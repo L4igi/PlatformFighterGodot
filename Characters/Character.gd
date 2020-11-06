@@ -8,6 +8,7 @@ const JUMP_SPEED = 800
 var jumpCount = 0
 var snapEdge = false
 var collidePlatforms = true
+var dropDownCount = 0
 
 var directionChange = false
 
@@ -64,29 +65,40 @@ func basic_movement(delta):
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
 
-	if Input.is_action_just_pressed("down") and is_on_floor():
+	if Input.is_action_just_pressed("down"):
+		dropDownCount += 1
 		for i in get_slide_count():
 			var collision = get_slide_collision(i)
 			#print("is in group " + str(collision.get_collider().is_in_group("Platform")))
-			if collision.get_collider().is_in_group("Platform"):
+			if collision.get_collider().is_in_group("Platform") && dropDownCount >=2:
+				print(velocity.y)
 				set_collision_mask_bit(1,false)
-				create_drop_platform_timer()
+				create_drop_platform_timer(0.3, false)
+			else: 
+				create_drop_platform_timer(0.5, true)
 				
-func _on_Timer_timeout():
-	print("Timer over")
+				
+func _on_drop_platform_timeout():
 	collidePlatforms = false
 
+func _on_drop_input_timeout():
+	dropDownCount = 0
+
 #creates timer after dropping through platform to enable/diable collision
-func create_drop_platform_timer():
+func create_drop_platform_timer(waittime,inputTimeout):
 	var timer = Timer.new()
 	timer.set_one_shot(true)
-	timer.set_wait_time(0.3)
-	timer.connect("timeout", self, "_on_Timer_timeout")
+	timer.set_wait_time(waittime)
 	timer.autostart = true
+	if inputTimeout:
+		timer.connect("timeout", self, "_on_drop_input_timeout")
+	else: 
+		timer.connect("timeout", self, "_on_drop_platform_timeout")
 	add_child(timer)
  
 func snap_edge():
 	if !is_on_floor():
 		snapEdge = true
+
 
 
