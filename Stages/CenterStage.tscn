@@ -24,7 +24,7 @@ scale = Vector2( 14, 1.5 )
 texture = ExtResource( 1 )
 
 [node name="EdgeSnapLeft" parent="." instance=ExtResource( 3 )]
-position = Vector2( -448, -16 )
+position = Vector2( -448, -32 )
 
 [node name="EdgeSnapRight" parent="." instance=ExtResource( 3 )]
-position = Vector2( 448, -16 )
+position = Vector2( 448, -32 )

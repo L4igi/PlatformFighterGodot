@@ -1,16 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://Stages/EdgeSnap.gd" type="Script" id=1]
 
-[sub_resource type="CircleShape2D" id=1]
-radius = 40.7922
-
 [node name="EdgeSnap" type="Area2D"]
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+build_mode = 1
+polygon = PoolVector2Array( 35.5563, 0.47731, 40.1812, 12.2499, 38.9199, 34.9541, 25.0451, 52.6129, 4.44313, 60.181, -14.8975, 58.4992, -28.7723, 48.4084, -40.9653, 23.1815, -35.9199, 0.47731 )
 [connection signal="body_entered" from="." to="." method="_on_EdgeSnap_body_entered"]

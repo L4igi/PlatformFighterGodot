@@ -7,16 +7,16 @@
 [node name="Stage" type="Node2D"]
 
 [node name="Character" parent="." instance=ExtResource( 3 )]
-position = Vector2( 288, 424 )
+position = Vector2( 384, 426.079 )
 
 [node name="PlatformLeft" parent="." instance=ExtResource( 2 )]
-position = Vector2( 256, 320 )
+position = Vector2( 352, 322.079 )
 
 [node name="PlatformTop" parent="." instance=ExtResource( 2 )]
-position = Vector2( 512, 192 )
+position = Vector2( 608, 194.079 )
 
 [node name="PlatformRight" parent="." instance=ExtResource( 2 )]
-position = Vector2( 768, 320 )
+position = Vector2( 864, 322.079 )
 
 [node name="CenterStage" parent="." instance=ExtResource( 1 )]
-position = Vector2( 512, 480 )
+position = Vector2( 608, 482.079 )

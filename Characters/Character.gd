@@ -9,6 +9,7 @@ var jumpCount = 0
 var snapEdge = false
 var collidePlatforms = true
 var dropDownCount = 0
+var snapEdgePosition = Vector2()
 
 var directionChange = false
 
@@ -17,7 +18,10 @@ var velocity = Vector2()
 onready var gravity = 2000
 
 func _physics_process(delta):
-	basic_movement(delta)
+	if !snapEdge:
+		basic_movement(delta)
+	else:
+		snap_edge_input(delta)
 	
 func basic_movement(delta):
 	# Horizontal movement code. First, get the player's input.
@@ -71,7 +75,6 @@ func basic_movement(delta):
 			var collision = get_slide_collision(i)
 			#print("is in group " + str(collision.get_collider().is_in_group("Platform")))
 			if collision.get_collider().is_in_group("Platform") && dropDownCount >=2:
-				print(velocity.y)
 				set_collision_mask_bit(1,false)
 				create_drop_platform_timer(0.3, false)
 			else: 
@@ -96,9 +99,41 @@ func create_drop_platform_timer(waittime,inputTimeout):
 		timer.connect("timeout", self, "_on_drop_platform_timeout")
 	add_child(timer)
  
-func snap_edge():
+func snap_edge(edgePosition):
 	if !is_on_floor():
 		snapEdge = true
+		snapEdgePosition = edgePosition
+		velocity = Vector2.ZERO
+		var targetPosition = edgePosition + $Sprite.texture.get_size()/2
+		if global_position < edgePosition:
+			targetPosition = edgePosition + Vector2(-($Sprite.texture.get_size()/2).x,($Sprite.texture.get_size()/2).y)
+		$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$Tween.start()
+		yield($Tween, "tween_all_completed")
+		#snapEdge = false
 
+func snap_edge_input(delta):
+	if Input.is_action_just_pressed("down"):
+		jumpCount = 0
+		snapEdge=false
+	elif Input.is_action_just_pressed("up"):
+		velocity.y = -JUMP_SPEED
+		jumpCount += 1
+		#disables collisons with platforms if player is jumping upwards
+		collidePlatforms = false
+		set_collision_mask_bit(1,false)
+		snapEdge=false
+	elif Input.is_action_just_pressed("left"):
+		if global_position < snapEdgePosition:
+			pass
+		else:
+			pass
+		snapEdge=false
+	elif Input.is_action_just_pressed("right"):
+		if global_position > snapEdgePosition:
+			pass
+		else: 
+			pass
+		snapEdge=false
 
 
