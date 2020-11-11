@@ -11,12 +11,14 @@ var collidePlatforms = true
 var dropDownCount = 0
 var snapEdgePosition = Vector2()
 var disableInput = false
+var shortHop = true
 
 var directionChange = false
 
 var velocity = Vector2()
 
 onready var gravity = 2000
+onready var baseGravity = gravity
 
 func _physics_process(delta):
 	if !disableInput:
@@ -48,23 +50,29 @@ func basic_movement(delta):
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
-	# Check for jumping. is_on_floor() must be called after movement code.
+	#reset gravity if player is jumping
+	if Input.is_action_just_pressed("jump") && gravity != baseGravity: 
+		gravity = baseGravity
+	# Check for jumping. is_on_floor() must be called after movement code
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
-		#disables collisons with platforms if player is jumping upwards
-		collidePlatforms = false
-		set_collision_mask_bit(1,false)
+		create_jump_timer(0.15)
 	elif !is_on_floor() and Input.is_action_just_pressed("jump") and jumpCount == 1:
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
-		collidePlatforms = false
-		set_collision_mask_bit(1,false)
 	#rests jump count when player lands back on the ground
 	elif is_on_floor() and jumpCount > 0: 
 		jumpCount = 0
 	elif !is_on_floor() and jumpCount == 0: 
 		jumpCount = 1
+	#reset gravity
+	elif is_on_floor() && gravity != baseGravity:
+		gravity = baseGravity
+	#shorthop depending on button press length 
+	if Input.is_action_just_released("jump") && jumpCount == 1: 
+		print("ShortHop")
+		shortHop = true
 	
 	#enable collisons with platforms if player is falling down
 	if !collidePlatforms && !is_on_floor() && velocity.y >= 0: 
@@ -81,7 +89,13 @@ func basic_movement(delta):
 				create_drop_platform_timer(0.3, false)
 			else: 
 				create_drop_platform_timer(0.5, true)
+	#Fastfall
+	if Input.is_action_just_pressed("down") && !is_on_floor() && velocity.y > 0:
+		gravity = 4000
 				
+func _on_short_hop_timeout():
+	if shortHop: 
+		velocity.y=0
 				
 func _on_drop_platform_timeout():
 	collidePlatforms = false
@@ -89,6 +103,15 @@ func _on_drop_platform_timeout():
 func _on_drop_input_timeout():
 	dropDownCount = 0
 
+#creates timer to determine if short or fullhop
+func create_jump_timer(waittime):
+	shortHop = false
+	var timer = Timer.new()
+	timer.set_one_shot(true)
+	timer.set_wait_time(waittime)
+	timer.autostart = true
+	timer.connect("timeout", self, "_on_short_hop_timeout")
+	add_child(timer)
 #creates timer after dropping through platform to enable/diable collision
 func create_drop_platform_timer(waittime,inputTimeout):
 	var timer = Timer.new()
