@@ -10,6 +10,7 @@ var snapEdge = false
 var collidePlatforms = true
 var dropDownCount = 0
 var snapEdgePosition = Vector2()
+var disableInput = false
 
 var directionChange = false
 
@@ -18,10 +19,11 @@ var velocity = Vector2()
 onready var gravity = 2000
 
 func _physics_process(delta):
-	if !snapEdge:
-		basic_movement(delta)
-	else:
-		snap_edge_input(delta)
+	if !disableInput:
+		if !snapEdge:
+			basic_movement(delta)
+		else:
+			snap_edge_input(delta)
 	
 func basic_movement(delta):
 	# Horizontal movement code. First, get the player's input.
@@ -47,13 +49,13 @@ func basic_movement(delta):
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
 	# Check for jumping. is_on_floor() must be called after movement code.
-	if is_on_floor() and Input.is_action_just_pressed("up"):
+	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
 		#disables collisons with platforms if player is jumping upwards
 		collidePlatforms = false
 		set_collision_mask_bit(1,false)
-	elif !is_on_floor() and Input.is_action_just_pressed("up") and jumpCount == 1:
+	elif !is_on_floor() and Input.is_action_just_pressed("jump") and jumpCount == 1:
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
 		collidePlatforms = false
@@ -64,7 +66,7 @@ func basic_movement(delta):
 	elif !is_on_floor() and jumpCount == 0: 
 		jumpCount = 1
 	
-	#disables collisons with platforms if player is jumping upwards
+	#enable collisons with platforms if player is falling down
 	if !collidePlatforms && !is_on_floor() && velocity.y >= 0: 
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
@@ -101,7 +103,7 @@ func create_drop_platform_timer(waittime,inputTimeout):
  
 func snap_edge(edgePosition):
 	if !is_on_floor():
-		snapEdge = true
+		disableInput = true
 		snapEdgePosition = edgePosition
 		velocity = Vector2.ZERO
 		var targetPosition = edgePosition + $Sprite.texture.get_size()/2
@@ -110,13 +112,15 @@ func snap_edge(edgePosition):
 		$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
-		#snapEdge = false
+		snapEdge = true
+		disableInput = false
 
 func snap_edge_input(delta):
+	jumpCount = 0
+	velocity = Vector2.ZERO
 	if Input.is_action_just_pressed("down"):
-		jumpCount = 0
 		snapEdge=false
-	elif Input.is_action_just_pressed("up"):
+	elif Input.is_action_just_pressed("jump"):
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
 		#disables collisons with platforms if player is jumping upwards
@@ -125,15 +129,18 @@ func snap_edge_input(delta):
 		snapEdge=false
 	elif Input.is_action_just_pressed("left"):
 		if global_position < snapEdgePosition:
-			pass
+			velocity.x = -WALK_MAX_SPEED/4
 		else:
 			pass
 		snapEdge=false
 	elif Input.is_action_just_pressed("right"):
 		if global_position > snapEdgePosition:
-			pass
+			velocity.x = WALK_MAX_SPEED/4
 		else: 
 			pass
 		snapEdge=false
 
+func get_character_size():
+	return $Sprite.texture.get_size()
+	
 

@@ -7,4 +7,5 @@ func _ready():
 
 func _on_EdgeSnap_body_entered(body):
 	if body.is_in_group("Character"):
+		body.set_collision_mask_bit(1,false)
 		body.snap_edge(self.global_position)

@@ -6,15 +6,18 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 128, 8 )
 
-[node name="Platform" type="StaticBody2D" groups=[
+[node name="Platform" type="KinematicBody2D" groups=[
 "Platform",
 ]]
+rotation = 6.28319
 collision_layer = 2
 collision_mask = 2147483648
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
+one_way_collision = true
+one_way_collision_margin = 0.0
 
 [node name="Sprite" type="Sprite" parent="."]
 modulate = Color( 0, 0, 0, 1 )
