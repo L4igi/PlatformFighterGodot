@@ -4,15 +4,23 @@ const WALK_FORCE = 800
 const WALK_MAX_SPEED = 600
 const STOP_FORCE = 600
 const JUMP_SPEED = 800
-
+#jump
 var jumpCount = 0
-var snapEdge = false
+var availabelJumps = 2
+var shortHop = true
+#platform
 var collidePlatforms = true
 var dropDownCount = 0
+#edge
+var snapEdge = false
 var snapEdgePosition = Vector2()
 var disableInput = false
-var shortHop = true
-var availabelJumps = 2
+#attack 
+var jabCount = 0
+var jabCombo = 3
+#movement
+enum moveDirection {LEFT, RIGHT}
+var currentMoveDirection = moveDirection.RIGHT
 
 var directionChange = false
 
@@ -21,21 +29,32 @@ var velocity = Vector2()
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACK, ROLL, STUN}
+enum CharacterState{GROUND, AIR, EDGE, ATTACK, SPECIAL, ROLL, STUN}
 
 var currentState = CharacterState.GROUND
 
 func _physics_process(delta):
-	print(currentState)
 	if !disableInput:
+		check_input(delta)
 		if currentState == CharacterState.EDGE:
 			edge_handler(delta)
 		elif currentState == CharacterState.AIR:
 			air_handler(delta)
-		else:
-			basic_movement(delta)
-	
-func basic_movement(delta):
+		elif currentState == CharacterState.ATTACK:
+			attack_handler(delta)
+		elif currentState == CharacterState.GROUND:
+			ground_handler(delta)
+
+func check_input(delta):
+	if Input.is_action_just_pressed("Attack"):
+		currentState = CharacterState.ATTACK
+		
+func attack_handler(delta):
+	print(abs(velocity.x))
+	if abs(velocity.x) < 150:
+		pass
+	currentState = CharacterState.GROUND
+func ground_handler(delta):
 	#reset gravity if player is grounded
 	if gravity!=baseGravity:
 		gravity=baseGravity
@@ -46,12 +65,21 @@ func basic_movement(delta):
 		# The velocity, slowed down a bit, and then reassigned.
 		velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
 	else:
-		if velocity.x >= 0 && walk < 0 || velocity.x <= 0 && walk > 0: 
+		if (velocity.x >= 0 and walk < 0 or velocity.x <= 0 and walk > 0) and directionChange == false: 
+			if walk < 0: 
+				currentMoveDirection = moveDirection.LEFT
+			elif walk > 0: 
+				currentMoveDirection = moveDirection.RIGHT
+			print(currentMoveDirection)
 			directionChange = true
-			velocity.x += walk*3 * delta
-		else: 
+			
+		elif (velocity.x >= 0 and walk > 0 or velocity.x <= 0 and walk < 0) and directionChange: 
 			directionChange = false
-			velocity.x += walk * delta
+			
+	if directionChange: 
+		velocity.x += walk*3 * delta
+	else: 
+		velocity.x += walk * delta
 	# Clamp to the maximum horizontal movement speed.
 	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
 
@@ -85,7 +113,19 @@ func basic_movement(delta):
 	if velocity.y != 0:
 		jumpCount = 1
 		currentState = CharacterState.AIR
-		
+
+#creates timer after dropping through platform to enable/diable collision
+func create_drop_platform_timer(waittime,inputTimeout):
+	var timer = Timer.new()
+	timer.set_one_shot(true)
+	timer.set_wait_time(waittime)
+	timer.autostart = true
+	if inputTimeout:
+		timer.connect("timeout", self, "_on_drop_input_timeout")
+	else: 
+		timer.connect("timeout", self, "_on_drop_platform_timeout")
+	add_child(timer)
+	
 #is called when player is in the air 
 func air_handler(delta):
 	var walk = WALK_FORCE * (Input.get_action_strength("right") - Input.get_action_strength("left"))
@@ -135,7 +175,7 @@ func _on_drop_platform_timeout():
 
 func _on_drop_input_timeout():
 	dropDownCount = 0
-
+	
 #creates timer to determine if short or fullhop
 func create_jump_timer(waittime):
 	shortHop = false
@@ -145,18 +185,7 @@ func create_jump_timer(waittime):
 	timer.autostart = true
 	timer.connect("timeout", self, "_on_short_hop_timeout")
 	add_child(timer)
-#creates timer after dropping through platform to enable/diable collision
-func create_drop_platform_timer(waittime,inputTimeout):
-	var timer = Timer.new()
-	timer.set_one_shot(true)
-	timer.set_wait_time(waittime)
-	timer.autostart = true
-	if inputTimeout:
-		timer.connect("timeout", self, "_on_drop_input_timeout")
-	else: 
-		timer.connect("timeout", self, "_on_drop_platform_timeout")
-	add_child(timer)
- 
+	
 func snap_edge(edgePosition):
 	if !is_on_floor():
 		currentState = CharacterState.EDGE
@@ -171,7 +200,7 @@ func snap_edge(edgePosition):
 		yield($Tween, "tween_all_completed")
 		snapEdge = true
 		disableInput = false
-
+		
 func edge_handler(delta):
 	disableInput = true
 	jumpCount = 0
@@ -249,4 +278,3 @@ func edge_handler(delta):
 func get_character_size():
 	return $Sprite.texture.get_size()
 	
-
