@@ -18,6 +18,7 @@ var disableInput = false
 #attack 
 var jabCount = 0
 var jabCombo = 3
+var dashAttackSpeed = 500
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
@@ -31,7 +32,7 @@ onready var baseGravity = gravity
 
 enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL, STUN}
 
-enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, NAIR}
+enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, NAIR, DASHATTACK}
 
 var currentState = CharacterState.GROUND
 
@@ -41,6 +42,17 @@ onready var animationPlayer = $AnimatedSprite/AnimationPlayer
 func _physics_process(delta):
 	if disableInput:
 		process_movement_physics(delta)
+		if currentState == CharacterState.AIR:
+			if is_on_floor():
+				currentState = CharacterState.GROUND
+				#if aerial attack is interrupted by ground cancel hitboxes
+				toggle_all_hitboxes("off")
+		elif currentState == CharacterState.GROUND:
+			if velocity.y != 0:
+				jumpCount = 1
+				currentState = CharacterState.AIR
+				animationPlayer.play("freefall")
+				toggle_all_hitboxes("off")
 	if !disableInput:
 		check_input(delta)
 		match currentState:
@@ -66,10 +78,18 @@ func check_input(delta):
 func attack_handler_ground(delta):
 	if abs(velocity.x) < 150:
 		animation_handler(CharacterAnimations.JAB1)
+	else: 
+		#dashattack
+		match currentMoveDirection:
+			moveDirection.LEFT:
+				velocity.x = -dashAttackSpeed
+			moveDirection.RIGHT:
+				velocity.x = dashAttackSpeed
+		animation_handler(CharacterAnimations.DASHATTACK)
 	currentState = CharacterState.GROUND
 			
 func attack_handler_air(delta):
-	if abs(velocity.x) < 150:
+	if abs((Input.get_action_strength("right") - Input.get_action_strength("left"))) < 0.1:
 		animation_handler(CharacterAnimations.NAIR)
 	currentState = CharacterState.AIR
 			
@@ -106,6 +126,8 @@ func ground_handler(delta):
 	if velocity.y != 0:
 		jumpCount = 1
 		currentState = CharacterState.AIR
+		animationPlayer.play("freefall")
+		toggle_all_hitboxes("off")
 
 #creates timer after dropping through platform to enable/diable collision
 func create_drop_platform_timer(waittime,inputTimeout):
@@ -171,9 +193,9 @@ func snap_edge(edgePosition):
 		disableInput = true
 		snapEdgePosition = edgePosition
 		velocity = Vector2.ZERO
-		var targetPosition = edgePosition + $Sprite.texture.get_size()/2
+		var targetPosition = edgePosition + characterSprite.frames.get_frame("idle",0).get_size()/2
 		if global_position < edgePosition:
-			targetPosition = edgePosition + Vector2(-($Sprite.texture.get_size()/2).x,($Sprite.texture.get_size()/2).y)
+			targetPosition = edgePosition + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/2).y)
 		$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
@@ -255,7 +277,7 @@ func edge_handler(delta):
 	disableInput = false
 
 func get_character_size():
-	return $Sprite.texture.get_size()
+	return characterSprite.frames.get_frame("idle",0).get_size()
 	
 func animation_handler(animationToPlay):
 	match animationToPlay:
@@ -273,18 +295,24 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("doublejump")
 			animationPlayer.queue("freefall")
 		CharacterAnimations.NAIR:
-			animationPlayer.play("nair")
-			animationPlayer.queue("freefall")
+			play_attack_animation("nair")
+		CharacterAnimations.DASHATTACK: 
+			play_attack_animation("dash_attack")
 		CharacterAnimations.JAB1:
-			disableInput = true
-			#todo: keep sliding velocity 
-			toggle_all_hitboxes("on")
-			animationPlayer.play("jab1")
-			yield(animationPlayer, "animation_finished")
-			toggle_all_hitboxes("off")
-			animationPlayer.play("idle")
-			disableInput = false
+			play_attack_animation("jab1")
 
+func play_attack_animation(animationToPlay):
+	disableInput = true
+	animationPlayer.play(animationToPlay)
+	yield(animationPlayer, "animation_finished")
+	toggle_all_hitboxes("off")
+	match CharacterState:
+		CharacterState.GROUND:
+			animationPlayer.play("freefall")
+		CharacterState.AIR:
+			animationPlayer.play("idle")
+	disableInput = false
+	
 func process_movement_physics(delta):
 	velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
 	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
@@ -336,6 +364,7 @@ func toggle_all_hitboxes(onOff):
 				if hitbox is CollisionShape2D:
 					hitbox.disabled = false
 		"off":
+			disableInput = false
 			for hitbox in $AnimatedSprite/HitBoxes.get_children():
 				if hitbox is CollisionShape2D:
 					hitbox.disabled = true
