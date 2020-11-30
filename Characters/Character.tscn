@@ -1,13 +1,322 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=59 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
+[ext_resource path="res://Characters/Mario/Run/0.png" type="Texture" id=3]
+[ext_resource path="res://Characters/Mario/Run/2.png" type="Texture" id=4]
+[ext_resource path="res://Characters/Mario/Run/3.png" type="Texture" id=5]
+[ext_resource path="res://Characters/Mario/Run/4.png" type="Texture" id=6]
+[ext_resource path="res://Characters/Mario/Run/5.png" type="Texture" id=7]
+[ext_resource path="res://Characters/Mario/Run/6.png" type="Texture" id=8]
+[ext_resource path="res://Characters/Mario/Run/7.png" type="Texture" id=9]
+[ext_resource path="res://Characters/Mario/Run/8.png" type="Texture" id=10]
+[ext_resource path="res://Characters/Mario/Run/9.png" type="Texture" id=11]
+[ext_resource path="res://Characters/Mario/Run/1.png" type="Texture" id=12]
+[ext_resource path="res://Characters/Mario/Run/10.png" type="Texture" id=13]
+[ext_resource path="res://Characters/Mario/Run/11.png" type="Texture" id=14]
+[ext_resource path="res://Characters/Mario/Jab1/1.png" type="Texture" id=15]
+[ext_resource path="res://Characters/Mario/Jab1/2.png" type="Texture" id=16]
+[ext_resource path="res://Characters/Mario/Jab1/3.png" type="Texture" id=17]
+[ext_resource path="res://Characters/Mario/idle/1.png" type="Texture" id=18]
+[ext_resource path="res://Characters/Mario/idle/0.png" type="Texture" id=19]
+[ext_resource path="res://Characters/Mario/idle/6.png" type="Texture" id=20]
+[ext_resource path="res://Characters/Mario/idle/5.png" type="Texture" id=21]
+[ext_resource path="res://Characters/Mario/idle/4.png" type="Texture" id=22]
+[ext_resource path="res://Characters/Mario/idle/3.png" type="Texture" id=23]
+[ext_resource path="res://Characters/Mario/idle/2.png" type="Texture" id=24]
+[ext_resource path="res://Characters/Mario/jump/2.png" type="Texture" id=25]
+[ext_resource path="res://Characters/Mario/jump/3.png" type="Texture" id=26]
+[ext_resource path="res://Characters/Mario/jump/0.png" type="Texture" id=27]
+[ext_resource path="res://Characters/Mario/jump/5.png" type="Texture" id=28]
+[ext_resource path="res://Characters/Mario/jump/6.png" type="Texture" id=29]
+[ext_resource path="res://Characters/Mario/jump/4.png" type="Texture" id=30]
+[ext_resource path="res://Characters/Mario/jump/1.png" type="Texture" id=31]
+[ext_resource path="res://Characters/Mario/DoubleJump/4.png" type="Texture" id=32]
+[ext_resource path="res://Characters/Mario/DoubleJump/2.png" type="Texture" id=33]
+[ext_resource path="res://Characters/Mario/DoubleJump/0.png" type="Texture" id=34]
+[ext_resource path="res://Characters/Mario/DoubleJump/3.png" type="Texture" id=35]
+[ext_resource path="res://Characters/Mario/DoubleJump/1.png" type="Texture" id=36]
+[ext_resource path="res://Characters/Mario/freefall/5.png" type="Texture" id=37]
+[ext_resource path="res://Characters/Mario/freefall/4.png" type="Texture" id=38]
+[ext_resource path="res://Characters/Mario/freefall/3.png" type="Texture" id=39]
+[ext_resource path="res://Characters/Mario/freefall/6.png" type="Texture" id=40]
+[ext_resource path="res://Characters/Mario/nair/0.png" type="Texture" id=41]
+[ext_resource path="res://Characters/Mario/nair/5.png" type="Texture" id=42]
+[ext_resource path="res://Characters/Mario/nair/1.png" type="Texture" id=43]
+[ext_resource path="res://Characters/Mario/nair/2.png" type="Texture" id=44]
+[ext_resource path="res://Characters/Mario/nair/4.png" type="Texture" id=45]
+[ext_resource path="res://Characters/Mario/nair/6.png" type="Texture" id=46]
+[ext_resource path="res://Characters/Mario/nair/3.png" type="Texture" id=47]
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 16, 10 )
-
-[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 31.8176, 31.9846 )
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
+"loop": true,
+"name": "nair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
+"loop": true,
+"name": "jab1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
+"loop": true,
+"name": "doublejump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
+"loop": true,
+"name": "freefall",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=8]
+resource_name = "doublejump"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "doublejump" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "freefall"
+length = 0.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "freefall" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 1, 0 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "idle"
+length = 0.7
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "idle" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "jab1"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "jab1" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "jump"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "jump" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "nair"
+length = 0.7
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "nair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/NAir:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -14.4, -3.9968e-14 ), Vector2( -19.2, -5.625 ), Vector2( -9.53674e-07, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 9.53674e-07, 5.625 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NAir:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.1, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "walk"
+length = 1.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "walk" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
+}
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id=11]
 
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
@@ -15,18 +324,37 @@ extents = Vector2( 31.8176, 31.9846 )
 collision_mask = 7
 script = ExtResource( 1 )
 
-[node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 2 )
-
-[node name="Jab1" type="Area2D" parent="Sprite"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Jab1"]
-position = Vector2( 48, 0 )
-shape = SubResource( 2 )
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="Tween" type="Tween" parent="."]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 0, 5.68434e-14 )
+scale = Vector2( 1.66667, 1.42222 )
+frames = SubResource( 3 )
+animation = "nair"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
+autoplay = "idle"
+anims/doublejump = SubResource( 8 )
+anims/freefall = SubResource( 9 )
+anims/idle = SubResource( 6 )
+anims/jab1 = SubResource( 5 )
+anims/jump = SubResource( 7 )
+anims/nair = SubResource( 10 )
+anims/walk = SubResource( 4 )
+
+[node name="HitBoxes" type="Area2D" parent="AnimatedSprite"]
+
+[node name="Jab1" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes"]
+visible = false
+position = Vector2( 20, 0 )
+scale = Vector2( 0.7, 0.7 )
+shape = SubResource( 1 )
+disabled = true
+
+[node name="NAir" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes"]
+position = Vector2( 3.52965e-07, 2.08187 )
+shape = SubResource( 11 )
+disabled = true

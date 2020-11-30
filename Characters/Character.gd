@@ -29,67 +29,56 @@ var velocity = Vector2()
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACK, SPECIAL, ROLL, STUN}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL, STUN}
+
+enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1}
 
 var currentState = CharacterState.GROUND
 
+onready var characterSprite = $AnimatedSprite
+onready var animationPlayer = $AnimatedSprite/AnimationPlayer
+
 func _physics_process(delta):
+	if disableInput:
+		process_movement_physics(delta)
 	if !disableInput:
 		check_input(delta)
 		if currentState == CharacterState.EDGE:
 			edge_handler(delta)
 		elif currentState == CharacterState.AIR:
 			air_handler(delta)
-		elif currentState == CharacterState.ATTACK:
+		elif currentState == CharacterState.ATTACKAIR || currentState == CharacterState.ATTACKGROUND:
 			attack_handler(delta)
 		elif currentState == CharacterState.GROUND:
 			ground_handler(delta)
 
 func check_input(delta):
 	if Input.is_action_just_pressed("Attack"):
-		currentState = CharacterState.ATTACK
+		match currentState:
+			CharacterState.AIR:
+				currentState = CharacterState.ATTACKAIR
+			CharacterState.GROUND:
+				currentState = CharacterState.ATTACKGROUND
 		
 func attack_handler(delta):
-	print(abs(velocity.x))
 	if abs(velocity.x) < 150:
-		pass
-	currentState = CharacterState.GROUND
+		animation_handler(CharacterAnimations.JAB1)
+	match currentState:
+		CharacterState.ATTACKAIR:
+			currentState = CharacterState.AIR
+		CharacterState.ATTACKGROUND:
+			currentState = CharacterState.GROUND
+			
 func ground_handler(delta):
 	#reset gravity if player is grounded
 	if gravity!=baseGravity:
 		gravity=baseGravity
-	# Horizontal movement code. First, get the player's input.
-	var walk = WALK_FORCE * (Input.get_action_strength("right") - Input.get_action_strength("left"))
-	# Slow down the player if they're not trying to move.
-	if abs(walk) < WALK_FORCE * 0.2:
-		# The velocity, slowed down a bit, and then reassigned.
-		velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
-	else:
-		if (velocity.x >= 0 and walk < 0 or velocity.x <= 0 and walk > 0) and directionChange == false: 
-			if walk < 0: 
-				currentMoveDirection = moveDirection.LEFT
-			elif walk > 0: 
-				currentMoveDirection = moveDirection.RIGHT
-			print(currentMoveDirection)
-			directionChange = true
-			
-		elif (velocity.x >= 0 and walk > 0 or velocity.x <= 0 and walk < 0) and directionChange: 
-			directionChange = false
-			
-	if directionChange: 
-		velocity.x += walk*3 * delta
-	else: 
-		velocity.x += walk * delta
-	# Clamp to the maximum horizontal movement speed.
-	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
-
-	# Vertical movement code. Apply gravity.
-	velocity.y += gravity * delta
-
+	input_movement_physics(delta)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	# Check for jumping. is_on_floor() must be called after movement code
 	if Input.is_action_just_pressed("jump"):
+		animation_handler(CharacterAnimations.JUMP)
 		#reset gravity if player is jumping
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
@@ -128,27 +117,11 @@ func create_drop_platform_timer(waittime,inputTimeout):
 	
 #is called when player is in the air 
 func air_handler(delta):
-	var walk = WALK_FORCE * (Input.get_action_strength("right") - Input.get_action_strength("left"))
-	# Slow down the player if they're not trying to move.
-	if abs(walk) < WALK_FORCE * 0.2:
-		# The velocity, slowed down a bit, and then reassigned.
-		velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
-	else:
-		if velocity.x >= 0 && walk < 0 || velocity.x <= 0 && walk > 0: 
-			directionChange = true
-			velocity.x += walk*3 * delta
-		else: 
-			directionChange = false
-			velocity.x += walk * delta
-	# Clamp to the maximum horizontal movement speed.
-	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
-
-	# Vertical movement code. Apply gravity.
-	velocity.y += gravity * delta
-
+	input_movement_physics(delta)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	if Input.is_action_just_pressed("jump") && jumpCount < availabelJumps:
+		animation_handler(CharacterAnimations.DOUBLEJUMP)
 		if gravity!=baseGravity:
 			gravity=baseGravity
 		velocity.y = -JUMP_SPEED
@@ -278,3 +251,72 @@ func edge_handler(delta):
 func get_character_size():
 	return $Sprite.texture.get_size()
 	
+func animation_handler(animationToPlay):
+	match animationToPlay:
+		CharacterAnimations.IDLE:
+			animationPlayer.play("idle")
+		CharacterAnimations.WALK:
+			animationPlayer.play("walk")
+		CharacterAnimations.RUN:
+			pass
+		CharacterAnimations.JUMP:
+			animationPlayer.play("jump")
+			animationPlayer.queue("freefall")
+#			yield(animationPlayer, "animation_finished")
+		CharacterAnimations.DOUBLEJUMP:
+			animationPlayer.play("doublejump")
+			animationPlayer.queue("freefall")
+		CharacterAnimations.JAB1:
+			disableInput = true
+			#todo: keep sliding velocity 
+			$AnimatedSprite/HitBoxes/Jab1.set_disabled(false)
+			animationPlayer.play("jab1")
+			yield(animationPlayer, "animation_finished")
+			$AnimatedSprite/HitBoxes/Jab1.set_disabled(true)
+			animationPlayer.play("idle")
+			disableInput = false
+
+func process_movement_physics(delta):
+	velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
+	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
+	# Vertical movement code. Apply gravity.
+	velocity.y += gravity * delta
+	# Move based on the velocity and snap to the ground.
+	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
+
+func input_movement_physics(delta):
+	# Horizontal movement code. First, get the player's input.
+	var walk = WALK_FORCE * (Input.get_action_strength("right") - Input.get_action_strength("left"))
+	# Slow down the player if they're not trying to move.
+	if abs(walk) < WALK_FORCE * 0.2:
+		if(currentState == CharacterState.GROUND):
+			animationPlayer.play("idle")
+		# The velocity, slowed down a bit, and then reassigned.
+		velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
+	else:
+		if(currentState == CharacterState.GROUND):
+			animationPlayer.play("walk")
+		if (velocity.x >= 0 and walk < 0 or velocity.x <= 0 and walk > 0) and directionChange == false: 
+			if walk < 0: 
+				currentMoveDirection = moveDirection.LEFT
+				characterSprite.flip_h = true
+				$AnimatedSprite/HitBoxes.scale = Vector2(-1, 1)
+			elif walk > 0: 
+				currentMoveDirection = moveDirection.RIGHT
+				characterSprite.flip_h = false
+				$AnimatedSprite/HitBoxes.scale = Vector2(1, 1)
+			directionChange = true
+			
+		elif (velocity.x >= 0 and walk > 0 or velocity.x <= 0 and walk < 0) and directionChange: 
+			directionChange = false
+			
+	if directionChange: 
+		velocity.x += walk*3 * delta
+	else: 
+		velocity.x += walk * delta
+	# Clamp to the maximum horizontal movement speed.
+	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
+
+	# Vertical movement code. Apply gravity.
+	velocity.y += gravity * delta
+
