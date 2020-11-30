@@ -31,7 +31,7 @@ onready var baseGravity = gravity
 
 enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL, STUN}
 
-enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1}
+enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, NAIR}
 
 var currentState = CharacterState.GROUND
 
@@ -43,14 +43,17 @@ func _physics_process(delta):
 		process_movement_physics(delta)
 	if !disableInput:
 		check_input(delta)
-		if currentState == CharacterState.EDGE:
-			edge_handler(delta)
-		elif currentState == CharacterState.AIR:
-			air_handler(delta)
-		elif currentState == CharacterState.ATTACKAIR || currentState == CharacterState.ATTACKGROUND:
-			attack_handler(delta)
-		elif currentState == CharacterState.GROUND:
-			ground_handler(delta)
+		match currentState:
+			CharacterState.EDGE:
+				edge_handler(delta)
+			CharacterState.AIR:
+				air_handler(delta)
+			CharacterState.ATTACKAIR:
+				attack_handler_air(delta)
+			CharacterState.ATTACKGROUND:
+				attack_handler_ground(delta)
+			CharacterState.GROUND:
+				ground_handler(delta)
 
 func check_input(delta):
 	if Input.is_action_just_pressed("Attack"):
@@ -60,14 +63,15 @@ func check_input(delta):
 			CharacterState.GROUND:
 				currentState = CharacterState.ATTACKGROUND
 		
-func attack_handler(delta):
+func attack_handler_ground(delta):
 	if abs(velocity.x) < 150:
 		animation_handler(CharacterAnimations.JAB1)
-	match currentState:
-		CharacterState.ATTACKAIR:
-			currentState = CharacterState.AIR
-		CharacterState.ATTACKGROUND:
-			currentState = CharacterState.GROUND
+	currentState = CharacterState.GROUND
+			
+func attack_handler_air(delta):
+	if abs(velocity.x) < 150:
+		animation_handler(CharacterAnimations.NAIR)
+	currentState = CharacterState.AIR
 			
 func ground_handler(delta):
 	#reset gravity if player is grounded
@@ -137,6 +141,8 @@ func air_handler(delta):
 		gravity = 4000
 	if is_on_floor():
 		currentState = CharacterState.GROUND
+		#if aerial attack is interrupted by ground cancel hitboxes
+		toggle_all_hitboxes("off")
 	
 func _on_short_hop_timeout():
 	if shortHop: 
@@ -266,13 +272,16 @@ func animation_handler(animationToPlay):
 		CharacterAnimations.DOUBLEJUMP:
 			animationPlayer.play("doublejump")
 			animationPlayer.queue("freefall")
+		CharacterAnimations.NAIR:
+			animationPlayer.play("nair")
+			animationPlayer.queue("freefall")
 		CharacterAnimations.JAB1:
 			disableInput = true
 			#todo: keep sliding velocity 
-			$AnimatedSprite/HitBoxes/Jab1.set_disabled(false)
+			toggle_all_hitboxes("on")
 			animationPlayer.play("jab1")
 			yield(animationPlayer, "animation_finished")
-			$AnimatedSprite/HitBoxes/Jab1.set_disabled(true)
+			toggle_all_hitboxes("off")
 			animationPlayer.play("idle")
 			disableInput = false
 
@@ -319,4 +328,14 @@ func input_movement_physics(delta):
 
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
-
+	
+func toggle_all_hitboxes(onOff):
+	match onOff: 
+		"on":
+			for hitbox in $AnimatedSprite/HitBoxes.get_children():
+				if hitbox is CollisionShape2D:
+					hitbox.disabled = false
+		"off":
+			for hitbox in $AnimatedSprite/HitBoxes.get_children():
+				if hitbox is CollisionShape2D:
+					hitbox.disabled = true
