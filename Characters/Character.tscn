@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=2]
+[gd_scene load_steps=79 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -64,6 +64,7 @@
 [ext_resource path="res://Characters/Mario/dash_attack/10.png" type="Texture" id=62]
 [ext_resource path="res://Characters/Mario/dash_attack/12.png" type="Texture" id=63]
 [ext_resource path="res://Characters/Mario/dash_attack/13.png" type="Texture" id=64]
+[ext_resource path="res://Characters/HitBoxes.gd" type="Script" id=65]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 16, 32 )
@@ -139,28 +140,28 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("HitBoxes/Neutral:position")
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.2, 0.3, 0.4, 0.9 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0.2, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 14.4, 5.625 ), Vector2( 9.6, 5.625 ), Vector2( 4.8, 5.625 ), Vector2( 4.8, 0 ) ]
+"values": [ false, true ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("HitBoxes/Neutral:disabled")
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0.2, 0.9 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
+"times": PoolRealArray( 0, 0.2, 0.3, 0.4, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 14.4, 5.625 ), Vector2( 9.6, 5.625 ), Vector2( 4.8, 5.625 ), Vector2( 4.8, 0 ) ]
 }
 
 [sub_resource type="Animation" id=8]
@@ -277,28 +278,28 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("HitBoxes/Neutral:position")
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.4 ),
+"times": PoolRealArray( 0.1, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 19.2, 0 ), Vector2( 19.2, 0 ) ]
+"values": [ false, true ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("HitBoxes/Neutral:disabled")
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0.1, 0.3 ),
+"times": PoolRealArray( 0, 0.4 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
+"update": 0,
+"values": [ Vector2( 19.2, 0 ), Vector2( 19.2, 0 ) ]
 }
 
 [sub_resource type="Animation" id=7]
@@ -357,7 +358,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("HitBoxes/Sour:position")
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -366,10 +367,10 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( -4.8, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 14.4, 5.625 ), Vector2( -9.53674e-07, 5.625 ), Vector2( -14.4, -16.875 ), Vector2( 9.6, -11.25 ), Vector2( 9.6, 5.625 ) ]
+"values": [ Vector2( 9.6, -16.875 ), Vector2( 4.8, 0 ), Vector2( -4.8, 5.625 ), Vector2( -14.4, 0 ), Vector2( 0, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 0, 5.625 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("HitBoxes/Sour:disabled")
+tracks/3/path = NodePath("HitBoxes/SweetSpot/Sweet:disabled")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -377,11 +378,11 @@ tracks/3/enabled = true
 tracks/3/keys = {
 "times": PoolRealArray( 0.1, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
+"update": 0,
 "values": [ false, true ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("HitBoxes/Sweet:position")
+tracks/4/path = NodePath("HitBoxes/SweetSpot/Sweet:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -393,7 +394,7 @@ tracks/4/keys = {
 "values": [ Vector2( 24, -11.25 ), Vector2( -5, 2 ), Vector2( -19, -5 ), Vector2( -4.8, -16.875 ), Vector2( 19.2, -5.625 ), Vector2( 19.2, 0 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("HitBoxes/Sweet:disabled")
+tracks/5/path = NodePath("HitBoxes/SourSpot/Sour:disabled")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -401,11 +402,11 @@ tracks/5/enabled = true
 tracks/5/keys = {
 "times": PoolRealArray( 0.1, 0.6 ),
 "transitions": PoolRealArray( 1, 1 ),
-"update": 1,
+"update": 0,
 "values": [ false, true ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("HitBoxes/Neutral:position")
+tracks/6/path = NodePath("HitBoxes/SourSpot/Sour:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -414,7 +415,7 @@ tracks/6/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 9.6, -16.875 ), Vector2( 4.8, 0 ), Vector2( -4.8, 5.625 ), Vector2( -14.4, 0 ), Vector2( 0, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 0, 5.625 ) ]
+"values": [ Vector2( -4.8, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 14.4, 5.625 ), Vector2( -9.53674e-07, 5.625 ), Vector2( -14.4, -16.875 ), Vector2( 9.6, -11.25 ), Vector2( 9.6, 5.625 ) ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -449,9 +450,9 @@ tracks/1/keys = {
 [sub_resource type="CircleShape2D" id=1]
 radius = 9.6
 
-[sub_resource type="CircleShape2D" id=11]
-
 [sub_resource type="CircleShape2D" id=13]
+
+[sub_resource type="CircleShape2D" id=11]
 
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
@@ -468,7 +469,7 @@ shape = SubResource( 2 )
 position = Vector2( 0, 5.68434e-14 )
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 3 )
-animation = "dash_attack"
+animation = "jump"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -481,24 +482,32 @@ anims/jump = SubResource( 7 )
 anims/nair = SubResource( 10 )
 anims/walk = SubResource( 4 )
 
-[node name="HitBoxes" type="Area2D" parent="AnimatedSprite"]
-scale = Vector2( 1, 1 )
+[node name="HitBoxes" type="Node2D" parent="AnimatedSprite"]
+script = ExtResource( 65 )
 
-[node name="Sweet" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes"]
-visible = false
+[node name="SweetSpot" type="Area2D" parent="AnimatedSprite/HitBoxes"]
+position = Vector2( 0, 5.68434e-14 )
+
+[node name="Sweet" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes/SweetSpot"]
 modulate = Color( 0, 0.976471, 1, 1 )
 position = Vector2( 24, -11.25 )
 shape = SubResource( 1 )
 disabled = true
 
-[node name="Sour" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes"]
-visible = false
+[node name="NeutralSpot" type="Area2D" parent="AnimatedSprite/HitBoxes"]
+position = Vector2( 0, 5.68434e-14 )
+
+[node name="Neutral" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes/NeutralSpot"]
+modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
+position = Vector2( 19.2, 0 )
+shape = SubResource( 13 )
+disabled = true
+
+[node name="SourSpot" type="Area2D" parent="AnimatedSprite/HitBoxes"]
+position = Vector2( 0, 5.68434e-14 )
+
+[node name="Sour" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes/SourSpot"]
 modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 position = Vector2( -4.8, -16.875 )
 shape = SubResource( 11 )
-disabled = true
-
-[node name="Neutral" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes"]
-modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
-shape = SubResource( 13 )
 disabled = true

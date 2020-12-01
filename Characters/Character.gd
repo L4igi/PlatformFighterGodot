@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 const WALK_FORCE = 800
 const WALK_MAX_SPEED = 600
-const STOP_FORCE = 600
+const STOP_FORCE = 800
 const JUMP_SPEED = 800
 #jump
 var jumpCount = 0
@@ -337,11 +337,11 @@ func input_movement_physics(delta):
 			if walk < 0: 
 				currentMoveDirection = moveDirection.LEFT
 				characterSprite.flip_h = true
-				$AnimatedSprite/HitBoxes.scale = Vector2(-1, 1)
+				mirror_hitboxes()
 			elif walk > 0: 
 				currentMoveDirection = moveDirection.RIGHT
 				characterSprite.flip_h = false
-				$AnimatedSprite/HitBoxes.scale = Vector2(1, 1)
+				mirror_hitboxes()
 			directionChange = true
 			
 		elif (velocity.x >= 0 and walk > 0 or velocity.x <= 0 and walk < 0) and directionChange: 
@@ -368,3 +368,9 @@ func toggle_all_hitboxes(onOff):
 			for hitbox in $AnimatedSprite/HitBoxes.get_children():
 				if hitbox is CollisionShape2D:
 					hitbox.disabled = true
+
+func mirror_hitboxes():
+	pass
+#	var hitboxes = $AnimatedSprite/HitBoxes
+#	for hitbox in hitboxes.get_children():
+#		hitbox.scale *= Vector2(-1, 1)
