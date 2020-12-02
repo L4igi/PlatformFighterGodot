@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=2]
+[gd_scene load_steps=82 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -65,11 +65,12 @@
 [ext_resource path="res://Characters/Mario/dash_attack/12.png" type="Texture" id=63]
 [ext_resource path="res://Characters/Mario/dash_attack/13.png" type="Texture" id=64]
 [ext_resource path="res://Characters/HitBoxes.gd" type="Script" id=65]
+[ext_resource path="res://Characters/InteractionAreas.gd" type="Script" id=66]
 
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 16, 32 )
+[sub_resource type="RectangleShape2D" id=14]
+extents = Vector2( 24, 32 )
 
-[sub_resource type="SpriteFrames" id=3]
+[sub_resource type="SpriteFrames" id=2]
 animations = [ {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
@@ -81,14 +82,14 @@ animations = [ {
 "name": "nair",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
+"loop": true,
+"name": "doublejump",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
 "loop": true,
 "name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
-"loop": true,
-"name": "jab1",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
@@ -101,9 +102,9 @@ animations = [ {
 "name": "dash_attack",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
+"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
 "loop": true,
-"name": "doublejump",
+"name": "jab1",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
@@ -112,7 +113,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=3]
 resource_name = "dash_attack"
 length = 1.7
 tracks/0/type = "value"
@@ -164,7 +165,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 14.4, 5.625 ), Vector2( 9.6, 5.625 ), Vector2( 4.8, 5.625 ), Vector2( 4.8, 0 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=4]
 resource_name = "doublejump"
 length = 0.5
 tracks/0/type = "value"
@@ -192,7 +193,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=5]
 resource_name = "freefall"
 length = 0.5
 loop = true
@@ -250,8 +251,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "jab1"
+[sub_resource type="Animation" id=7]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -302,8 +302,7 @@ tracks/3/keys = {
 "values": [ Vector2( 19.2, 0 ), Vector2( 19.2, 0 ) ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "jump"
+[sub_resource type="Animation" id=8]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -330,7 +329,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=9]
 resource_name = "nair"
 length = 0.7
 tracks/0/type = "value"
@@ -418,8 +417,7 @@ tracks/6/keys = {
 "values": [ Vector2( -4.8, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 14.4, 5.625 ), Vector2( -9.53674e-07, 5.625 ), Vector2( -14.4, -16.875 ), Vector2( 9.6, -11.25 ), Vector2( 9.6, 5.625 ) ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "walk"
+[sub_resource type="Animation" id=10]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -447,12 +445,19 @@ tracks/1/keys = {
 "values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=11]
 radius = 9.6
+
+[sub_resource type="CircleShape2D" id=12]
 
 [sub_resource type="CircleShape2D" id=13]
 
-[sub_resource type="CircleShape2D" id=11]
+[sub_resource type="CapsuleShape2D" id=15]
+radius = 24.0
+height = 16.0
+
+[sub_resource type="CapsuleShape2D" id=16]
+radius = 16.0
 
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
@@ -460,54 +465,71 @@ radius = 9.6
 collision_mask = 7
 script = ExtResource( 1 )
 
-[node name="CharacterHurtBox" type="CollisionShape2D" parent="."]
-shape = SubResource( 2 )
+[node name="WorldCollider" type="CollisionShape2D" parent="."]
+shape = SubResource( 14 )
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, 5.68434e-14 )
 scale = Vector2( 1.66667, 1.42222 )
-frames = SubResource( 3 )
-animation = "jump"
+frames = SubResource( 2 )
+animation = "idle"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
-anims/dash_attack = SubResource( 12 )
-anims/doublejump = SubResource( 8 )
-anims/freefall = SubResource( 9 )
+anims/dash_attack = SubResource( 3 )
+anims/doublejump = SubResource( 4 )
+anims/freefall = SubResource( 5 )
 anims/idle = SubResource( 6 )
-anims/jab1 = SubResource( 5 )
-anims/jump = SubResource( 7 )
-anims/nair = SubResource( 10 )
-anims/walk = SubResource( 4 )
+anims/jab1 = SubResource( 7 )
+anims/jump = SubResource( 8 )
+anims/nair = SubResource( 9 )
+anims/walk = SubResource( 10 )
 
 [node name="HitBoxes" type="Node2D" parent="AnimatedSprite"]
 script = ExtResource( 65 )
 
 [node name="SweetSpot" type="Area2D" parent="AnimatedSprite/HitBoxes"]
+visible = false
 position = Vector2( 0, 5.68434e-14 )
 
 [node name="Sweet" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes/SweetSpot"]
 modulate = Color( 0, 0.976471, 1, 1 )
 position = Vector2( 24, -11.25 )
-shape = SubResource( 1 )
+shape = SubResource( 11 )
 disabled = true
 
 [node name="NeutralSpot" type="Area2D" parent="AnimatedSprite/HitBoxes"]
 position = Vector2( 0, 5.68434e-14 )
 
 [node name="Neutral" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes/NeutralSpot"]
+visible = false
 modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
 position = Vector2( 19.2, 0 )
-shape = SubResource( 13 )
+shape = SubResource( 12 )
 disabled = true
 
 [node name="SourSpot" type="Area2D" parent="AnimatedSprite/HitBoxes"]
+visible = false
 position = Vector2( 0, 5.68434e-14 )
 
 [node name="Sour" type="CollisionShape2D" parent="AnimatedSprite/HitBoxes/SourSpot"]
 modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 position = Vector2( -4.8, -16.875 )
-shape = SubResource( 11 )
+shape = SubResource( 13 )
 disabled = true
+
+[node name="InteractionAreas" type="Node2D" parent="."]
+script = ExtResource( 66 )
+
+[node name="Hurtbox" type="Area2D" parent="InteractionAreas"]
+
+[node name="HurtBox" type="CollisionShape2D" parent="InteractionAreas/Hurtbox"]
+shape = SubResource( 15 )
+
+[node name="CollisionArea" type="Area2D" parent="InteractionAreas"]
+
+[node name="CollisionArea" type="CollisionShape2D" parent="InteractionAreas/CollisionArea"]
+shape = SubResource( 16 )
+[connection signal="body_entered" from="AnimatedSprite/HitBoxes/NeutralSpot" to="AnimatedSprite/HitBoxes" method="_on_NeutralSpot_body_entered"]

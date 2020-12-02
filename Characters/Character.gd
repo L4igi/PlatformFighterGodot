@@ -1,8 +1,8 @@
 extends KinematicBody2D
 
-const WALK_FORCE = 800
+const WALK_FORCE = 1200
 const WALK_MAX_SPEED = 600
-const STOP_FORCE = 800
+const STOP_FORCE = 1500
 const JUMP_SPEED = 800
 #jump
 var jumpCount = 0
@@ -18,10 +18,11 @@ var disableInput = false
 #attack 
 var jabCount = 0
 var jabCombo = 3
-var dashAttackSpeed = 500
+var dashAttackSpeed = 2000
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
+var turnaroundCoefficient = 600
 
 var directionChange = false
 
@@ -151,6 +152,10 @@ func air_handler(delta):
 		if gravity!=baseGravity:
 			gravity=baseGravity
 		velocity.y = -JUMP_SPEED
+		if currentMoveDirection == moveDirection.LEFT && get_input_direction() != -1:
+			velocity.x = 0
+		elif currentMoveDirection == moveDirection.RIGHT && get_input_direction() != 1:
+			velocity.x = 0
 		jumpCount += 1
 	if Input.is_action_just_released("jump") && jumpCount == 1:
 		shortHop = true
@@ -159,7 +164,7 @@ func air_handler(delta):
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
 	#Fastfall
-	if Input.is_action_just_pressed("down") && !is_on_floor() && velocity.y > 0:
+	if Input.is_action_just_pressed("down") && !is_on_floor():
 		gravity = 4000
 	if is_on_floor():
 		currentState = CharacterState.GROUND
@@ -318,6 +323,7 @@ func process_movement_physics(delta):
 	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
+	print(velocity.x)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
@@ -333,22 +339,31 @@ func input_movement_physics(delta):
 	else:
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("walk")
-		if (velocity.x >= 0 and walk < 0 or velocity.x <= 0 and walk > 0) and directionChange == false: 
-			if walk < 0: 
-				currentMoveDirection = moveDirection.LEFT
-				characterSprite.flip_h = true
-				mirror_hitboxes()
-			elif walk > 0: 
-				currentMoveDirection = moveDirection.RIGHT
-				characterSprite.flip_h = false
-				mirror_hitboxes()
-			directionChange = true
-			
-		elif (velocity.x >= 0 and walk > 0 or velocity.x <= 0 and walk < 0) and directionChange: 
-			directionChange = false
-			
-	if directionChange: 
-		velocity.x += walk*3 * delta
+			match currentMoveDirection:
+				moveDirection.LEFT:
+					if walk > 0: 
+						currentMoveDirection = moveDirection.RIGHT
+						characterSprite.flip_h = false
+						mirror_hitboxes()
+						directionChange = true
+				moveDirection.RIGHT:
+					if walk < 0: 
+						currentMoveDirection = moveDirection.LEFT
+						characterSprite.flip_h = true
+						mirror_hitboxes()
+						directionChange = true
+					
+	if directionChange && ((velocity.x<= 0 && walk >= 0) || (velocity.x>= 0 && walk <= 0)): 
+		match currentMoveDirection:
+			moveDirection.LEFT:
+				velocity.x -= turnaroundCoefficient
+				if velocity.x < 0: 
+					velocity.x = 0
+			moveDirection.RIGHT:
+				velocity.x += turnaroundCoefficient
+				if velocity.x > 0: 
+					velocity.x = 0
+		directionChange = false
 	else: 
 		velocity.x += walk * delta
 	# Clamp to the maximum horizontal movement speed.
@@ -370,7 +385,13 @@ func toggle_all_hitboxes(onOff):
 					hitbox.disabled = true
 
 func mirror_hitboxes():
-	pass
-#	var hitboxes = $AnimatedSprite/HitBoxes
-#	for hitbox in hitboxes.get_children():
-#		hitbox.scale *= Vector2(-1, 1)
+	var hitboxes = $AnimatedSprite/HitBoxes
+	for hitbox in hitboxes.get_children():
+		match currentMoveDirection:
+			moveDirection.LEFT:
+				hitbox.scale = Vector2(-1, 1)
+			moveDirection.RIGHT:
+				hitbox.scale = Vector2(1, 1)
+				
+func get_input_direction():
+	return Input.get_action_strength("right") - Input.get_action_strength("left")

@@ -27,6 +27,6 @@ func process_movement_physics(delta):
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	
-func apply_force(power, direction):
+func apply_force(power, direction, damage = 0):
 	velocity = power*direction
 	
