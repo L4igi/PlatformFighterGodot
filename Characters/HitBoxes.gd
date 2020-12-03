@@ -22,8 +22,9 @@ func _on_NeutralSpot_body_entered(body):
 	if body == character:
 		pass
 	elif body.is_in_group("Character"):
-		match character.currentMoveDirection:
-			character.moveDirection.RIGHT:
-				body.apply_force(500, Vector2(1,-1))
-			character.moveDirection.LEFT:
-				body.apply_force(-500, Vector2(1,1))
+		pass
+#		match character.currentMoveDirection:
+#			character.moveDirection.RIGHT:
+#				body.apply_force(500, Vector2(1,-1)) 
+#			character.moveDirection.LEFT:
+#				body.apply_force(-500, Vector2(1,1))

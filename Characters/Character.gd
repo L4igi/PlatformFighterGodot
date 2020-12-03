@@ -1,9 +1,9 @@
 extends KinematicBody2D
 
-const WALK_FORCE = 1200
-const WALK_MAX_SPEED = 600
-const STOP_FORCE = 1500
-const JUMP_SPEED = 800
+var WALK_FORCE = 1200
+var WALK_MAX_SPEED = 600
+var STOP_FORCE = 1500
+var JUMP_SPEED = 800
 #jump
 var jumpCount = 0
 var availabelJumps = 2
@@ -18,7 +18,7 @@ var disableInput = false
 #attack 
 var jabCount = 0
 var jabCombo = 3
-var dashAttackSpeed = 2000
+var dashAttackSpeed = 800
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
@@ -28,6 +28,8 @@ var directionChange = false
 
 var velocity = Vector2()
 
+#character stats
+var weight = 100
 onready var gravity = 2000
 onready var baseGravity = gravity
 
@@ -39,6 +41,15 @@ var currentState = CharacterState.GROUND
 
 onready var characterSprite = $AnimatedSprite
 onready var animationPlayer = $AnimatedSprite/AnimationPlayer
+
+#inputs
+var up = ""
+var down = ""
+var left = ""
+var right = ""
+var jump = ""
+var attack = ""
+var shield = ""
 
 func _physics_process(delta):
 	if disableInput:
@@ -69,7 +80,7 @@ func _physics_process(delta):
 				ground_handler(delta)
 
 func check_input(delta):
-	if Input.is_action_just_pressed("Attack"):
+	if Input.is_action_just_pressed(attack):
 		match currentState:
 			CharacterState.AIR:
 				currentState = CharacterState.ATTACKAIR
@@ -86,11 +97,12 @@ func attack_handler_ground(delta):
 				velocity.x = -dashAttackSpeed
 			moveDirection.RIGHT:
 				velocity.x = dashAttackSpeed
+		print(velocity.x)
 		animation_handler(CharacterAnimations.DASHATTACK)
 	currentState = CharacterState.GROUND
 			
 func attack_handler_air(delta):
-	if abs((Input.get_action_strength("right") - Input.get_action_strength("left"))) < 0.1:
+	if abs((Input.get_action_strength(right) - Input.get_action_strength(left))) < 0.1:
 		animation_handler(CharacterAnimations.NAIR)
 	currentState = CharacterState.AIR
 			
@@ -102,7 +114,7 @@ func ground_handler(delta):
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	# Check for jumping. is_on_floor() must be called after movement code
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_just_pressed(jump):
 		animation_handler(CharacterAnimations.JUMP)
 		#reset gravity if player is jumping
 		collidePlatforms = true
@@ -113,7 +125,7 @@ func ground_handler(delta):
 		create_jump_timer(0.15)
 		currentState = CharacterState.AIR
 	#shorthop depending on button press length 
-	if Input.is_action_just_pressed("down"):
+	if Input.is_action_just_pressed(down):
 		dropDownCount += 1
 		for i in get_slide_count():
 			var collision = get_slide_collision(i)
@@ -147,7 +159,7 @@ func air_handler(delta):
 	input_movement_physics(delta)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
-	if Input.is_action_just_pressed("jump") && jumpCount < availabelJumps:
+	if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
 		animation_handler(CharacterAnimations.DOUBLEJUMP)
 		if gravity!=baseGravity:
 			gravity=baseGravity
@@ -157,14 +169,14 @@ func air_handler(delta):
 		elif currentMoveDirection == moveDirection.RIGHT && get_input_direction() != 1:
 			velocity.x = 0
 		jumpCount += 1
-	if Input.is_action_just_released("jump") && jumpCount == 1:
+	if Input.is_action_just_released(jump) && jumpCount == 1:
 		shortHop = true
 	#enable collisons with platforms if player is falling down
 	if !collidePlatforms && velocity.y >= 0: 
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
 	#Fastfall
-	if Input.is_action_just_pressed("down") && !is_on_floor():
+	if Input.is_action_just_pressed(down) && !is_on_floor() && velocity.y >= 0:
 		gravity = 4000
 	if is_on_floor():
 		currentState = CharacterState.GROUND
@@ -196,6 +208,7 @@ func snap_edge(edgePosition):
 	if !is_on_floor():
 		currentState = CharacterState.EDGE
 		disableInput = true
+		gravity = baseGravity
 		snapEdgePosition = edgePosition
 		velocity = Vector2.ZERO
 		var targetPosition = edgePosition + characterSprite.frames.get_frame("idle",0).get_size()/2
@@ -212,10 +225,10 @@ func edge_handler(delta):
 	jumpCount = 0
 	velocity = Vector2.ZERO
 	var targetPosition = Vector2.ZERO
-	if Input.is_action_just_pressed("down"):
+	if Input.is_action_just_pressed(down):
 		currentState = CharacterState.AIR
 		snapEdge=false
-	elif Input.is_action_just_pressed("jump"):
+	elif Input.is_action_just_pressed(jump):
 		currentState = CharacterState.AIR
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
@@ -223,7 +236,7 @@ func edge_handler(delta):
 		collidePlatforms = false
 		set_collision_mask_bit(1,false)
 		snapEdge=false
-	elif Input.is_action_just_pressed("left"):
+	elif Input.is_action_just_pressed(left):
 		if global_position < snapEdgePosition:
 			currentState = CharacterState.AIR
 			velocity.x = -WALK_MAX_SPEED/4
@@ -235,7 +248,7 @@ func edge_handler(delta):
 			yield($Tween, "tween_all_completed")
 			snapEdge=false
 			currentState = CharacterState.GROUND
-	elif Input.is_action_just_pressed("right"):
+	elif Input.is_action_just_pressed(right):
 		if global_position > snapEdgePosition:
 			velocity.x = WALK_MAX_SPEED/4
 			snapEdge=false
@@ -247,7 +260,7 @@ func edge_handler(delta):
 			yield($Tween, "tween_all_completed")
 			snapEdge=false
 			currentState = CharacterState.GROUND
-	elif Input.is_action_just_pressed("up"):
+	elif Input.is_action_just_pressed(up):
 		if global_position > snapEdgePosition:
 			#normal getup right edge
 			targetPosition = snapEdgePosition - get_character_size()/2
@@ -263,7 +276,7 @@ func edge_handler(delta):
 			yield($Tween, "tween_all_completed")
 			snapEdge=false 
 			currentState = CharacterState.GROUND
-	elif Input.is_action_just_pressed("shield"):
+	elif Input.is_action_just_pressed(shield):
 		if global_position > snapEdgePosition:
 			#normal getup right edge
 			targetPosition = snapEdgePosition - Vector2((get_character_size()/2).x*4,(get_character_size()/2).y)
@@ -320,16 +333,15 @@ func play_attack_animation(animationToPlay):
 	
 func process_movement_physics(delta):
 	velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
-	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
+#	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
-	print(velocity.x)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
 func input_movement_physics(delta):
 	# Horizontal movement code. First, get the player's input.
-	var walk = WALK_FORCE * (Input.get_action_strength("right") - Input.get_action_strength("left"))
+	var walk = WALK_FORCE * (Input.get_action_strength(right) - Input.get_action_strength(left))
 	# Slow down the player if they're not trying to move.
 	if abs(walk) < WALK_FORCE * 0.2:
 		if(currentState == CharacterState.GROUND):
@@ -394,4 +406,4 @@ func mirror_hitboxes():
 				hitbox.scale = Vector2(1, 1)
 				
 func get_input_direction():
-	return Input.get_action_strength("right") - Input.get_action_strength("left")
+	return Input.get_action_strength(right) - Input.get_action_strength(left)
