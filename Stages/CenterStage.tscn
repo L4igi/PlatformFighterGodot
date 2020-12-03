@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 448, 48 )
 
-[node name="CenterStage" type="StaticBody2D" groups=[
+[node name="CenterStage" type="KinematicBody2D" groups=[
 "Ground",
 ]]
 collision_layer = 4
@@ -16,6 +16,7 @@ script = ExtResource( 2 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 16 )
 shape = SubResource( 1 )
+one_way_collision_margin = 0.0
 
 [node name="Sprite" type="Sprite" parent="."]
 modulate = Color( 0, 0, 0, 1 )

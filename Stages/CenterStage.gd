@@ -1,4 +1,4 @@
-extends StaticBody2D
+extends KinematicBody2D
 
 
 # Declare member variables here. Examples:

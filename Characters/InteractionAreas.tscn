@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Characters/InteractionAreas.gd" type="Script" id=1]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 24.0
+height = 16.0
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 20.0
+height = 32.0
+
+[node name="InteractionAreas" type="Node2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [ -40.0 ]
+}
+
+[node name="Hurtbox" type="Area2D" parent="."]
+visible = false
+
+[node name="HurtBox" type="CollisionShape2D" parent="Hurtbox"]
+visible = false
+shape = SubResource( 1 )
+
+[node name="CollisionArea" type="Area2D" parent="." groups=[
+"CollisionArea",
+]]
+
+[node name="CollisionArea" type="CollisionShape2D" parent="CollisionArea"]
+shape = SubResource( 2 )
+[connection signal="area_entered" from="CollisionArea" to="." method="_on_CollisionArea_area_entered"]
+[connection signal="area_exited" from="CollisionArea" to="." method="_on_CollisionArea_area_exited"]

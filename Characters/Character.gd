@@ -23,6 +23,7 @@ var dashAttackSpeed = 800
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
 var turnaroundCoefficient = 600
+var pushingCharacter =  null
 
 var directionChange = false
 
@@ -52,11 +53,13 @@ var attack = ""
 var shield = ""
 
 func _physics_process(delta):
+	switch_WorldColliders()
 	if disableInput:
 		process_movement_physics(delta)
 		if currentState == CharacterState.AIR:
 			if is_on_floor():
 				currentState = CharacterState.GROUND
+				
 				#if aerial attack is interrupted by ground cancel hitboxes
 				toggle_all_hitboxes("off")
 		elif currentState == CharacterState.GROUND:
@@ -333,6 +336,7 @@ func play_attack_animation(animationToPlay):
 	
 func process_movement_physics(delta):
 	velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
+#	handle_pushing_character()
 #	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
@@ -358,12 +362,18 @@ func input_movement_physics(delta):
 						characterSprite.flip_h = false
 						mirror_hitboxes()
 						directionChange = true
+						if pushingCharacter:
+							pushingCharacter.pushingCharacter = null
+						pushingCharacter = null
 				moveDirection.RIGHT:
 					if walk < 0: 
 						currentMoveDirection = moveDirection.LEFT
 						characterSprite.flip_h = true
 						mirror_hitboxes()
 						directionChange = true
+						if pushingCharacter:
+							pushingCharacter.pushingCharacter = null
+						pushingCharacter = null
 					
 	if directionChange && ((velocity.x<= 0 && walk >= 0) || (velocity.x>= 0 && walk <= 0)): 
 		match currentMoveDirection:
@@ -378,7 +388,10 @@ func input_movement_physics(delta):
 		directionChange = false
 	else: 
 		velocity.x += walk * delta
+		#pushes other character if in push area
+#			velocity.x = walk + pushingCharacter.velocity.x*pushingCharacter.get_input_direction()
 	# Clamp to the maximum horizontal movement speed.
+	handle_pushing_character()
 	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
 
 	# Vertical movement code. Apply gravity.
@@ -407,3 +420,22 @@ func mirror_hitboxes():
 				
 func get_input_direction():
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
+
+func handle_pushing_character():
+	if pushingCharacter!=null:
+		if currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
+			velocity.x += pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
+			velocity.x -= pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
+			velocity.x += pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+		elif currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
+			velocity.x -= pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+
+func switch_WorldColliders():
+	if currentState == CharacterState.AIR:
+		$AirCollider.disabled = false
+		$GroundCollider.disabled = true
+	elif currentState == CharacterState.GROUND:
+		$AirCollider.disabled = true
+		$GroundCollider.disabled = false
