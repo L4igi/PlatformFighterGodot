@@ -53,6 +53,7 @@ var attack = ""
 var shield = ""
 
 func _physics_process(delta):
+	print(str(self.name) + " " + str(self.get_collision_mask_bit(0)))
 	switch_WorldColliders()
 	if disableInput:
 		process_movement_physics(delta)
@@ -360,7 +361,7 @@ func input_movement_physics(delta):
 					if walk > 0: 
 						currentMoveDirection = moveDirection.RIGHT
 						characterSprite.flip_h = false
-						mirror_hitboxes()
+						mirror_areas()
 						directionChange = true
 						if pushingCharacter:
 							pushingCharacter.pushingCharacter = null
@@ -369,7 +370,7 @@ func input_movement_physics(delta):
 					if walk < 0: 
 						currentMoveDirection = moveDirection.LEFT
 						characterSprite.flip_h = true
-						mirror_hitboxes()
+						mirror_areas()
 						directionChange = true
 						if pushingCharacter:
 							pushingCharacter.pushingCharacter = null
@@ -409,7 +410,8 @@ func toggle_all_hitboxes(onOff):
 				if hitbox is CollisionShape2D:
 					hitbox.disabled = true
 
-func mirror_hitboxes():
+func mirror_areas():
+	#mirror hitboxes
 	var hitboxes = $AnimatedSprite/HitBoxes
 	for hitbox in hitboxes.get_children():
 		match currentMoveDirection:
@@ -417,8 +419,21 @@ func mirror_hitboxes():
 				hitbox.scale = Vector2(-1, 1)
 			moveDirection.RIGHT:
 				hitbox.scale = Vector2(1, 1)
+	#mirror hurt and collisionareas
+	var hurtInteractionArea = $InteractionAreas
+	for mirrorArea in hurtInteractionArea.get_children():
+		match currentMoveDirection:
+			moveDirection.LEFT:
+				mirrorArea.scale = Vector2(-1, 1)
+				if mirrorArea is RayCast2D:
+					mirrorArea.position*=-1
+			moveDirection.RIGHT:
+				mirrorArea.scale = Vector2(1, 1)
+				if mirrorArea is RayCast2D:
+					mirrorArea.position*=-1
 				
 func get_input_direction():
+#	print(Input.get_action_strength(right) - Input.get_action_strength(left))
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
 
 func handle_pushing_character():

@@ -2,12 +2,12 @@
 
 [ext_resource path="res://Characters/HitBoxes.gd" type="Script" id=1]
 
-[sub_resource type="CircleShape2D" id=11]
+[sub_resource type="CircleShape2D" id=1]
 radius = 9.6
 
-[sub_resource type="CircleShape2D" id=12]
+[sub_resource type="CircleShape2D" id=2]
 
-[sub_resource type="CircleShape2D" id=13]
+[sub_resource type="CircleShape2D" id=3]
 
 [node name="HitBoxes" type="Node2D"]
 script = ExtResource( 1 )
@@ -21,7 +21,7 @@ position = Vector2( 0, 5.68434e-14 )
 [node name="Sweet" type="CollisionShape2D" parent="SweetSpot"]
 modulate = Color( 0, 0.976471, 1, 1 )
 position = Vector2( 24, -11.25 )
-shape = SubResource( 11 )
+shape = SubResource( 1 )
 disabled = true
 
 [node name="NeutralSpot" type="Area2D" parent="." groups=[
@@ -33,7 +33,7 @@ position = Vector2( 0, 5.68434e-14 )
 visible = false
 modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
 position = Vector2( 19.2, 0 )
-shape = SubResource( 12 )
+shape = SubResource( 2 )
 disabled = true
 
 [node name="SourSpot" type="Area2D" parent="." groups=[
@@ -45,6 +45,6 @@ position = Vector2( 0, 5.68434e-14 )
 [node name="Sour" type="CollisionShape2D" parent="SourSpot"]
 modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 position = Vector2( -4.8, -16.875 )
-shape = SubResource( 13 )
+shape = SubResource( 3 )
 disabled = true
 [connection signal="body_entered" from="NeutralSpot" to="." method="_on_NeutralSpot_body_entered"]

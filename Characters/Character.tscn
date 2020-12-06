@@ -67,11 +67,16 @@
 [ext_resource path="res://Characters/HitBoxes.tscn" type="PackedScene" id=65]
 [ext_resource path="res://Characters/InteractionAreas.tscn" type="PackedScene" id=66]
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
@@ -87,11 +92,6 @@ animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
 "loop": true,
 "name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
-"loop": true,
-"name": "jump",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
@@ -110,7 +110,7 @@ animations = [ {
 "speed": 5.0
 } ]
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 resource_name = "dash_attack"
 length = 1.7
 tracks/0/type = "value"
@@ -162,7 +162,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 14.4, 5.625 ), Vector2( 9.6, 5.625 ), Vector2( 4.8, 5.625 ), Vector2( 4.8, 0 ) ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 resource_name = "doublejump"
 length = 0.5
 tracks/0/type = "value"
@@ -190,7 +190,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 resource_name = "freefall"
 length = 0.5
 loop = true
@@ -219,7 +219,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "idle"
 length = 0.7
 loop = true
@@ -248,7 +248,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=6]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -299,7 +299,7 @@ tracks/3/keys = {
 "values": [ Vector2( 19.2, 0 ), Vector2( 19.2, 0 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=7]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -326,7 +326,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=8]
 resource_name = "nair"
 length = 0.7
 tracks/0/type = "value"
@@ -414,7 +414,7 @@ tracks/6/keys = {
 "values": [ Vector2( -4.8, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 14.4, 5.625 ), Vector2( -9.53674e-07, 5.625 ), Vector2( -14.4, -16.875 ), Vector2( 9.6, -11.25 ), Vector2( 9.6, 5.625 ) ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=9]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -453,7 +453,6 @@ position = Vector2( 0, 1.599 )
 scale = Vector2( 0.884754, 1.52782 )
 polygon = PoolVector2Array( 0, 19.8983, -18.0841, -6.28281, 18.0841, -6.28281 )
 disabled = true
-one_way_collision = true
 
 [node name="GroundCollider" type="CollisionPolygon2D" parent="."]
 polygon = PoolVector2Array( 0, -16, -16, 8, -16, 16, -8, 32, 8, 32, 16, 16, 16, 8 )
@@ -463,19 +462,19 @@ polygon = PoolVector2Array( 0, -16, -16, 8, -16, 16, -8, 32, 8, 32, 16, 16, 16, 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, 5.68434e-14 )
 scale = Vector2( 1.66667, 1.42222 )
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 animation = "idle"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
-anims/dash_attack = SubResource( 3 )
-anims/doublejump = SubResource( 4 )
-anims/freefall = SubResource( 5 )
-anims/idle = SubResource( 6 )
-anims/jab1 = SubResource( 7 )
-anims/jump = SubResource( 8 )
-anims/nair = SubResource( 9 )
-anims/walk = SubResource( 10 )
+anims/dash_attack = SubResource( 2 )
+anims/doublejump = SubResource( 3 )
+anims/freefall = SubResource( 4 )
+anims/idle = SubResource( 5 )
+anims/jab1 = SubResource( 6 )
+anims/jump = SubResource( 7 )
+anims/nair = SubResource( 8 )
+anims/walk = SubResource( 9 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
 visible = false
