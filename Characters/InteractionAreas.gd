@@ -8,6 +8,7 @@ onready var character = get_parent()
 onready var collisionRayCast = $CollisionRayCast2D
 var raycastCollisionObject = null
 var areaCollisionObject = null
+var firstPush = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	for child in get_children():
@@ -35,6 +36,9 @@ func _on_CollisionArea_area_exited(area):
 
 func raycast_collision():
 	if collisionRayCast.is_colliding():
+		if firstPush == false: 
+			calc_push_weight_slowdown()
+			firstPush = true
 		var collider = collisionRayCast.get_collider()
 		if collider.is_in_group("CollisionArea"):
 			if (character.currentState == character.CharacterState.GROUND \
@@ -50,5 +54,12 @@ func raycast_collision():
 	else: 
 		if raycastCollisionObject != null:
 			raycastCollisionObject.pushingCharacter = null
+			character.walkMaxSpeed = character.baseWalkMaxSpeed
+			firstPush = false
 #			raycastCollisionObject.set_collision_mask_bit(0,false)
 #			character.set_collision_mask_bit(0,false)
+
+func calc_push_weight_slowdown():
+	character.walkMaxSpeed /= 4
+	if character.velocity.x > character.walkMaxSpeed:
+		character.velocity.x = character.walkMaxSpeed * character.get_input_direction()

@@ -8,7 +8,7 @@ height = 16.0
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 24.0
-height = 32.0
+height = 48.0
 
 [node name="InteractionAreas" type="Node2D"]
 script = ExtResource( 1 )
@@ -29,11 +29,10 @@ disabled = true
 ]]
 
 [node name="CollisionArea" type="CollisionShape2D" parent="CollisionArea"]
-visible = false
 shape = SubResource( 2 )
 
 [node name="CollisionRayCast2D" type="RayCast2D" parent="."]
-position = Vector2( 25, 0 )
+position = Vector2( 27, 0 )
 scale = Vector2( 1, 5 )
 enabled = true
 cast_to = Vector2( 3, 0 )

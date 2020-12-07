@@ -1,9 +1,15 @@
 extends KinematicBody2D
 
-var WALK_FORCE = 1200
-var WALK_MAX_SPEED = 600
-var STOP_FORCE = 1500
-var JUMP_SPEED = 800
+#base stats to return to after changes were made
+var baseWalkForce = 1200
+var baseWalkMaxSpeed = 600
+var baseStopForce = 1500
+var baseJumpSpeed = 800
+
+var walkForce = 1200
+var walkMaxSpeed = 600
+var stopForce = 1500
+var jumpSpeed = 800
 #jump
 var jumpCount = 0
 var availabelJumps = 2
@@ -121,7 +127,7 @@ func ground_handler(delta):
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
 		dropDownCount = 0
-		velocity.y = -JUMP_SPEED
+		velocity.y = -jumpSpeed
 		jumpCount = 1
 		create_jump_timer(0.15)
 		switch_to_state(CharacterState.AIR)
@@ -164,7 +170,7 @@ func air_handler(delta):
 		animation_handler(CharacterAnimations.DOUBLEJUMP)
 		if gravity!=baseGravity:
 			gravity=baseGravity
-		velocity.y = -JUMP_SPEED
+		velocity.y = -jumpSpeed
 		if currentMoveDirection == moveDirection.LEFT && get_input_direction() != -1:
 			velocity.x = 0
 		elif currentMoveDirection == moveDirection.RIGHT && get_input_direction() != 1:
@@ -231,7 +237,7 @@ func edge_handler(delta):
 		snapEdge=false
 	elif Input.is_action_just_pressed(jump):
 		switch_to_state(CharacterState.AIR)
-		velocity.y = -JUMP_SPEED
+		velocity.y = -jumpSpeed
 		jumpCount += 1
 		#disables collisons with platforms if player is jumping upwards
 		collidePlatforms = false
@@ -240,7 +246,7 @@ func edge_handler(delta):
 	elif Input.is_action_just_pressed(left):
 		if global_position < snapEdgePosition:
 			switch_to_state(CharacterState.AIR)
-			velocity.x = -WALK_MAX_SPEED/4
+			velocity.x = -walkMaxSpeed/4
 			snapEdge=false
 		else:
 			targetPosition = snapEdgePosition - get_character_size()/2
@@ -251,7 +257,7 @@ func edge_handler(delta):
 			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(right):
 		if global_position > snapEdgePosition:
-			velocity.x = WALK_MAX_SPEED/4
+			velocity.x = walkMaxSpeed/4
 			snapEdge=false
 			switch_to_state(CharacterState.AIR)
 		else: 
@@ -333,9 +339,9 @@ func play_attack_animation(animationToPlay):
 	disableInput = false
 	
 func process_movement_physics(delta):
-	velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
+	velocity.x = move_toward(velocity.x, 0, stopForce * delta)
 	handle_pushing_character()
-#	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
+#	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
@@ -343,13 +349,13 @@ func process_movement_physics(delta):
 
 func input_movement_physics(delta):
 	# Horizontal movement code. First, get the player's input.
-	var walk = WALK_FORCE * (Input.get_action_strength(right) - Input.get_action_strength(left))
+	var walk = walkForce * (Input.get_action_strength(right) - Input.get_action_strength(left))
 	# Slow down the player if they're not trying to move.
-	if abs(walk) < WALK_FORCE * 0.2:
+	if abs(walk) < walkForce * 0.2:
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("idle")
 		# The velocity, slowed down a bit, and then reassigned.
-		velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
+		velocity.x = move_toward(velocity.x, 0, stopForce * delta)
 	else:
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("walk")
@@ -388,7 +394,7 @@ func input_movement_physics(delta):
 		velocity.x += walk * delta
 	# Clamp to the maximum horizontal movement speed.
 	handle_pushing_character()
-	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
+	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
@@ -440,13 +446,13 @@ func handle_pushing_character():
 		elif pushingCharacter.get_input_direction() > 0:
 			pushforce = 1
 		if currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
-			velocity.x += pushingCharacter.velocity.x * pushforce
+			velocity.x += pushingCharacter.velocity.x/2 * pushforce
 		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
-			velocity.x -= pushingCharacter.velocity.x * pushforce
+			velocity.x -= pushingCharacter.velocity.x/2 * pushforce
 		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
-			velocity.x += pushingCharacter.velocity.x * pushforce
+			velocity.x += pushingCharacter.velocity.x/2 * pushforce
 		elif currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
-			velocity.x -= pushingCharacter.velocity.x * pushforce
+			velocity.x -= pushingCharacter.velocity.x/2 * pushforce
 		if get_input_direction() == 0 && pushforce == 0: 
 			self.set_collision_mask_bit(0,true)
 			self.set_collision_layer_bit(0,true)
