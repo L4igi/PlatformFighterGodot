@@ -74,29 +74,9 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
-"loop": true,
-"name": "nair",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
 "loop": true,
 "name": "doublejump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
-"loop": true,
-"name": "dash_attack",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
@@ -107,6 +87,26 @@ animations = [ {
 "frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
 "loop": true,
 "name": "freefall",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
+"loop": true,
+"name": "dash_attack",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
+"loop": true,
+"name": "nair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
 "speed": 5.0
 } ]
 
@@ -456,7 +456,7 @@ disabled = true
 one_way_collision_margin = 10.0
 
 [node name="GroundCollider" type="CollisionPolygon2D" parent="."]
-polygon = PoolVector2Array( 0, -24, -16, 8, -16, 16, -16, 32, -8, 32, 8, 32, 16, 32, 16, 16, 16, 8 )
+polygon = PoolVector2Array( 0, -10, -16, 8, -16, 16, -16, 32, -8, 32, 8, 32, 16, 32, 16, 16, 16, 8 )
 disabled = true
 
 [node name="Tween" type="Tween" parent="."]

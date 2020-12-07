@@ -22,6 +22,7 @@ config/icon="res://icon.png"
 [autoload]
 
 GlobalVariables="*res://GlobalVariables.gd"
+CharacterInteractionHandler="*res://Characters/CharacterInteractionHandler.gd"
 
 [display]
 

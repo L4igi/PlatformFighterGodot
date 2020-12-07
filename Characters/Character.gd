@@ -41,6 +41,9 @@ onready var gravity = 2000
 onready var baseGravity = gravity
 
 enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL, STUN}
+#signal for character state change
+signal character_state_changed(state)
+signal character_turnaround()
 
 enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, NAIR, DASHATTACK}
 
@@ -340,9 +343,6 @@ func play_attack_animation(animationToPlay):
 	
 func process_movement_physics(delta):
 	velocity.x = move_toward(velocity.x, 0, stopForce * delta)
-	handle_pushing_character()
-#	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
-	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
@@ -355,7 +355,8 @@ func input_movement_physics(delta):
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("idle")
 		# The velocity, slowed down a bit, and then reassigned.
-		velocity.x = move_toward(velocity.x, 0, stopForce * delta)
+		if pushingCharacter == null:
+			velocity.x = move_toward(velocity.x, 0, stopForce * delta)
 	else:
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("walk")
@@ -366,19 +367,14 @@ func input_movement_physics(delta):
 						characterSprite.flip_h = false
 						mirror_areas()
 						directionChange = true
-						if pushingCharacter:
-							pushingCharacter.pushingCharacter = null
-						pushingCharacter = null
+						emit_signal("character_turnaround")
 				moveDirection.RIGHT:
 					if walk < 0: 
 						currentMoveDirection = moveDirection.LEFT
 						characterSprite.flip_h = true
 						mirror_areas()
 						directionChange = true
-						if pushingCharacter:
-							pushingCharacter.pushingCharacter = null
-						pushingCharacter = null
-					
+						emit_signal("character_turnaround")
 	if directionChange && ((velocity.x<= 0 && walk >= 0) || (velocity.x>= 0 && walk <= 0)): 
 		match currentMoveDirection:
 			moveDirection.LEFT:
@@ -392,8 +388,6 @@ func input_movement_physics(delta):
 		directionChange = false
 	else: 
 		velocity.x += walk * delta
-	# Clamp to the maximum horizontal movement speed.
-	handle_pushing_character()
 	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 
 	# Vertical movement code. Apply gravity.
@@ -437,32 +431,6 @@ func mirror_areas():
 				
 func get_input_direction():
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
-
-func handle_pushing_character():
-	if pushingCharacter!=null:
-		var pushforce = 0 
-		if pushingCharacter.get_input_direction() < 0: 
-			pushforce = -1
-		elif pushingCharacter.get_input_direction() > 0:
-			pushforce = 1
-		if currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
-			velocity.x += pushingCharacter.velocity.x/2 * pushforce
-		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
-			velocity.x -= pushingCharacter.velocity.x/2 * pushforce
-		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
-			velocity.x += pushingCharacter.velocity.x/2 * pushforce
-		elif currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
-			velocity.x -= pushingCharacter.velocity.x/2 * pushforce
-		if get_input_direction() == 0 && pushforce == 0: 
-			self.set_collision_mask_bit(0,true)
-			self.set_collision_layer_bit(0,true)
-			pushingCharacter.set_collision_mask_bit(0,true)
-			pushingCharacter.set_collision_layer_bit(0,true)
-		else: 
-			self.set_collision_mask_bit(0,false)
-			self.set_collision_layer_bit(0,false)
-			pushingCharacter.set_collision_mask_bit(0,false)
-			pushingCharacter.set_collision_layer_bit(0,false)
 			
 			
 func switch_to_state(state):
@@ -473,12 +441,14 @@ func switch_to_state(state):
 			$AirCollider.visible = false
 			$GroundCollider.disabled = false
 			$GroundCollider.visible = true
+			emit_signal("character_state_changed", currentState)
 		CharacterState.AIR:
 			currentState = CharacterState.AIR
 			$AirCollider.disabled = false
 			$AirCollider.visible = true
 			$GroundCollider.disabled = true
 			$GroundCollider.visible = false
+			emit_signal("character_state_changed", currentState)
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR
 		CharacterState.ATTACKGROUND:
