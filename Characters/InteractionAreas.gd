@@ -15,9 +15,11 @@ func _on_CollisionArea_area_entered(area):
 		collisionAreaEntered = area
 		#manage air ground char interactions
 		if character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.AIR:
-			character.set_collision_mask_bit(0,true)
+			if areaCollisionObject.global_position.y < character.global_position.y:
+				character.set_collision_mask_bit(0,true)
 		elif character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
-			character.set_collision_mask_bit(0,true)
+			if character.global_position.y < areaCollisionObject.global_position.y:
+				character.set_collision_mask_bit(0,true)
 		#manage ground ground char interactions
 		elif character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
 			character.pushingCharacter = areaCollisionObject
@@ -47,16 +49,13 @@ func _on_character_state_change(currentState):
 
 func _on_character_turnaround():
 	if collisionAreaEntered != null:
-		print("turnaround " +str(character.currentMoveDirection)) 
 		#remove when moving away
 		if CharacterInteractionHandler.countGroundCollidingCharacters.has(character):
 			if character.currentMoveDirection == character.moveDirection.RIGHT \
 			&& character.global_position > areaCollisionObject.global_position :
-				print("First")
 				CharacterInteractionHandler.countGroundCollidingCharacters.erase(character)
 			elif character.currentMoveDirection == character.moveDirection.LEFT \
 			&& character.global_position < areaCollisionObject.global_position :
-				print("second")
 				CharacterInteractionHandler.countGroundCollidingCharacters.erase(character)
 		#add when moving towards
 		else: 

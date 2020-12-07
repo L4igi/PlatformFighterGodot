@@ -21,10 +21,10 @@ func set_combined_velocity():
 
 func add_ground_colliding_character(character):
 	countGroundCollidingCharacters.append(character)
-	calc_push_weight_slowdown(character)
+	calc_push_slowdown(character)
 	
-func calc_push_weight_slowdown(character):
-	character.walkMaxSpeed /= 4
+func calc_push_slowdown(character):
+	character.walkMaxSpeed /= 2
 #	character.walkForce = 200
 	if character.velocity.x > character.walkMaxSpeed:
 		character.velocity.x = character.walkMaxSpeed * character.get_input_direction()
