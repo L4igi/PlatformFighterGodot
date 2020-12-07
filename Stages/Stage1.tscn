@@ -12,10 +12,12 @@ extents = Vector2( 2256, 40 )
 [node name="Stage" type="Node2D"]
 
 [node name="Mario" parent="." instance=ExtResource( 3 )]
-position = Vector2( 376, 416 )
+position = Vector2( 352, 96 )
+collision_mask = 6
 
 [node name="Sandbag" parent="." instance=ExtResource( 4 )]
-position = Vector2( 744, 416 )
+position = Vector2( 872, 88 )
+collision_mask = 6
 
 [node name="PlatformLeft" parent="." instance=ExtResource( 2 )]
 position = Vector2( 352, 322.079 )

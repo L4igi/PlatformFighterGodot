@@ -53,20 +53,18 @@ var attack = ""
 var shield = ""
 
 func _physics_process(delta):
-	print(str(self.name) + " " + str(self.get_collision_mask_bit(0)))
-	switch_WorldColliders()
 	if disableInput:
 		process_movement_physics(delta)
 		if currentState == CharacterState.AIR:
 			if is_on_floor():
-				currentState = CharacterState.GROUND
+				switch_to_state(CharacterState.GROUND)
 				
 				#if aerial attack is interrupted by ground cancel hitboxes
 				toggle_all_hitboxes("off")
 		elif currentState == CharacterState.GROUND:
 			if velocity.y != 0:
 				jumpCount = 1
-				currentState = CharacterState.AIR
+				switch_to_state(CharacterState.AIR)
 				animationPlayer.play("freefall")
 				toggle_all_hitboxes("off")
 	if !disableInput:
@@ -87,9 +85,9 @@ func check_input(delta):
 	if Input.is_action_just_pressed(attack):
 		match currentState:
 			CharacterState.AIR:
-				currentState = CharacterState.ATTACKAIR
+				switch_to_state(CharacterState.ATTACKAIR)
 			CharacterState.GROUND:
-				currentState = CharacterState.ATTACKGROUND
+				switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground(delta):
 	if abs(velocity.x) < 150:
@@ -101,14 +99,13 @@ func attack_handler_ground(delta):
 				velocity.x = -dashAttackSpeed
 			moveDirection.RIGHT:
 				velocity.x = dashAttackSpeed
-		print(velocity.x)
 		animation_handler(CharacterAnimations.DASHATTACK)
-	currentState = CharacterState.GROUND
+	switch_to_state(CharacterState.GROUND)
 			
 func attack_handler_air(delta):
 	if abs((Input.get_action_strength(right) - Input.get_action_strength(left))) < 0.1:
 		animation_handler(CharacterAnimations.NAIR)
-	currentState = CharacterState.AIR
+	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
 	#reset gravity if player is grounded
@@ -127,13 +124,12 @@ func ground_handler(delta):
 		velocity.y = -JUMP_SPEED
 		jumpCount = 1
 		create_jump_timer(0.15)
-		currentState = CharacterState.AIR
+		switch_to_state(CharacterState.AIR)
 	#shorthop depending on button press length 
 	if Input.is_action_just_pressed(down):
 		dropDownCount += 1
 		for i in get_slide_count():
 			var collision = get_slide_collision(i)
-			#print("is in group " + str(collision.get_collider().is_in_group("Platform")))
 			if collision.get_collider().is_in_group("Platform") && dropDownCount >=2:
 				set_collision_mask_bit(1,false)
 				create_drop_platform_timer(0.3, false)
@@ -142,7 +138,8 @@ func ground_handler(delta):
 	#checks if player walked off platform/stage
 	if velocity.y != 0:
 		jumpCount = 1
-		currentState = CharacterState.AIR
+		if currentState != CharacterState.AIR:
+			switch_to_state(CharacterState.AIR)
 		animationPlayer.play("freefall")
 		toggle_all_hitboxes("off")
 
@@ -183,7 +180,7 @@ func air_handler(delta):
 	if Input.is_action_just_pressed(down) && !is_on_floor() && velocity.y >= 0:
 		gravity = 4000
 	if is_on_floor():
-		currentState = CharacterState.GROUND
+		switch_to_state(CharacterState.GROUND)
 		#if aerial attack is interrupted by ground cancel hitboxes
 		toggle_all_hitboxes("off")
 	
@@ -192,7 +189,7 @@ func _on_short_hop_timeout():
 		velocity.y=0
 				
 func _on_drop_platform_timeout():
-	currentState = CharacterState.AIR
+	switch_to_state(CharacterState.AIR)
 	collidePlatforms = false
 
 func _on_drop_input_timeout():
@@ -210,7 +207,7 @@ func create_jump_timer(waittime):
 	
 func snap_edge(edgePosition):
 	if !is_on_floor():
-		currentState = CharacterState.EDGE
+		switch_to_state(CharacterState.EDGE)
 		disableInput = true
 		gravity = baseGravity
 		snapEdgePosition = edgePosition
@@ -230,10 +227,10 @@ func edge_handler(delta):
 	velocity = Vector2.ZERO
 	var targetPosition = Vector2.ZERO
 	if Input.is_action_just_pressed(down):
-		currentState = CharacterState.AIR
+		switch_to_state(CharacterState.AIR)
 		snapEdge=false
 	elif Input.is_action_just_pressed(jump):
-		currentState = CharacterState.AIR
+		switch_to_state(CharacterState.AIR)
 		velocity.y = -JUMP_SPEED
 		jumpCount += 1
 		#disables collisons with platforms if player is jumping upwards
@@ -242,7 +239,7 @@ func edge_handler(delta):
 		snapEdge=false
 	elif Input.is_action_just_pressed(left):
 		if global_position < snapEdgePosition:
-			currentState = CharacterState.AIR
+			switch_to_state(CharacterState.AIR)
 			velocity.x = -WALK_MAX_SPEED/4
 			snapEdge=false
 		else:
@@ -251,19 +248,19 @@ func edge_handler(delta):
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
 			snapEdge=false
-			currentState = CharacterState.GROUND
+			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(right):
 		if global_position > snapEdgePosition:
 			velocity.x = WALK_MAX_SPEED/4
 			snapEdge=false
-			currentState = CharacterState.AIR
+			switch_to_state(CharacterState.AIR)
 		else: 
 			targetPosition = snapEdgePosition - Vector2(-(get_character_size()/2).x,(get_character_size()/2).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
 			snapEdge=false
-			currentState = CharacterState.GROUND
+			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(up):
 		if global_position > snapEdgePosition:
 			#normal getup right edge
@@ -272,14 +269,14 @@ func edge_handler(delta):
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
 			snapEdge=false 
-			currentState = CharacterState.GROUND
+			switch_to_state(CharacterState.GROUND)
 		else: 
 			targetPosition = snapEdgePosition - Vector2(-(get_character_size()/2).x,(get_character_size()/2).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
 			snapEdge=false 
-			currentState = CharacterState.GROUND
+			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(shield):
 		if global_position > snapEdgePosition:
 			#normal getup right edge
@@ -288,14 +285,14 @@ func edge_handler(delta):
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
 			snapEdge=false 
-			currentState = CharacterState.GROUND
+			switch_to_state(CharacterState.GROUND)
 		else: 
 			targetPosition = snapEdgePosition - Vector2(-(get_character_size()/2).x*4,(get_character_size()/2).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
 			snapEdge=false 
-			currentState = CharacterState.GROUND
+			switch_to_state(CharacterState.GROUND)
 	disableInput = false
 
 func get_character_size():
@@ -337,7 +334,7 @@ func play_attack_animation(animationToPlay):
 	
 func process_movement_physics(delta):
 	velocity.x = move_toward(velocity.x, 0, STOP_FORCE * delta)
-#	handle_pushing_character()
+	handle_pushing_character()
 #	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
@@ -389,8 +386,6 @@ func input_movement_physics(delta):
 		directionChange = false
 	else: 
 		velocity.x += walk * delta
-		#pushes other character if in push area
-#			velocity.x = walk + pushingCharacter.velocity.x*pushingCharacter.get_input_direction()
 	# Clamp to the maximum horizontal movement speed.
 	handle_pushing_character()
 	velocity.x = clamp(velocity.x, -WALK_MAX_SPEED, WALK_MAX_SPEED)
@@ -427,30 +422,66 @@ func mirror_areas():
 				mirrorArea.scale = Vector2(-1, 1)
 				if mirrorArea is RayCast2D:
 					mirrorArea.position*=-1
+					mirrorArea.scale.y = 5
 			moveDirection.RIGHT:
 				mirrorArea.scale = Vector2(1, 1)
 				if mirrorArea is RayCast2D:
 					mirrorArea.position*=-1
+					mirrorArea.scale.y = 5
 				
 func get_input_direction():
-#	print(Input.get_action_strength(right) - Input.get_action_strength(left))
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
 
 func handle_pushing_character():
 	if pushingCharacter!=null:
+		var pushforce = 0 
+		if pushingCharacter.get_input_direction() < 0: 
+			pushforce = -1
+		elif pushingCharacter.get_input_direction() > 0:
+			pushforce = 1
 		if currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
-			velocity.x += pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+			velocity.x += pushingCharacter.velocity.x * pushforce
 		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
-			velocity.x -= pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+			velocity.x -= pushingCharacter.velocity.x * pushforce
 		elif currentMoveDirection == moveDirection.RIGHT && pushingCharacter.currentMoveDirection == moveDirection.RIGHT:
-			velocity.x += pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
+			velocity.x += pushingCharacter.velocity.x * pushforce
 		elif currentMoveDirection == moveDirection.LEFT && pushingCharacter.currentMoveDirection == moveDirection.LEFT:
-			velocity.x -= pushingCharacter.velocity.x * pushingCharacter.get_input_direction()
-
-func switch_WorldColliders():
-	if currentState == CharacterState.AIR:
-		$AirCollider.disabled = false
-		$GroundCollider.disabled = true
-	elif currentState == CharacterState.GROUND:
-		$AirCollider.disabled = true
-		$GroundCollider.disabled = false
+			velocity.x -= pushingCharacter.velocity.x * pushforce
+		if get_input_direction() == 0 && pushforce == 0: 
+			self.set_collision_mask_bit(0,true)
+			self.set_collision_layer_bit(0,true)
+			pushingCharacter.set_collision_mask_bit(0,true)
+			pushingCharacter.set_collision_layer_bit(0,true)
+		else: 
+			self.set_collision_mask_bit(0,false)
+			self.set_collision_layer_bit(0,false)
+			pushingCharacter.set_collision_mask_bit(0,false)
+			pushingCharacter.set_collision_layer_bit(0,false)
+			
+			
+func switch_to_state(state):
+	match state: 
+		CharacterState.GROUND:
+			currentState = CharacterState.GROUND
+			$AirCollider.disabled = true
+			$AirCollider.visible = false
+			$GroundCollider.disabled = false
+			$GroundCollider.visible = true
+		CharacterState.AIR:
+			currentState = CharacterState.AIR
+			$AirCollider.disabled = false
+			$AirCollider.visible = true
+			$GroundCollider.disabled = true
+			$GroundCollider.visible = false
+		CharacterState.ATTACKAIR:
+			currentState = CharacterState.ATTACKAIR
+		CharacterState.ATTACKGROUND:
+			currentState = CharacterState.ATTACKGROUND
+		CharacterState.SPECIAL:
+			currentState = CharacterState.SPECIAL
+		CharacterState.EDGE:
+			currentState = CharacterState.EDGE
+		CharacterState.ROLL:
+			currentState = CharacterState.ROLL
+		CharacterState.STUN:
+			currentState = CharacterState.STUN

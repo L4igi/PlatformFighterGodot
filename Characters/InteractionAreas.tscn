@@ -7,7 +7,7 @@ radius = 24.0
 height = 16.0
 
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 20.0
+radius = 24.0
 height = 32.0
 
 [node name="InteractionAreas" type="Node2D"]
@@ -17,8 +17,10 @@ __meta__ = {
 }
 
 [node name="Hurtbox" type="Area2D" parent="."]
+visible = false
 
 [node name="HurtBox" type="CollisionShape2D" parent="Hurtbox"]
+visible = false
 shape = SubResource( 1 )
 disabled = true
 
@@ -27,10 +29,12 @@ disabled = true
 ]]
 
 [node name="CollisionArea" type="CollisionShape2D" parent="CollisionArea"]
+visible = false
 shape = SubResource( 2 )
 
 [node name="CollisionRayCast2D" type="RayCast2D" parent="."]
-position = Vector2( 19, 0 )
+position = Vector2( 25, 0 )
+scale = Vector2( 1, 5 )
 enabled = true
 cast_to = Vector2( 3, 0 )
 collision_mask = 17
