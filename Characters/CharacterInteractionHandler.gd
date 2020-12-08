@@ -18,9 +18,22 @@ func set_combined_velocity():
 	var char2PushForce = char2.walkForce * char2.get_input_direction()
 	char2PushForce = clamp(char2PushForce, -char2.walkMaxSpeed, char2.walkMaxSpeed)
 	var combinedVelocity = char1PushForce + char2PushForce
+#both characters face same direction enter area and front one moves 
+#this should avoid pulling the other one 
+#	print(char1.name +str(char1PushForce))
+#	print(char2.name +str(char2PushForce))
+	if char2.get_input_direction() == 0 \
+	&& char1.currentMoveDirection == char1.moveDirection.LEFT \
+	&& char1.global_position.x < char2.global_position.x:
+		CharacterInteractionHandler.countGroundCollidingCharacters.erase(char1)
+	if char2.get_input_direction() == 0 \
+	&& char1.currentMoveDirection == char1.moveDirection.RIGHT \
+	&& char1.global_position.x > char2.global_position.x:
+		CharacterInteractionHandler.countGroundCollidingCharacters.erase(char1)
 	#one character is standing still the other one moving
-	char1.velocity.x = combinedVelocity
-	char2.velocity.x = combinedVelocity
+	var maxWalkForce = max(char1.walkMaxSpeed, char2.walkMaxSpeed)
+	char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
+	char2.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
 
 func add_ground_colliding_character(character):
 	countGroundCollidingCharacters.append(character)

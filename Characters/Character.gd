@@ -35,7 +35,7 @@ var directionChange = false
 
 var velocity = Vector2()
 
-var groundedChar = false
+var onSolidGround = false
 
 #character stats
 var weight = 100
@@ -51,6 +51,10 @@ enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB
 
 var currentState = CharacterState.GROUND
 
+#character aircollider node
+onready var airCollider = $AirCollider 
+onready var groundCollider = $GroundCollider 
+
 onready var characterSprite = $AnimatedSprite
 onready var animationPlayer = $AnimatedSprite/AnimationPlayer
 
@@ -63,11 +67,14 @@ var jump = ""
 var attack = ""
 var shield = ""
 
+func _ready():
+	self.set_collision_mask_bit(0,false)
+	
 func _physics_process(delta):
 	if disableInput:
 		process_movement_physics(delta)
 		if currentState == CharacterState.AIR:
-			if is_on_floor():
+			if onSolidGround:
 				switch_to_state(CharacterState.GROUND)
 				
 				#if aerial attack is interrupted by ground cancel hitboxes
@@ -125,7 +132,7 @@ func ground_handler(delta):
 	input_movement_physics(delta)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
-	# Check for jumping. is_on_floor() must be called after movement code
+	# Check for jumping. grounded must be called after movement code
 	if Input.is_action_just_pressed(jump):
 		animation_handler(CharacterAnimations.JUMP)
 		#reset gravity if player is jumping
@@ -137,7 +144,7 @@ func ground_handler(delta):
 		create_jump_timer(0.15)
 		switch_to_state(CharacterState.AIR)
 	#shorthop depending on button press length 
-	if Input.is_action_just_pressed(down):
+	elif Input.is_action_just_pressed(down):
 		dropDownCount += 1
 		for i in get_slide_count():
 			var collision = get_slide_collision(i)
@@ -147,7 +154,7 @@ func ground_handler(delta):
 			else: 
 				create_drop_platform_timer(0.5, true)
 	#checks if player walked off platform/stage
-	if velocity.y != 0:
+	elif velocity.y != 0:
 		jumpCount = 1
 		if currentState != CharacterState.AIR:
 			switch_to_state(CharacterState.AIR)
@@ -188,16 +195,16 @@ func air_handler(delta):
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
 	#Fastfall
-	if Input.is_action_just_pressed(down) && !is_on_floor() && velocity.y >= 0:
+	if Input.is_action_just_pressed(down) && !onSolidGround && velocity.y >= 0:
 		gravity = 4000
-	if is_on_floor():
+	if int(velocity.y) == 0 && onSolidGround:
 		switch_to_state(CharacterState.GROUND)
 		#if aerial attack is interrupted by ground cancel hitboxes
 		toggle_all_hitboxes("off")
 	
 func _on_short_hop_timeout():
 	if shortHop: 
-		velocity.y=0
+		velocity.y = 0
 				
 func _on_drop_platform_timeout():
 	switch_to_state(CharacterState.AIR)
@@ -217,7 +224,7 @@ func create_jump_timer(waittime):
 	add_child(timer)
 	
 func snap_edge(edgePosition):
-	if !is_on_floor():
+	if !onSolidGround:
 		switch_to_state(CharacterState.EDGE)
 		disableInput = true
 		gravity = baseGravity
@@ -449,17 +456,17 @@ func switch_to_state(state):
 	match state: 
 		CharacterState.GROUND:
 			currentState = CharacterState.GROUND
-			$AirCollider.disabled = true
-			$AirCollider.visible = false
-			$GroundCollider.disabled = false
-			$GroundCollider.visible = true
+			airCollider.set_disabled(true)
+			airCollider.visible = false
+			groundCollider.set_disabled(false)
+			groundCollider.visible = true
 			emit_signal("character_state_changed", currentState)
 		CharacterState.AIR:
 			currentState = CharacterState.AIR
-			$AirCollider.disabled = false
-			$AirCollider.visible = true
-			$GroundCollider.disabled = true
-			$GroundCollider.visible = false
+			airCollider.set_disabled(false)
+			airCollider.visible = true
+			groundCollider.set_disabled(true)
+			groundCollider.visible = false
 			emit_signal("character_state_changed", currentState)
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR

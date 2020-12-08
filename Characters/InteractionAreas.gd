@@ -14,13 +14,11 @@ func _on_CollisionArea_area_entered(area):
 		areaCollisionObject = area.get_parent().get_parent()
 		collisionAreaEntered = area
 		#manage air ground char interactions
-		if character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.AIR:
-			if areaCollisionObject.global_position.y < character.global_position.y && character.velocity.y > 0:
-				character.set_collision_mask_bit(0,true)
-		elif character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
+		if character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
 			if character.global_position.y < areaCollisionObject.global_position.y && character.velocity.y > 0:
 				character.set_collision_mask_bit(0,true)
-		#manage ground ground char interactions
+				character.pushingCharacter = areaCollisionObject
+#		#manage ground ground char interactions
 		elif character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
 			character.pushingCharacter = areaCollisionObject
 			CharacterInteractionHandler.add_ground_colliding_character(character)
@@ -65,6 +63,18 @@ func _on_character_turnaround():
 func _on_CollisionArea_body_entered(body):
 	if character.global_position.y < body.global_position.y:
 		if body.is_in_group("Ground"):
-			print(str("Ground ") + str(body.name))
+#			print(str("Ground entered ") + str(body.name))
+			character.onSolidGround = true
 		if body.is_in_group("Platform"):
-			print(str("Platform ") + str(body.name))
+#			print(str("Platform entered ") + str(body.name))
+			character.onSolidGround = true
+
+
+func _on_CollisionArea_body_exited(body):
+	if character.onSolidGround:
+		if body.is_in_group("Ground"):
+#			print(str("Ground exited ") + str(body.name))
+			character.onSolidGround = false
+		if body.is_in_group("Platform"):
+#			print(str("Platform exited ") + str(body.name))
+			character.onSolidGround = false

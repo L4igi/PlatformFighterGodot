@@ -20,4 +20,4 @@ func _ready():
 	set_base_stats()
 	
 func set_base_stats():
-	weight = 1
+	weight = 1.0

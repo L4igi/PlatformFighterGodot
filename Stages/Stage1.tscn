@@ -1,18 +1,15 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Stages/CenterStage.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Stages/Platform.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Characters/Mario/Mario.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Characters/Sandbag/Dark_Mario.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Stages/TeleportToStart.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 2256, 40 )
 
 [node name="Stage" type="Node2D"]
-
-[node name="Mario" parent="." instance=ExtResource( 3 )]
-position = Vector2( 352, 96 )
-collision_mask = 6
 
 [node name="PlatformLeft" parent="." instance=ExtResource( 2 )]
 position = Vector2( 352, 322.079 )
@@ -25,6 +22,13 @@ position = Vector2( 864, 322.079 )
 
 [node name="CenterStage" parent="." instance=ExtResource( 1 )]
 position = Vector2( 608, 480 )
+
+[node name="Mario" parent="." instance=ExtResource( 3 )]
+position = Vector2( 352, 96 )
+
+[node name="Dark_Mario" parent="." instance=ExtResource( 4 )]
+position = Vector2( 848, 88 )
+collision_mask = 7
 
 [node name="TeleportToStart" type="Area2D" parent="."]
 script = ExtResource( 5 )
