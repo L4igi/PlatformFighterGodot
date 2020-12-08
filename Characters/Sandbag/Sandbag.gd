@@ -5,7 +5,6 @@ extends "res://Characters/Character.gd"
 # var a = 2
 # var b = "text"
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	up = GlobalVariables.controlsP2.get("up")
@@ -15,3 +14,8 @@ func _ready():
 	shield = GlobalVariables.controlsP2.get("shield")
 	jump = GlobalVariables.controlsP2.get("jump")
 	attack = GlobalVariables.controlsP2.get("attack")
+	
+	set_base_stats()
+
+func set_base_stats():
+	weight = 1

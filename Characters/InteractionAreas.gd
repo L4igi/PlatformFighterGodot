@@ -15,10 +15,10 @@ func _on_CollisionArea_area_entered(area):
 		collisionAreaEntered = area
 		#manage air ground char interactions
 		if character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.AIR:
-			if areaCollisionObject.global_position.y < character.global_position.y:
+			if areaCollisionObject.global_position.y < character.global_position.y && character.velocity.y > 0:
 				character.set_collision_mask_bit(0,true)
 		elif character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
-			if character.global_position.y < areaCollisionObject.global_position.y:
+			if character.global_position.y < areaCollisionObject.global_position.y && character.velocity.y > 0:
 				character.set_collision_mask_bit(0,true)
 		#manage ground ground char interactions
 		elif character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
@@ -60,3 +60,11 @@ func _on_character_turnaround():
 		#add when moving towards
 		else: 
 			CharacterInteractionHandler.countGroundCollidingCharacters.append(character)
+
+
+func _on_CollisionArea_body_entered(body):
+	if character.global_position.y < body.global_position.y:
+		if body.is_in_group("Ground"):
+			print(str("Ground ") + str(body.name))
+		if body.is_in_group("Platform"):
+			print(str("Platform ") + str(body.name))

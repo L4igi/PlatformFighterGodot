@@ -12,8 +12,11 @@ func _process(delta):
 func set_combined_velocity():
 	var char1 = countGroundCollidingCharacters[0]
 	var char2 = countGroundCollidingCharacters[1]
+	
 	var char1PushForce = char1.walkForce * char1.get_input_direction()
+	char1PushForce = clamp(char1PushForce, -char1.walkMaxSpeed, char1.walkMaxSpeed)
 	var char2PushForce = char2.walkForce * char2.get_input_direction()
+	char2PushForce = clamp(char2PushForce, -char2.walkMaxSpeed, char2.walkMaxSpeed)
 	var combinedVelocity = char1PushForce + char2PushForce
 	#one character is standing still the other one moving
 	char1.velocity.x = combinedVelocity
@@ -24,7 +27,7 @@ func add_ground_colliding_character(character):
 	calc_push_slowdown(character)
 	
 func calc_push_slowdown(character):
-	character.walkMaxSpeed /= 2
+	character.walkMaxSpeed /= (2*character.weight) 
 #	character.walkForce = 200
 	if character.velocity.x > character.walkMaxSpeed:
 		character.velocity.x = character.walkMaxSpeed * character.get_input_direction()

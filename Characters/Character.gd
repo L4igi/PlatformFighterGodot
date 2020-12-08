@@ -35,6 +35,8 @@ var directionChange = false
 
 var velocity = Vector2()
 
+var groundedChar = false
+
 #character stats
 var weight = 100
 onready var gravity = 2000
@@ -394,8 +396,11 @@ func input_movement_physics(delta):
 			walkMaxSpeed = baseWalkMaxSpeed
 		elif currentMoveDirection == moveDirection.LEFT && self.global_position < pushingCharacter.global_position: 
 			walkMaxSpeed = baseWalkMaxSpeed
-			
-	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
+	
+	if pushingCharacter == null: 
+		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
+	elif pushingCharacter != null && velocity.x == 0:
+		velocity.x = clamp(velocity.x, -pushingCharacter.walkMaxSpeed, pushingCharacter.walkMaxSpeed)
 
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
@@ -468,3 +473,4 @@ func switch_to_state(state):
 			currentState = CharacterState.ROLL
 		CharacterState.STUN:
 			currentState = CharacterState.STUN
+
