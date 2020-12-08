@@ -3,9 +3,11 @@
 [ext_resource path="res://Stages/EdgeSnap.gd" type="Script" id=1]
 
 [node name="EdgeSnap" type="Area2D"]
+collision_layer = 32
+collision_mask = 16
 script = ExtResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 build_mode = 1
-polygon = PoolVector2Array( 0, 0, 8, 16, 0.659256, 37.8972, -8, 16, 0, 0 )
-[connection signal="body_entered" from="." to="." method="_on_EdgeSnap_body_entered"]
+polygon = PoolVector2Array( 16, 16, 16, 32, 0.659256, 37.8972, -16, 32, -16, 16, -16, 8, 0, 8, 16, 8 )
+[connection signal="area_entered" from="." to="." method="_on_EdgeSnap_area_entered"]

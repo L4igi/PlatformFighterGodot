@@ -197,6 +197,7 @@ Attack2={
 2d_physics/layer_3="CenterStage"
 2d_physics/layer_4="Background"
 2d_physics/layer_5="CollisionBody"
+2d_physics/layer_6="Edge"
 
 [rendering]
 

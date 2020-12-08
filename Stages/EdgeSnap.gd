@@ -5,7 +5,10 @@ extends Area2D
 func _ready():
 	pass # Replace with function body.
 
-func _on_EdgeSnap_body_entered(body):
-	if body.is_in_group("Character"):
-		body.set_collision_mask_bit(1,false)
-		body.snap_edge(self.global_position)
+
+func _on_EdgeSnap_area_entered(area):
+	print(area.name)
+	if area.is_in_group("CollisionArea"):
+		var edgeCharacter = area.get_parent().get_parent()
+#		body.set_collision_mask_bit(1,false)
+		edgeCharacter.snap_edge(self.global_position)
