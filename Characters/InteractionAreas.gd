@@ -14,7 +14,9 @@ func _on_CollisionArea_area_entered(area):
 		areaCollisionObject = area.get_parent().get_parent()
 		collisionAreaEntered = area
 		#manage air ground char interactions
-		if character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
+		if character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.AIR:
+			character.set_collision_mask_bit(0,false)
+		elif character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
 			if character.global_position.y < areaCollisionObject.global_position.y && character.velocity.y > 0:
 				character.set_collision_mask_bit(0,true)
 				character.pushingCharacter = areaCollisionObject
@@ -31,18 +33,20 @@ func _on_CollisionArea_area_exited(area):
 		CharacterInteractionHandler.remove_ground_colliding_character(character)
 		collisionAreaEntered = null
 		character.pushingCharacter = null
+#		if character.currentState == character.CharacterState.GROUND:
+#			character.velocity.x = 0
 
 func _on_character_state_change(currentState):
 	if collisionAreaEntered != null: 
 		if currentState == character.CharacterState.GROUND:
 			if character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
+				character.set_collision_mask_bit(0,true)
 				character.pushingCharacter = areaCollisionObject
+				areaCollisionObject.pushingCharacter = character
 				CharacterInteractionHandler.add_ground_colliding_character(character)
 				CharacterInteractionHandler.add_ground_colliding_character(areaCollisionObject)
-				character.set_collision_mask_bit(0,true)
-				areaCollisionObject.set_collision_mask_bit(0,true)
-				_on_character_turnaround()
 		if currentState == character.CharacterState.AIR:
+			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 func _on_character_turnaround():
@@ -57,7 +61,8 @@ func _on_character_turnaround():
 				CharacterInteractionHandler.countGroundCollidingCharacters.erase(character)
 		#add when moving towards
 		else: 
-			CharacterInteractionHandler.countGroundCollidingCharacters.append(character)
+			if character.currentState == character.CharacterState.GROUND:
+				CharacterInteractionHandler.countGroundCollidingCharacters.append(character)
 
 
 func _on_CollisionArea_body_entered(body):

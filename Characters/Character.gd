@@ -397,17 +397,8 @@ func input_movement_physics(delta):
 		directionChange = false
 	else: 
 		velocity.x += walk * delta
-	#run away from pushing character
-	if pushingCharacter != null && walk != 0: 
-		if currentMoveDirection == moveDirection.RIGHT && self.global_position > pushingCharacter.global_position: 
-			walkMaxSpeed = baseWalkMaxSpeed
-		elif currentMoveDirection == moveDirection.LEFT && self.global_position < pushingCharacter.global_position: 
-			walkMaxSpeed = baseWalkMaxSpeed
-	
-	if pushingCharacter == null: 
-		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
-	elif pushingCharacter != null && velocity.x == 0:
-		velocity.x = clamp(velocity.x, -pushingCharacter.walkMaxSpeed, pushingCharacter.walkMaxSpeed)
+		
+	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
