@@ -28,6 +28,7 @@ func _on_CollisionArea_area_entered(area):
 			
 func _on_CollisionArea_area_exited(area):
 	if area.is_in_group("CollisionArea"):
+		print(character.name)
 		character.set_collision_mask_bit(0,false)
 		#set everything to base
 		CharacterInteractionHandler.remove_ground_colliding_character(character)
@@ -37,6 +38,9 @@ func _on_CollisionArea_area_exited(area):
 #			character.velocity.x = 0
 
 func _on_character_state_change(currentState):
+	#todo: check this out!!!
+#	if currentState != character.CharacterState.GROUND || currentState != character.CharacterState.AIR:
+#		return
 	if collisionAreaEntered != null: 
 		if currentState == character.CharacterState.GROUND:
 			if character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
@@ -48,7 +52,10 @@ func _on_character_state_change(currentState):
 		if currentState == character.CharacterState.AIR:
 			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
-
+#		if currentState == character.CharaterState.STUN:
+#			character.set_collision_mask_bit(0,false)
+#			CharacterInteractionHandler.remove_ground_colliding_character(character)
+			
 func _on_character_turnaround():
 	if collisionAreaEntered != null:
 		#remove when moving away

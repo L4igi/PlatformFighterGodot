@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Characters/InteractionAreas.gd" type="Script" id=1]
 
-[sub_resource type="CapsuleShape2D" id=1]
-radius = 24.0
-height = 16.0
+[sub_resource type="CircleShape2D" id=1]
+radius = 16.0
 
 [sub_resource type="CapsuleShape2D" id=2]
+height = 15.6791
+
+[sub_resource type="CapsuleShape2D" id=3]
 radius = 20.0
 height = 24.0
 
@@ -16,13 +18,18 @@ __meta__ = {
 "_edit_horizontal_guides_": [ -40.0 ]
 }
 
-[node name="Hurtbox" type="Area2D" parent="."]
-visible = false
+[node name="Hurtbox" type="Area2D" parent="." groups=[
+"Hurtbox",
+]]
 
-[node name="HurtBox" type="CollisionShape2D" parent="Hurtbox"]
-visible = false
+[node name="HurtBoxHead" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2( 0, -15 )
 shape = SubResource( 1 )
-disabled = true
+
+[node name="HurtBoxBody" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2( 0, 13 )
+scale = Vector2( 1.4, 1.2 )
+shape = SubResource( 2 )
 
 [node name="CollisionArea" type="Area2D" parent="." groups=[
 "CollisionArea",
@@ -32,7 +39,7 @@ collision_mask = 54
 
 [node name="CollisionArea" type="CollisionShape2D" parent="CollisionArea"]
 position = Vector2( 0, 8 )
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 [connection signal="area_entered" from="CollisionArea" to="." method="_on_CollisionArea_area_entered"]
 [connection signal="area_exited" from="CollisionArea" to="." method="_on_CollisionArea_area_exited"]
 [connection signal="body_entered" from="CollisionArea" to="." method="_on_CollisionArea_body_entered"]

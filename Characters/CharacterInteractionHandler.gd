@@ -30,7 +30,10 @@ func set_combined_velocity(delta):
 	else:
 		char1PushForce = clamp(char1PushForce, -char1.walkMaxSpeed, char1.walkMaxSpeed)
 		char2PushForce = clamp(char2PushForce, -char2.walkMaxSpeed, char2.walkMaxSpeed)
-		combinedVelocity = (char1PushForce + char2PushForce)
+		if char1PushForce == 0 || char2PushForce == 0:
+			combinedVelocity += (char1PushForce + char2PushForce) * delta
+		else: 
+			combinedVelocity = (char1PushForce + char2PushForce)
 	
 #	if char1.get_input_direction() != 0 && char2.get_input_direction() != 0:
 #		var maxWalkForce = max(char1.walkMaxSpeed, char2.walkMaxSpeed)
@@ -57,7 +60,8 @@ func ignore_pulling_character(char1, char2):
 	return true
 		
 func add_ground_colliding_character(character):
-	countGroundCollidingCharacters.append(character)
+	if !countGroundCollidingCharacters.has(character):
+		countGroundCollidingCharacters.append(character)
 	
 func calc_push_slowdown(character1, character2):
 	character1.walkMaxSpeed /= (character2.weight) 

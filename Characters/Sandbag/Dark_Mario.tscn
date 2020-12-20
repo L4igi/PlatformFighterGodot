@@ -6,3 +6,8 @@
 [node name="Dark_Mario" instance=ExtResource( 1 )]
 modulate = Color( 0.164706, 0.152941, 0.207843, 1 )
 script = ExtResource( 2 )
+
+[node name="HitBoxes" parent="AnimatedSprite" index="1"]
+visible = true
+
+[editable path="InteractionAreas"]

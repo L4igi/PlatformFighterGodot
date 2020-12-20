@@ -6,5 +6,10 @@
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
+[node name="AnimatedSprite" parent="." index="3"]
+animation = "jump"
+
 [node name="HitBoxes" parent="AnimatedSprite" index="1"]
 visible = true
+
+[editable path="InteractionAreas"]

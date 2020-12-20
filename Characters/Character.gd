@@ -21,7 +21,9 @@ var dropDownCount = 0
 var snapEdge = false
 var snapEdgePosition = Vector2()
 var disableInput = false
+var hitStun = false
 #attack 
+var currentAttack = null
 var jabCount = 0
 var jabCombo = 3
 var dashAttackSpeed = 800
@@ -47,8 +49,6 @@ enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL, ST
 signal character_state_changed(state)
 signal character_turnaround()
 
-enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, NAIR, DASHATTACK}
-
 var currentState = CharacterState.GROUND
 
 #character aircollider node
@@ -57,6 +57,8 @@ onready var groundCollider = $GroundCollider
 
 onready var characterSprite = $AnimatedSprite
 onready var animationPlayer = $AnimatedSprite/AnimationPlayer
+
+var attackData = null
 
 #inputs
 var up = ""
@@ -69,6 +71,11 @@ var shield = ""
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
+	var file = File.new()
+	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
+	var attacks = JSON.parse(file.get_as_text())
+	file.close()
+	attackData = attacks.get_result()
 	
 func _physics_process(delta):
 	if disableInput:
@@ -108,21 +115,23 @@ func check_input(delta):
 				switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground(delta):
-	if abs(velocity.x) < 150:
-		animation_handler(CharacterAnimations.JAB1)
+	if abs(get_input_direction()) == 0:
+		animation_handler(GlobalVariables.CharacterAnimations.JAB1)
+		currentAttack = GlobalVariables.CharacterAnimations.JAB1
 	else: 
-		#dashattack
+		#attack
 		match currentMoveDirection:
 			moveDirection.LEFT:
 				velocity.x = -dashAttackSpeed
 			moveDirection.RIGHT:
 				velocity.x = dashAttackSpeed
-		animation_handler(CharacterAnimations.DASHATTACK)
+		animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 	switch_to_state(CharacterState.GROUND)
 			
 func attack_handler_air(delta):
 	if abs((Input.get_action_strength(right) - Input.get_action_strength(left))) < 0.1:
-		animation_handler(CharacterAnimations.NAIR)
+		animation_handler(GlobalVariables.CharacterAnimations.NAIR)
+		currentAttack = GlobalVariables.CharacterAnimations.NAIR
 	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
@@ -134,7 +143,7 @@ func ground_handler(delta):
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	# Check for jumping. grounded must be called after movement code
 	if Input.is_action_just_pressed(jump):
-		animation_handler(CharacterAnimations.JUMP)
+		animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 		#reset gravity if player is jumping
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
@@ -179,7 +188,7 @@ func air_handler(delta):
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
-		animation_handler(CharacterAnimations.DOUBLEJUMP)
+		animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
 		if gravity!=baseGravity:
 			gravity=baseGravity
 		velocity.y = -jumpSpeed
@@ -318,24 +327,24 @@ func get_character_size():
 	
 func animation_handler(animationToPlay):
 	match animationToPlay:
-		CharacterAnimations.IDLE:
+		GlobalVariables.CharacterAnimations.IDLE:
 			animationPlayer.play("idle")
-		CharacterAnimations.WALK:
+		GlobalVariables.CharacterAnimations.WALK:
 			animationPlayer.play("walk")
-		CharacterAnimations.RUN:
+		GlobalVariables.CharacterAnimations.RUN:
 			pass
-		CharacterAnimations.JUMP:
+		GlobalVariables.CharacterAnimations.JUMP:
 			animationPlayer.play("jump")
 			animationPlayer.queue("freefall")
 #			yield(animationPlayer, "animation_finished")
-		CharacterAnimations.DOUBLEJUMP:
+		GlobalVariables.CharacterAnimations.DOUBLEJUMP:
 			animationPlayer.play("doublejump")
 			animationPlayer.queue("freefall")
-		CharacterAnimations.NAIR:
+		GlobalVariables.CharacterAnimations.NAIR:
 			play_attack_animation("nair")
-		CharacterAnimations.DASHATTACK: 
+		GlobalVariables.CharacterAnimations.DASHATTACK: 
 			play_attack_animation("dash_attack")
-		CharacterAnimations.JAB1:
+		GlobalVariables.CharacterAnimations.JAB1:
 			play_attack_animation("jab1")
 
 func play_attack_animation(animationToPlay):
@@ -472,3 +481,6 @@ func switch_to_state(state):
 		CharacterState.STUN:
 			currentState = CharacterState.STUN
 
+func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
+	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
+#	switch_to_state(CharacterState.STUN)
