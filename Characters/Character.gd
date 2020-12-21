@@ -341,22 +341,24 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("doublejump")
 			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.NAIR:
-			play_attack_animation("nair")
+			play_attack_animation("nair", 2.0)
 		GlobalVariables.CharacterAnimations.DASHATTACK: 
 			play_attack_animation("dash_attack")
 		GlobalVariables.CharacterAnimations.JAB1:
 			play_attack_animation("jab1")
 
-func play_attack_animation(animationToPlay):
+func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
-	animationPlayer.play(animationToPlay)
+	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
+	match currentState:
+		CharacterState.ATTACKGROUND:
+			print("GROUND")
+			animationPlayer.queue("idle")
+		CharacterState.ATTACKAIR:
+			print("AIR")
+			animationPlayer.queue("freefall")
 	yield(animationPlayer, "animation_finished")
 	toggle_all_hitboxes("off")
-	match CharacterState:
-		CharacterState.GROUND:
-			animationPlayer.play("freefall")
-		CharacterState.AIR:
-			animationPlayer.play("idle")
 	disableInput = false
 	
 func process_movement_physics(delta):
@@ -484,3 +486,4 @@ func switch_to_state(state):
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
 #	switch_to_state(CharacterState.STUN)
+
