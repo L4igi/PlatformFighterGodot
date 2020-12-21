@@ -143,13 +143,13 @@ func attack_handler_ground(delta):
 				velocity.x = dashAttackSpeed
 		animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 		currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
-	switch_to_state(CharacterState.GROUND)
+#	switch_to_state(CharacterState.GROUND)
 			
 func attack_handler_air(delta):
 	if abs((Input.get_action_strength(right) - Input.get_action_strength(left))) < 0.1:
 		animation_handler(GlobalVariables.CharacterAnimations.NAIR)
 		currentAttack = GlobalVariables.CharacterAnimations.NAIR
-	switch_to_state(CharacterState.AIR)
+#	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
 	#reset gravity if player is grounded
@@ -400,20 +400,14 @@ func animation_handler(animationToPlay):
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
-	#create timer on jab for jab combos
-#	match animationToPlay:
-#		"jab1":
-#			create_jab_timer(animationPlayer.get_current_animation_length())
-#		"jab2":
-#			create_jab_timer(animationPlayer.get_current_animation_length())
-#		"jab3":
-#			create_jab_timer(animationPlayer.get_current_animation_length())
 	yield(animationPlayer, "animation_finished")
 	toggle_all_hitboxes("off")
 	match currentState:
-		CharacterState.GROUND:
+		CharacterState.ATTACKGROUND:
+			switch_to_state(CharacterState.GROUND)
 			animationPlayer.play("idle")
-		CharacterState.AIR:
+		CharacterState.ATTACKAIR:
+			switch_to_state(CharacterState.AIR)
 			animationPlayer.play("freefall")
 #	enable_player_input()
 	

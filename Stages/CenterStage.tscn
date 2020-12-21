@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://Stages/CenterStage.gd" type="Script" id=2]
 [ext_resource path="res://Stages/EdgeSnap.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Stages/StopAreas.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 448, 48 )
@@ -29,3 +30,5 @@ position = Vector2( -448, -32 )
 
 [node name="EdgeSnapRight" parent="." instance=ExtResource( 3 )]
 position = Vector2( 448, -32 )
+
+[node name="StopAreas" parent="." instance=ExtResource( 4 )]
