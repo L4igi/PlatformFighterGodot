@@ -21,3 +21,5 @@ func set_base_stats():
 	weight = 1.0
 	baseWalkMaxSpeed = 600
 	walkMaxSpeed = 600
+	
+	jabCombo = 1

@@ -32,6 +32,10 @@ enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
 var turnaroundCoefficient = 600
 var pushingCharacter =  null
+var disableInputDI = false
+var inHitStun = false
+#bufferInput
+var bufferInput = null
 
 var directionChange = false
 
@@ -44,7 +48,7 @@ var weight = 100
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL, STUN}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -80,10 +84,11 @@ func _ready():
 func _physics_process(delta):
 	if disableInput:
 		process_movement_physics(delta)
+		check_buffer_input()
 		if currentState == CharacterState.AIR:
 			if onSolidGround:
 				switch_to_state(CharacterState.GROUND)
-				
+				animationPlayer.play("idle")
 				#if aerial attack is interrupted by ground cancel hitboxes
 				toggle_all_hitboxes("off")
 		elif currentState == CharacterState.GROUND:
@@ -115,9 +120,20 @@ func check_input(delta):
 				switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground(delta):
-	if abs(get_input_direction()) == 0:
-		animation_handler(GlobalVariables.CharacterAnimations.JAB1)
-		currentAttack = GlobalVariables.CharacterAnimations.JAB1
+	if abs(get_input_direction()) == 0 || jabCount > 0:
+		match jabCount:
+			0:
+				animation_handler(GlobalVariables.CharacterAnimations.JAB1)
+				currentAttack = GlobalVariables.CharacterAnimations.JAB1
+			1:
+				animation_handler(GlobalVariables.CharacterAnimations.JAB2)
+				currentAttack = GlobalVariables.CharacterAnimations.JAB2
+			2:
+				animation_handler(GlobalVariables.CharacterAnimations.JAB3)
+				currentAttack = GlobalVariables.CharacterAnimations.JAB3
+		jabCount += 1
+		if jabCount > jabCombo: 
+			jabCount = 0
 	else: 
 		#attack
 		match currentMoveDirection:
@@ -126,6 +142,7 @@ func attack_handler_ground(delta):
 			moveDirection.RIGHT:
 				velocity.x = dashAttackSpeed
 		animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
+		currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 	switch_to_state(CharacterState.GROUND)
 			
 func attack_handler_air(delta):
@@ -193,6 +210,7 @@ func air_handler(delta):
 			gravity=baseGravity
 		velocity.y = -jumpSpeed
 		if currentMoveDirection == moveDirection.LEFT && get_input_direction() != -1:
+			pass
 			velocity.x = 0
 		elif currentMoveDirection == moveDirection.RIGHT && get_input_direction() != 1:
 			velocity.x = 0
@@ -232,6 +250,33 @@ func create_jump_timer(waittime):
 	timer.connect("timeout", self, "_on_short_hop_timeout")
 	add_child(timer)
 	
+func create_hitstun_timer(stunTime):
+	disableInput = true
+	inHitStun = true
+	var timer = Timer.new()
+	timer.set_one_shot(true)
+	timer.set_wait_time(stunTime)
+	timer.autostart = true
+	timer.connect("timeout", self, "_on_hitstun_timeout")
+	add_child(timer)
+	
+func _on_hitstun_timeout():
+	inHitStun = false
+	enable_player_input()
+	
+#func create_jab_timer(jabTime):
+#	var timer = Timer.new()
+#	jabCount += 1
+#	timer.set_one_shot(true)
+#	timer.set_wait_time(jabTime)
+#	timer.autostart = true
+#	timer.connect("timeout", self, "_on_jab_timeout")
+#	add_child(timer)
+#
+#func _on_jab_timeout():
+#	if jabCount == jabCombo:
+#		jabCount = 0
+	
 func snap_edge(edgePosition):
 	if !onSolidGround:
 		switch_to_state(CharacterState.EDGE)
@@ -246,7 +291,7 @@ func snap_edge(edgePosition):
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
 		snapEdge = true
-		disableInput = false
+		enable_player_input()
 		
 func edge_handler(delta):
 	disableInput = true
@@ -320,7 +365,7 @@ func edge_handler(delta):
 			yield($Tween, "tween_all_completed")
 			snapEdge=false 
 			switch_to_state(CharacterState.GROUND)
-	disableInput = false
+	enable_player_input()
 
 func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
@@ -342,34 +387,51 @@ func animation_handler(animationToPlay):
 			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.NAIR:
 			play_attack_animation("nair", 2.0)
+			disableInputDI = true
 		GlobalVariables.CharacterAnimations.DASHATTACK: 
-			play_attack_animation("dash_attack")
+			play_attack_animation("dash_attack", 1.6)
 		GlobalVariables.CharacterAnimations.JAB1:
 			play_attack_animation("jab1")
+		GlobalVariables.CharacterAnimations.JAB2:
+			play_attack_animation("jab2")		
+		GlobalVariables.CharacterAnimations.JAB3:
+			play_attack_animation("jab2")
 
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
-	match currentState:
-		CharacterState.ATTACKGROUND:
-			print("GROUND")
-			animationPlayer.queue("idle")
-		CharacterState.ATTACKAIR:
-			print("AIR")
-			animationPlayer.queue("freefall")
+	#create timer on jab for jab combos
+#	match animationToPlay:
+#		"jab1":
+#			create_jab_timer(animationPlayer.get_current_animation_length())
+#		"jab2":
+#			create_jab_timer(animationPlayer.get_current_animation_length())
+#		"jab3":
+#			create_jab_timer(animationPlayer.get_current_animation_length())
 	yield(animationPlayer, "animation_finished")
 	toggle_all_hitboxes("off")
-	disableInput = false
+	match currentState:
+		CharacterState.GROUND:
+			animationPlayer.play("idle")
+		CharacterState.AIR:
+			animationPlayer.play("freefall")
+#	enable_player_input()
 	
 func process_movement_physics(delta):
-	velocity.x = move_toward(velocity.x, 0, stopForce * delta)
+	check_buffer_input()
+	if disableInputDI:
+		var walk = walkForce * get_input_direction()
+		velocity.x += walk * delta
+		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
+	else:
+		velocity.x = move_toward(velocity.x, 0, stopForce * delta)
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
 func input_movement_physics(delta):
 	# Horizontal movement code. First, get the player's input.
-	var walk = walkForce * (Input.get_action_strength(right) - Input.get_action_strength(left))
+	var walk = walkForce * get_input_direction()
 	# Slow down the player if they're not trying to move.
 	if abs(walk) < walkForce * 0.2:
 		if(currentState == CharacterState.GROUND):
@@ -417,14 +479,17 @@ func input_movement_physics(delta):
 func toggle_all_hitboxes(onOff):
 	match onOff: 
 		"on":
-			for hitbox in $AnimatedSprite/HitBoxes.get_children():
-				if hitbox is CollisionShape2D:
-					hitbox.disabled = false
+			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
+				for hitbox in areaHitbox.get_children():
+					if hitbox is CollisionShape2D:
+						hitbox.disabled = false
 		"off":
-			disableInput = false
-			for hitbox in $AnimatedSprite/HitBoxes.get_children():
-				if hitbox is CollisionShape2D:
-					hitbox.disabled = true
+			if !inHitStun:
+				enable_player_input()
+			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
+				for hitbox in areaHitbox.get_children():
+					if hitbox is CollisionShape2D:
+						hitbox.disabled = true
 
 func mirror_areas():
 	#mirror hitboxes
@@ -480,10 +545,35 @@ func switch_to_state(state):
 			currentState = CharacterState.EDGE
 		CharacterState.ROLL:
 			currentState = CharacterState.ROLL
-		CharacterState.STUN:
-			currentState = CharacterState.STUN
 
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
-#	switch_to_state(CharacterState.STUN)
+	create_hitstun_timer(hitStun)
 
+func enable_player_input():
+	buffered_input()
+	disableInput = false
+	disableInputDI = false
+	bufferInput = null
+
+func check_buffer_input():
+	#todo: add other inputs for buffer
+	if bufferInput == null: 
+		if Input.is_action_just_pressed(attack):
+			bufferInput = attack
+
+func buffered_input():
+	if bufferInput == null: 
+		jabCount = 0
+		return false
+	#for now only buffer for jab inputs
+	elif bufferInput == attack && jabCount > 0:
+		match bufferInput: 
+			attack:
+				match currentState:
+					CharacterState.AIR:
+						switch_to_state(CharacterState.ATTACKAIR)
+					CharacterState.GROUND:
+						switch_to_state(CharacterState.ATTACKGROUND)
+			_: return false
+		return true

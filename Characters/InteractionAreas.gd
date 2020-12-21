@@ -28,7 +28,6 @@ func _on_CollisionArea_area_entered(area):
 			
 func _on_CollisionArea_area_exited(area):
 	if area.is_in_group("CollisionArea"):
-		print(character.name)
 		character.set_collision_mask_bit(0,false)
 		#set everything to base
 		CharacterInteractionHandler.remove_ground_colliding_character(character)

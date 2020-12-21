@@ -2,37 +2,37 @@
 {
   "JAB1":{
     "damage":5,
-    "hitStun":5,
-    "launchVelocity":500,
+    "hitStun":0.5,
+    "launchVelocity":100,
     "launchVectorX":1,
     "launchVectorY":-1
   },
   "JAB2":{
     "damage":5,
-    "hitStun":5,
-    "launchVelocity":500,
+    "hitStun":0.5,
+    "launchVelocity":200,
     "launchVectorX":1,
     "launchVectorY":-1
   },
   "JAB3":{
     "damage":5,
-    "hitStun":5,
+    "hitStun":0.5,
     "launchVelocity":500,
     "launchVectorX":1,
     "launchVectorY":-1
   },
   "NAIR":{
     "damage":5,
-    "hitStun":5,
+    "hitStun":0.5,
     "launchVelocity":500,
     "launchVectorX":1,
     "launchVectorY":-1
   },
-  "DASH":{
+  "DASHATTACK":{
     "damage":5,
-    "hitStun":5,
+    "hitStun":0.5,
     "launchVelocity":500,
-    "launchVectorX":1,
+    "launchVectorX":2,
     "launchVectorY":-1
   }
 }

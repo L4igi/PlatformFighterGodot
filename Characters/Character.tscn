@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=2]
+[gd_scene load_steps=81 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -66,9 +66,18 @@
 [ext_resource path="res://Characters/Mario/dash_attack/13.png" type="Texture" id=64]
 [ext_resource path="res://Characters/HitBoxes.tscn" type="PackedScene" id=65]
 [ext_resource path="res://Characters/InteractionAreas.tscn" type="PackedScene" id=66]
+[ext_resource path="res://Characters/Mario/Jab2/0.png" type="Texture" id=67]
+[ext_resource path="res://Characters/Mario/Jab2/1.png" type="Texture" id=68]
+[ext_resource path="res://Characters/Mario/Jab2/2.png" type="Texture" id=69]
+[ext_resource path="res://Characters/Mario/Jab2/3.png" type="Texture" id=70]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
+"frames": [ ExtResource( 67 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 70 ) ],
+"loop": true,
+"name": "jab2",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "idle",
@@ -359,6 +368,34 @@ tracks/3/keys = {
 "values": [ Vector2( 19.2, 0 ), Vector2( 19.2, 0 ) ]
 }
 
+[sub_resource type="Animation" id=10]
+resource_name = "jab2"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "jab2" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
 [sub_resource type="Animation" id=7]
 length = 0.7
 tracks/0/type = "value"
@@ -497,6 +534,18 @@ tracks/6/keys = {
 "update": 0,
 "values": [ Vector2( -4.8, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 14.4, 5.625 ), Vector2( -9.53674e-07, 5.625 ), Vector2( -14.4, -16.875 ), Vector2( 9.6, -11.25 ), Vector2( 9.6, 5.625 ) ]
 }
+tracks/7/type = "value"
+tracks/7/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0.1, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
 [sub_resource type="Animation" id=9]
 length = 1.1
@@ -550,7 +599,7 @@ one_way_collision_margin = 10.0
 position = Vector2( 0, 5.68434e-14 )
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "nair"
+animation = "dash_attack"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -559,11 +608,22 @@ anims/doublejump = SubResource( 3 )
 anims/freefall = SubResource( 4 )
 anims/idle = SubResource( 5 )
 anims/jab1 = SubResource( 6 )
+anims/jab2 = SubResource( 10 )
 anims/jump = SubResource( 7 )
 anims/nair = SubResource( 8 )
 anims/walk = SubResource( 9 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
+visible = true
+
+[node name="SweetSpot" parent="AnimatedSprite/HitBoxes" index="0"]
+visible = false
+
+[node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
+position = Vector2( 0, 0 )
+
+[node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
+visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 
@@ -575,5 +635,7 @@ position = Vector2( 2, 14 )
 
 [node name="CollisionArea" parent="InteractionAreas" index="1"]
 visible = false
+
+[editable path="AnimatedSprite/HitBoxes"]
 
 [editable path="InteractionAreas"]
