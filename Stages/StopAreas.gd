@@ -22,7 +22,7 @@ func _on_StopAreaLeft_area_entered(area):
 
 func stop_character_velocity(area):
 	var stopCharacter = area.get_parent().get_parent()
-	if stopCharacter.get_input_direction() == 0:
+	if stopCharacter.get_input_direction_x() == 0 || stopCharacter.currentState == stopCharacter.CharacterState.ATTACKGROUND:
 		if stopCharacter.onSolidGround: 
 			if self.global_position < stopCharacter.global_position: 
 				stopCharacter.velocity.x = 200

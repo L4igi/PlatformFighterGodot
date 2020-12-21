@@ -21,8 +21,8 @@ func set_combined_velocity(delta):
 		calc_push_slowdown(char1, char2)
 		calc_push_slowdown(char2, char1)
 	
-	var char1PushForce = char1.walkForce * char1.get_input_direction()
-	var char2PushForce = char2.walkForce * char2.get_input_direction()
+	var char1PushForce = char1.walkForce * char1.get_input_direction_x()
+	var char2PushForce = char2.walkForce * char2.get_input_direction_x()
 	if abs(char1PushForce) < char1.walkForce * 0.2 &&  abs(char2PushForce) < char2.walkForce * 0.2:
 		char1PushForce = move_toward(char1PushForce, 0, char1.stopForce * delta)
 		char2PushForce = move_toward(char2PushForce, 0, char2.stopForce * delta)
@@ -35,7 +35,7 @@ func set_combined_velocity(delta):
 		else: 
 			combinedVelocity = (char1PushForce + char2PushForce)
 	
-#	if char1.get_input_direction() != 0 && char2.get_input_direction() != 0:
+#	if char1.get_input_direction_x() != 0 && char2.get_input_direction_x() != 0:
 #		var maxWalkForce = max(char1.walkMaxSpeed, char2.walkMaxSpeed)
 #		char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
 #		char2.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
@@ -49,12 +49,12 @@ func set_combined_velocity(delta):
 func ignore_pulling_character(char1, char2):
 	if char1.currentMoveDirection == char1.moveDirection.LEFT \
 	&& char1.global_position.x < char2.global_position.x \
-	&& (char1.get_input_direction() != 0 && char2.get_input_direction() == 0):
+	&& (char1.get_input_direction_x() != 0 && char2.get_input_direction_x() == 0):
 		char2.velocity.x = 0
 		return false
 	elif char1.currentMoveDirection == char1.moveDirection.RIGHT \
 	&& char1.global_position.x > char2.global_position.x \
-	&& (char1.get_input_direction() != 0 && char2.get_input_direction() == 0):
+	&& (char1.get_input_direction_x() != 0 && char2.get_input_direction_x() == 0):
 		char2.velocity.x = 0
 		return false
 	return true
@@ -67,7 +67,7 @@ func calc_push_slowdown(character1, character2):
 	character1.walkMaxSpeed /= (character2.weight) 
 #	character.walkForce = 200
 	if character1.velocity.x > character1.walkMaxSpeed:
-		character1.velocity.x = character1.walkMaxSpeed * character1.get_input_direction()
+		character1.velocity.x = character1.walkMaxSpeed * character1.get_input_direction_x()
 
 func remove_ground_colliding_character(character):
 	countGroundCollidingCharacters.erase(character)

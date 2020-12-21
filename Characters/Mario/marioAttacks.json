@@ -21,12 +21,33 @@
     "launchVectorX":1,
     "launchVectorY":-1
   },
+  "UPTILT":{
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":750,
+    "launchVectorX":0,
+    "launchVectorY":-1
+  },
   "NAIR":{
     "damage":5,
     "hitStun":0.5,
     "launchVelocity":500,
     "launchVectorX":1,
     "launchVectorY":-1
+  },
+  "UPAIR":{
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":750,
+    "launchVectorX":0,
+    "launchVectorY":-1
+  },
+  "FAIR":{
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":750,
+    "launchVectorX":0.2,
+    "launchVectorY":1
   },
   "DASHATTACK":{
     "damage":5,

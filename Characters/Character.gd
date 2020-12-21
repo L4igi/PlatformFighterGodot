@@ -85,13 +85,13 @@ func _physics_process(delta):
 	if disableInput:
 		process_movement_physics(delta)
 		check_buffer_input()
-		if currentState == CharacterState.AIR:
+		if currentState == CharacterState.AIR || currentState == CharacterState.ATTACKAIR:
 			if onSolidGround:
 				switch_to_state(CharacterState.GROUND)
 				animationPlayer.play("idle")
 				#if aerial attack is interrupted by ground cancel hitboxes
 				toggle_all_hitboxes("off")
-		elif currentState == CharacterState.GROUND:
+		elif currentState == CharacterState.GROUND || currentState == CharacterState.ATTACKGROUND:
 			if velocity.y != 0:
 				jumpCount = 1
 				switch_to_state(CharacterState.AIR)
@@ -120,7 +120,8 @@ func check_input(delta):
 				switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground(delta):
-	if abs(get_input_direction()) == 0 || jabCount > 0:
+	if (abs(get_input_direction_x()) == 0 || jabCount > 0) \
+	&& get_input_direction_y() == 0:
 		match jabCount:
 			0:
 				animation_handler(GlobalVariables.CharacterAnimations.JAB1)
@@ -134,6 +135,9 @@ func attack_handler_ground(delta):
 		jabCount += 1
 		if jabCount > jabCombo: 
 			jabCount = 0
+	elif get_input_direction_y() < 0:
+		animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
+		currentAttack = GlobalVariables.CharacterAnimations.UPTILT
 	else: 
 		#attack
 		match currentMoveDirection:
@@ -146,9 +150,14 @@ func attack_handler_ground(delta):
 #	switch_to_state(CharacterState.GROUND)
 			
 func attack_handler_air(delta):
-	if abs((Input.get_action_strength(right) - Input.get_action_strength(left))) < 0.1:
+	if abs(get_input_direction_x()) < 0.1\
+	&& abs(get_input_direction_y()) < 0.1:
 		animation_handler(GlobalVariables.CharacterAnimations.NAIR)
 		currentAttack = GlobalVariables.CharacterAnimations.NAIR
+	elif get_input_direction_y() < 0:
+		animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
+		currentAttack = GlobalVariables.CharacterAnimations.UPAIR
+		pass
 #	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
@@ -209,10 +218,10 @@ func air_handler(delta):
 		if gravity!=baseGravity:
 			gravity=baseGravity
 		velocity.y = -jumpSpeed
-		if currentMoveDirection == moveDirection.LEFT && get_input_direction() != -1:
+		if currentMoveDirection == moveDirection.LEFT && get_input_direction_x() != -1:
 			pass
 			velocity.x = 0
-		elif currentMoveDirection == moveDirection.RIGHT && get_input_direction() != 1:
+		elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() != 1:
 			velocity.x = 0
 		jumpCount += 1
 	if Input.is_action_just_released(jump) && jumpCount == 1:
@@ -396,6 +405,10 @@ func animation_handler(animationToPlay):
 			play_attack_animation("jab2")		
 		GlobalVariables.CharacterAnimations.JAB3:
 			play_attack_animation("jab2")
+		GlobalVariables.CharacterAnimations.UPTILT:
+			play_attack_animation("uptilt", 2.0)
+		GlobalVariables.CharacterAnimations.UPAIR:
+			play_attack_animation("upair", 2.0)
 
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -414,7 +427,7 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 func process_movement_physics(delta):
 	check_buffer_input()
 	if disableInputDI:
-		var walk = walkForce * get_input_direction()
+		var walk = walkForce * get_input_direction_x()
 		velocity.x += walk * delta
 		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 	else:
@@ -425,7 +438,7 @@ func process_movement_physics(delta):
 
 func input_movement_physics(delta):
 	# Horizontal movement code. First, get the player's input.
-	var walk = walkForce * get_input_direction()
+	var walk = walkForce * get_input_direction_x()
 	# Slow down the player if they're not trying to move.
 	if abs(walk) < walkForce * 0.2:
 		if(currentState == CharacterState.GROUND):
@@ -509,9 +522,11 @@ func mirror_areas():
 					mirrorArea.position*=-1
 					mirrorArea.scale.y = 5
 				
-func get_input_direction():
+func get_input_direction_x():
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
 			
+func get_input_direction_y():
+	return Input.get_action_strength(down) - Input.get_action_strength(up)
 			
 func switch_to_state(state):
 	match state: 

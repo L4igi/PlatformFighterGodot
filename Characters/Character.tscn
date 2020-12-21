@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=2]
+[gd_scene load_steps=108 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -70,12 +70,46 @@
 [ext_resource path="res://Characters/Mario/Jab2/1.png" type="Texture" id=68]
 [ext_resource path="res://Characters/Mario/Jab2/2.png" type="Texture" id=69]
 [ext_resource path="res://Characters/Mario/Jab2/3.png" type="Texture" id=70]
+[ext_resource path="res://Characters/Mario/upair/1.png" type="Texture" id=71]
+[ext_resource path="res://Characters/Mario/upair/2.png" type="Texture" id=72]
+[ext_resource path="res://Characters/Mario/upair/3.png" type="Texture" id=73]
+[ext_resource path="res://Characters/Mario/upair/4.png" type="Texture" id=74]
+[ext_resource path="res://Characters/Mario/upair/0.png" type="Texture" id=75]
+[ext_resource path="res://Characters/Mario/upair/5.png" type="Texture" id=76]
+[ext_resource path="res://Characters/Mario/upair/6.png" type="Texture" id=77]
+[ext_resource path="res://Characters/Mario/uptilt/0.png" type="Texture" id=78]
+[ext_resource path="res://Characters/Mario/uptilt/3.png" type="Texture" id=79]
+[ext_resource path="res://Characters/Mario/uptilt/2.png" type="Texture" id=80]
+[ext_resource path="res://Characters/Mario/uptilt/4.png" type="Texture" id=81]
+[ext_resource path="res://Characters/Mario/uptilt/1.png" type="Texture" id=82]
+[ext_resource path="res://Characters/Mario/uptilt/5.png" type="Texture" id=83]
+[ext_resource path="res://Characters/Mario/fair/0.png" type="Texture" id=84]
+[ext_resource path="res://Characters/Mario/fair/3.png" type="Texture" id=85]
+[ext_resource path="res://Characters/Mario/fair/4.png" type="Texture" id=86]
+[ext_resource path="res://Characters/Mario/fair/1.png" type="Texture" id=87]
+[ext_resource path="res://Characters/Mario/fair/2.png" type="Texture" id=88]
+[ext_resource path="res://Characters/Mario/fair/10.png" type="Texture" id=89]
+[ext_resource path="res://Characters/Mario/fair/8.png" type="Texture" id=90]
+[ext_resource path="res://Characters/Mario/fair/6.png" type="Texture" id=91]
+[ext_resource path="res://Characters/Mario/fair/9.png" type="Texture" id=92]
+[ext_resource path="res://Characters/Mario/fair/5.png" type="Texture" id=93]
+[ext_resource path="res://Characters/Mario/fair/7.png" type="Texture" id=94]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
+"frames": [ ExtResource( 78 ), ExtResource( 82 ), ExtResource( 80 ), ExtResource( 79 ), ExtResource( 81 ), ExtResource( 83 ) ],
+"loop": true,
+"name": "uptilt",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 67 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 70 ) ],
 "loop": true,
 "name": "jab2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 84 ), ExtResource( 87 ), ExtResource( 88 ), ExtResource( 85 ), ExtResource( 86 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 94 ), ExtResource( 90 ), ExtResource( 92 ), ExtResource( 89 ) ],
+"loop": true,
+"name": "fair",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
@@ -116,6 +150,11 @@ animations = [ {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
 "loop": true,
 "name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
+"loop": true,
+"name": "upair",
 "speed": 5.0
 } ]
 
@@ -233,6 +272,82 @@ tracks/4/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ 93.2, 63.6, 93.2, 63.6, -4.2 ]
+}
+
+[sub_resource type="Animation" id=13]
+resource_name = "fair"
+length = 1.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "fair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:speed_scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 2.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 15.6, -18.2813 ), Vector2( 15.6, 4.21875 ), Vector2( 15.6, 8.43751 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.4, 1.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.4, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -547,6 +662,134 @@ tracks/7/keys = {
 "values": [ false, true ]
 }
 
+[sub_resource type="Animation" id=11]
+resource_name = "upair"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "upair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.1, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -9.59998, -12.6563 ), Vector2( 1.2, -15.4688 ), Vector2( 9.59998, -11.25 ), Vector2( 12, -5.62501 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("../InteractionAreas/Hurtbox/HurtBoxHead:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.1, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=12]
+resource_name = "uptilt"
+length = 0.65
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ "uptilt", "fair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1.2, -18.2813 ), Vector2( 0, -18.2813 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
+}
+
 [sub_resource type="Animation" id=9]
 length = 1.1
 loop = true
@@ -599,18 +842,23 @@ one_way_collision_margin = 10.0
 position = Vector2( 0, 5.68434e-14 )
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "dash_attack"
+animation = "fair"
+frame = 10
+speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
 anims/dash_attack = SubResource( 2 )
 anims/doublejump = SubResource( 3 )
+anims/fair = SubResource( 13 )
 anims/freefall = SubResource( 4 )
 anims/idle = SubResource( 5 )
 anims/jab1 = SubResource( 6 )
 anims/jab2 = SubResource( 10 )
 anims/jump = SubResource( 7 )
 anims/nair = SubResource( 8 )
+anims/upair = SubResource( 11 )
+anims/uptilt = SubResource( 12 )
 anims/walk = SubResource( 9 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
@@ -620,7 +868,9 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 0, 0 )
+position = Vector2( 15.6, 8.43751 )
+scale = Vector2( 1.02857, 1.02857 )
+disabled = false
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false
