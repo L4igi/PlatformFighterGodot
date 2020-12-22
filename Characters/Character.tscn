@@ -1,4 +1,4 @@
-[gd_scene load_steps=116 format=2]
+[gd_scene load_steps=139 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -101,6 +101,27 @@
 [ext_resource path="res://Characters/Mario/bair/6.png" type="Texture" id=99]
 [ext_resource path="res://Characters/Mario/bair/4.png" type="Texture" id=100]
 [ext_resource path="res://Characters/Mario/bair/5.png" type="Texture" id=101]
+[ext_resource path="res://Characters/Mario/dtilt/2.png" type="Texture" id=102]
+[ext_resource path="res://Characters/Mario/dtilt/3.png" type="Texture" id=103]
+[ext_resource path="res://Characters/Mario/dtilt/4.png" type="Texture" id=104]
+[ext_resource path="res://Characters/Mario/dtilt/5.png" type="Texture" id=105]
+[ext_resource path="res://Characters/Mario/dtilt/6.png" type="Texture" id=106]
+[ext_resource path="res://Characters/Mario/dtilt/1.png" type="Texture" id=107]
+[ext_resource path="res://Characters/Mario/dtilt/0.png" type="Texture" id=108]
+[ext_resource path="res://Characters/Mario/dair/0.png" type="Texture" id=109]
+[ext_resource path="res://Characters/Mario/dair/1.png" type="Texture" id=110]
+[ext_resource path="res://Characters/Mario/dair/4.png" type="Texture" id=111]
+[ext_resource path="res://Characters/Mario/dair/5.png" type="Texture" id=112]
+[ext_resource path="res://Characters/Mario/dair/2.png" type="Texture" id=113]
+[ext_resource path="res://Characters/Mario/dair/3.png" type="Texture" id=114]
+[ext_resource path="res://Characters/Mario/dair/8.png" type="Texture" id=115]
+[ext_resource path="res://Characters/Mario/dair/10.png" type="Texture" id=116]
+[ext_resource path="res://Characters/Mario/dair/9.png" type="Texture" id=117]
+[ext_resource path="res://Characters/Mario/dair/7.png" type="Texture" id=118]
+[ext_resource path="res://Characters/Mario/dair/11.png" type="Texture" id=119]
+[ext_resource path="res://Characters/Mario/dair/6.png" type="Texture" id=120]
+[ext_resource path="res://Characters/Mario/dair/12.png" type="Texture" id=121]
+[ext_resource path="res://Characters/Mario/dair/13.png" type="Texture" id=122]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -167,6 +188,16 @@ animations = [ {
 "frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
 "loop": true,
 "name": "upair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 108 ), ExtResource( 107 ), ExtResource( 102 ), ExtResource( 103 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 106 ) ],
+"loop": true,
+"name": "dtilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 109 ), ExtResource( 110 ), ExtResource( 113 ), ExtResource( 114 ), ExtResource( 111 ), ExtResource( 112 ), ExtResource( 120 ), ExtResource( 118 ), ExtResource( 115 ), ExtResource( 117 ), ExtResource( 116 ), ExtResource( 119 ), ExtResource( 121 ), ExtResource( 122 ) ],
+"loop": true,
+"name": "dair",
 "speed": 5.0
 } ]
 
@@ -244,6 +275,70 @@ tracks/5/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( -15, 5 ) ]
+}
+
+[sub_resource type="Animation" id=16]
+resource_name = "dair"
+length = 1.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "dair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.4, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.4 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 10.277 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("..:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.4 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 10, 10 ) ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -360,6 +455,82 @@ tracks/4/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ 93.2, 63.6, 93.2, 63.6, -4.2 ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "dtilt"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "dtilt" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../InteractionAreas:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -12, 7 ), Vector2( -10, 0 ), Vector2( 17, 0 ), Vector2( 24, 0 ), Vector2( -15, 0 ), Vector2( -30, 0 ), Vector2( 0, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../InteractionAreas:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.1, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 27.0, 0.0, 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.1, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 7.31999, 2.8125 ), Vector2( 2.84217e-14, 8.43751 ) ]
 }
 
 [sub_resource type="Animation" id=13]
@@ -954,14 +1125,15 @@ one_way_collision_margin = 10.0
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
 animation = "bair"
-frame = 1
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
 anims/bair = SubResource( 14 )
+anims/dair = SubResource( 16 )
 anims/dash_attack = SubResource( 2 )
 anims/doublejump = SubResource( 3 )
+anims/dtilt = SubResource( 15 )
 anims/fair = SubResource( 13 )
 anims/freefall = SubResource( 4 )
 anims/idle = SubResource( 5 )
@@ -986,8 +1158,6 @@ position = Vector2( -15, 5 )
 visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
-position = Vector2( -2.8695, 0 )
-rotation = -0.287979
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
 position = Vector2( 2, -18 )

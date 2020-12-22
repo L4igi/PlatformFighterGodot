@@ -28,6 +28,13 @@
     "launchVectorX":0,
     "launchVectorY":-1
   },
+  "DTILT":{
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":750,
+    "launchVectorX":1,
+    "launchVectorY":-0.5
+  },
   "NAIR":{
     "damage":5,
     "hitStun":0.3,
@@ -40,6 +47,13 @@
     "hitStun":0.3,
     "launchVelocity":750,
     "launchVectorX":0,
+    "launchVectorY":-1
+  },
+  "DAIR":{
+    "damage":5,
+    "hitStun":0.3,
+    "launchVelocity":750,
+    "launchVectorX":0.5,
     "launchVectorY":-1
   },
   "FAIR":{

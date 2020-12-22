@@ -36,6 +36,8 @@ var disableInputDI = false
 var inHitStun = false
 #bufferInput
 var bufferInput = null
+#animation needs to finish 
+var bufferAnimation = false
 
 var directionChange = false
 
@@ -154,6 +156,9 @@ func attack_handler_ground():
 	elif get_input_direction_y() < 0:
 		animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
 		currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+	elif get_input_direction_y() > 0:
+		animation_handler(GlobalVariables.CharacterAnimations.DTILT)
+		currentAttack = GlobalVariables.CharacterAnimations.DTILT
 	else: 
 		#attack
 		match currentMoveDirection:
@@ -182,6 +187,9 @@ func attack_handler_air():
 	|| get_input_direction_x() < 0 && currentMoveDirection == moveDirection.RIGHT: 
 		animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 		currentAttack = GlobalVariables.CharacterAnimations.BAIR
+	elif get_input_direction_y() > 0:
+		animation_handler(GlobalVariables.CharacterAnimations.DAIR)
+		currentAttack = GlobalVariables.CharacterAnimations.DAIR
 #	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
@@ -441,6 +449,12 @@ func animation_handler(animationToPlay):
 		GlobalVariables.CharacterAnimations.BAIR:
 			play_attack_animation("bair", 1.5)
 			disableInputDI = true
+		GlobalVariables.CharacterAnimations.DTILT:
+			play_attack_animation("dtilt", 1.5)
+			disableInputDI = true
+		GlobalVariables.CharacterAnimations.DAIR:
+			play_attack_animation("dair", 1.5)
+			disableInputDI = true
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -457,6 +471,9 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 				animationPlayer.queue("freefall")
 	bufferInput = null
 #	enable_player_input()
+
+func apply_attack_movement_stats(step = 0):
+	pass
 	
 func process_movement_physics(delta):
 	check_buffer_input()
@@ -596,6 +613,8 @@ func switch_to_state(state):
 			currentState = CharacterState.ROLL
 
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
+	if gravity!=baseGravity:
+		gravity=baseGravity
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
 	create_hitstun_timer(hitStun)
 
@@ -617,3 +636,9 @@ func buffered_input():
 		jabCount = 0
 		return false
 	return true
+
+func gravity_on_off(status):
+	if status == "on":
+		gravity = baseGravity
+	elif status == "off":
+		gravity = 0
