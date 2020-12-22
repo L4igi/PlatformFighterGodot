@@ -1,4 +1,4 @@
-[gd_scene load_steps=108 format=2]
+[gd_scene load_steps=116 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -94,6 +94,13 @@
 [ext_resource path="res://Characters/Mario/fair/9.png" type="Texture" id=92]
 [ext_resource path="res://Characters/Mario/fair/5.png" type="Texture" id=93]
 [ext_resource path="res://Characters/Mario/fair/7.png" type="Texture" id=94]
+[ext_resource path="res://Characters/Mario/bair/0.png" type="Texture" id=95]
+[ext_resource path="res://Characters/Mario/bair/1.png" type="Texture" id=96]
+[ext_resource path="res://Characters/Mario/bair/2.png" type="Texture" id=97]
+[ext_resource path="res://Characters/Mario/bair/3.png" type="Texture" id=98]
+[ext_resource path="res://Characters/Mario/bair/6.png" type="Texture" id=99]
+[ext_resource path="res://Characters/Mario/bair/4.png" type="Texture" id=100]
+[ext_resource path="res://Characters/Mario/bair/5.png" type="Texture" id=101]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -105,6 +112,11 @@ animations = [ {
 "frames": [ ExtResource( 67 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 70 ) ],
 "loop": true,
 "name": "jab2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 95 ), ExtResource( 96 ), ExtResource( 97 ), ExtResource( 98 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 99 ) ],
+"loop": true,
+"name": "bair",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 84 ), ExtResource( 87 ), ExtResource( 88 ), ExtResource( 85 ), ExtResource( 86 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 94 ), ExtResource( 90 ), ExtResource( 92 ), ExtResource( 89 ) ],
@@ -157,6 +169,82 @@ animations = [ {
 "name": "upair",
 "speed": 5.0
 } ]
+
+[sub_resource type="Animation" id=14]
+resource_name = "bair"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "bair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../InteractionAreas:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 0.5, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -5.739, 0 ), Vector2( -1.665, 0 ), Vector2( 0, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../InteractionAreas:rotation_degrees")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -33.0, -6.0, 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.3, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -15, 5 ) ]
+}
 
 [sub_resource type="Animation" id=2]
 resource_name = "dash_attack"
@@ -865,11 +953,13 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "jab2"
+animation = "bair"
+frame = 1
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
+anims/bair = SubResource( 14 )
 anims/dash_attack = SubResource( 2 )
 anims/doublejump = SubResource( 3 )
 anims/fair = SubResource( 13 )
@@ -890,12 +980,14 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 0, 0 )
+position = Vector2( -15, 5 )
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
+position = Vector2( -2.8695, 0 )
+rotation = -0.287979
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
 position = Vector2( 2, -18 )

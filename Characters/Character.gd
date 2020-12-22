@@ -174,9 +174,14 @@ func attack_handler_air():
 		animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
 		currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 		pass
-	elif get_input_direction_x() != 0: 
+	elif get_input_direction_x() > 0 && currentMoveDirection == moveDirection.RIGHT\
+	|| get_input_direction_x() < 0 && currentMoveDirection == moveDirection.LEFT: 
 		animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 		currentAttack = GlobalVariables.CharacterAnimations.FAIR
+	elif get_input_direction_x() > 0 && currentMoveDirection == moveDirection.LEFT\
+	|| get_input_direction_x() < 0 && currentMoveDirection == moveDirection.RIGHT: 
+		animation_handler(GlobalVariables.CharacterAnimations.BAIR)
+		currentAttack = GlobalVariables.CharacterAnimations.BAIR
 #	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
@@ -433,6 +438,9 @@ func animation_handler(animationToPlay):
 		GlobalVariables.CharacterAnimations.FAIR:
 			play_attack_animation("fair", 2.0)
 			disableInputDI = true
+		GlobalVariables.CharacterAnimations.BAIR:
+			play_attack_animation("bair", 1.5)
+			disableInputDI = true
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -531,16 +539,11 @@ func toggle_all_hitboxes(onOff):
 			$InteractionAreas.set_rotation(0)
 
 func mirror_areas():
-	print("before " +str(self.get_scale()))
 	match currentMoveDirection:
 		moveDirection.LEFT:
-			if self.get_scale() == Vector2(1,-1):
-				self.set_scale(Vector2(1, -1))
-			else:
-				self.set_scale(Vector2(-1, 1))
+			self.set_scale(Vector2(-1, 1))
 		moveDirection.RIGHT:
-			self.set_scale(Vector2(1, 1))
-	print("after " +str(self.get_scale()))
+			self.set_scale(Vector2(-1, -1))
 #	#mirror hitboxes
 #	var hitboxes = $AnimatedSprite/HitBoxes
 #	match currentMoveDirection:

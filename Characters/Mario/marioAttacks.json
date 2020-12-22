@@ -49,6 +49,13 @@
     "launchVectorX":0.2,
     "launchVectorY":1
   },
+  "BAIR":{
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":1000,
+    "launchVectorX":1,
+    "launchVectorY":-0.5
+  },
   "DASHATTACK":{
     "damage":5,
     "hitStun":0.5,
