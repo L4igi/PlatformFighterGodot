@@ -9,7 +9,7 @@ var baseJumpSpeed = 800
 var walkForce = 1200
 var walkMaxSpeed = 600
 var stopForce = 1500
-var jumpSpeed = 800
+var jumpSpeed = 850
 #jump
 var jumpCount = 0
 var availabelJumps = 2
@@ -280,6 +280,7 @@ func create_jump_timer(waittime):
 	
 func create_hitstun_timer(stunTime):
 	disableInput = true
+	disableInputDI = false
 	inHitStun = true
 	var timer = Timer.new()
 	timer.set_one_shot(true)
@@ -433,7 +434,6 @@ func animation_handler(animationToPlay):
 			play_attack_animation("fair", 2.0)
 			disableInputDI = true
 			
-			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
@@ -452,6 +452,10 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	
 func process_movement_physics(delta):
 	check_buffer_input()
+	if inHitStun:
+#		velocity = velocity.bounce(Vector2(0,1))
+		if onSolidGround && velocity.y > 0: 
+			velocity.y *= -1
 	if disableInputDI:
 		var walk = walkForce * get_input_direction_x()
 		velocity.x += walk * delta
@@ -479,14 +483,14 @@ func input_movement_physics(delta):
 				moveDirection.LEFT:
 					if walk > 0: 
 						currentMoveDirection = moveDirection.RIGHT
-						characterSprite.flip_h = false
+#						characterSprite.flip_h = false
 						mirror_areas()
 						directionChange = true
 						emit_signal("character_turnaround")
 				moveDirection.RIGHT:
 					if walk < 0: 
 						currentMoveDirection = moveDirection.LEFT
-						characterSprite.flip_h = true
+#						characterSprite.flip_h = true
 						mirror_areas()
 						directionChange = true
 						emit_signal("character_turnaround")
@@ -527,30 +531,33 @@ func toggle_all_hitboxes(onOff):
 			$InteractionAreas.set_rotation(0)
 
 func mirror_areas():
-	print("mirroring")
-	#mirror hitboxes
-	var hitboxes = $AnimatedSprite/HitBoxes
+	print("before " +str(self.get_scale()))
 	match currentMoveDirection:
 		moveDirection.LEFT:
-			hitboxes.scale = Vector2(-1, 1)
+			if self.get_scale() == Vector2(1,-1):
+				self.set_scale(Vector2(1, -1))
+			else:
+				self.set_scale(Vector2(-1, 1))
 		moveDirection.RIGHT:
-			hitboxes.scale = Vector2(1, 1)
-	#mirror hurt and collisionareas
-	var hurtInteractionArea = $InteractionAreas
-	for mirrorArea in hurtInteractionArea.get_children():
-		match currentMoveDirection:
-			moveDirection.LEFT:
-				mirrorArea.scale = Vector2(-1, 1)
-				mirrorArea.rotation *= -1
-				if mirrorArea is RayCast2D:
-					mirrorArea.position*=-1
-					mirrorArea.scale.y = 5
-			moveDirection.RIGHT:
-				mirrorArea.scale = Vector2(1, 1)
-				mirrorArea.rotation *= -1
-				if mirrorArea is RayCast2D:
-					mirrorArea.position*=-1
-					mirrorArea.scale.y = 5
+			self.set_scale(Vector2(1, 1))
+	print("after " +str(self.get_scale()))
+#	#mirror hitboxes
+#	var hitboxes = $AnimatedSprite/HitBoxes
+#	match currentMoveDirection:
+#		moveDirection.LEFT:
+#			hitboxes.scale = Vector2(-1, 1)
+#		moveDirection.RIGHT:
+#			hitboxes.scale = Vector2(1, 1)
+#	#mirror hurt and collisionareas
+#	var hurtInteractionArea = $InteractionAreas
+#	for mirrorArea in hurtInteractionArea.get_children():
+#		match currentMoveDirection:
+#			moveDirection.LEFT:
+#				mirrorArea.scale = Vector2(-1, 1)
+#				mirrorArea.rotation *= -1
+#			moveDirection.RIGHT:
+#				mirrorArea.scale = Vector2(1, 1)
+#				mirrorArea.rotation *= -1
 				
 func get_input_direction_x():
 	return Input.get_action_strength(right) - Input.get_action_strength(left)

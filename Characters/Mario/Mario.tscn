@@ -4,7 +4,11 @@
 [ext_resource path="res://Characters/Mario/Mario.gd" type="Script" id=2]
 
 [node name="Mario" instance=ExtResource( 1 )]
+scale = Vector2( 1, 1 )
 script = ExtResource( 2 )
+
+[node name="AnimatedSprite" parent="." index="3"]
+animation = "dash_attack"
 
 [editable path="AnimatedSprite/HitBoxes"]
 

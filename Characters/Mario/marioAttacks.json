@@ -30,14 +30,14 @@
   },
   "NAIR":{
     "damage":5,
-    "hitStun":0.5,
+    "hitStun":0.3,
     "launchVelocity":500,
     "launchVectorX":1,
     "launchVectorY":-1
   },
   "UPAIR":{
     "damage":5,
-    "hitStun":0.5,
+    "hitStun":0.3,
     "launchVelocity":750,
     "launchVectorX":0,
     "launchVectorY":-1
@@ -45,9 +45,9 @@
   "FAIR":{
     "damage":5,
     "hitStun":0.5,
-    "launchVelocity":750,
+    "launchVelocity":1000,
     "launchVectorX":0.2,
-    "launchVectorY":-1
+    "launchVectorY":1
   },
   "DASHATTACK":{
     "damage":5,
