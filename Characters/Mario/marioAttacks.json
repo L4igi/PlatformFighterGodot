@@ -47,7 +47,7 @@
     "hitStun":0.5,
     "launchVelocity":750,
     "launchVectorX":0.2,
-    "launchVectorY":1
+    "launchVectorY":-1
   },
   "DASHATTACK":{
     "damage":5,

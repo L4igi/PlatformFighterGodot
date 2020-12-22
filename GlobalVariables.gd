@@ -2,7 +2,7 @@ extends Node
 
 enum WorldType {Platform = 0, CenterStage = 1, Character = 2, Item = 3}
 
-enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, UPTILT, NAIR, UPAIR, DASHATTACK}
+enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, UPTILT, FAIR, NAIR, UPAIR, DASHATTACK}
 
 var controlsP1 = {
 	"up": "Up1",

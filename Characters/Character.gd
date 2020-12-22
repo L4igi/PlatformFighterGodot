@@ -81,6 +81,8 @@ func _ready():
 	file.close()
 	attackData = attacks.get_result()
 	
+#	animationPlayer.set_blend_time("fair","freefall", 0.05)
+	
 func _physics_process(delta):
 	if disableInput:
 		process_movement_physics(delta)
@@ -105,9 +107,9 @@ func _physics_process(delta):
 			CharacterState.AIR:
 				air_handler(delta)
 			CharacterState.ATTACKAIR:
-				attack_handler_air(delta)
+				attack_handler_air()
 			CharacterState.ATTACKGROUND:
-				attack_handler_ground(delta)
+				attack_handler_ground()
 			CharacterState.GROUND:
 				ground_handler(delta)
 
@@ -119,9 +121,23 @@ func check_input(delta):
 			CharacterState.GROUND:
 				switch_to_state(CharacterState.ATTACKGROUND)
 		
-func attack_handler_ground(delta):
-	if (abs(get_input_direction_x()) == 0 || jabCount > 0) \
-	&& get_input_direction_y() == 0:
+func attack_handler_ground():
+	if bufferInput != null: 
+		match jabCount:
+			0:
+				animation_handler(GlobalVariables.CharacterAnimations.JAB1)
+				currentAttack = GlobalVariables.CharacterAnimations.JAB1
+			1:
+				animation_handler(GlobalVariables.CharacterAnimations.JAB2)
+				currentAttack = GlobalVariables.CharacterAnimations.JAB2
+			2:
+				animation_handler(GlobalVariables.CharacterAnimations.JAB3)
+				currentAttack = GlobalVariables.CharacterAnimations.JAB3
+		jabCount += 1
+		if jabCount > jabCombo: 
+			jabCount = 0
+	elif ((abs(get_input_direction_x()) == 0 || jabCount > 0) \
+	&& get_input_direction_y() == 0):
 		match jabCount:
 			0:
 				animation_handler(GlobalVariables.CharacterAnimations.JAB1)
@@ -149,7 +165,7 @@ func attack_handler_ground(delta):
 		currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 #	switch_to_state(CharacterState.GROUND)
 			
-func attack_handler_air(delta):
+func attack_handler_air():
 	if abs(get_input_direction_x()) < 0.1\
 	&& abs(get_input_direction_y()) < 0.1:
 		animation_handler(GlobalVariables.CharacterAnimations.NAIR)
@@ -158,6 +174,9 @@ func attack_handler_air(delta):
 		animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
 		currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 		pass
+	elif get_input_direction_x() != 0: 
+		animation_handler(GlobalVariables.CharacterAnimations.FAIR)
+		currentAttack = GlobalVariables.CharacterAnimations.FAIR
 #	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
@@ -409,19 +428,26 @@ func animation_handler(animationToPlay):
 			play_attack_animation("uptilt", 2.0)
 		GlobalVariables.CharacterAnimations.UPAIR:
 			play_attack_animation("upair", 2.0)
-
+			disableInputDI = true
+		GlobalVariables.CharacterAnimations.FAIR:
+			play_attack_animation("fair", 2.0)
+			disableInputDI = true
+			
+			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
 	yield(animationPlayer, "animation_finished")
 	toggle_all_hitboxes("off")
-	match currentState:
-		CharacterState.ATTACKGROUND:
-			switch_to_state(CharacterState.GROUND)
-			animationPlayer.play("idle")
-		CharacterState.ATTACKAIR:
-			switch_to_state(CharacterState.AIR)
-			animationPlayer.play("freefall")
+	if bufferInput == null:
+		match currentState:
+			CharacterState.ATTACKGROUND:
+				switch_to_state(CharacterState.GROUND)
+				animationPlayer.queue("idle")
+			CharacterState.ATTACKAIR:
+				switch_to_state(CharacterState.AIR)
+				animationPlayer.queue("freefall")
+	bufferInput = null
 #	enable_player_input()
 	
 func process_movement_physics(delta):
@@ -497,27 +523,31 @@ func toggle_all_hitboxes(onOff):
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
 						hitbox.disabled = true
+			$InteractionAreas.set_position(Vector2(0,0))
+			$InteractionAreas.set_rotation(0)
 
 func mirror_areas():
+	print("mirroring")
 	#mirror hitboxes
 	var hitboxes = $AnimatedSprite/HitBoxes
-	for hitbox in hitboxes.get_children():
-		match currentMoveDirection:
-			moveDirection.LEFT:
-				hitbox.scale = Vector2(-1, 1)
-			moveDirection.RIGHT:
-				hitbox.scale = Vector2(1, 1)
+	match currentMoveDirection:
+		moveDirection.LEFT:
+			hitboxes.scale = Vector2(-1, 1)
+		moveDirection.RIGHT:
+			hitboxes.scale = Vector2(1, 1)
 	#mirror hurt and collisionareas
 	var hurtInteractionArea = $InteractionAreas
 	for mirrorArea in hurtInteractionArea.get_children():
 		match currentMoveDirection:
 			moveDirection.LEFT:
 				mirrorArea.scale = Vector2(-1, 1)
+				mirrorArea.rotation *= -1
 				if mirrorArea is RayCast2D:
 					mirrorArea.position*=-1
 					mirrorArea.scale.y = 5
 			moveDirection.RIGHT:
 				mirrorArea.scale = Vector2(1, 1)
+				mirrorArea.rotation *= -1
 				if mirrorArea is RayCast2D:
 					mirrorArea.position*=-1
 					mirrorArea.scale.y = 5
@@ -560,10 +590,11 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	create_hitstun_timer(hitStun)
 
 func enable_player_input():
-	buffered_input()
-	disableInput = false
-	disableInputDI = false
-	bufferInput = null
+	if buffered_input():
+		attack_handler_ground()
+	else:
+		disableInput = false
+		disableInputDI = false
 
 func check_buffer_input():
 	#todo: add other inputs for buffer
@@ -575,14 +606,4 @@ func buffered_input():
 	if bufferInput == null: 
 		jabCount = 0
 		return false
-	#for now only buffer for jab inputs
-	elif bufferInput == attack && jabCount > 0:
-		match bufferInput: 
-			attack:
-				match currentState:
-					CharacterState.AIR:
-						switch_to_state(CharacterState.ATTACKAIR)
-					CharacterState.GROUND:
-						switch_to_state(CharacterState.ATTACKGROUND)
-			_: return false
-		return true
+	return true

@@ -349,6 +349,30 @@ tracks/5/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/6/type = "value"
+tracks/6/path = NodePath("../InteractionAreas:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 20 ), Vector2( 4.563, 16 ), Vector2( 8.079, 12 ), Vector2( 7.821, 13.72 ), Vector2( -8.449, 17.645 ), Vector2( -32.252, 0 ), Vector2( -25.623, -11.195 ), Vector2( -20.4984, -8.956 ), Vector2( -28.039, -5.908 ), Vector2( -32.644, -3.939 ), Vector2( -30.781, 1.131 ), Vector2( 0, 0 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("../InteractionAreas:rotation_degrees")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 0.1, 0.4, 0.5, 0.6, 0.7, 0.9, 1, 1.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ -45.0, -63.0, 0.0, 18.0, 54.0, 54.0, 27.0, 0.0, 0.0 ]
+}
 
 [sub_resource type="Animation" id=4]
 resource_name = "freefall"
@@ -736,10 +760,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.6 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ "uptilt", "fair" ]
+"values": [ "uptilt" ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:frame")
@@ -839,11 +863,9 @@ one_way_collision_margin = 10.0
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 0, 5.68434e-14 )
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "fair"
-frame = 10
+animation = "jab2"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -868,9 +890,7 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 15.6, 8.43751 )
-scale = Vector2( 1.02857, 1.02857 )
-disabled = false
+position = Vector2( 0, 0 )
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false
