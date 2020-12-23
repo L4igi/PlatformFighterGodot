@@ -47,6 +47,7 @@ var onSolidGround = false
 
 #character stats
 var weight = 100
+var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
@@ -264,7 +265,7 @@ func air_handler(delta):
 		set_collision_mask_bit(1,true)
 	#Fastfall
 	if Input.is_action_just_pressed(down) && !onSolidGround && int(velocity.y) >= 0:
-		gravity = 4000
+		gravity = fastFallGravity
 	if int(velocity.y) == 0 && onSolidGround:
 		switch_to_state(CharacterState.GROUND)
 		#if aerial attack is interrupted by ground cancel hitboxes
@@ -428,10 +429,10 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("doublejump")
 			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.NAIR:
-			play_attack_animation("nair", 2.0)
+			play_attack_animation("nair")
 			disableInputDI = true
 		GlobalVariables.CharacterAnimations.DASHATTACK: 
-			play_attack_animation("dash_attack", 1.6)
+			play_attack_animation("dash_attack")
 		GlobalVariables.CharacterAnimations.JAB1:
 			play_attack_animation("jab1")
 		GlobalVariables.CharacterAnimations.JAB2:
@@ -439,21 +440,21 @@ func animation_handler(animationToPlay):
 		GlobalVariables.CharacterAnimations.JAB3:
 			play_attack_animation("jab2")
 		GlobalVariables.CharacterAnimations.UPTILT:
-			play_attack_animation("uptilt", 2.0)
+			play_attack_animation("uptilt")
 		GlobalVariables.CharacterAnimations.UPAIR:
-			play_attack_animation("upair", 2.0)
+			play_attack_animation("upair")
 			disableInputDI = true
 		GlobalVariables.CharacterAnimations.FAIR:
-			play_attack_animation("fair", 2.0)
+			play_attack_animation("fair")
 			disableInputDI = true
 		GlobalVariables.CharacterAnimations.BAIR:
-			play_attack_animation("bair", 1.5)
+			play_attack_animation("bair")
 			disableInputDI = true
 		GlobalVariables.CharacterAnimations.DTILT:
-			play_attack_animation("dtilt", 1.5)
+			play_attack_animation("dtilt")
 			disableInputDI = true
 		GlobalVariables.CharacterAnimations.DAIR:
-			play_attack_animation("dair", 1.5)
+			play_attack_animation("dair")
 			disableInputDI = true
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
@@ -561,23 +562,6 @@ func mirror_areas():
 			self.set_scale(Vector2(-1, 1))
 		moveDirection.RIGHT:
 			self.set_scale(Vector2(-1, -1))
-#	#mirror hitboxes
-#	var hitboxes = $AnimatedSprite/HitBoxes
-#	match currentMoveDirection:
-#		moveDirection.LEFT:
-#			hitboxes.scale = Vector2(-1, 1)
-#		moveDirection.RIGHT:
-#			hitboxes.scale = Vector2(1, 1)
-#	#mirror hurt and collisionareas
-#	var hurtInteractionArea = $InteractionAreas
-#	for mirrorArea in hurtInteractionArea.get_children():
-#		match currentMoveDirection:
-#			moveDirection.LEFT:
-#				mirrorArea.scale = Vector2(-1, 1)
-#				mirrorArea.rotation *= -1
-#			moveDirection.RIGHT:
-#				mirrorArea.scale = Vector2(1, 1)
-#				mirrorArea.rotation *= -1
 				
 func get_input_direction_x():
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
@@ -627,11 +611,13 @@ func enable_player_input():
 	else:
 		disableInput = false
 		disableInputDI = false
+		#reset animationplayer playback speed to default
+		animationPlayer.set_speed_scale(1.0)
 
 func check_buffer_input():
 	#todo: add other inputs for buffer
 	if bufferInput == null: 
-		if Input.is_action_just_pressed(attack):
+		if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 			bufferInput = attack
 
 func buffered_input():

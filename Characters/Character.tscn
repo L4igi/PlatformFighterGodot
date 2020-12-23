@@ -559,72 +559,60 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath(".:speed_scale")
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 2.0 ]
-}
-tracks/3/type = "value"
-tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/keys = {
 "times": PoolRealArray( 0.4, 0.5, 0.6 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 15.6, -18.2813 ), Vector2( 15.6, 4.21875 ), Vector2( 15.6, 8.43751 ) ]
 }
-tracks/4/type = "value"
-tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:scale")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/keys = {
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
 "times": PoolRealArray( 0.4, 1.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
 }
-tracks/5/type = "value"
-tracks/5/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/keys = {
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
 "times": PoolRealArray( 0.4, 1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
 }
-tracks/6/type = "value"
-tracks/6/path = NodePath("../InteractionAreas:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/keys = {
+tracks/5/type = "value"
+tracks/5/path = NodePath("../InteractionAreas:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, 20 ), Vector2( 4.563, 16 ), Vector2( 8.079, 12 ), Vector2( 7.821, 13.72 ), Vector2( -8.449, 17.645 ), Vector2( -32.252, 0 ), Vector2( -25.623, -11.195 ), Vector2( -20.4984, -8.956 ), Vector2( -28.039, -5.908 ), Vector2( -32.644, -3.939 ), Vector2( -30.781, 1.131 ), Vector2( 0, 0 ) ]
 }
-tracks/7/type = "value"
-tracks/7/path = NodePath("../InteractionAreas:rotation_degrees")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/keys = {
+tracks/6/type = "value"
+tracks/6/path = NodePath("../InteractionAreas:rotation_degrees")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
 "times": PoolRealArray( 0, 0.1, 0.4, 0.5, 0.6, 0.7, 0.9, 1, 1.1 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
@@ -1120,7 +1108,7 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "bair"
+animation = "idle"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
