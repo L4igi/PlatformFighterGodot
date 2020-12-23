@@ -25,7 +25,7 @@ func set_base_stats():
 	baseWalkMaxSpeed = 600
 	walkMaxSpeed = 600
 	
-	jabCombo = 2
+	jabCombo = 1
 
 func apply_attack_movement_stats(step = 0):
 	match currentAttack:
@@ -41,3 +41,4 @@ func manage_dair(step):
 		1:
 			gravity_on_off("on")
 			animationPlayer.stop(false)
+			bufferAnimation = true

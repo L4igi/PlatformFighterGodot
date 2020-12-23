@@ -911,9 +911,6 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="AnimatedSprite" parent="." index="3"]
-animation = "dair"
-
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 anims/bair = SubResource( 1 )
 anims/dair = SubResource( 2 )
@@ -930,9 +927,6 @@ anims/nair = SubResource( 12 )
 anims/upair = SubResource( 13 )
 anims/uptilt = SubResource( 14 )
 anims/walk = SubResource( 15 )
-
-[node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 0, 10.277 )
 
 [editable path="AnimatedSprite/HitBoxes"]
 

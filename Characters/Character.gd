@@ -92,7 +92,7 @@ func _physics_process(delta):
 		if currentState == CharacterState.AIR || currentState == CharacterState.ATTACKAIR:
 			if onSolidGround:
 				switch_to_state(CharacterState.GROUND)
-				animationPlayer.play("idle")
+#				animationPlayer.play("idle")
 				#if aerial attack is interrupted by ground cancel hitboxes
 				toggle_all_hitboxes("off")
 		elif currentState == CharacterState.GROUND || currentState == CharacterState.ATTACKGROUND:
@@ -621,6 +621,9 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 func enable_player_input():
 	if buffered_input():
 		attack_handler_ground()
+	elif bufferAnimation:
+		animationPlayer.play()
+		bufferAnimation = false
 	else:
 		disableInput = false
 		disableInputDI = false
