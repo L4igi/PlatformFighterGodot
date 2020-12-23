@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://Stages/CenterStage.gd" type="Script" id=2]
@@ -7,6 +7,9 @@
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 448, 48 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 448, 8 )
 
 [node name="CenterStage" type="KinematicBody2D" groups=[
 "Ground",
@@ -32,3 +35,11 @@ position = Vector2( -448, -32 )
 position = Vector2( 448, -32 )
 
 [node name="StopAreas" parent="." instance=ExtResource( 4 )]
+
+[node name="CollisisionDetectionArea" type="Area2D" parent="."]
+
+[node name="CollisisonDetectionShape" type="CollisionShape2D" parent="CollisisionDetectionArea"]
+position = Vector2( 0, -30 )
+shape = SubResource( 2 )
+[connection signal="body_entered" from="CollisisionDetectionArea" to="." method="_on_CollisisionDetectionArea_body_entered"]
+[connection signal="body_exited" from="CollisisionDetectionArea" to="." method="_on_CollisisionDetectionArea_body_exited"]

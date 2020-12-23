@@ -71,24 +71,27 @@ func _on_character_turnaround():
 				CharacterInteractionHandler.countGroundCollidingCharacters.append(character)
 
 
-func _on_CollisionArea_body_entered(body):
-	if character.global_position.y < body.global_position.y:
-		var testCollision = character.move_and_collide(Vector2(0,1), true, true, true)
-		if testCollision == null || testCollision.collider != body: 
-			return
-		elif body.is_in_group("Ground"):
-#			print(str("Ground entered ") + str(body.name))
-			character.onSolidGround = true
-		elif body.is_in_group("Platform"):
-#			print(str("Platform entered ") + str(body.name))
-			character.onSolidGround = true
-
-
-func _on_CollisionArea_body_exited(body):
-	if character.onSolidGround:
-		if body.is_in_group("Ground"):
-#			print(str("Ground exited ") + str(body.name))
-			character.onSolidGround = false
-		if body.is_in_group("Platform"):
-#			print(str("Platform exited ") + str(body.name))
-			character.onSolidGround = false
+#func _on_CollisionArea_body_entered(body):
+#	print(character.global_position)
+#	print(body.global_position)
+#	if character.global_position.y < body.global_position.y:
+#		print("TRUE")
+##		var testCollision = character.move_and_collide(Vector2(0,1), true, true, true)
+##		if testCollision == null || testCollision.collider != body: 
+##			return
+#		if body.is_in_group("Ground"):
+##			print(str("Ground entered ") + str(body.name))
+#			character.onSolidGround = true
+#		elif body.is_in_group("Platform"):
+##			print(str("Platform entered ") + str(body.name))
+#			character.onSolidGround = true
+#
+#
+#func _on_CollisionArea_body_exited(body):
+#	if character.onSolidGround:
+#		if body.is_in_group("Ground"):
+##			print(str("Ground exited ") + str(body.name))
+#			character.onSolidGround = false
+#		if body.is_in_group("Platform"):
+##			print(str("Platform exited ") + str(body.name))
+#			character.onSolidGround = false

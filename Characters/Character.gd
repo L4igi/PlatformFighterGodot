@@ -90,13 +90,13 @@ func _physics_process(delta):
 		process_movement_physics(delta)
 		check_buffer_input()
 		if currentState == CharacterState.AIR || currentState == CharacterState.ATTACKAIR:
-			if onSolidGround:
+			if onSolidGround && int(velocity.y) == 0:
 				switch_to_state(CharacterState.GROUND)
 #				animationPlayer.play("idle")
 				#if aerial attack is interrupted by ground cancel hitboxes
 				toggle_all_hitboxes("off")
 		elif currentState == CharacterState.GROUND || currentState == CharacterState.ATTACKGROUND:
-			if velocity.y != 0:
+			if int(velocity.y) != 0:
 				jumpCount = 1
 				switch_to_state(CharacterState.AIR)
 				animationPlayer.play("freefall")
@@ -263,7 +263,7 @@ func air_handler(delta):
 		collidePlatforms = true
 		set_collision_mask_bit(1,true)
 	#Fastfall
-	if Input.is_action_just_pressed(down) && !onSolidGround && velocity.y >= 0:
+	if Input.is_action_just_pressed(down) && !onSolidGround && int(velocity.y) >= 0:
 		gravity = 4000
 	if int(velocity.y) == 0 && onSolidGround:
 		switch_to_state(CharacterState.GROUND)
@@ -479,7 +479,7 @@ func process_movement_physics(delta):
 	check_buffer_input()
 	if inHitStun:
 #		velocity = velocity.bounce(Vector2(0,1))
-		if onSolidGround && velocity.y > 0: 
+		if onSolidGround && int(velocity.y) > 0: 
 			velocity.y *= -1
 	if disableInputDI:
 		var walk = walkForce * get_input_direction_x()

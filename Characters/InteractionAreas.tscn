@@ -42,5 +42,3 @@ position = Vector2( 0, 2 )
 shape = SubResource( 3 )
 [connection signal="area_entered" from="CollisionArea" to="." method="_on_CollisionArea_area_entered"]
 [connection signal="area_exited" from="CollisionArea" to="." method="_on_CollisionArea_area_exited"]
-[connection signal="body_entered" from="CollisionArea" to="." method="_on_CollisionArea_body_entered"]
-[connection signal="body_exited" from="CollisionArea" to="." method="_on_CollisionArea_body_exited"]
