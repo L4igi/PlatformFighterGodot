@@ -9,8 +9,8 @@ radius = 16.0
 height = 15.6791
 
 [sub_resource type="CapsuleShape2D" id=3]
-radius = 20.0
-height = 24.0
+radius = 17.0
+height = 34.0
 
 [node name="InteractionAreas" type="Node2D"]
 script = ExtResource( 1 )
@@ -38,7 +38,7 @@ collision_layer = 16
 collision_mask = 54
 
 [node name="CollisionArea" type="CollisionShape2D" parent="CollisionArea"]
-position = Vector2( 0, 8 )
+position = Vector2( 0, 2 )
 shape = SubResource( 3 )
 [connection signal="area_entered" from="CollisionArea" to="." method="_on_CollisionArea_area_entered"]
 [connection signal="area_exited" from="CollisionArea" to="." method="_on_CollisionArea_area_exited"]

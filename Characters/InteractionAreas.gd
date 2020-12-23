@@ -73,10 +73,13 @@ func _on_character_turnaround():
 
 func _on_CollisionArea_body_entered(body):
 	if character.global_position.y < body.global_position.y:
-		if body.is_in_group("Ground"):
+		var testCollision = character.move_and_collide(Vector2(0,1), true, true, true)
+		if testCollision == null || testCollision.collider != body: 
+			return
+		elif body.is_in_group("Ground"):
 #			print(str("Ground entered ") + str(body.name))
 			character.onSolidGround = true
-		if body.is_in_group("Platform"):
+		elif body.is_in_group("Platform"):
 #			print(str("Platform entered ") + str(body.name))
 			character.onSolidGround = true
 

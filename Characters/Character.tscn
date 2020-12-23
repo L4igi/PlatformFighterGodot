@@ -1151,7 +1151,11 @@ visible = true
 [node name="SweetSpot" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = false
 
+[node name="NeutralSpot" parent="AnimatedSprite/HitBoxes" index="1"]
+visible = false
+
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
+visible = false
 position = Vector2( -15, 5 )
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
@@ -1160,13 +1164,12 @@ visible = false
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
+visible = false
 position = Vector2( 2, -18 )
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
-position = Vector2( 2, 14 )
-
-[node name="CollisionArea" parent="InteractionAreas" index="1"]
 visible = false
+position = Vector2( 2, 14 )
 
 [editable path="AnimatedSprite/HitBoxes"]
 
