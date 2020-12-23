@@ -613,6 +613,8 @@ func enable_player_input():
 		disableInputDI = false
 		#reset animationplayer playback speed to default
 		animationPlayer.set_speed_scale(1.0)
+		#reset InteractionArea Position/Rotation/Scale to default
+		$InteractionAreas.reset_global_transform()
 
 func check_buffer_input():
 	#todo: add other inputs for buffer

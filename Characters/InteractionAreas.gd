@@ -5,10 +5,14 @@ var raycastCollisionObject = null
 var areaCollisionObject = null
 var collisionAreaEntered = null
 
+var _initial_position
+
+
 func _ready():
 	character.connect("character_state_changed", self, "_on_character_state_change")
 	character.connect("character_turnaround", self, "_on_character_turnaround")
-
+	_initial_position = get_transform()
+	
 func _on_CollisionArea_area_entered(area):
 	if area.is_in_group("CollisionArea"):
 		areaCollisionObject = area.get_parent().get_parent()
@@ -69,29 +73,7 @@ func _on_character_turnaround():
 		else: 
 			if character.currentState == character.CharacterState.GROUND:
 				CharacterInteractionHandler.countGroundCollidingCharacters.append(character)
-
-
-#func _on_CollisionArea_body_entered(body):
-#	print(character.global_position)
-#	print(body.global_position)
-#	if character.global_position.y < body.global_position.y:
-#		print("TRUE")
-##		var testCollision = character.move_and_collide(Vector2(0,1), true, true, true)
-##		if testCollision == null || testCollision.collider != body: 
-##			return
-#		if body.is_in_group("Ground"):
-##			print(str("Ground entered ") + str(body.name))
-#			character.onSolidGround = true
-#		elif body.is_in_group("Platform"):
-##			print(str("Platform entered ") + str(body.name))
-#			character.onSolidGround = true
-#
-#
-#func _on_CollisionArea_body_exited(body):
-#	if character.onSolidGround:
-#		if body.is_in_group("Ground"):
-##			print(str("Ground exited ") + str(body.name))
-#			character.onSolidGround = false
-#		if body.is_in_group("Platform"):
-##			print(str("Platform exited ") + str(body.name))
-#			character.onSolidGround = false
+				
+				
+func reset_global_transform():
+	set_transform(_initial_position)
