@@ -1,18 +1,20 @@
 extends KinematicBody2D
 
 #base stats to return to after changes were made
-var baseWalkForce = 1200
+var baseDisableInputInfluence = 1200
 var baseWalkMaxSpeed = 100
 var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 800
 var baseAirSpeed = 600
 
-var walkForce = 1200
+#walkforce is only used when no input is detected to slow the character down
+var disableInputInfluence = 1200
 var walkMaxSpeed = 100
 var runMaxSpeed = 600
 var airMaxSpeed = 600
-var stopForce = 1500
+var airStopForce = 1000
+var groundStopForce = 1500
 var jumpSpeed = 850
 var currentMaxSpeed = runMaxSpeed
 #jump
@@ -35,7 +37,7 @@ var dashAttackSpeed = 800
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
-var turnaroundCoefficient = 600
+var turnaroundCoefficient = 1500
 var pushingCharacter =  null
 var disableInputDI = false
 var inHitStun = false
@@ -489,11 +491,14 @@ func process_movement_physics(delta):
 		if onSolidGround && int(velocity.y) > 0: 
 			velocity.y *= -1
 	if disableInputDI:
-		var walk = walkForce * get_input_direction_x()
+		var walk = disableInputInfluence * get_input_direction_x()
 		velocity.x += walk * delta
 		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 	else:
-		velocity.x = move_toward(velocity.x, 0, stopForce * delta)
+		if currentState == CharacterState.GROUND:
+			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
+		elif currentState == CharacterState.AIR:
+			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
@@ -501,68 +506,68 @@ func process_movement_physics(delta):
 func input_movement_physics_ground(delta):
 	# Horizontal movement code. First, get the player's input.
 	var xInput = get_input_direction_x()
-	var walk = walkForce * xInput
 	if xInput == 0:
 		resetMovementSpeed = true
-	if resetMovementSpeed && xInput != 0: 
+	if resetMovementSpeed && xInput != 0 && pushingCharacter == null: 
 		resetMovementSpeed = false
 		change_max_speed(xInput)
 	# Slow down the player if they're not trying to move.
-	if abs(walk) < walkForce * 0.02:
+	if abs(xInput) < 0.05:
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("idle")
 		# The velocity, slowed down a bit, and then reassigned.
 		if pushingCharacter == null:
-			velocity.x = move_toward(velocity.x, 0, stopForce * delta)
+			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 	else:
-		if(currentState == CharacterState.GROUND):
-			if currentMaxSpeed == baseWalkMaxSpeed:
-				animationPlayer.play("walk")
-			else:
-				animationPlayer.play("run")
-			match currentMoveDirection:
-				moveDirection.LEFT:
-					if walk > 0: 
-						currentMoveDirection = moveDirection.RIGHT
-#						characterSprite.flip_h = false
-						mirror_areas()
-						directionChange = true
-						change_max_speed(xInput)
-						emit_signal("character_turnaround")
-				moveDirection.RIGHT:
-					if walk < 0: 
-						currentMoveDirection = moveDirection.LEFT
-#						characterSprite.flip_h = true
-						mirror_areas()
-						directionChange = true
-						change_max_speed(xInput)
-						emit_signal("character_turnaround")
-	if directionChange && ((velocity.x<= 0 && walk >= 0) || (velocity.x>= 0 && walk <= 0)): 
+		if currentMaxSpeed == baseWalkMaxSpeed:
+			animationPlayer.play("walk")
+		else:
+			animationPlayer.play("run")
 		match currentMoveDirection:
 			moveDirection.LEFT:
-				velocity.x -= turnaroundCoefficient
-				if velocity.x < 0: 
-					velocity.x = 0
+				if xInput > 0: 
+					currentMoveDirection = moveDirection.RIGHT
+#						characterSprite.flip_h = false
+					mirror_areas()
+					directionChange = true
+					change_max_speed(xInput)
+					emit_signal("character_turnaround")
 			moveDirection.RIGHT:
-				velocity.x += turnaroundCoefficient
-				if velocity.x > 0: 
-					velocity.x = 0
-		directionChange = false
-	else: 
-		if currentMaxSpeed == baseWalkMaxSpeed:
-			if pushingCharacter != null:
-				pass
-#				velocity.x += xInput * currentMaxSpeed
+				if xInput < 0: 
+					currentMoveDirection = moveDirection.LEFT
+#						characterSprite.flip_h = true
+					mirror_areas()
+					directionChange = true
+					change_max_speed(xInput)
+					emit_signal("character_turnaround")
+		if directionChange && ((velocity.x<= 0 && xInput >= 0) || (velocity.x>= 0 && xInput <= 0)): 
+			match currentMoveDirection:
+				moveDirection.LEFT:
+					velocity.x -= turnaroundCoefficient * delta 
+					if velocity.x < 0: 
+						directionChange = false
+				moveDirection.RIGHT:
+					velocity.x += turnaroundCoefficient * delta 
+					if velocity.x > 0: 
+						directionChange = false
+#			directionChange = false
+		else: 
+			if currentMaxSpeed == baseWalkMaxSpeed:
+				if pushingCharacter != null:
+					pass
+					#handled in character collision response script
+	#				velocity.x += xInput * currentMaxSpeed
+				else:
+					velocity.x = xInput * currentMaxSpeed
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 			else:
-				velocity.x = xInput * currentMaxSpeed
-				velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
-		else:
-			if pushingCharacter != null: 
-				pass
-#				velocity.x += xInput * currentMaxSpeed
-			else:
-				velocity.x = xInput * currentMaxSpeed
-				velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+				if pushingCharacter != null: 
+					#handled in character collision response script
+					pass
+	#				velocity.x += xInput * currentMaxSpeed
+				else:
+					velocity.x = xInput * currentMaxSpeed
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 		
 #	
 
@@ -578,16 +583,24 @@ func change_max_speed(xInput):
 func input_movement_physics_air(delta):
 	# Horizontal movement code. First, get the player's input.
 	var xInput = get_input_direction_x()
-	var walk = walkForce * xInput
+	var walk = airMaxSpeed * xInput
 	# Slow down the player if they're not trying to move.
-	if abs(walk) < walkForce * 0.2:
+	if abs(xInput) < 0.05:
 		if pushingCharacter == null:
-			velocity.x = move_toward(velocity.x, 0, stopForce * delta)
+			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	else:
-		velocity.x += walk * delta
+		#improves are moveability when pressing the opposite direction as currently looking
+		if currentMoveDirection == moveDirection.LEFT &&\
+		xInput > 0: 
+			velocity.x += (walk * delta)*2
+		elif currentMoveDirection == moveDirection.RIGHT &&\
+		xInput < 0: 
+			velocity.x += (walk * delta)*2
+			
+		else:
+			velocity.x += walk * delta
 #	print(currentMaxSpeed)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
-
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
 	
