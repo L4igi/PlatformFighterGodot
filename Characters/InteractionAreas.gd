@@ -29,6 +29,12 @@ func _on_CollisionArea_area_entered(area):
 			character.pushingCharacter = areaCollisionObject
 			CharacterInteractionHandler.add_ground_colliding_character(character)
 			character.set_collision_mask_bit(0,true)
+		#manage attack push one character attacking one character grounded
+		elif (character.currentState == character.CharacterState.ATTACKGROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND)\
+		|| (character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.ATTACKGROUND):
+				character.pushingCharacter = areaCollisionObject
+				CharacterInteractionHandler.add_ground_colliding_character(character)
+				character.set_collision_mask_bit(0,true)
 			
 func _on_CollisionArea_area_exited(area):
 	if area.is_in_group("CollisionArea"):
@@ -65,14 +71,14 @@ func _on_character_turnaround():
 		if CharacterInteractionHandler.countGroundCollidingCharacters.has(character):
 			if character.currentMoveDirection == character.moveDirection.RIGHT \
 			&& character.global_position > areaCollisionObject.global_position :
-				CharacterInteractionHandler.countGroundCollidingCharacters.erase(character)
+				CharacterInteractionHandler.remove_ground_colliding_character(character)
 			elif character.currentMoveDirection == character.moveDirection.LEFT \
 			&& character.global_position < areaCollisionObject.global_position :
-				CharacterInteractionHandler.countGroundCollidingCharacters.erase(character)
+				CharacterInteractionHandler.remove_ground_colliding_character(character)
 		#add when moving towards
 		else: 
 			if character.currentState == character.CharacterState.GROUND:
-				CharacterInteractionHandler.countGroundCollidingCharacters.append(character)
+				CharacterInteractionHandler.add_ground_colliding_character(character)
 				
 				
 func reset_global_transform():

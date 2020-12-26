@@ -185,7 +185,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0.2, 0.9 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ false, true ]
+"values": [ true, true ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
@@ -875,9 +875,11 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
+[node name="AirCollider" parent="." index="0"]
+visible = false
+
 [node name="AnimatedSprite" parent="." index="3"]
-animation = "dash_attack"
-frame = 13
+frame = 6
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 1.5
@@ -897,6 +899,9 @@ anims/upair = SubResource( 13 )
 anims/uptilt = SubResource( 14 )
 anims/walk = SubResource( 15 )
 
+[node name="HitBoxes" parent="AnimatedSprite" index="1"]
+visible = false
+
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/SweetSpot" index="0"]
 visible = false
 
@@ -908,8 +913,8 @@ visible = true
 position = Vector2( 4.8, 0 )
 
 [node name="InteractionAreas" parent="." index="4"]
+visible = false
 position = Vector2( -4, 4 )
-rotation = 0.261799
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
 visible = true

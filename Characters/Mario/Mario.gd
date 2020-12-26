@@ -21,16 +21,19 @@ func _ready():
 #	animationPlayer = $AnimatedSprite/AnimationPlayer
 	
 func set_base_stats():
-	weight = 1.0
-	baseWalkMaxSpeed = 600
-	walkMaxSpeed = 600
-	
+	weight = 2.0
+	baseWalkMaxSpeed = 300
+	walkMaxSpeed = 300
+	runMaxSpeed = 600
+	baseRunMaxSpeed = 600
 	jabCombo = 1
 
 func apply_attack_movement_stats(step = 0):
 	match currentAttack:
 		GlobalVariables.CharacterAnimations.DAIR: 
 			manage_dair(step)
+		GlobalVariables.CharacterAnimations.DASHATTACK:
+			manage_dash_attack(step)
 	
 func manage_dair(step):
 	match step:
@@ -42,3 +45,6 @@ func manage_dair(step):
 			gravity_on_off("on")
 			animationPlayer.stop(false)
 			bufferAnimation = true
+			
+func manage_dash_attack(step):
+	pass

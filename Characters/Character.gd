@@ -2,14 +2,19 @@ extends KinematicBody2D
 
 #base stats to return to after changes were made
 var baseWalkForce = 1200
-var baseWalkMaxSpeed = 600
+var baseWalkMaxSpeed = 100
+var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 800
+var baseAirSpeed = 600
 
 var walkForce = 1200
-var walkMaxSpeed = 600
+var walkMaxSpeed = 100
+var runMaxSpeed = 600
+var airMaxSpeed = 600
 var stopForce = 1500
 var jumpSpeed = 850
+var currentMaxSpeed = runMaxSpeed
 #jump
 var jumpCount = 0
 var availabelJumps = 2
@@ -34,6 +39,7 @@ var turnaroundCoefficient = 600
 var pushingCharacter =  null
 var disableInputDI = false
 var inHitStun = false
+var resetMovementSpeed = false
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
@@ -197,7 +203,7 @@ func ground_handler(delta):
 	#reset gravity if player is grounded
 	if gravity!=baseGravity:
 		gravity=baseGravity
-	input_movement_physics(delta)
+	input_movement_physics_ground(delta)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	# Check for jumping. grounded must be called after movement code
@@ -243,7 +249,7 @@ func create_drop_platform_timer(waittime,inputTimeout):
 	
 #is called when player is in the air 
 func air_handler(delta):
-	input_movement_physics(delta)
+	input_movement_physics_air(delta)
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
@@ -492,11 +498,17 @@ func process_movement_physics(delta):
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
-func input_movement_physics(delta):
+func input_movement_physics_ground(delta):
 	# Horizontal movement code. First, get the player's input.
-	var walk = walkForce * get_input_direction_x()
+	var xInput = get_input_direction_x()
+	var walk = walkForce * xInput
+	if xInput == 0:
+		resetMovementSpeed = true
+	if resetMovementSpeed && xInput != 0: 
+		resetMovementSpeed = false
+		change_max_speed(xInput)
 	# Slow down the player if they're not trying to move.
-	if abs(walk) < walkForce * 0.2:
+	if abs(walk) < walkForce * 0.02:
 		if(currentState == CharacterState.GROUND):
 			animationPlayer.play("idle")
 		# The velocity, slowed down a bit, and then reassigned.
@@ -504,7 +516,10 @@ func input_movement_physics(delta):
 			velocity.x = move_toward(velocity.x, 0, stopForce * delta)
 	else:
 		if(currentState == CharacterState.GROUND):
-			animationPlayer.play("walk")
+			if currentMaxSpeed == baseWalkMaxSpeed:
+				animationPlayer.play("walk")
+			else:
+				animationPlayer.play("run")
 			match currentMoveDirection:
 				moveDirection.LEFT:
 					if walk > 0: 
@@ -512,6 +527,7 @@ func input_movement_physics(delta):
 #						characterSprite.flip_h = false
 						mirror_areas()
 						directionChange = true
+						change_max_speed(xInput)
 						emit_signal("character_turnaround")
 				moveDirection.RIGHT:
 					if walk < 0: 
@@ -519,6 +535,7 @@ func input_movement_physics(delta):
 #						characterSprite.flip_h = true
 						mirror_areas()
 						directionChange = true
+						change_max_speed(xInput)
 						emit_signal("character_turnaround")
 	if directionChange && ((velocity.x<= 0 && walk >= 0) || (velocity.x>= 0 && walk <= 0)): 
 		match currentMoveDirection:
@@ -532,9 +549,44 @@ func input_movement_physics(delta):
 					velocity.x = 0
 		directionChange = false
 	else: 
-		velocity.x += walk * delta
+		if currentMaxSpeed == baseWalkMaxSpeed:
+			if pushingCharacter != null:
+				pass
+#				velocity.x += xInput * currentMaxSpeed
+			else:
+				velocity.x = xInput * currentMaxSpeed
+				velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+		else:
+			if pushingCharacter != null: 
+				pass
+#				velocity.x += xInput * currentMaxSpeed
+			else:
+				velocity.x = xInput * currentMaxSpeed
+				velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 		
-	velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
+#	
+
+	# Vertical movement code. Apply gravity.
+	velocity.y += gravity * delta
+	
+func change_max_speed(xInput):
+	if abs(xInput) > 0.3:
+		currentMaxSpeed = baseRunMaxSpeed
+	else:
+		currentMaxSpeed = baseWalkMaxSpeed
+
+func input_movement_physics_air(delta):
+	# Horizontal movement code. First, get the player's input.
+	var xInput = get_input_direction_x()
+	var walk = walkForce * xInput
+	# Slow down the player if they're not trying to move.
+	if abs(walk) < walkForce * 0.2:
+		if pushingCharacter == null:
+			velocity.x = move_toward(velocity.x, 0, stopForce * delta)
+	else:
+		velocity.x += walk * delta
+#	print(currentMaxSpeed)
+	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 
 	# Vertical movement code. Apply gravity.
 	velocity.y += gravity * delta
