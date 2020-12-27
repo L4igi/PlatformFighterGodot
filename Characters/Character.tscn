@@ -1,4 +1,4 @@
-[gd_scene load_steps=171 format=2]
+[gd_scene load_steps=196 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -151,6 +151,29 @@
 [ext_resource path="res://Characters/Mario/upsmash/8.png" type="Texture" id=149]
 [ext_resource path="res://Characters/Mario/upsmash/10.png" type="Texture" id=150]
 [ext_resource path="res://Characters/Mario/upsmash/11.png" type="Texture" id=151]
+[ext_resource path="res://Characters/Mario/fsmash/3.png" type="Texture" id=152]
+[ext_resource path="res://Characters/Mario/fsmash/0.png" type="Texture" id=153]
+[ext_resource path="res://Characters/Mario/fsmash/2.png" type="Texture" id=154]
+[ext_resource path="res://Characters/Mario/fsmash/1.png" type="Texture" id=155]
+[ext_resource path="res://Characters/Mario/fsmash/4.png" type="Texture" id=156]
+[ext_resource path="res://Characters/Mario/fsmash/5.png" type="Texture" id=157]
+[ext_resource path="res://Characters/Mario/fsmash/7.png" type="Texture" id=158]
+[ext_resource path="res://Characters/Mario/fsmash/8.png" type="Texture" id=159]
+[ext_resource path="res://Characters/Mario/fsmash/9.png" type="Texture" id=160]
+[ext_resource path="res://Characters/Mario/fsmash/10.png" type="Texture" id=161]
+[ext_resource path="res://Characters/Mario/fsmash/6.png" type="Texture" id=162]
+[ext_resource path="res://Characters/Mario/dsmash/0.png" type="Texture" id=163]
+[ext_resource path="res://Characters/Mario/dsmash/2.png" type="Texture" id=164]
+[ext_resource path="res://Characters/Mario/dsmash/9.png" type="Texture" id=165]
+[ext_resource path="res://Characters/Mario/dsmash/3.png" type="Texture" id=166]
+[ext_resource path="res://Characters/Mario/dsmash/4.png" type="Texture" id=167]
+[ext_resource path="res://Characters/Mario/dsmash/6.png" type="Texture" id=168]
+[ext_resource path="res://Characters/Mario/dsmash/7.png" type="Texture" id=169]
+[ext_resource path="res://Characters/Mario/dsmash/5.png" type="Texture" id=170]
+[ext_resource path="res://Characters/Mario/dsmash/11.png" type="Texture" id=171]
+[ext_resource path="res://Characters/Mario/dsmash/8.png" type="Texture" id=172]
+[ext_resource path="res://Characters/Mario/dsmash/1.png" type="Texture" id=173]
+[ext_resource path="res://Characters/Mario/dsmash/10.png" type="Texture" id=174]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -167,6 +190,11 @@ animations = [ {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
 "loop": true,
 "name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 163 ), ExtResource( 173 ), ExtResource( 164 ), ExtResource( 166 ), ExtResource( 167 ), ExtResource( 170 ), ExtResource( 168 ), ExtResource( 169 ), ExtResource( 172 ), ExtResource( 165 ), ExtResource( 174 ), ExtResource( 171 ) ],
+"loop": true,
+"name": "dsmash",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
@@ -242,6 +270,11 @@ animations = [ {
 "frames": [ ExtResource( 140 ), ExtResource( 141 ), ExtResource( 145 ), ExtResource( 142 ), ExtResource( 143 ), ExtResource( 144 ), ExtResource( 148 ), ExtResource( 146 ), ExtResource( 149 ), ExtResource( 147 ), ExtResource( 150 ), ExtResource( 151 ) ],
 "loop": true,
 "name": "upsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 153 ), ExtResource( 155 ), ExtResource( 154 ), ExtResource( 152 ), ExtResource( 156 ), ExtResource( 157 ), ExtResource( 162 ), ExtResource( 158 ), ExtResource( 159 ), ExtResource( 160 ), ExtResource( 161 ) ],
+"loop": true,
+"name": "fsmash",
 "speed": 5.0
 } ]
 
@@ -499,6 +532,51 @@ tracks/4/keys = {
 "values": [ 93.2, 63.6, 93.2, 63.6, -4.2 ]
 }
 
+[sub_resource type="Animation" id=26]
+resource_name = "dsmash"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "dsmash" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_smash_attack_steps"
+}, {
+"args": [ 1 ],
+"method": "apply_smash_attack_steps"
+} ]
+}
+
 [sub_resource type="Animation" id=6]
 resource_name = "dtilt"
 length = 0.7
@@ -689,6 +767,50 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 1, 0 ]
+}
+
+[sub_resource type="Animation" id=25]
+resource_name = "fsmash"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "fsmash" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_smash_attack_steps"
+}, {
+"args": [ 1 ],
+"method": "apply_smash_attack_steps"
+} ]
 }
 
 [sub_resource type="Animation" id=23]
@@ -1302,8 +1424,8 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "upsmash"
-frame = 2
+animation = "dsmash"
+frame = 3
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -1311,9 +1433,11 @@ anims/bair = SubResource( 2 )
 anims/dair = SubResource( 3 )
 anims/dash_attack = SubResource( 4 )
 anims/doublejump = SubResource( 5 )
+anims/dsmash = SubResource( 26 )
 anims/dtilt = SubResource( 6 )
 anims/fair = SubResource( 7 )
 anims/freefall = SubResource( 8 )
+anims/fsmash = SubResource( 25 )
 anims/ftilt = SubResource( 23 )
 anims/idle = SubResource( 9 )
 anims/jab1 = SubResource( 10 )
@@ -1333,7 +1457,7 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( -15, 5 )
+position = Vector2( 13.08, -4.21876 )
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false

@@ -152,14 +152,25 @@ func attack_handler_ground():
 #		print("SMASH " +str(smashAttack))
 		match smashAttack: 
 			GlobalVariables.SmashAttacks.SMASHRIGHT:
-				pass
+				if currentMoveDirection != moveDirection.RIGHT:
+					print("mirror areas right")
+					currentMoveDirection = moveDirection.RIGHT
+					mirror_areas()
+				animation_handler(GlobalVariables.CharacterAnimations.FSMASH)
+				currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 			GlobalVariables.SmashAttacks.SMASHLEFT:
-				pass
+				if currentMoveDirection != moveDirection.LEFT:
+					print("mirror areas left")
+					currentMoveDirection = moveDirection.LEFT
+					mirror_areas()
+				animation_handler(GlobalVariables.CharacterAnimations.FSMASH)
+				currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 			GlobalVariables.SmashAttacks.SMASHUP:
 				animation_handler(GlobalVariables.CharacterAnimations.UPSMASH)
 				currentAttack = GlobalVariables.CharacterAnimations.UPSMASH
 			GlobalVariables.SmashAttacks.SMASHDOWN:
-				pass
+				animation_handler(GlobalVariables.CharacterAnimations.DSMASH)
+				currentAttack = GlobalVariables.CharacterAnimations.DSMASH
 	elif bufferInput != null || ((abs(get_input_direction_x()) == 0 || jabCount > 0) \
 	&& get_input_direction_y() == 0):
 		jab_handler()
@@ -332,6 +343,10 @@ func create_hitstun_timer(stunTime):
 	
 func _on_hitstun_timeout():
 	inHitStun = false
+	if velocity.y != 0: 
+		switch_to_state(CharacterState.AIR)
+	else:
+		switch_to_state(CharacterState.GROUND)
 	enable_player_input()
 	
 #func create_jab_timer(jabTime):
@@ -487,6 +502,10 @@ func animation_handler(animationToPlay):
 			disableInputDI = true
 		GlobalVariables.CharacterAnimations.UPSMASH:
 			play_attack_animation("upsmash")
+		GlobalVariables.CharacterAnimations.DSMASH:
+			play_attack_animation("dsmash")
+		GlobalVariables.CharacterAnimations.FSMASH:
+			play_attack_animation("fsmash")
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
