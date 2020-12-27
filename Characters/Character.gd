@@ -495,9 +495,9 @@ func process_movement_physics(delta):
 		velocity.x += walk * delta
 		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
 	else:
-		if currentState == CharacterState.GROUND:
+		if currentState == CharacterState.GROUND || currentState == CharacterState.ATTACKGROUND:
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
-		elif currentState == CharacterState.AIR:
+		elif currentState == CharacterState.AIR || currentState == CharacterState.ATTACKAIR:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
@@ -598,7 +598,7 @@ func input_movement_physics_air(delta):
 			velocity.x += (walk * delta)*2
 			
 		else:
-			velocity.x += walk * delta
+			velocity.x += (walk * delta)*2
 #	print(currentMaxSpeed)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 	# Vertical movement code. Apply gravity.

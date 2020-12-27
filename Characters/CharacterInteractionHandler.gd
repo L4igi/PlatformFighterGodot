@@ -33,8 +33,6 @@ func set_combined_velocity(delta):
 		char1PushForce = clamp(char1PushForce, -char1.currentMaxSpeed, char1.currentMaxSpeed)
 		char2PushForce = clamp(char2PushForce, -char2.currentMaxSpeed, char2.currentMaxSpeed)
 	combinedVelocity = (char1PushForce + char2PushForce)
-	print(char1.currentMaxSpeed)
-	print(char2.currentMaxSpeed)
 	var maxWalkForce = max(char1.currentMaxSpeed, char2.currentMaxSpeed)
 	if ignore_pulling_character(char2, char1):
 		char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)

@@ -878,9 +878,6 @@ script = ExtResource( 2 )
 [node name="AirCollider" parent="." index="0"]
 visible = false
 
-[node name="AnimatedSprite" parent="." index="3"]
-frame = 6
-
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 1.5
 anims/bair = SubResource( 1 )
@@ -910,7 +907,6 @@ visible = true
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
 visible = true
-position = Vector2( 4.8, 0 )
 
 [node name="InteractionAreas" parent="." index="4"]
 visible = false
