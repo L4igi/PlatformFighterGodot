@@ -30,10 +30,12 @@ var snapEdgePosition = Vector2()
 var disableInput = false
 var hitStun = false
 #attack 
+var smashAttack = null
 var currentAttack = null
 var jabCount = 0
 var jabCombo = 3
 var dashAttackSpeed = 800
+var chargingSmashAttack = false
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
@@ -42,6 +44,7 @@ var pushingCharacter =  null
 var disableInputDI = false
 var inHitStun = false
 var resetMovementSpeed = false
+var walkThreashold = 0.3
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
@@ -59,7 +62,7 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, SPECIAL, ROLL}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNAIR, HITSTUNGROUND, SPECIAL, ROLL}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -125,7 +128,19 @@ func _physics_process(delta):
 				ground_handler(delta)
 
 func check_input(delta):
-	if Input.is_action_just_pressed(attack):
+	if Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHUP
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(attack):
 		match currentState:
 			CharacterState.AIR:
 				switch_to_state(CharacterState.ATTACKAIR)
@@ -133,41 +148,30 @@ func check_input(delta):
 				switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground():
-	if bufferInput != null: 
-		match jabCount:
-			0:
-				animation_handler(GlobalVariables.CharacterAnimations.JAB1)
-				currentAttack = GlobalVariables.CharacterAnimations.JAB1
-			1:
-				animation_handler(GlobalVariables.CharacterAnimations.JAB2)
-				currentAttack = GlobalVariables.CharacterAnimations.JAB2
-			2:
-				animation_handler(GlobalVariables.CharacterAnimations.JAB3)
-				currentAttack = GlobalVariables.CharacterAnimations.JAB3
-		jabCount += 1
-		if jabCount > jabCombo: 
-			jabCount = 0
-	elif ((abs(get_input_direction_x()) == 0 || jabCount > 0) \
+	if smashAttack != null: 
+#		print("SMASH " +str(smashAttack))
+		match smashAttack: 
+			GlobalVariables.SmashAttacks.SMASHRIGHT:
+				pass
+			GlobalVariables.SmashAttacks.SMASHLEFT:
+				pass
+			GlobalVariables.SmashAttacks.SMASHUP:
+				animation_handler(GlobalVariables.CharacterAnimations.UPSMASH)
+				currentAttack = GlobalVariables.CharacterAnimations.UPSMASH
+			GlobalVariables.SmashAttacks.SMASHDOWN:
+				pass
+	elif bufferInput != null || ((abs(get_input_direction_x()) == 0 || jabCount > 0) \
 	&& get_input_direction_y() == 0):
-		match jabCount:
-			0:
-				animation_handler(GlobalVariables.CharacterAnimations.JAB1)
-				currentAttack = GlobalVariables.CharacterAnimations.JAB1
-			1:
-				animation_handler(GlobalVariables.CharacterAnimations.JAB2)
-				currentAttack = GlobalVariables.CharacterAnimations.JAB2
-			2:
-				animation_handler(GlobalVariables.CharacterAnimations.JAB3)
-				currentAttack = GlobalVariables.CharacterAnimations.JAB3
-		jabCount += 1
-		if jabCount > jabCombo: 
-			jabCount = 0
+		jab_handler()
 	elif get_input_direction_y() < 0:
 		animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
 		currentAttack = GlobalVariables.CharacterAnimations.UPTILT
 	elif get_input_direction_y() > 0:
 		animation_handler(GlobalVariables.CharacterAnimations.DTILT)
 		currentAttack = GlobalVariables.CharacterAnimations.DTILT
+	elif currentMaxSpeed == baseWalkMaxSpeed: 
+		animation_handler(GlobalVariables.CharacterAnimations.FTILT)
+		currentAttack = GlobalVariables.CharacterAnimations.FTILT
 	else: 
 		#attack
 		match currentMoveDirection:
@@ -179,6 +183,21 @@ func attack_handler_ground():
 		currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 #	switch_to_state(CharacterState.GROUND)
 			
+func jab_handler():
+	match jabCount:
+		0:
+			animation_handler(GlobalVariables.CharacterAnimations.JAB1)
+			currentAttack = GlobalVariables.CharacterAnimations.JAB1
+		1:
+			animation_handler(GlobalVariables.CharacterAnimations.JAB2)
+			currentAttack = GlobalVariables.CharacterAnimations.JAB2
+		2:
+			animation_handler(GlobalVariables.CharacterAnimations.JAB3)
+			currentAttack = GlobalVariables.CharacterAnimations.JAB3
+	jabCount += 1
+	if jabCount > jabCombo: 
+		jabCount = 0
+		
 func attack_handler_air():
 	if abs(get_input_direction_x()) < 0.1\
 	&& abs(get_input_direction_y()) < 0.1:
@@ -447,6 +466,8 @@ func animation_handler(animationToPlay):
 			play_attack_animation("jab2")		
 		GlobalVariables.CharacterAnimations.JAB3:
 			play_attack_animation("jab2")
+		GlobalVariables.CharacterAnimations.FTILT:
+			play_attack_animation("ftilt")
 		GlobalVariables.CharacterAnimations.UPTILT:
 			play_attack_animation("uptilt")
 		GlobalVariables.CharacterAnimations.UPAIR:
@@ -464,6 +485,8 @@ func animation_handler(animationToPlay):
 		GlobalVariables.CharacterAnimations.DAIR:
 			play_attack_animation("dair")
 			disableInputDI = true
+		GlobalVariables.CharacterAnimations.UPSMASH:
+			play_attack_animation("upsmash")
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -575,7 +598,7 @@ func input_movement_physics_ground(delta):
 	velocity.y += gravity * delta
 	
 func change_max_speed(xInput):
-	if abs(xInput) > 0.3:
+	if abs(xInput) > walkThreashold:
 		currentMaxSpeed = baseRunMaxSpeed
 	else:
 		currentMaxSpeed = baseWalkMaxSpeed
@@ -650,6 +673,10 @@ func switch_to_state(state):
 			groundCollider.set_disabled(true)
 			groundCollider.visible = false
 			emit_signal("character_state_changed", currentState)
+		CharacterState.HITSTUNAIR:
+			currentState = CharacterState.HITSTUNAIR
+		CharacterState.HITSTUNGROUND:
+			currentState = CharacterState.HITSTUNGROUND
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR
 		CharacterState.ATTACKGROUND:
@@ -664,7 +691,16 @@ func switch_to_state(state):
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
 		gravity=baseGravity
+	chargingSmashAttack = false
+	smashAttack = null
+	bufferInput = null
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
+	if velocity.y != 0: 
+		switch_to_state(CharacterState.HITSTUNAIR)
+	else: 
+		switch_to_state(CharacterState.HITSTUNGROUND)
+	#play idle animation in hitstun 
+	#todo: replace with knockback/hurt animation
 	create_hitstun_timer(hitStun)
 
 func enable_player_input():
@@ -686,6 +722,10 @@ func check_buffer_input():
 	if bufferInput == null: 
 		if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 			bufferInput = attack
+	if chargingSmashAttack:
+		if Input.is_action_just_released(attack) && chargingSmashAttack:
+			chargingSmashAttack = false
+			apply_smash_attack_steps(2)
 
 func buffered_input():
 	if bufferInput == null: 
@@ -698,3 +738,15 @@ func gravity_on_off(status):
 		gravity = baseGravity
 	elif status == "off":
 		gravity = 0
+
+func apply_smash_attack_steps(step = 0):
+	match step:
+		0:
+			disableInputDI = false
+			chargingSmashAttack = true
+		1:
+			if chargingSmashAttack:
+				animationPlayer.stop(false)
+		2:
+			animationPlayer.play()
+			smashAttack = null

@@ -1,4 +1,4 @@
-[gd_scene load_steps=152 format=2]
+[gd_scene load_steps=171 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -134,12 +134,34 @@
 [ext_resource path="res://Characters/Mario/walk/9.png" type="Texture" id=132]
 [ext_resource path="res://Characters/Mario/walk/10.png" type="Texture" id=133]
 [ext_resource path="res://Characters/Mario/walk/11.png" type="Texture" id=134]
+[ext_resource path="res://Characters/Mario/ftilt/4.png" type="Texture" id=135]
+[ext_resource path="res://Characters/Mario/ftilt/3.png" type="Texture" id=136]
+[ext_resource path="res://Characters/Mario/ftilt/1.png" type="Texture" id=137]
+[ext_resource path="res://Characters/Mario/ftilt/0.png" type="Texture" id=138]
+[ext_resource path="res://Characters/Mario/ftilt/2.png" type="Texture" id=139]
+[ext_resource path="res://Characters/Mario/upsmash/0.png" type="Texture" id=140]
+[ext_resource path="res://Characters/Mario/upsmash/1.png" type="Texture" id=141]
+[ext_resource path="res://Characters/Mario/upsmash/3.png" type="Texture" id=142]
+[ext_resource path="res://Characters/Mario/upsmash/4.png" type="Texture" id=143]
+[ext_resource path="res://Characters/Mario/upsmash/5.png" type="Texture" id=144]
+[ext_resource path="res://Characters/Mario/upsmash/2.png" type="Texture" id=145]
+[ext_resource path="res://Characters/Mario/upsmash/7.png" type="Texture" id=146]
+[ext_resource path="res://Characters/Mario/upsmash/9.png" type="Texture" id=147]
+[ext_resource path="res://Characters/Mario/upsmash/6.png" type="Texture" id=148]
+[ext_resource path="res://Characters/Mario/upsmash/8.png" type="Texture" id=149]
+[ext_resource path="res://Characters/Mario/upsmash/10.png" type="Texture" id=150]
+[ext_resource path="res://Characters/Mario/upsmash/11.png" type="Texture" id=151]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 138 ), ExtResource( 137 ), ExtResource( 139 ), ExtResource( 136 ), ExtResource( 135 ) ],
+"loop": true,
+"name": "ftilt",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
@@ -215,6 +237,11 @@ animations = [ {
 "frames": [ ExtResource( 109 ), ExtResource( 110 ), ExtResource( 113 ), ExtResource( 114 ), ExtResource( 111 ), ExtResource( 112 ), ExtResource( 120 ), ExtResource( 118 ), ExtResource( 115 ), ExtResource( 117 ), ExtResource( 116 ), ExtResource( 119 ), ExtResource( 121 ), ExtResource( 122 ) ],
 "loop": true,
 "name": "dair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 140 ), ExtResource( 141 ), ExtResource( 145 ), ExtResource( 142 ), ExtResource( 143 ), ExtResource( 144 ), ExtResource( 148 ), ExtResource( 146 ), ExtResource( 149 ), ExtResource( 147 ), ExtResource( 150 ), ExtResource( 151 ) ],
+"loop": true,
+"name": "upsmash",
 "speed": 5.0
 } ]
 
@@ -664,6 +691,58 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
+[sub_resource type="Animation" id=23]
+resource_name = "ftilt"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "ftilt" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 12, 0 ), Vector2( 15.6, -5.68434e-14 ), Vector2( 16.8, 0.703126 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.2, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
 [sub_resource type="Animation" id=9]
 length = 0.7
 loop = true
@@ -1036,6 +1115,75 @@ tracks/4/keys = {
 "values": [ true, false ]
 }
 
+[sub_resource type="Animation" id=24]
+resource_name = "upsmash"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "upsmash" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.8, 0.9, 1, 1.1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 6, 6, 7, 8, 9, 10, 11 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -9.59998, -9.84377 ), Vector2( 1.2, -9.84377 ), Vector2( 13.08, -4.21876 ) ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath("..")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_smash_attack_steps"
+}, {
+"args": [ 1 ],
+"method": "apply_smash_attack_steps"
+} ]
+}
+
 [sub_resource type="Animation" id=16]
 length = 0.65
 tracks/0/type = "value"
@@ -1154,7 +1302,8 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "bair"
+animation = "upsmash"
+frame = 2
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -1165,6 +1314,7 @@ anims/doublejump = SubResource( 5 )
 anims/dtilt = SubResource( 6 )
 anims/fair = SubResource( 7 )
 anims/freefall = SubResource( 8 )
+anims/ftilt = SubResource( 23 )
 anims/idle = SubResource( 9 )
 anims/jab1 = SubResource( 10 )
 anims/jab2 = SubResource( 11 )
@@ -1172,6 +1322,7 @@ anims/jump = SubResource( 12 )
 anims/nair = SubResource( 13 )
 anims/run = SubResource( 14 )
 anims/upair = SubResource( 15 )
+anims/upsmash = SubResource( 24 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
@@ -1181,17 +1332,15 @@ visible = true
 [node name="SweetSpot" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = false
 
-[node name="NeutralSpot" parent="AnimatedSprite/HitBoxes" index="1"]
-visible = false
-
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-visible = false
 position = Vector2( -15, 5 )
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
+position = Vector2( -5.739, 0 )
+rotation = -0.575959
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
 visible = false

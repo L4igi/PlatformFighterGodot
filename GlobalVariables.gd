@@ -2,7 +2,9 @@ extends Node
 
 enum WorldType {Platform = 0, CenterStage = 1, Character = 2, Item = 3}
 
-enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, UPTILT, DTILT, FAIR, BAIR, NAIR, UPAIR, DAIR, DASHATTACK}
+enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, FTILT ,UPTILT, DTILT, FAIR, BAIR, NAIR, UPAIR, DAIR, DASHATTACK, UPSMASH, DOWNSMASH, FSMASH, }
+
+enum SmashAttacks{SMASHRIGHT, SMASHLEFT, SMASHUP, SMASHDOWN}
 
 var controlsP1 = {
 	"up": "Up1",

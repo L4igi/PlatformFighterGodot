@@ -24,6 +24,14 @@
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral"
   },
+  "FTILT":{
+    "damage_neutral":5,
+    "hitStun_neutral":0.5,
+    "launchVelocity_neutral":750,
+    "launchAngle_neutral":30,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral"
+  },
   "UPTILT":{
     "damage_neutral":5,
     "hitStun_neutral":0.5,
@@ -85,6 +93,14 @@
     "hitStun_neutral":0.5,
     "launchVelocity_neutral":500,
     "launchAngle_neutral":30,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral"
+  },
+  "UPSMASH":{
+    "damage_neutral":5,
+    "hitStun_neutral":0.5,
+    "launchVelocity_neutral":1500,
+    "launchAngle_neutral":290,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral"
   }
