@@ -21,9 +21,12 @@ var currentMaxSpeed = runMaxSpeed
 var jumpCount = 0
 var availabelJumps = 2
 var shortHop = true
+onready var shortHopTimer = $ShortHopTimer
 #platform
 var collidePlatforms = true
 var dropDownCount = 0
+onready var dropDownTimer = $DropDownTimer
+var inputTimeout = false
 #edge
 var snapEdge = false
 var snapEdgePosition = Vector2()
@@ -42,13 +45,15 @@ var currentMoveDirection = moveDirection.RIGHT
 var turnaroundCoefficient = 1500
 var pushingCharacter =  null
 var disableInputDI = false
-var inHitStun = false
 var resetMovementSpeed = false
 var walkThreashold = 0.3
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
 var bufferAnimation = false
+#hitstun 
+var inHitStun = false
+onready var hitStunTimer = $HitStunTimer
 
 var directionChange = false
 
@@ -62,7 +67,7 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNAIR, HITSTUNGROUND, SPECIAL, ROLL}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUN, SPECIAL, ROLL}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -94,9 +99,11 @@ func _ready():
 	var attacks = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = attacks.get_result()
-	
+	hitStunTimer.connect("timeout", self, "_on_hitstun_timeout")
+	shortHopTimer.connect("timeout", self, "_on_short_hop_timeout")
+	dropDownTimer.connect("timeout", self, "_on_drop_timer_timeout")
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
-	
+
 func _physics_process(delta):
 	if disableInput:
 		process_movement_physics(delta)
@@ -113,6 +120,10 @@ func _physics_process(delta):
 				switch_to_state(CharacterState.AIR)
 				animationPlayer.play("freefall")
 				toggle_all_hitboxes("off")
+		#if character is in hitstun and lands on ground finish hurt animation
+		elif currentState == CharacterState.HITSTUN:
+			if onSolidGround && int(velocity.y) == 0:
+				bufferAnimation = true
 	if !disableInput:
 		check_input(delta)
 		match currentState:
@@ -126,26 +137,28 @@ func _physics_process(delta):
 				attack_handler_ground()
 			CharacterState.GROUND:
 				ground_handler(delta)
+			CharacterState.HITSTUN:
+				hitstun_handler(delta)
 
 func check_input(delta):
-	if Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
-		switch_to_state(CharacterState.ATTACKGROUND)
-	elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
-		switch_to_state(CharacterState.ATTACKGROUND)
-	elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHUP
-		switch_to_state(CharacterState.ATTACKGROUND)
-	elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
-		switch_to_state(CharacterState.ATTACKGROUND)
-	elif Input.is_action_just_pressed(attack):
-		match currentState:
-			CharacterState.AIR:
-				switch_to_state(CharacterState.ATTACKAIR)
-			CharacterState.GROUND:
-				switch_to_state(CharacterState.ATTACKGROUND)
+		if Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
+			smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
+			switch_to_state(CharacterState.ATTACKGROUND)
+		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
+			smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
+			switch_to_state(CharacterState.ATTACKGROUND)
+		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
+			smashAttack = GlobalVariables.SmashAttacks.SMASHUP
+			switch_to_state(CharacterState.ATTACKGROUND)
+		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
+			smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
+			switch_to_state(CharacterState.ATTACKGROUND)
+		elif Input.is_action_just_pressed(attack) && !hitStun:
+			match currentState:
+				CharacterState.AIR:
+					switch_to_state(CharacterState.ATTACKAIR)
+				CharacterState.GROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground():
 	if smashAttack != null: 
@@ -268,16 +281,13 @@ func ground_handler(delta):
 		toggle_all_hitboxes("off")
 
 #creates timer after dropping through platform to enable/diable collision
-func create_drop_platform_timer(waittime,inputTimeout):
-	var timer = Timer.new()
-	timer.set_one_shot(true)
-	timer.set_wait_time(waittime)
-	timer.autostart = true
-	if inputTimeout:
-		timer.connect("timeout", self, "_on_drop_input_timeout")
+func create_drop_platform_timer(waittime,setInputTimeout):
+	if setInputTimeout:
+		inputTimeout = true
 	else: 
-		timer.connect("timeout", self, "_on_drop_platform_timeout")
-	add_child(timer)
+		inputTimeout = false
+	dropDownTimer.set_wait_time(waittime)
+	dropDownTimer.start()
 	
 #is called when player is in the air 
 func air_handler(delta):
@@ -308,45 +318,46 @@ func air_handler(delta):
 		switch_to_state(CharacterState.GROUND)
 		#if aerial attack is interrupted by ground cancel hitboxes
 		toggle_all_hitboxes("off")
-	
+		
 func _on_short_hop_timeout():
 	if shortHop: 
 		velocity.y = 0
 				
-func _on_drop_platform_timeout():
-	switch_to_state(CharacterState.AIR)
-	collidePlatforms = false
-
-func _on_drop_input_timeout():
-	dropDownCount = 0
+func _on_drop_timer_timeout():
+	if inputTimeout:
+		inputTimeout = false
+		dropDownCount = 0
+	else:
+		switch_to_state(CharacterState.AIR)
+		collidePlatforms = false
 	
 #creates timer to determine if short or fullhop
 func create_jump_timer(waittime):
 	shortHop = false
-	var timer = Timer.new()
-	timer.set_one_shot(true)
-	timer.set_wait_time(waittime)
-	timer.autostart = true
-	timer.connect("timeout", self, "_on_short_hop_timeout")
-	add_child(timer)
+	shortHopTimer.set_wait_time(waittime)
+	shortHopTimer.start()
+	
+func hitstun_handler(delta):
+#	print("Hitstun")
+	process_movement_physics(delta)
+	#switch to other animation on button press
+	
+	#when hitting ground continou hurt animation
 	
 func create_hitstun_timer(stunTime):
 	disableInput = true
 	disableInputDI = false
 	inHitStun = true
-	var timer = Timer.new()
-	timer.set_one_shot(true)
-	timer.set_wait_time(stunTime)
-	timer.autostart = true
-	timer.connect("timeout", self, "_on_hitstun_timeout")
-	add_child(timer)
+	hitStunTimer.set_wait_time(stunTime)
+	hitStunTimer.start()
 	
 func _on_hitstun_timeout():
-	inHitStun = false
-	if velocity.y != 0: 
-		switch_to_state(CharacterState.AIR)
-	else:
-		switch_to_state(CharacterState.GROUND)
+	print("timeout")
+#	inHitStun = false
+#	if velocity.y != 0: 
+#		switch_to_state(CharacterState.AIR)
+#	else:
+#		switch_to_state(CharacterState.GROUND)
 	enable_player_input()
 	
 #func create_jab_timer(jabTime):
@@ -506,6 +517,10 @@ func animation_handler(animationToPlay):
 			play_attack_animation("dsmash")
 		GlobalVariables.CharacterAnimations.FSMASH:
 			play_attack_animation("fsmash")
+		GlobalVariables.CharacterAnimations.HURT:
+			animationPlayer.stop(true)
+			print("current anim " +str(animationPlayer.current_animation))
+			animationPlayer.play("hurt")
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -532,6 +547,7 @@ func process_movement_physics(delta):
 #		velocity = velocity.bounce(Vector2(0,1))
 		if onSolidGround && int(velocity.y) > 0: 
 			velocity.y *= -1
+		velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 	if disableInputDI:
 		var walk = disableInputInfluence * get_input_direction_x()
 		velocity.x += walk * delta
@@ -692,14 +708,15 @@ func switch_to_state(state):
 			groundCollider.set_disabled(true)
 			groundCollider.visible = false
 			emit_signal("character_state_changed", currentState)
-		CharacterState.HITSTUNAIR:
-			currentState = CharacterState.HITSTUNAIR
-		CharacterState.HITSTUNGROUND:
-			currentState = CharacterState.HITSTUNGROUND
+		CharacterState.HITSTUN:
+			currentState = CharacterState.HITSTUN
+			emit_signal("character_state_changed", currentState)
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR
+			emit_signal("character_state_changed", currentState)
 		CharacterState.ATTACKGROUND:
 			currentState = CharacterState.ATTACKGROUND
+			emit_signal("character_state_changed", currentState)
 		CharacterState.SPECIAL:
 			currentState = CharacterState.SPECIAL
 		CharacterState.EDGE:
@@ -714,18 +731,17 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	smashAttack = null
 	bufferInput = null
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
-	if velocity.y != 0: 
-		switch_to_state(CharacterState.HITSTUNAIR)
-	else: 
-		switch_to_state(CharacterState.HITSTUNGROUND)
+	switch_to_state(CharacterState.HITSTUN)
 	#play idle animation in hitstun 
 	#todo: replace with knockback/hurt animation
+	animation_handler(GlobalVariables.CharacterAnimations.HURT)
 	create_hitstun_timer(hitStun)
 
 func enable_player_input():
 	if buffered_input():
 		attack_handler_ground()
 	elif bufferAnimation:
+		print("Buffer animation")
 		animationPlayer.play()
 		bufferAnimation = false
 	else:
@@ -745,6 +761,7 @@ func check_buffer_input():
 		if Input.is_action_just_released(attack) && chargingSmashAttack:
 			chargingSmashAttack = false
 			apply_smash_attack_steps(2)
+	
 
 func buffered_input():
 	if bufferInput == null: 
@@ -769,3 +786,13 @@ func apply_smash_attack_steps(step = 0):
 		2:
 			animationPlayer.play()
 			smashAttack = null
+
+func apply_hurt_animation_step(step =0):
+	match step: 
+		0:
+			disableInputDI = false
+		1:
+			animationPlayer.stop(false)
+#			bufferAnimation = true
+		2:
+			pass

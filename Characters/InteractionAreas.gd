@@ -58,7 +58,10 @@ func _on_character_state_change(currentState):
 				areaCollisionObject.pushingCharacter = character
 				CharacterInteractionHandler.add_ground_colliding_character(character)
 				CharacterInteractionHandler.add_ground_colliding_character(areaCollisionObject)
-		if currentState == character.CharacterState.AIR:
+		elif currentState == character.CharacterState.AIR:
+			character.set_collision_mask_bit(0,false)
+			CharacterInteractionHandler.remove_ground_colliding_character(character)
+		elif currentState == character.CharacterState.HITSTUN:
 			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
 #		if currentState == character.CharaterState.STUN:
