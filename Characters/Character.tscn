@@ -917,7 +917,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5 ),
+"times": PoolRealArray( 0, 0.7 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
@@ -1557,7 +1557,6 @@ anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
-visible = true
 
 [node name="SweetSpot" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = false
@@ -1572,12 +1571,13 @@ visible = false
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
-visible = false
 position = Vector2( 2, -18 )
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
-visible = false
 position = Vector2( 0.666667, 14 )
+
+[node name="CollisionArea" parent="InteractionAreas" index="1"]
+visible = false
 
 [node name="HitStunTimer" type="Timer" parent="."]
 one_shot = true

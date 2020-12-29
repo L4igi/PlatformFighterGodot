@@ -34,7 +34,7 @@
   },
   "UPTILT":{
     "damage_neutral":5,
-    "hitStun_neutral":0.5,
+    "hitStun_neutral":0.1,
     "launchVelocity_neutral":750,
     "launchAngle_neutral":270,
     "knockBackGrowth_neutral" :100,
