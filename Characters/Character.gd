@@ -27,6 +27,7 @@ var collidePlatforms = true
 var dropDownCount = 0
 onready var dropDownTimer = $DropDownTimer
 var inputTimeout = false
+var atPlatformEdge = null
 #edge
 var snapEdge = false
 var snapEdgePosition = Vector2()
@@ -47,6 +48,7 @@ var pushingCharacter =  null
 var disableInputDI = false
 var resetMovementSpeed = false
 var walkThreashold = 0.3
+var currentPushSpeed = 0
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
@@ -388,18 +390,18 @@ func hitstun_handler(delta):
 			switch_to_state(CharacterState.GETUP)
 			animation_handler(GlobalVariables.CharacterAnimations.NORMALGETUP)
 		elif Input.is_action_just_pressed(left):
+			print("rolling left")
 			switch_to_state(CharacterState.GETUP)
 			if currentMoveDirection != moveDirection.LEFT:
 				currentMoveDirection = moveDirection.LEFT
 				mirror_areas()
-			velocity.x = -500
 			animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
 		elif Input.is_action_just_pressed(right):
+			print("rolling right")
 			switch_to_state(CharacterState.GETUP)
 			if currentMoveDirection != moveDirection.RIGHT:
 				currentMoveDirection = moveDirection.RIGHT
 				mirror_areas()
-			velocity.x = 500
 			animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
 	elif currentState == CharacterState.HITSTUNAIR:
 		#if not in hitstun check for jump, attack or special 
@@ -583,11 +585,20 @@ func animation_handler(animationToPlay):
 		GlobalVariables.CharacterAnimations.ROLLGETUP:
 			animationPlayer.play("roll_getup")
 			if currentMoveDirection == moveDirection.LEFT:
-				getupRollDistance *=-1
+				getupRollDistance = abs(getupRollDistance) * -1
+				if atPlatformEdge == moveDirection.LEFT:
+					velocity.x = 0
+				else:
+					velocity.x = getupRollDistance
 			else:
 				getupRollDistance = abs(getupRollDistance)
-			$Tween.interpolate_property(self, "position",self.position, self.position+Vector2(getupRollDistance, 0), animationPlayer.get_animation("roll_getup").length,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-			$Tween.start()
+				if atPlatformEdge == moveDirection.RIGHT:
+					velocity.x = 0
+				else:
+					velocity.x = getupRollDistance
+#			$Tween.interpolate_property(self, "position",self.position, self.position+Vector2(getupRollDistance, 0), animationPlayer.get_animation("roll_getup").length,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+#			$Tween.start()
+			
 
 		GlobalVariables.CharacterAnimations.NORMALGETUP:
 			animationPlayer.play("normal_getup")

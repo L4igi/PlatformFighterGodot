@@ -20,20 +20,32 @@ func set_combined_velocity(delta):
 		combinedVelocity = 0
 		#special case for dash attacks
 		#no slowdown 
+		char1.currentPushSpeed = char1.currentMaxSpeed
+		char2.currentPushSpeed = char2.currentMaxSpeed
 		calc_push_slowdown(char1, char2)
 		calc_push_slowdown(char2, char1)
 
-	var char1PushForce = char1.currentMaxSpeed * char1.get_input_direction_x()
-	var char2PushForce = char2.currentMaxSpeed * char2.get_input_direction_x()
-			
+	var char1PushForce = char1.currentPushSpeed * char1.get_input_direction_x()
+	if char1.currentState == char1.CharacterState.HITSTUNGROUND:
+		char1PushForce = 0
+	if char1.resetMovementSpeed && char1PushForce != 0: 
+		char1.change_max_speed(char1PushForce)
+		initCalculations = false
+	var char2PushForce = char2.currentPushSpeed * char2.get_input_direction_x()
+	if char2.currentState == char2.CharacterState.HITSTUNGROUND:
+		char2PushForce = 0
+	if char2.resetMovementSpeed && char2PushForce != 0:
+		char2.change_max_speed(char2PushForce)
+		initCalculations = false
+		
 	if abs(char1.get_input_direction_x()) < 0.05 &&  abs(char2.get_input_direction_x()) < 0.05:
 		char1PushForce = move_toward(char1PushForce, 0, char1.groundStopForce * delta)
 		char2PushForce = move_toward(char2PushForce, 0, char2.groundStopForce * delta)
 	else:
-		char1PushForce = clamp(char1PushForce, -char1.currentMaxSpeed, char1.currentMaxSpeed)
-		char2PushForce = clamp(char2PushForce, -char2.currentMaxSpeed, char2.currentMaxSpeed)
+		char1PushForce = clamp(char1PushForce, -char1.currentPushSpeed, char1.currentPushSpeed)
+		char2PushForce = clamp(char2PushForce, -char2.currentPushSpeed, char2.currentPushSpeed)
 	combinedVelocity = (char1PushForce + char2PushForce)
-	var maxWalkForce = max(char1.currentMaxSpeed, char2.currentMaxSpeed)
+	var maxWalkForce = max(char1.currentPushSpeed, char2.currentPushSpeed)
 	if ignore_pulling_character(char2, char1):
 		char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
 	if ignore_pulling_character(char1, char2):
@@ -57,10 +69,11 @@ func add_ground_colliding_character(character):
 		countGroundCollidingCharacters.append(character)
 	
 func calc_push_slowdown(character1, character2):
-	character1.currentMaxSpeed /= (character2.weight) 
+	character1.currentPushSpeed = character1.currentMaxSpeed/(character2.weight) 
 #	character.walkForce = 200
-	if character1.velocity.x > character1.currentMaxSpeed:
-		character1.velocity.x = character1.currentMaxSpeed * character1.get_input_direction_x()
+	if character1.velocity.x > character1.currentPushSpeed:
+		character1.velocity.x = character1.currentPushSpeed * character1.get_input_direction_x()
+		
 
 func remove_ground_colliding_character(character):
 	countGroundCollidingCharacters.erase(character)
