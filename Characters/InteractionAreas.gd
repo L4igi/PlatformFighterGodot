@@ -21,7 +21,8 @@ func _on_CollisionArea_area_entered(area):
 		if character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.AIR:
 			character.set_collision_mask_bit(0,false)
 		elif character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND\
-		|| character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.HITSTUNGROUND:
+		|| character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.HITSTUNGROUND\
+		|| character.currentState == character.CharacterState.AIR && areaCollisionObject.currentState == areaCollisionObject.CharacterState.SHIELD:
 			if character.global_position.y < areaCollisionObject.global_position.y && character.velocity.y > 0:
 				character.set_collision_mask_bit(0,true)
 				character.pushingCharacter = areaCollisionObject
@@ -33,6 +34,12 @@ func _on_CollisionArea_area_entered(area):
 		#manage characters on ground in hitstun/lying on ground
 		elif character.currentState == character.CharacterState.HITSTUNGROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND\
 		|| character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.HITSTUNGROUND:
+			character.pushingCharacter = areaCollisionObject
+			CharacterInteractionHandler.add_ground_colliding_character(character)
+			character.set_collision_mask_bit(0,true)
+		#manage character in shield and character on ground
+		elif character.currentState == character.CharacterState.SHIELD && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND\
+		|| character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.SHIELD:
 			character.pushingCharacter = areaCollisionObject
 			CharacterInteractionHandler.add_ground_colliding_character(character)
 			character.set_collision_mask_bit(0,true)
@@ -63,7 +70,9 @@ func _on_character_state_change(currentState):
 #	if currentState != character.CharacterState.GROUND || currentState != character.CharacterState.AIR:
 #		return
 	if collisionAreaEntered != null: 
-		if currentState == character.CharacterState.GROUND || currentState == character.CharacterState.HITSTUNGROUND:
+		if currentState == character.CharacterState.GROUND \
+		|| currentState == character.CharacterState.HITSTUNGROUND \
+		|| currentState == character.CharacterState.SHIELD:
 			character.set_collision_mask_bit(0,true)
 			character.pushingCharacter = areaCollisionObject
 			areaCollisionObject.pushingCharacter = character

@@ -899,9 +899,6 @@ anims/upair = SubResource( 13 )
 anims/uptilt = SubResource( 14 )
 anims/walk = SubResource( 15 )
 
-[node name="HitBoxes" parent="AnimatedSprite" index="1"]
-visible = false
-
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/SweetSpot" index="0"]
 visible = false
 
@@ -912,12 +909,6 @@ position = Vector2( 0, 10.277 )
 visible = false
 position = Vector2( -4.00001, 3.99999 )
 rotation = 1.5708
-
-[node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
-visible = true
-
-[node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
-visible = true
 
 [node name="CollisionArea" parent="InteractionAreas" index="1"]
 position = Vector2( 0, -4 )

@@ -24,18 +24,28 @@ func set_combined_velocity(delta):
 		char2.currentPushSpeed = char2.currentMaxSpeed
 		calc_push_slowdown(char1, char2)
 		calc_push_slowdown(char2, char1)
-
-	var char1PushForce = char1.currentPushSpeed * char1.get_input_direction_x()
-	if char1.currentState == char1.CharacterState.HITSTUNGROUND:
+		
+	var char1XInput = char1.get_input_direction_x()
+	var char1PushForce = char1.currentPushSpeed * char1XInput
+	var char2XInput = char2.get_input_direction_x()
+	var char2PushForce = char1.currentPushSpeed * char2XInput
+	
+	if char1.currentState == char1.CharacterState.HITSTUNGROUND \
+	|| char1.inHitStun\
+	|| char1.currentState == char1.CharacterState.SHIELD:
 		char1PushForce = 0
 	if char1.resetMovementSpeed && char1PushForce != 0: 
-		char1.change_max_speed(char1PushForce)
+		char1.change_max_speed(char1XInput)
+		char1.resetMovementSpeed = false
 		initCalculations = false
-	var char2PushForce = char2.currentPushSpeed * char2.get_input_direction_x()
-	if char2.currentState == char2.CharacterState.HITSTUNGROUND:
+
+	if char2.currentState == char2.CharacterState.HITSTUNGROUND \
+	|| char2.inHitStun \
+	|| char2.currentState == char2.CharacterState.SHIELD:
 		char2PushForce = 0
 	if char2.resetMovementSpeed && char2PushForce != 0:
-		char2.change_max_speed(char2PushForce)
+		char2.change_max_speed(char2XInput)
+		char2.resetMovementSpeed = false
 		initCalculations = false
 		
 	if abs(char1.get_input_direction_x()) < 0.05 &&  abs(char2.get_input_direction_x()) < 0.05:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=239 format=2]
+[gd_scene load_steps=241 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -212,6 +212,7 @@
 [ext_resource path="res://Characters/Mario/roll_getup/9.png" type="Texture" id=210]
 [ext_resource path="res://Characters/Mario/roll_getup/12.png" type="Texture" id=211]
 [ext_resource path="res://Characters/Mario/roll_getup/11.png" type="Texture" id=212]
+[ext_resource path="res://Characters/Mario/shield/0.png" type="Texture" id=213]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -243,6 +244,11 @@ animations = [ {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
 "loop": true,
 "name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 213 ) ],
+"loop": true,
+"name": "shield",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 186 ), ExtResource( 185 ), ExtResource( 187 ), ExtResource( 180 ), ExtResource( 179 ), ExtResource( 181 ), ExtResource( 182 ), ExtResource( 183 ), ExtResource( 184 ), ExtResource( 175 ), ExtResource( 178 ), ExtResource( 177 ), ExtResource( 176 ) ],
@@ -1028,6 +1034,7 @@ tracks/3/keys = {
 [sub_resource type="Animation" id=28]
 resource_name = "hurt_short"
 length = 0.3
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -1051,6 +1058,18 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("AnimationPlayer:playback_speed")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
 }
 
 [sub_resource type="Animation" id=9]
@@ -1452,6 +1471,34 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
+[sub_resource type="Animation" id=32]
+resource_name = "shield"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "shield" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
 [sub_resource type="Animation" id=15]
 length = 0.7
 tracks/0/type = "value"
@@ -1702,12 +1749,10 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "attack_getup"
-frame = 6
+animation = "shield"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
-playback_speed = 2.0
 anims/attack_getup = SubResource( 30 )
 anims/bair = SubResource( 2 )
 anims/dair = SubResource( 3 )
@@ -1729,6 +1774,7 @@ anims/nair = SubResource( 13 )
 anims/normal_getup = SubResource( 29 )
 anims/roll_getup = SubResource( 31 )
 anims/run = SubResource( 14 )
+anims/shield = SubResource( 32 )
 anims/upair = SubResource( 15 )
 anims/upsmash = SubResource( 24 )
 anims/uptilt = SubResource( 16 )

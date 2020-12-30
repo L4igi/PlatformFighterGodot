@@ -32,7 +32,6 @@ var atPlatformEdge = null
 var snapEdge = false
 var snapEdgePosition = Vector2()
 var disableInput = false
-var hitStun = false
 #attack 
 var smashAttack = null
 var currentAttack = null
@@ -58,6 +57,7 @@ var inHitStun = false
 onready var hitStunTimer = $HitStunTimer
 var groundHitStun = 3.0
 var getupRollDistance = 100
+var tumblingThreashold = 500
 #invincibility
 onready var invincibilityTimer = $InvincibilityTimer
 
@@ -73,7 +73,7 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, ROLL, GETUP}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, SHIELD, ROLL, GETUP}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -160,6 +160,8 @@ func _physics_process(delta):
 				hitstun_handler(delta)
 			CharacterState.HITSTUNGROUND:
 				hitstun_handler(delta)
+			CharacterState.SHIELD:
+				shield_handler(delta)
 
 func check_input(delta):
 		if Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
@@ -174,12 +176,16 @@ func check_input(delta):
 		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
 			smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
 			switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_just_pressed(attack) && !hitStun:
+		elif Input.is_action_just_pressed(attack) && !inHitStun:
 			match currentState:
 				CharacterState.AIR:
 					switch_to_state(CharacterState.ATTACKAIR)
 				CharacterState.GROUND:
 					switch_to_state(CharacterState.ATTACKGROUND)
+		elif Input.is_action_just_pressed(shield) && currentState == CharacterState.GROUND:
+			print("SHILED")
+			animation_handler(GlobalVariables.CharacterAnimations.SHIELD)
+			switch_to_state(CharacterState.SHIELD)
 		
 func attack_handler_ground():
 	if smashAttack != null: 
@@ -406,7 +412,7 @@ func hitstun_handler(delta):
 	elif currentState == CharacterState.HITSTUNAIR:
 		#if not in hitstun check for jump, attack or special 
 		#todo: check for special
-		if !hitStun: 
+		if !inHitStun: 
 			if Input.is_action_just_pressed(attack):
 				switch_to_state(CharacterState.ATTACKAIR)
 				attack_handler_air()
@@ -424,13 +430,18 @@ func create_hitstun_timer(stunTime):
 	hitStunTimer.start()
 	
 func _on_hitstun_timeout():
-	print("hitstun timeout")
+#	print("hitstun timeout")
 	inHitStun = false
 #	if velocity.y != 0: 
 #		switch_to_state(CharacterState.AIR)
 #	else:
 #		switch_to_state(CharacterState.GROUND)
 	enable_player_input()
+	
+func shield_handler(delta):
+	process_movement_physics(delta)
+	if Input.is_action_just_released(shield):
+		switch_to_state(CharacterState.GROUND)
 	
 func snap_edge(edgePosition):
 	if !onSolidGround:
@@ -578,8 +589,10 @@ func animation_handler(animationToPlay):
 			play_attack_animation("fsmash")
 		GlobalVariables.CharacterAnimations.HURT:
 			animationPlayer.stop(true)
-			print("current anim " +str(animationPlayer.current_animation))
 			animationPlayer.play("hurt")
+		GlobalVariables.CharacterAnimations.HURTSHORT:
+			animationPlayer.stop(true)
+			animationPlayer.play("hurt_short")
 		GlobalVariables.CharacterAnimations.ATTACKGETUP:
 			animationPlayer.play("attack_getup")
 		GlobalVariables.CharacterAnimations.ROLLGETUP:
@@ -596,12 +609,10 @@ func animation_handler(animationToPlay):
 					velocity.x = 0
 				else:
 					velocity.x = getupRollDistance
-#			$Tween.interpolate_property(self, "position",self.position, self.position+Vector2(getupRollDistance, 0), animationPlayer.get_animation("roll_getup").length,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-#			$Tween.start()
-			
-
 		GlobalVariables.CharacterAnimations.NORMALGETUP:
 			animationPlayer.play("normal_getup")
+		GlobalVariables.CharacterAnimations.SHIELD:
+			animationPlayer.play("shield")
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -637,6 +648,8 @@ func process_movement_physics(delta):
 		if currentState == CharacterState.GROUND || currentState == CharacterState.ATTACKGROUND:
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 		elif currentState == CharacterState.AIR || currentState == CharacterState.ATTACKAIR:
+			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
+		elif currentState == CharacterState.SHIELD:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
@@ -810,6 +823,9 @@ func switch_to_state(state):
 		CharacterState.GETUP:
 			currentState = CharacterState.GETUP
 			emit_signal("character_state_changed", currentState)
+		CharacterState.SHIELD:
+			currentState = CharacterState.SHIELD
+			emit_signal("character_state_changed", currentState)
 
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
@@ -817,14 +833,20 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
-	$Tween.stop_all()
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
+	if launchVelocity > tumblingThreashold:
 	#todo: calculate if in tumble animation
-	switch_to_state(CharacterState.HITSTUNAIR)
+		switch_to_state(CharacterState.HITSTUNAIR)
 	#todo hitstun ground?
 	#play idle animation in hitstun 
 	#todo: replace with knockback/hurt animation
-	animation_handler(GlobalVariables.CharacterAnimations.HURT)
+		animation_handler(GlobalVariables.CharacterAnimations.HURT)
+	else: 
+		if onSolidGround && velocity.y == 0:
+			switch_to_state(CharacterState.GROUND)
+		else:
+			switch_to_state(CharacterState.AIR)
+		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
 
 func enable_player_input():
@@ -845,7 +867,7 @@ func enable_player_input():
 func check_buffer_input():
 	#todo: add other inputs for buffer
 	if bufferInput == null: 
-		if currentState == CharacterState.GROUND:
+		if currentState == CharacterState.ATTACKGROUND:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = attack
 	if chargingSmashAttack:

@@ -1163,26 +1163,14 @@ anims/upsmash = SubResource( 18 )
 anims/uptilt = SubResource( 19 )
 anims/walk = SubResource( 20 )
 
-[node name="HitBoxes" parent="AnimatedSprite" index="1"]
-visible = false
-
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/SweetSpot" index="0"]
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
 position = Vector2( 0, 10.277 )
-disabled = false
 
 [node name="InteractionAreas" parent="." index="4"]
 visible = false
-position = Vector2( -4.381, 0 )
-rotation = -0.10472
-
-[node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
-visible = true
-
-[node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
-visible = true
 
 [node name="CollisionArea" parent="InteractionAreas" index="1"]
 position = Vector2( 0, -4 )

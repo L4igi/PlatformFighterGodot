@@ -2,7 +2,7 @@
 {
   "JAB1":{
     "damage_neutral":5,
-    "hitStun_neutral":2.5,
+    "hitStun_neutral":0.5,
     "launchVelocity_neutral":100,
     "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
@@ -10,7 +10,7 @@
   },
   "JAB2":{
     "damage_neutral":5,
-    "hitStun_neutral":0.5,
+    "hitStun_neutral":0.3,
     "launchVelocity_neutral":200,
     "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
