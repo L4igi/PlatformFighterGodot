@@ -76,15 +76,14 @@ func _on_character_state_change(currentState):
 			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
 		elif currentState == character.CharacterState.HITSTUNGROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND:
-			print("character changed hitstunground")
 			character.set_collision_mask_bit(0,true)
 			character.pushingCharacter = areaCollisionObject
 			areaCollisionObject.pushingCharacter = character
 			CharacterInteractionHandler.add_ground_colliding_character(character)
 			CharacterInteractionHandler.add_ground_colliding_character(areaCollisionObject)
-#		if currentState == character.CharaterState.STUN:
-#			character.set_collision_mask_bit(0,false)
-#			CharacterInteractionHandler.remove_ground_colliding_character(character)
+		elif currentState == character.CharacterState.GETUP:
+			character.set_collision_mask_bit(0,false)
+			CharacterInteractionHandler.remove_ground_colliding_character(character)
 			
 func _on_character_turnaround():
 	if collisionAreaEntered != null:

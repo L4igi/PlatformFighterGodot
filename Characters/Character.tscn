@@ -1,4 +1,4 @@
-[gd_scene load_steps=211 format=2]
+[gd_scene load_steps=239 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -187,12 +187,52 @@
 [ext_resource path="res://Characters/Mario/hurt/1.png" type="Texture" id=185]
 [ext_resource path="res://Characters/Mario/hurt/0.png" type="Texture" id=186]
 [ext_resource path="res://Characters/Mario/hurt/2.png" type="Texture" id=187]
+[ext_resource path="res://Characters/Mario/normal_getup/4.png" type="Texture" id=188]
+[ext_resource path="res://Characters/Mario/normal_getup/1.png" type="Texture" id=189]
+[ext_resource path="res://Characters/Mario/roll_getup/0.png" type="Texture" id=190]
+[ext_resource path="res://Characters/Mario/roll_getup/1.png" type="Texture" id=191]
+[ext_resource path="res://Characters/Mario/roll_getup/2.png" type="Texture" id=192]
+[ext_resource path="res://Characters/Mario/attack_getup/1.png" type="Texture" id=193]
+[ext_resource path="res://Characters/Mario/attack_getup/5.png" type="Texture" id=194]
+[ext_resource path="res://Characters/Mario/attack_getup/6.png" type="Texture" id=195]
+[ext_resource path="res://Characters/Mario/attack_getup/2.png" type="Texture" id=196]
+[ext_resource path="res://Characters/Mario/normal_getup/2.png" type="Texture" id=197]
+[ext_resource path="res://Characters/Mario/normal_getup/3.png" type="Texture" id=198]
+[ext_resource path="res://Characters/Mario/attack_getup/3.png" type="Texture" id=199]
+[ext_resource path="res://Characters/Mario/attack_getup/4.png" type="Texture" id=200]
+[ext_resource path="res://Characters/Mario/normal_getup/0.png" type="Texture" id=201]
+[ext_resource path="res://Characters/Mario/attack_getup/0.png" type="Texture" id=202]
+[ext_resource path="res://Characters/Mario/roll_getup/4.png" type="Texture" id=203]
+[ext_resource path="res://Characters/Mario/roll_getup/8.png" type="Texture" id=204]
+[ext_resource path="res://Characters/Mario/roll_getup/5.png" type="Texture" id=205]
+[ext_resource path="res://Characters/Mario/roll_getup/6.png" type="Texture" id=206]
+[ext_resource path="res://Characters/Mario/roll_getup/3.png" type="Texture" id=207]
+[ext_resource path="res://Characters/Mario/roll_getup/7.png" type="Texture" id=208]
+[ext_resource path="res://Characters/Mario/roll_getup/10.png" type="Texture" id=209]
+[ext_resource path="res://Characters/Mario/roll_getup/9.png" type="Texture" id=210]
+[ext_resource path="res://Characters/Mario/roll_getup/12.png" type="Texture" id=211]
+[ext_resource path="res://Characters/Mario/roll_getup/11.png" type="Texture" id=212]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 190 ), ExtResource( 191 ), ExtResource( 192 ), ExtResource( 207 ), ExtResource( 203 ), ExtResource( 205 ), ExtResource( 206 ), ExtResource( 208 ), ExtResource( 204 ), ExtResource( 210 ), ExtResource( 209 ), ExtResource( 212 ), ExtResource( 211 ) ],
+"loop": true,
+"name": "roll_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 201 ), ExtResource( 189 ), ExtResource( 197 ), ExtResource( 198 ), ExtResource( 188 ) ],
+"loop": true,
+"name": "normal_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ) ],
+"loop": true,
+"name": "attack_getup",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 138 ), ExtResource( 137 ), ExtResource( 139 ), ExtResource( 136 ), ExtResource( 135 ) ],
@@ -295,6 +335,51 @@ animations = [ {
 "name": "fsmash",
 "speed": 5.0
 } ]
+
+[sub_resource type="Animation" id=30]
+resource_name = "attack_getup"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "attack_getup" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "ground_getup_handler"
+}, {
+"args": [ 1 ],
+"method": "ground_getup_handler"
+} ]
+}
 
 [sub_resource type="Animation" id=2]
 resource_name = "bair"
@@ -1248,6 +1333,96 @@ tracks/7/keys = {
 "values": [ false, true ]
 }
 
+[sub_resource type="Animation" id=29]
+resource_name = "normal_getup"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "normal_getup" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "ground_getup_handler"
+}, {
+"args": [ 1 ],
+"method": "ground_getup_handler"
+} ]
+}
+
+[sub_resource type="Animation" id=31]
+resource_name = "roll_getup"
+length = 1.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "roll_getup" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "ground_getup_handler"
+}, {
+"args": [ 1 ],
+"method": "ground_getup_handler"
+} ]
+}
+
 [sub_resource type="Animation" id=14]
 resource_name = "run"
 length = 1.2
@@ -1527,12 +1702,13 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "hurt"
-frame = 3
+animation = "attack_getup"
+frame = 6
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 playback_speed = 2.0
+anims/attack_getup = SubResource( 30 )
 anims/bair = SubResource( 2 )
 anims/dair = SubResource( 3 )
 anims/dash_attack = SubResource( 4 )
@@ -1550,6 +1726,8 @@ anims/jab1 = SubResource( 10 )
 anims/jab2 = SubResource( 11 )
 anims/jump = SubResource( 12 )
 anims/nair = SubResource( 13 )
+anims/normal_getup = SubResource( 29 )
+anims/roll_getup = SubResource( 31 )
 anims/run = SubResource( 14 )
 anims/upair = SubResource( 15 )
 anims/upsmash = SubResource( 24 )
@@ -1569,15 +1747,14 @@ disabled = false
 visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
+position = Vector2( -4.381, 0 )
+rotation = -0.10472
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
 position = Vector2( 2, -18 )
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
 position = Vector2( 0.666667, 14 )
-
-[node name="CollisionArea" parent="InteractionAreas" index="1"]
-visible = false
 
 [node name="HitStunTimer" type="Timer" parent="."]
 one_shot = true
@@ -1586,6 +1763,9 @@ one_shot = true
 one_shot = true
 
 [node name="ShortHopTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
 one_shot = true
 
 [editable path="AnimatedSprite/HitBoxes"]

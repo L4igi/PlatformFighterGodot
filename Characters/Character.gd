@@ -55,6 +55,9 @@ var bufferAnimation = false
 var inHitStun = false
 onready var hitStunTimer = $HitStunTimer
 var groundHitStun = 3.0
+var getupRollDistance = 100
+#invincibility
+onready var invincibilityTimer = $InvincibilityTimer
 
 var directionChange = false
 
@@ -68,7 +71,7 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, ROLL}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, ROLL, GETUP}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -79,8 +82,12 @@ var currentState = CharacterState.GROUND
 onready var airCollider = $AirCollider 
 onready var groundCollider = $GroundCollider 
 
+onready var collisionAreaShape = $InteractionAreas/CollisionArea/CollisionArea
+
 onready var characterSprite = $AnimatedSprite
 onready var animationPlayer = $AnimatedSprite/AnimationPlayer
+
+onready var hurtBox = $InteractionAreas/Hurtbox
 
 var attackData = null
 
@@ -103,6 +110,7 @@ func _ready():
 	hitStunTimer.connect("timeout", self, "_on_hitstun_timeout")
 	shortHopTimer.connect("timeout", self, "_on_short_hop_timeout")
 	dropDownTimer.connect("timeout", self, "_on_drop_timer_timeout")
+	invincibilityTimer.connect("timeout", self, "_on_invincibility_timer_timeout")
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
@@ -371,8 +379,28 @@ func hitstun_handler(delta):
 		bufferAnimation = false
 		create_hitstun_timer(groundHitStun)
 	elif currentState == CharacterState.HITSTUNGROUND: 
+		#if not in hitstun check for jump, attack or special 
+		#todo: check for special
 		if Input.is_action_just_pressed(attack):
-			switch_to_state(CharacterState.GROUND)
+			switch_to_state(CharacterState.GETUP)
+			animation_handler(GlobalVariables.CharacterAnimations.ATTACKGETUP)
+		elif Input.is_action_just_pressed(up):
+			switch_to_state(CharacterState.GETUP)
+			animation_handler(GlobalVariables.CharacterAnimations.NORMALGETUP)
+		elif Input.is_action_just_pressed(left):
+			switch_to_state(CharacterState.GETUP)
+			if currentMoveDirection != moveDirection.LEFT:
+				currentMoveDirection = moveDirection.LEFT
+				mirror_areas()
+			velocity.x = -500
+			animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
+		elif Input.is_action_just_pressed(right):
+			switch_to_state(CharacterState.GETUP)
+			if currentMoveDirection != moveDirection.RIGHT:
+				currentMoveDirection = moveDirection.RIGHT
+				mirror_areas()
+			velocity.x = 500
+			animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
 	elif currentState == CharacterState.HITSTUNAIR:
 		#if not in hitstun check for jump, attack or special 
 		#todo: check for special
@@ -385,11 +413,6 @@ func hitstun_handler(delta):
 				double_jump_handler()
 	process_movement_physics(delta)
 	#switch to other animation on button press
-	
-	#when hitting ground continou hurt animation
-	
-func ground_getup_handler():
-	pass
 	
 func create_hitstun_timer(stunTime):
 	disableInput = true
@@ -555,6 +578,19 @@ func animation_handler(animationToPlay):
 			animationPlayer.stop(true)
 			print("current anim " +str(animationPlayer.current_animation))
 			animationPlayer.play("hurt")
+		GlobalVariables.CharacterAnimations.ATTACKGETUP:
+			animationPlayer.play("attack_getup")
+		GlobalVariables.CharacterAnimations.ROLLGETUP:
+			animationPlayer.play("roll_getup")
+			if currentMoveDirection == moveDirection.LEFT:
+				getupRollDistance *=-1
+			else:
+				getupRollDistance = abs(getupRollDistance)
+			$Tween.interpolate_property(self, "position",self.position, self.position+Vector2(getupRollDistance, 0), animationPlayer.get_animation("roll_getup").length,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+			$Tween.start()
+
+		GlobalVariables.CharacterAnimations.NORMALGETUP:
+			animationPlayer.play("normal_getup")
 			
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
@@ -760,6 +796,9 @@ func switch_to_state(state):
 			currentState = CharacterState.EDGE
 		CharacterState.ROLL:
 			currentState = CharacterState.ROLL
+		CharacterState.GETUP:
+			currentState = CharacterState.GETUP
+			emit_signal("character_state_changed", currentState)
 
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
@@ -767,6 +806,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
+	$Tween.stop_all()
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
 	#todo: calculate if in tumble animation
 	switch_to_state(CharacterState.HITSTUNAIR)
@@ -836,3 +876,29 @@ func apply_hurt_animation_step(step =0):
 				animationPlayer.stop(false)
 		2:
 			disableInput = false
+			
+func ground_getup_handler(step = 0):
+	match step: 
+		0:
+			disableInput = true
+			collisionAreaShape.set_disabled(true)
+			create_invincible_timer(animationPlayer.current_animation_length)
+		1:
+			disableInput = false
+			collisionAreaShape.set_disabled(false)
+			switch_to_state(CharacterState.GROUND)
+
+func create_invincible_timer(duration = 0):
+	invincibilityTimer.set_wait_time(duration)
+	enable_diable_hurtboxes(false)
+	invincibilityTimer.start()
+
+func _on_invincibility_timer_timeout():
+	enable_diable_hurtboxes(true)
+
+func enable_diable_hurtboxes(enable = true):
+	for singleHurtbox in hurtBox.get_children():
+		if enable:
+			singleHurtbox.set_disabled(false)
+		else:
+			singleHurtbox.set_disabled(true)
