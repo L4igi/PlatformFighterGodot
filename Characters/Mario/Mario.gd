@@ -1,9 +1,6 @@
 extends "res://Characters/Character.gd"
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+#add variable for shield size (scale)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

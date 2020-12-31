@@ -48,6 +48,9 @@ var disableInputDI = false
 var resetMovementSpeed = false
 var walkThreashold = 0.3
 var currentPushSpeed = 0
+var directionChange = false
+var velocity = Vector2()
+var onSolidGround = false
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
@@ -60,20 +63,16 @@ var getupRollDistance = 100
 var tumblingThreashold = 500
 #invincibility
 onready var invincibilityTimer = $InvincibilityTimer
-
-var directionChange = false
-
-var velocity = Vector2()
-
-var onSolidGround = false
-
+#shield
+onready var characterShield = $Shield
+var rollDistance = 150
 #character stats
 var weight = 100
 var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, SHIELD, ROLL, GETUP}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, SHIELD, ROLL, GRAB, SPOTDODGE, GETUP, SHIELDBREAK}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -182,8 +181,7 @@ func check_input(delta):
 					switch_to_state(CharacterState.ATTACKAIR)
 				CharacterState.GROUND:
 					switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_just_pressed(shield) && currentState == CharacterState.GROUND:
-			print("SHILED")
+		elif Input.is_action_pressed(shield) && currentState == CharacterState.GROUND:
 			animation_handler(GlobalVariables.CharacterAnimations.SHIELD)
 			switch_to_state(CharacterState.SHIELD)
 		
@@ -396,14 +394,12 @@ func hitstun_handler(delta):
 			switch_to_state(CharacterState.GETUP)
 			animation_handler(GlobalVariables.CharacterAnimations.NORMALGETUP)
 		elif Input.is_action_just_pressed(left):
-			print("rolling left")
 			switch_to_state(CharacterState.GETUP)
 			if currentMoveDirection != moveDirection.LEFT:
 				currentMoveDirection = moveDirection.LEFT
 				mirror_areas()
 			animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
 		elif Input.is_action_just_pressed(right):
-			print("rolling right")
 			switch_to_state(CharacterState.GETUP)
 			if currentMoveDirection != moveDirection.RIGHT:
 				currentMoveDirection = moveDirection.RIGHT
@@ -441,8 +437,34 @@ func _on_hitstun_timeout():
 func shield_handler(delta):
 	process_movement_physics(delta)
 	if Input.is_action_just_released(shield):
+		characterShield.disable_shield()
 		switch_to_state(CharacterState.GROUND)
-	
+	elif Input.is_action_just_pressed(jump):
+		characterShield.disable_shield()
+		jump_handler()
+	elif Input.is_action_just_pressed(attack):
+		#todo implement grab mechanic
+		print("GRAB")
+	elif Input.is_action_just_pressed(right):
+		#todo implement roll mechanic
+		characterShield.disable_shield()
+		switch_to_state(CharacterState.ROLL)
+		if currentMoveDirection != moveDirection.RIGHT:
+			currentMoveDirection = moveDirection.RIGHT
+			mirror_areas()
+		animation_handler(GlobalVariables.CharacterAnimations.ROLL)
+	elif Input.is_action_just_pressed(left):
+		#todo implement roll mechanic
+		characterShield.disable_shield()
+		switch_to_state(CharacterState.ROLL)
+		if currentMoveDirection != moveDirection.LEFT:
+			currentMoveDirection = moveDirection.LEFT
+			mirror_areas()
+		animation_handler(GlobalVariables.CharacterAnimations.ROLL)
+	elif Input.is_action_just_pressed(down):
+		#todo implement spotdodge mechanic
+		print("SPOTDODGE")
+		
 func snap_edge(edgePosition):
 	if !onSolidGround:
 		switch_to_state(CharacterState.EDGE)
@@ -597,23 +619,29 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("attack_getup")
 		GlobalVariables.CharacterAnimations.ROLLGETUP:
 			animationPlayer.play("roll_getup")
-			if currentMoveDirection == moveDirection.LEFT:
-				getupRollDistance = abs(getupRollDistance) * -1
-				if atPlatformEdge == moveDirection.LEFT:
-					velocity.x = 0
-				else:
-					velocity.x = getupRollDistance
-			else:
-				getupRollDistance = abs(getupRollDistance)
-				if atPlatformEdge == moveDirection.RIGHT:
-					velocity.x = 0
-				else:
-					velocity.x = getupRollDistance
+			roll_calculator(getupRollDistance)
 		GlobalVariables.CharacterAnimations.NORMALGETUP:
 			animationPlayer.play("normal_getup")
 		GlobalVariables.CharacterAnimations.SHIELD:
 			animationPlayer.play("shield")
+		GlobalVariables.CharacterAnimations.ROLL:
+			animationPlayer.play("roll")
+			roll_calculator(rollDistance)
 			
+func roll_calculator(distance): 
+	if currentMoveDirection == moveDirection.LEFT:
+		distance = abs(distance) * -1
+		if atPlatformEdge == moveDirection.LEFT:
+			velocity.x = 0
+		else:
+			velocity.x = distance
+	else:
+		distance = abs(distance)
+		if atPlatformEdge == moveDirection.RIGHT:
+			velocity.x = 0
+		else:
+			velocity.x = distance
+	
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
@@ -825,6 +853,10 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", currentState)
 		CharacterState.SHIELD:
 			currentState = CharacterState.SHIELD
+			characterShield.enable_shield()
+			emit_signal("character_state_changed", currentState)
+		CharacterState.ROLL:
+			currentState = CharacterState.ROLL
 			emit_signal("character_state_changed", currentState)
 
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
@@ -920,7 +952,19 @@ func ground_getup_handler(step = 0):
 			disableInput = false
 			collisionAreaShape.set_disabled(false)
 			switch_to_state(CharacterState.GROUND)
-
+			
+func roll_handler(step = 0):
+	match step: 
+		0:
+			disableInput = true
+			collisionAreaShape.set_disabled(true)
+			create_invincible_timer(animationPlayer.current_animation_length)
+		1:
+			disableInput = false
+			collisionAreaShape.set_disabled(false)
+			switch_to_state(CharacterState.GROUND)
+			
+			
 func create_invincible_timer(duration = 0):
 	invincibilityTimer.set_wait_time(duration)
 	enable_diable_hurtboxes(false)

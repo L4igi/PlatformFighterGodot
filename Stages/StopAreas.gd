@@ -23,8 +23,11 @@ func _on_StopAreaLeft_body_entered(body):
 
 func stop_character_velocity(body):
 	var stopCharacter = body
-	if stopCharacter.get_input_direction_x() == 0 || stopCharacter.currentState == stopCharacter.CharacterState.ATTACKGROUND\
-	|| stopCharacter.currentState == stopCharacter.CharacterState.GETUP:
+	if stopCharacter.get_input_direction_x() == 0\
+	|| stopCharacter.currentState == stopCharacter.CharacterState.ATTACKGROUND\
+	|| stopCharacter.currentState == stopCharacter.CharacterState.GETUP\
+	|| stopCharacter.currentState == stopCharacter.CharacterState.SHIELD\
+	|| stopCharacter.currentState == stopCharacter.CharacterState.ROLL:
 		if stopCharacter.onSolidGround: 
 			if self.global_position < stopCharacter.global_position: 
 				stopCharacter.velocity.x = 0
