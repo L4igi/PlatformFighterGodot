@@ -90,6 +90,9 @@ func _on_character_state_change(currentState):
 		elif currentState == character.CharacterState.ROLL:
 			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
+		elif currentState == character.CharacterState.SPOTDODGE:
+			character.set_collision_mask_bit(0,false)
+			CharacterInteractionHandler.remove_ground_colliding_character(character)
 			
 func _on_character_turnaround():
 	if collisionAreaEntered != null:

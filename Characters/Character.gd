@@ -66,13 +66,16 @@ onready var invincibilityTimer = $InvincibilityTimer
 #shield
 onready var characterShield = $Shield
 var rollDistance = 150
+#grab
+var grabbedCharacter = null
+var inGrabByCharacter = null
 #character stats
 var weight = 100
 var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, SHIELD, ROLL, GRAB, SPOTDODGE, GETUP, SHIELDBREAK}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK}
 #signal for character state change
 signal character_state_changed(state)
 signal character_turnaround()
@@ -100,6 +103,7 @@ var right = ""
 var jump = ""
 var attack = ""
 var shield = ""
+var grab = ""
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -161,6 +165,10 @@ func _physics_process(delta):
 				hitstun_handler(delta)
 			CharacterState.SHIELD:
 				shield_handler(delta)
+			CharacterState.GRAB:
+				grab_handler(delta)
+			CharacterState.INGRAB:
+				in_grab_handler(delta)
 
 func check_input(delta):
 		if Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
@@ -184,6 +192,9 @@ func check_input(delta):
 		elif Input.is_action_pressed(shield) && currentState == CharacterState.GROUND:
 			animation_handler(GlobalVariables.CharacterAnimations.SHIELD)
 			switch_to_state(CharacterState.SHIELD)
+		if Input.is_action_just_pressed(grab) && currentState == CharacterState.GROUND:
+			animation_handler(GlobalVariables.CharacterAnimations.GRAB)
+			switch_to_state(CharacterState.GRAB)
 		
 func attack_handler_ground():
 	if smashAttack != null: 
@@ -444,7 +455,9 @@ func shield_handler(delta):
 		jump_handler()
 	elif Input.is_action_just_pressed(attack):
 		#todo implement grab mechanic
-		print("GRAB")
+		characterShield.disable_shield()
+		switch_to_state(CharacterState.GRAB)
+		animation_handler(GlobalVariables.CharacterAnimations.GRAB)
 	elif Input.is_action_just_pressed(right):
 		#todo implement roll mechanic
 		characterShield.disable_shield()
@@ -463,8 +476,33 @@ func shield_handler(delta):
 		animation_handler(GlobalVariables.CharacterAnimations.ROLL)
 	elif Input.is_action_just_pressed(down):
 		#todo implement spotdodge mechanic
-		print("SPOTDODGE")
+		characterShield.disable_shield()
+		switch_to_state(CharacterState.SPOTDODGE)
+		animation_handler(GlobalVariables.CharacterAnimations.SPOTDODGE)
 		
+func grab_handler(delta):
+	if grabbedCharacter != null: 
+		if Input.is_action_just_pressed(attack):
+			print("grabJab")
+		elif Input.is_action_just_pressed(left):
+			if currentMoveDirection == moveDirection.LEFT:
+				print("fthrow")
+			else:
+				print("bthrow")
+		elif Input.is_action_just_pressed(right):
+			if currentMoveDirection == moveDirection.RIGHT:
+				print("fthrow")
+			else:
+				print("bthrow")
+		elif Input.is_action_just_pressed(up):
+			print("upthrow")
+		elif Input.is_action_just_pressed(down):
+			print("downthrow")
+	
+func in_grab_handler(delta):
+	pass
+	
+	
 func snap_edge(edgePosition):
 	if !onSolidGround:
 		switch_to_state(CharacterState.EDGE)
@@ -627,6 +665,12 @@ func animation_handler(animationToPlay):
 		GlobalVariables.CharacterAnimations.ROLL:
 			animationPlayer.play("roll")
 			roll_calculator(rollDistance)
+		GlobalVariables.CharacterAnimations.SPOTDODGE:
+			animationPlayer.play("spotdodge")
+		GlobalVariables.CharacterAnimations.GRAB:
+			animationPlayer.play("grab")
+		GlobalVariables.CharacterAnimations.INGRAB:
+			animationPlayer.play("ingrab")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -858,6 +902,15 @@ func switch_to_state(state):
 		CharacterState.ROLL:
 			currentState = CharacterState.ROLL
 			emit_signal("character_state_changed", currentState)
+		CharacterState.SPOTDODGE:
+			currentState = CharacterState.SPOTDODGE
+			emit_signal("character_state_changed", currentState)
+		CharacterState.GRAB:
+			currentState = CharacterState.GRAB
+			emit_signal("character_state_changed", currentState)
+		CharacterState.INGRAB:
+			currentState = CharacterState.INGRAB
+			emit_signal("character_state_changed", currentState)
 
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
@@ -881,6 +934,16 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
 
+func is_grabbed_handler(byCharacter):
+	inGrabByCharacter = byCharacter
+	if gravity!=baseGravity:
+		gravity=baseGravity
+	chargingSmashAttack = false
+	smashAttack = null
+	bufferInput = null
+	switch_to_state(CharacterState.INGRAB)
+	animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
+	
 func enable_player_input():
 	if buffered_input():
 		attack_handler_ground()
@@ -942,7 +1005,7 @@ func apply_hurt_animation_step(step =0):
 		2:
 			disableInput = false
 			
-func ground_getup_handler(step = 0):
+func animation_invincibility_handler(step = 0):
 	match step: 
 		0:
 			disableInput = true
@@ -953,17 +1016,13 @@ func ground_getup_handler(step = 0):
 			collisionAreaShape.set_disabled(false)
 			switch_to_state(CharacterState.GROUND)
 			
-func roll_handler(step = 0):
+func apply_grab_animation_step(step = 0):
 	match step: 
 		0:
-			disableInput = true
-			collisionAreaShape.set_disabled(true)
-			create_invincible_timer(animationPlayer.current_animation_length)
+			grabbedCharacter = null
 		1:
-			disableInput = false
-			collisionAreaShape.set_disabled(false)
-			switch_to_state(CharacterState.GROUND)
-			
+			if grabbedCharacter == null: 
+				switch_to_state(CharacterState.GROUND)
 			
 func create_invincible_timer(duration = 0):
 	invincibilityTimer.set_wait_time(duration)

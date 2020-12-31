@@ -1139,6 +1139,7 @@ visible = false
 [node name="AnimatedSprite" parent="." index="3"]
 modulate = Color( 0.223529, 0.337255, 0.847059, 1 )
 animation = "dair"
+frame = 0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 1.5

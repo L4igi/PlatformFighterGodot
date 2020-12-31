@@ -2,7 +2,7 @@ extends Node
 
 enum WorldType {Platform = 0, CenterStage = 1, Character = 2, Item = 3}
 
-enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, FTILT ,UPTILT, DTILT, FAIR, BAIR, NAIR, UPAIR, DAIR, DASHATTACK, UPSMASH, DSMASH, FSMASH, HURT, HURTSHORT, ROLLGETUP, ATTACKGETUP, NORMALGETUP, SHIELD, ROLL, SPOTDODGE, SHIELDBREAK}
+enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, FTILT ,UPTILT, DTILT, FAIR, BAIR, NAIR, UPAIR, DAIR, DASHATTACK, UPSMASH, DSMASH, FSMASH, HURT, HURTSHORT, ROLLGETUP, ATTACKGETUP, NORMALGETUP, SHIELD, ROLL, SPOTDODGE, SHIELDBREAK, GRAB, INGRAB, BTHROW, FTHROW, UTHROW, FTHROW}
 
 enum SmashAttacks{SMASHRIGHT, SMASHLEFT, SMASHUP, SMASHDOWN}
 
@@ -14,6 +14,7 @@ var controlsP1 = {
 	"jump" : "Jump1",
 	"attack" : "Attack1",
 	"shield" : "Shield1",
+	"grab" : "Grab1"
 }
 
 var controlsP2 = {
@@ -24,4 +25,5 @@ var controlsP2 = {
 	"jump" : "Jump2",
 	"attack" : "Attack2",
 	"shield" : "Shield2",
+	"grab" : "Grab2"
 }

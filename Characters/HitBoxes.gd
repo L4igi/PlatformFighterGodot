@@ -22,7 +22,11 @@ func _on_NeutralSpot_area_entered(area):
 	if area.is_in_group("Hurtbox"):
 		attackedCharacter = area.get_parent().get_parent()
 		if attackedCharacter != self.get_parent().get_parent():
-			apply_attack(HitBoxType.NEUTRAL)
+			if character.currentState == character.CharacterState.ATTACKGROUND\
+			|| character.currentState == character.CharacterState.ATTACKAIR:
+				apply_attack(HitBoxType.NEUTRAL)
+			elif character.currentState == character.CharacterState.GRAB:
+				apply_grab(HitBoxType.NEUTRAL)
 
 		
 func apply_attack(hbType):
@@ -50,5 +54,7 @@ func apply_attack(hbType):
 	print(launchVector)
 	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity)
 
-
+func apply_grab(hbType):
+	character.grabbedCharacter = attackedCharacter
+	attackedCharacter.is_grabbed_handler(character)
 

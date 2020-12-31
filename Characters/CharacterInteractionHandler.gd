@@ -56,12 +56,10 @@ func set_combined_velocity(delta):
 		char2PushForce = clamp(char2PushForce, -char2.currentPushSpeed, char2.currentPushSpeed)
 	combinedVelocity = (char1PushForce + char2PushForce)
 	var maxWalkForce = max(char1.currentPushSpeed, char2.currentPushSpeed)
-	if ignore_pulling_character(char2, char1) && disable_velcotiy_calc(char1):
-		if char1.currentState != char1.CharacterState.ROLL:
-			char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
-	if ignore_pulling_character(char1, char2) && disable_velcotiy_calc(char2):
-		if char2.currentState != char2.CharacterState.ROLL:
-			char2.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
+	if ignore_pulling_character(char2, char1) && !disable_velcotiy_calc(char1):
+		char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
+	if ignore_pulling_character(char1, char2) && !disable_velcotiy_calc(char2):
+		char2.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
 		
 func ignore_pulling_character(char1, char2):
 	if char1.currentMoveDirection == char1.moveDirection.LEFT \

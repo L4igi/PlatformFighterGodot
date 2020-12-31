@@ -1,4 +1,4 @@
-[gd_scene load_steps=251 format=2]
+[gd_scene load_steps=267 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -222,6 +222,19 @@
 [ext_resource path="res://Characters/Mario/roll/6.png" type="Texture" id=220]
 [ext_resource path="res://Characters/Mario/roll/7.png" type="Texture" id=221]
 [ext_resource path="res://Characters/Mario/roll/8.png" type="Texture" id=222]
+[ext_resource path="res://Characters/Mario/spotdodge/6.png" type="Texture" id=223]
+[ext_resource path="res://Characters/Mario/spotdodge/0.png" type="Texture" id=224]
+[ext_resource path="res://Characters/Mario/spotdodge/1.png" type="Texture" id=225]
+[ext_resource path="res://Characters/Mario/spotdodge/2.png" type="Texture" id=226]
+[ext_resource path="res://Characters/Mario/spotdodge/3.png" type="Texture" id=227]
+[ext_resource path="res://Characters/Mario/spotdodge/4.png" type="Texture" id=228]
+[ext_resource path="res://Characters/Mario/spotdodge/5.png" type="Texture" id=229]
+[ext_resource path="res://Characters/Mario/grab/0.png" type="Texture" id=230]
+[ext_resource path="res://Characters/Mario/grab/1.png" type="Texture" id=231]
+[ext_resource path="res://Characters/Mario/grab/2.png" type="Texture" id=232]
+[ext_resource path="res://Characters/Mario/grab/3.png" type="Texture" id=233]
+[ext_resource path="res://Characters/Mario/ingrab/1.png" type="Texture" id=234]
+[ext_resource path="res://Characters/Mario/ingrab/0.png" type="Texture" id=235]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -353,6 +366,21 @@ animations = [ {
 "frames": [ ExtResource( 218 ), ExtResource( 216 ), ExtResource( 217 ), ExtResource( 215 ), ExtResource( 219 ), ExtResource( 220 ), ExtResource( 221 ), ExtResource( 222 ) ],
 "loop": true,
 "name": "roll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
+"loop": true,
+"name": "grab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 224 ), ExtResource( 225 ), ExtResource( 226 ), ExtResource( 227 ), ExtResource( 228 ), ExtResource( 229 ), ExtResource( 223 ) ],
+"loop": true,
+"name": "spotdodge",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 235 ), ExtResource( 234 ) ],
+"loop": true,
+"name": "ingrab",
 "speed": 5.0
 } ]
 
@@ -985,7 +1013,75 @@ tracks/3/keys = {
 }
 
 [sub_resource type="Animation" id=13]
-resource_name = "hurt"
+resource_name = "grab"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "grab" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_grab_animation_step"
+}, {
+"args": [ 1 ],
+"method": "apply_grab_animation_step"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 15, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.1, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+
+[sub_resource type="Animation" id=14]
 length = 1.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1041,8 +1137,7 @@ tracks/3/keys = {
 "values": [ 2.0 ]
 }
 
-[sub_resource type="Animation" id=14]
-resource_name = "hurt_short"
+[sub_resource type="Animation" id=15]
 length = 0.3
 loop = true
 tracks/0/type = "value"
@@ -1082,7 +1177,7 @@ tracks/2/keys = {
 "values": [ 1.0 ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -1134,7 +1229,36 @@ tracks/3/keys = {
 "values": [ Vector2( 2, 14 ), Vector2( 0, 14 ), Vector2( 2, 14 ) ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=17]
+resource_name = "ingrab"
+length = 0.1
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "ingrab" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=18]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1185,7 +1309,7 @@ tracks/3/keys = {
 "values": [ Vector2( 19.2, 0 ), Vector2( 19.2, 0 ) ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=19]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1212,7 +1336,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=20]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1263,7 +1387,7 @@ tracks/3/keys = {
 "values": [ -21.2, -8.5, 0.0 ]
 }
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id=21]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1362,8 +1486,7 @@ tracks/7/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=20]
-resource_name = "normal_getup"
+[sub_resource type="Animation" id=22]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1400,14 +1523,14 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
-"method": "ground_getup_handler"
+"method": "animation_invincibility_handler"
 }, {
 "args": [ 1 ],
-"method": "ground_getup_handler"
+"method": "animation_invincibility_handler"
 } ]
 }
 
-[sub_resource type="Animation" id=28]
+[sub_resource type="Animation" id=23]
 resource_name = "roll"
 length = 0.8
 tracks/0/type = "value"
@@ -1445,15 +1568,14 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
-"method": "roll_handler"
+"method": "animation_invincibility_handler"
 }, {
 "args": [ 1 ],
-"method": "roll_handler"
+"method": "animation_invincibility_handler"
 } ]
 }
 
-[sub_resource type="Animation" id=21]
-resource_name = "roll_getup"
+[sub_resource type="Animation" id=24]
 length = 1.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1490,14 +1612,14 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
-"method": "ground_getup_handler"
+"method": "animation_invincibility_handler"
 }, {
 "args": [ 1 ],
-"method": "ground_getup_handler"
+"method": "animation_invincibility_handler"
 } ]
 }
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id=25]
 length = 1.2
 loop = true
 tracks/0/type = "value"
@@ -1525,8 +1647,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="Animation" id=23]
-resource_name = "shield"
+[sub_resource type="Animation" id=26]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1553,7 +1674,52 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=24]
+[sub_resource type="Animation" id=27]
+resource_name = "spotdodge"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "spotdodge" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "animation_invincibility_handler"
+}, {
+"args": [ 1 ],
+"method": "animation_invincibility_handler"
+} ]
+}
+
+[sub_resource type="Animation" id=28]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1616,7 +1782,7 @@ tracks/4/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=29]
 length = 1.2
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1684,7 +1850,7 @@ tracks/4/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=26]
+[sub_resource type="Animation" id=30]
 length = 0.65
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1747,7 +1913,7 @@ tracks/4/keys = {
 "values": [ Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=27]
+[sub_resource type="Animation" id=31]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -1802,7 +1968,8 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "roll"
+animation = "attack_getup"
+frame = 2
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -1817,31 +1984,34 @@ anims/fair = SubResource( 9 )
 anims/freefall = SubResource( 10 )
 anims/fsmash = SubResource( 11 )
 anims/ftilt = SubResource( 12 )
-anims/hurt = SubResource( 13 )
-anims/hurt_short = SubResource( 14 )
-anims/idle = SubResource( 15 )
-anims/jab1 = SubResource( 16 )
-anims/jab2 = SubResource( 17 )
-anims/jump = SubResource( 18 )
-anims/nair = SubResource( 19 )
-anims/normal_getup = SubResource( 20 )
-anims/roll = SubResource( 28 )
-anims/roll_getup = SubResource( 21 )
-anims/run = SubResource( 22 )
-anims/shield = SubResource( 23 )
-anims/upair = SubResource( 24 )
-anims/upsmash = SubResource( 25 )
-anims/uptilt = SubResource( 26 )
-anims/walk = SubResource( 27 )
+anims/grab = SubResource( 13 )
+anims/hurt = SubResource( 14 )
+anims/hurt_short = SubResource( 15 )
+anims/idle = SubResource( 16 )
+anims/ingrab = SubResource( 17 )
+anims/jab1 = SubResource( 18 )
+anims/jab2 = SubResource( 19 )
+anims/jump = SubResource( 20 )
+anims/nair = SubResource( 21 )
+anims/normal_getup = SubResource( 22 )
+anims/roll = SubResource( 23 )
+anims/roll_getup = SubResource( 24 )
+anims/run = SubResource( 25 )
+anims/shield = SubResource( 26 )
+anims/spotdodge = SubResource( 27 )
+anims/upair = SubResource( 28 )
+anims/upsmash = SubResource( 29 )
+anims/uptilt = SubResource( 30 )
+anims/walk = SubResource( 31 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
+visible = true
 
 [node name="SweetSpot" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( -15, 5 )
-disabled = false
+position = Vector2( 15, 1 )
 
 [node name="SourSpot" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false

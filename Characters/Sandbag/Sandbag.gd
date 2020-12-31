@@ -15,6 +15,7 @@ func _ready():
 	jump = GlobalVariables.controlsP2.get("jump")
 	attack = GlobalVariables.controlsP2.get("attack")
 	shield = GlobalVariables.controlsP2.get("shield")
+	grab = GlobalVariables.controlsP2.get("grab")
 	
 	set_base_stats()
 	
