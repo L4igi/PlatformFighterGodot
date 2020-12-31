@@ -482,25 +482,33 @@ func shield_handler(delta):
 		animation_handler(GlobalVariables.CharacterAnimations.SPOTDODGE)
 		
 func grab_handler(delta):
+	process_movement_physics(delta)
 	if grabbedCharacter != null: 
 		if Input.is_action_just_pressed(attack):
+			currentAttack = GlobalVariables.CharacterAnimations.GRABJAB
 			animation_handler(GlobalVariables.CharacterAnimations.GRABJAB)
 		elif Input.is_action_just_pressed(left):
 			if currentMoveDirection == moveDirection.LEFT:
+				currentAttack = GlobalVariables.CharacterAnimations.FTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.FTHROW)
 			else:
+				currentAttack = GlobalVariables.CharacterAnimations.BTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
 			grabTimer.stop()
 		elif Input.is_action_just_pressed(right):
 			if currentMoveDirection == moveDirection.RIGHT:
+				currentAttack = GlobalVariables.CharacterAnimations.FTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.FTHROW)
 			else:
+				currentAttack = GlobalVariables.CharacterAnimations.BTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
 			grabTimer.stop()
 		elif Input.is_action_just_pressed(up):
+			currentAttack = GlobalVariables.CharacterAnimations.UTHROW
 			animation_handler(GlobalVariables.CharacterAnimations.UTHROW)
 			grabTimer.stop()
 		elif Input.is_action_just_pressed(down):
+			currentAttack = GlobalVariables.CharacterAnimations.DTHROW
 			animation_handler(GlobalVariables.CharacterAnimations.DTHROW)
 			grabTimer.stop()
 	
@@ -743,7 +751,7 @@ func process_movement_physics(delta):
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 		elif currentState == CharacterState.AIR || currentState == CharacterState.ATTACKAIR:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
-		elif currentState == CharacterState.SHIELD:
+		elif currentState == CharacterState.SHIELD || currentState == CharacterState.GRAB:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
@@ -898,9 +906,17 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", currentState)
 		CharacterState.HITSTUNAIR:
 			currentState = CharacterState.HITSTUNAIR
+#			airCollider.set_disabled(false)
+#			airCollider.visible = true
+#			groundCollider.set_disabled(true)
+#			groundCollider.visible = false
 			emit_signal("character_state_changed", currentState)
 		CharacterState.HITSTUNGROUND:
 			currentState = CharacterState.HITSTUNGROUND
+#			airCollider.set_disabled(true)
+#			airCollider.visible = false
+#			groundCollider.set_disabled(false)
+#			groundCollider.visible = true
 			emit_signal("character_state_changed", currentState)
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR
@@ -965,6 +981,42 @@ func is_grabbed_handler(byCharacter):
 	bufferInput = null
 	switch_to_state(CharacterState.INGRAB)
 	animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
+	
+func is_thrown_grabjabbed_handler(actionType):
+#	match actionType: 
+#		GlobalVariables.CharacterAnimations.GRABJAB:
+#			print("GRABJAB")
+#		GlobalVariables.CharacterAnimations.FTHROW:
+#			print("FTHROW")
+#		GlobalVariables.CharacterAnimations.BTHROW:
+#			print("BTHROW")
+#		GlobalVariables.CharacterAnimations.DTHROW:
+#			print("DTHROW")
+#		GlobalVariables.CharacterAnimations.UTHROW:
+#			print("UTHROW")
+#		GlobalVariables.CharacterAnimations.GRABRELEASE:
+#			print("GRABRELEASE")
+	apply_throw(actionType)
+	
+func apply_throw(actionType):
+	var currentAttackData = (inGrabByCharacter.attackData[GlobalVariables.CharacterAnimations.keys()[actionType]])
+	var attackDamage = currentAttackData["damage"]
+	if actionType == GlobalVariables.CharacterAnimations.GRABJAB:
+		return
+	var hitStun = currentAttackData["hitStun"]
+	var launchAngle = deg2rad(currentAttackData["launchAngle"])
+	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
+	var launchVectorX = launchVector.x
+	print(launchVectorX)
+	#inverse x launch diretion depending on character position
+	if global_position.x < inGrabByCharacter.global_position.x:
+		launchVectorX *= -1
+#	else:
+#		launchVectorX = abs(launchVectorX)
+	var launchVectorY = launchVector.y
+	var launchVelocity = currentAttackData["launchVelocity"]
+	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity)
+	inGrabByCharacter = null
 	
 func enable_player_input():
 	if buffered_input():
@@ -1054,13 +1106,21 @@ func disable_input_animation_step(step = 0):
 			disableInput = true
 		1:
 			disableInput = false
+			#apply grabjab to grabbed enemy
+			if currentState == CharacterState.GRAB\
+			&& currentAttack == GlobalVariables.CharacterAnimations.GRABJAB:
+				grabbedCharacter.is_thrown_grabjabbed_handler(currentAttack)
 			
 func apply_throw_animation_step(step = 0):
 	match step: 
 		0:
 			disableInput = true
-		1: 
+		1:
+			grabbedCharacter.is_thrown_grabjabbed_handler(currentAttack)
+			grabbedCharacter = null
+		2: 
 			disableInput = false
+			self.set_collision_mask_bit(0,true)
 			switch_to_state(CharacterState.GROUND)
 			
 func create_invincible_timer(duration = 0):

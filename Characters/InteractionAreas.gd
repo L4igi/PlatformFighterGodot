@@ -54,6 +54,12 @@ func _on_CollisionArea_area_entered(area):
 				character.pushingCharacter = areaCollisionObject
 				CharacterInteractionHandler.add_ground_colliding_character(character)
 				character.set_collision_mask_bit(0,true)
+		#manage grab push one character attacking one character grounded
+		elif (character.currentState == character.CharacterState.GRAB && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GROUND)\
+		|| (character.currentState == character.CharacterState.GROUND && areaCollisionObject.currentState == areaCollisionObject.CharacterState.GRAB):
+				character.pushingCharacter = areaCollisionObject
+				CharacterInteractionHandler.add_ground_colliding_character(character)
+				character.set_collision_mask_bit(0,true)
 			
 func _on_CollisionArea_area_exited(area):
 	if area.is_in_group("CollisionArea"):
@@ -91,6 +97,10 @@ func _on_character_state_change(currentState):
 			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
 		elif currentState == character.CharacterState.SPOTDODGE:
+			character.set_collision_mask_bit(0,false)
+			CharacterInteractionHandler.remove_ground_colliding_character(character)
+		elif currentState == character.CharacterState.GRAB:
+			character.velocity.x = 0
 			character.set_collision_mask_bit(0,false)
 			CharacterInteractionHandler.remove_ground_colliding_character(character)
 			

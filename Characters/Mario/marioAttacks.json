@@ -105,38 +105,38 @@
     "effect_neutral": "neutral"
   },
   "GRABJAB":{
-    "damage_neutral":2.5,
+    "damage":2.5,
   },
   "UTHROW":{
-    "damage_neutral":5,
-    "hitStun_neutral":0.5,
-    "launchVelocity_neutral":1500,
-    "launchAngle_neutral":290,
-    "knockBackGrowth_neutral" :100,
-    "effect_neutral": "neutral"
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":1100,
+    "launchAngle":270,
+    "knockBackGrowth" :100,
+    "effect": "neutral"
   },
   "DTHROW":{
-    "damage_neutral":5,
-    "hitStun_neutral":0.5,
-    "launchVelocity_neutral":1500,
-    "launchAngle_neutral":290,
-    "knockBackGrowth_neutral" :100,
-    "effect_neutral": "neutral"
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":1100,
+    "launchAngle":70,
+    "knockBackGrowth" :100,
+    "effect": "neutral"
   },
   "FTHROW":{
-    "damage_neutral":5,
-    "hitStun_neutral":0.5,
-    "launchVelocity_neutral":1500,
-    "launchAngle_neutral":290,
-    "knockBackGrowth_neutral" :100,
-    "effect_neutral": "neutral"
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":1000,
+    "launchAngle":330,
+    "knockBackGrowth" :100,
+    "effect": "neutral"
   },
   "BTHROW":{
-    "damage_neutral":5,
-    "hitStun_neutral":0.5,
-    "launchVelocity_neutral":1500,
-    "launchAngle_neutral":290,
-    "knockBackGrowth_neutral" :100,
-    "effect_neutral": "neutral"
+    "damage":5,
+    "hitStun":0.5,
+    "launchVelocity":1000,
+    "launchAngle":200,
+    "knockBackGrowth" :100,
+    "effect": "neutral"
   }
 }

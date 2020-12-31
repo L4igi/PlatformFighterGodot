@@ -1,6 +1,5 @@
 extends Node2D
 
-
 onready var character = get_parent().get_parent()
 onready var sweetSpot = $SweetSpot
 onready var neutralSpot = $NeutralSpot
@@ -51,7 +50,7 @@ func apply_attack(hbType):
 		launchVectorX = abs(launchVectorX)
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity_"+hbString]
-	print(launchVector)
+#	print(launchVector)
 	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity)
 
 func apply_grab(hbType):
