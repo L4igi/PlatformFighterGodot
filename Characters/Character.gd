@@ -67,8 +67,10 @@ onready var invincibilityTimer = $InvincibilityTimer
 onready var characterShield = $Shield
 var rollDistance = 150
 #grab
+onready var grabTimer = $GrabTimer
 var grabbedCharacter = null
 var inGrabByCharacter = null
+var grabTime = 4.0
 #character stats
 var weight = 100
 var fastFallGravity = 4000
@@ -116,6 +118,7 @@ func _ready():
 	shortHopTimer.connect("timeout", self, "_on_short_hop_timeout")
 	dropDownTimer.connect("timeout", self, "_on_drop_timer_timeout")
 	invincibilityTimer.connect("timeout", self, "_on_invincibility_timer_timeout")
+	grabTimer.connect("timeout", self, "_on_grab_timer_timeout")
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
@@ -202,14 +205,12 @@ func attack_handler_ground():
 		match smashAttack: 
 			GlobalVariables.SmashAttacks.SMASHRIGHT:
 				if currentMoveDirection != moveDirection.RIGHT:
-					print("mirror areas right")
 					currentMoveDirection = moveDirection.RIGHT
 					mirror_areas()
 				animation_handler(GlobalVariables.CharacterAnimations.FSMASH)
 				currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 			GlobalVariables.SmashAttacks.SMASHLEFT:
 				if currentMoveDirection != moveDirection.LEFT:
-					print("mirror areas left")
 					currentMoveDirection = moveDirection.LEFT
 					mirror_areas()
 				animation_handler(GlobalVariables.CharacterAnimations.FSMASH)
@@ -483,25 +484,36 @@ func shield_handler(delta):
 func grab_handler(delta):
 	if grabbedCharacter != null: 
 		if Input.is_action_just_pressed(attack):
-			print("grabJab")
+			animation_handler(GlobalVariables.CharacterAnimations.GRABJAB)
 		elif Input.is_action_just_pressed(left):
 			if currentMoveDirection == moveDirection.LEFT:
-				print("fthrow")
+				animation_handler(GlobalVariables.CharacterAnimations.FTHROW)
 			else:
-				print("bthrow")
+				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
+			grabTimer.stop()
 		elif Input.is_action_just_pressed(right):
 			if currentMoveDirection == moveDirection.RIGHT:
-				print("fthrow")
+				animation_handler(GlobalVariables.CharacterAnimations.FTHROW)
 			else:
-				print("bthrow")
+				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
+			grabTimer.stop()
 		elif Input.is_action_just_pressed(up):
-			print("upthrow")
+			animation_handler(GlobalVariables.CharacterAnimations.UTHROW)
+			grabTimer.stop()
 		elif Input.is_action_just_pressed(down):
-			print("downthrow")
+			animation_handler(GlobalVariables.CharacterAnimations.DTHROW)
+			grabTimer.stop()
+	
 	
 func in_grab_handler(delta):
 	pass
 	
+func create_grab_timer():
+	grabTimer.set_wait_time(grabTime)
+	grabTimer.start()
+	
+func _on_grab_timer_timeout():
+	print("grab timed out let go")
 	
 func snap_edge(edgePosition):
 	if !onSolidGround:
@@ -671,6 +683,16 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("grab")
 		GlobalVariables.CharacterAnimations.INGRAB:
 			animationPlayer.play("ingrab")
+		GlobalVariables.CharacterAnimations.GRABJAB:
+			animationPlayer.play("grabjab")
+		GlobalVariables.CharacterAnimations.FTHROW:
+			animationPlayer.play("fthrow")
+		GlobalVariables.CharacterAnimations.BTHROW:
+			animationPlayer.play("bthrow")
+		GlobalVariables.CharacterAnimations.UTHROW:
+			animationPlayer.play("uthrow")
+		GlobalVariables.CharacterAnimations.DTHROW:
+			animationPlayer.play("dthrow")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -1023,6 +1045,23 @@ func apply_grab_animation_step(step = 0):
 		1:
 			if grabbedCharacter == null: 
 				switch_to_state(CharacterState.GROUND)
+			else: 
+				create_grab_timer()
+				
+func disable_input_animation_step(step = 0):
+	match step: 
+		0:
+			disableInput = true
+		1:
+			disableInput = false
+			
+func apply_throw_animation_step(step = 0):
+	match step: 
+		0:
+			disableInput = true
+		1: 
+			disableInput = false
+			switch_to_state(CharacterState.GROUND)
 			
 func create_invincible_timer(duration = 0):
 	invincibilityTimer.set_wait_time(duration)

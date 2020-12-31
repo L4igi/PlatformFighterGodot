@@ -103,5 +103,40 @@
     "launchAngle_neutral":290,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral"
+  },
+  "GRABJAB":{
+    "damage_neutral":2.5,
+  },
+  "UTHROW":{
+    "damage_neutral":5,
+    "hitStun_neutral":0.5,
+    "launchVelocity_neutral":1500,
+    "launchAngle_neutral":290,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral"
+  },
+  "DTHROW":{
+    "damage_neutral":5,
+    "hitStun_neutral":0.5,
+    "launchVelocity_neutral":1500,
+    "launchAngle_neutral":290,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral"
+  },
+  "FTHROW":{
+    "damage_neutral":5,
+    "hitStun_neutral":0.5,
+    "launchVelocity_neutral":1500,
+    "launchAngle_neutral":290,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral"
+  },
+  "BTHROW":{
+    "damage_neutral":5,
+    "hitStun_neutral":0.5,
+    "launchVelocity_neutral":1500,
+    "launchAngle_neutral":290,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral"
   }
 }

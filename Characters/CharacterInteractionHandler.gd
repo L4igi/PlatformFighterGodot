@@ -32,7 +32,8 @@ func set_combined_velocity(delta):
 	
 	if char1.currentState == char1.CharacterState.HITSTUNGROUND \
 	|| char1.inHitStun\
-	|| char1.currentState == char1.CharacterState.SHIELD:
+	|| char1.currentState == char1.CharacterState.SHIELD\
+	|| char1.currentState == char1.CharacterState.GRAB:
 		char1PushForce = 0
 	if char1.resetMovementSpeed && char1PushForce != 0: 
 		char1.change_max_speed(char1XInput)
@@ -41,7 +42,8 @@ func set_combined_velocity(delta):
 
 	if char2.currentState == char2.CharacterState.HITSTUNGROUND \
 	|| char2.inHitStun \
-	|| char2.currentState == char2.CharacterState.SHIELD:
+	|| char2.currentState == char2.CharacterState.SHIELD\
+	|| char2.currentState == char2.CharacterState.GRAB:
 		char2PushForce = 0
 	if char2.resetMovementSpeed && char2PushForce != 0:
 		char2.change_max_speed(char2XInput)

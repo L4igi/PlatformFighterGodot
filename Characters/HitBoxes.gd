@@ -56,5 +56,11 @@ func apply_attack(hbType):
 
 func apply_grab(hbType):
 	character.grabbedCharacter = attackedCharacter
+	if character.currentMoveDirection == attackedCharacter.currentMoveDirection:
+		if attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.LEFT:
+			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.LEFT
+		elif attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.RIGHT:
+			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.RIGHT
+		attackedCharacter.mirror_areas()
 	attackedCharacter.is_grabbed_handler(character)
 

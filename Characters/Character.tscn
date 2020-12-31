@@ -1,4 +1,4 @@
-[gd_scene load_steps=267 format=2]
+[gd_scene load_steps=315 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -235,6 +235,49 @@
 [ext_resource path="res://Characters/Mario/grab/3.png" type="Texture" id=233]
 [ext_resource path="res://Characters/Mario/ingrab/1.png" type="Texture" id=234]
 [ext_resource path="res://Characters/Mario/ingrab/0.png" type="Texture" id=235]
+[ext_resource path="res://Characters/Mario/grabJab/1.png" type="Texture" id=236]
+[ext_resource path="res://Characters/Mario/grabJab/0.png" type="Texture" id=237]
+[ext_resource path="res://Characters/Mario/grabJab/3.png" type="Texture" id=238]
+[ext_resource path="res://Characters/Mario/grabJab/2.png" type="Texture" id=239]
+[ext_resource path="res://Characters/Mario/uthrow/2.png" type="Texture" id=240]
+[ext_resource path="res://Characters/Mario/uthrow/1.png" type="Texture" id=241]
+[ext_resource path="res://Characters/Mario/uthrow/5.png" type="Texture" id=242]
+[ext_resource path="res://Characters/Mario/uthrow/4.png" type="Texture" id=243]
+[ext_resource path="res://Characters/Mario/uthrow/3.png" type="Texture" id=244]
+[ext_resource path="res://Characters/Mario/bthrow/12.png" type="Texture" id=245]
+[ext_resource path="res://Characters/Mario/dthrow/1.png" type="Texture" id=246]
+[ext_resource path="res://Characters/Mario/dthrow/2.png" type="Texture" id=247]
+[ext_resource path="res://Characters/Mario/dthrow/0.png" type="Texture" id=248]
+[ext_resource path="res://Characters/Mario/dthrow/4.png" type="Texture" id=249]
+[ext_resource path="res://Characters/Mario/dthrow/8.png" type="Texture" id=250]
+[ext_resource path="res://Characters/Mario/dthrow/9.png" type="Texture" id=251]
+[ext_resource path="res://Characters/Mario/dthrow/10.png" type="Texture" id=252]
+[ext_resource path="res://Characters/Mario/bthrow/14.png" type="Texture" id=253]
+[ext_resource path="res://Characters/Mario/dthrow/11.png" type="Texture" id=254]
+[ext_resource path="res://Characters/Mario/dthrow/5.png" type="Texture" id=255]
+[ext_resource path="res://Characters/Mario/dthrow/3.png" type="Texture" id=256]
+[ext_resource path="res://Characters/Mario/dthrow/6.png" type="Texture" id=257]
+[ext_resource path="res://Characters/Mario/dthrow/7.png" type="Texture" id=258]
+[ext_resource path="res://Characters/Mario/dthrow/12.png" type="Texture" id=259]
+[ext_resource path="res://Characters/Mario/bthrow/11.png" type="Texture" id=260]
+[ext_resource path="res://Characters/Mario/bthrow/13.png" type="Texture" id=261]
+[ext_resource path="res://Characters/Mario/fthrow/3.png" type="Texture" id=262]
+[ext_resource path="res://Characters/Mario/fthrow/0.png" type="Texture" id=263]
+[ext_resource path="res://Characters/Mario/fthrow/4.png" type="Texture" id=264]
+[ext_resource path="res://Characters/Mario/uthrow/0.png" type="Texture" id=265]
+[ext_resource path="res://Characters/Mario/fthrow/1.png" type="Texture" id=266]
+[ext_resource path="res://Characters/Mario/fthrow/2.png" type="Texture" id=267]
+[ext_resource path="res://Characters/Mario/bthrow/0.png" type="Texture" id=268]
+[ext_resource path="res://Characters/Mario/bthrow/1.png" type="Texture" id=269]
+[ext_resource path="res://Characters/Mario/bthrow/2.png" type="Texture" id=270]
+[ext_resource path="res://Characters/Mario/bthrow/3.png" type="Texture" id=271]
+[ext_resource path="res://Characters/Mario/bthrow/4.png" type="Texture" id=272]
+[ext_resource path="res://Characters/Mario/bthrow/5.png" type="Texture" id=273]
+[ext_resource path="res://Characters/Mario/bthrow/6.png" type="Texture" id=274]
+[ext_resource path="res://Characters/Mario/bthrow/7.png" type="Texture" id=275]
+[ext_resource path="res://Characters/Mario/bthrow/8.png" type="Texture" id=276]
+[ext_resource path="res://Characters/Mario/bthrow/9.png" type="Texture" id=277]
+[ext_resource path="res://Characters/Mario/bthrow/10.png" type="Texture" id=278]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -382,6 +425,31 @@ animations = [ {
 "loop": true,
 "name": "ingrab",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 268 ), ExtResource( 269 ), ExtResource( 270 ), ExtResource( 271 ), ExtResource( 272 ), ExtResource( 273 ), ExtResource( 274 ), ExtResource( 275 ), ExtResource( 276 ), ExtResource( 277 ), ExtResource( 278 ), ExtResource( 260 ), ExtResource( 245 ), ExtResource( 261 ), ExtResource( 253 ) ],
+"loop": true,
+"name": "bthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 265 ), ExtResource( 241 ), ExtResource( 240 ), ExtResource( 244 ), ExtResource( 243 ), ExtResource( 242 ) ],
+"loop": true,
+"name": "uthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 263 ), ExtResource( 266 ), ExtResource( 267 ), ExtResource( 262 ), ExtResource( 264 ) ],
+"loop": true,
+"name": "fthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 237 ), ExtResource( 236 ), ExtResource( 239 ), ExtResource( 238 ) ],
+"loop": true,
+"name": "grabjab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 248 ), ExtResource( 246 ), ExtResource( 247 ), ExtResource( 256 ), ExtResource( 249 ), ExtResource( 255 ), ExtResource( 257 ), ExtResource( 258 ), ExtResource( 250 ), ExtResource( 251 ), ExtResource( 252 ), ExtResource( 254 ), ExtResource( 259 ) ],
+"loop": true,
+"name": "dthrow",
+"speed": 5.0
 } ]
 
 [sub_resource type="Animation" id=2]
@@ -502,6 +570,51 @@ tracks/5/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ Vector2( -15, 5 ) ]
+}
+
+[sub_resource type="Animation" id=33]
+resource_name = "bthrow"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "bthrow" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_throw_animation_step"
+}, {
+"args": [ 1 ],
+"method": "apply_throw_animation_step"
+} ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -723,6 +836,51 @@ tracks/2/keys = {
 }, {
 "args": [ 1 ],
 "method": "apply_smash_attack_steps"
+} ]
+}
+
+[sub_resource type="Animation" id=34]
+resource_name = "dthrow"
+length = 1.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "dthrow" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_throw_animation_step"
+}, {
+"args": [ 1 ],
+"method": "apply_throw_animation_step"
 } ]
 }
 
@@ -960,6 +1118,51 @@ tracks/2/keys = {
 } ]
 }
 
+[sub_resource type="Animation" id=35]
+resource_name = "fthrow"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "fthrow" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_throw_animation_step"
+}, {
+"args": [ 1 ],
+"method": "apply_throw_animation_step"
+} ]
+}
+
 [sub_resource type="Animation" id=12]
 resource_name = "ftilt"
 length = 0.5
@@ -1079,6 +1282,51 @@ tracks/4/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
+}
+
+[sub_resource type="Animation" id=32]
+resource_name = "grabjab"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "grabjab" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "disable_input_animation_step"
+}, {
+"args": [ 1 ],
+"method": "disable_input_animation_step"
+} ]
 }
 
 [sub_resource type="Animation" id=14]
@@ -1913,6 +2161,51 @@ tracks/4/keys = {
 "values": [ Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
 }
 
+[sub_resource type="Animation" id=36]
+resource_name = "uthrow"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "uthrow" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_throw_animation_step"
+}, {
+"args": [ 1 ],
+"method": "apply_throw_animation_step"
+} ]
+}
+
 [sub_resource type="Animation" id=31]
 length = 1.1
 loop = true
@@ -1968,23 +2261,27 @@ one_way_collision_margin = 10.0
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "attack_getup"
-frame = 2
+animation = "uthrow"
+frame = 5
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 anims/attack_getup = SubResource( 2 )
 anims/bair = SubResource( 3 )
+anims/bthrow = SubResource( 33 )
 anims/dair = SubResource( 4 )
 anims/dash_attack = SubResource( 5 )
 anims/doublejump = SubResource( 6 )
 anims/dsmash = SubResource( 7 )
+anims/dthrow = SubResource( 34 )
 anims/dtilt = SubResource( 8 )
 anims/fair = SubResource( 9 )
 anims/freefall = SubResource( 10 )
 anims/fsmash = SubResource( 11 )
+anims/fthrow = SubResource( 35 )
 anims/ftilt = SubResource( 12 )
 anims/grab = SubResource( 13 )
+anims/grabjab = SubResource( 32 )
 anims/hurt = SubResource( 14 )
 anims/hurt_short = SubResource( 15 )
 anims/idle = SubResource( 16 )
@@ -2002,6 +2299,7 @@ anims/spotdodge = SubResource( 27 )
 anims/upair = SubResource( 28 )
 anims/upsmash = SubResource( 29 )
 anims/uptilt = SubResource( 30 )
+anims/uthrow = SubResource( 36 )
 anims/walk = SubResource( 31 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
@@ -2034,6 +2332,9 @@ one_shot = true
 one_shot = true
 
 [node name="InvincibilityTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="GrabTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="Shield" parent="." instance=ExtResource( 214 )]
