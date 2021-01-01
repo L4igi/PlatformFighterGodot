@@ -2,7 +2,6 @@ extends Node
 
 var countGroundCollidingCharacters = []
 var initCalculations = false
-var combinedVelocity = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -17,7 +16,6 @@ func set_combined_velocity(delta):
 	
 	if !initCalculations: 
 		initCalculations = true
-		combinedVelocity = 0
 		#special case for dash attacks
 		#no slowdown 
 		char1.currentPushSpeed = char1.currentMaxSpeed
@@ -26,62 +24,91 @@ func set_combined_velocity(delta):
 		calc_push_slowdown(char2, char1)
 		
 	var char1XInput = char1.get_input_direction_x()
-	var char1PushForce = char1.currentPushSpeed * char1XInput
 	var char2XInput = char2.get_input_direction_x()
-	var char2PushForce = char1.currentPushSpeed * char2XInput
 	
-	if char1.currentState == char1.CharacterState.HITSTUNGROUND \
-	|| char1.inHitStun\
-	|| char1.currentState == char1.CharacterState.SHIELD\
-	|| char1.currentState == char1.CharacterState.GRAB:
-		char1PushForce = 0
-	if char1.resetMovementSpeed && char1PushForce != 0: 
+	if disable_character_pushforce(char1):
+		char1XInput = 0
+	if char1.resetMovementSpeed && char1XInput != 0: 
 		char1.change_max_speed(char1XInput)
 		char1.resetMovementSpeed = false
-		initCalculations = false
-
-	if char2.currentState == char2.CharacterState.HITSTUNGROUND \
-	|| char2.inHitStun \
-	|| char2.currentState == char2.CharacterState.SHIELD\
-	|| char2.currentState == char2.CharacterState.GRAB:
-		char2PushForce = 0
-	if char2.resetMovementSpeed && char2PushForce != 0:
+		char1.currentPushSpeed = char1.currentMaxSpeed
+		calc_push_slowdown(char1, char2)
+#
+	if disable_character_pushforce(char2):
+		char2XInput = 0
+	if char2.resetMovementSpeed && char2XInput != 0:
 		char2.change_max_speed(char2XInput)
 		char2.resetMovementSpeed = false
-		initCalculations = false
+		char2.currentPushSpeed = char2.currentMaxSpeed
+		calc_push_slowdown(char2, char1)
 		
-	if abs(char1.get_input_direction_x()) < 0.05 &&  abs(char2.get_input_direction_x()) < 0.05:
-		char1PushForce = move_toward(char1PushForce, 0, char1.groundStopForce * delta)
-		char2PushForce = move_toward(char2PushForce, 0, char2.groundStopForce * delta)
-	else:
-		char1PushForce = clamp(char1PushForce, -char1.currentPushSpeed, char1.currentPushSpeed)
-		char2PushForce = clamp(char2PushForce, -char2.currentPushSpeed, char2.currentPushSpeed)
-	combinedVelocity = (char1PushForce + char2PushForce)
-	var maxWalkForce = max(char1.currentPushSpeed, char2.currentPushSpeed)
-	if ignore_pulling_character(char2, char1) && !disable_velcotiy_calc(char1):
-		char1.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
-	if ignore_pulling_character(char1, char2) && !disable_velcotiy_calc(char2):
-		char2.velocity.x = clamp(combinedVelocity, -maxWalkForce, maxWalkForce)
+	#if no velocity is calculated call again with swapped parameters
+	if !calc_characters_velocity(char1, char2, char1XInput, char2XInput):
+		calc_characters_velocity(char2, char1, char2XInput, char1XInput)
 		
-func ignore_pulling_character(char1, char2):
-	if char1.currentMoveDirection == char1.moveDirection.LEFT \
-	&& char1.global_position.x < char2.global_position.x \
-	&& (char1.get_input_direction_x() != 0 && char2.get_input_direction_x() == 0):
-		char2.velocity.x = 0
-		return false
-	elif char1.currentMoveDirection == char1.moveDirection.RIGHT \
-	&& char1.global_position.x > char2.global_position.x \
-	&& (char1.get_input_direction_x() != 0 && char2.get_input_direction_x() == 0):
-		char2.velocity.x = 0
-		return false
-	return true
-	
-func disable_velcotiy_calc(character):
-	if character.currentState == character.CharacterState.ROLL\
-	|| character.currentState == character.CharacterState.GETUP:
+#sets pushForce to 0 if character is in certain state
+func disable_character_pushforce(character):
+	if character.currentState == character.CharacterState.HITSTUNGROUND \
+	|| character.inHitStun\
+	|| character.currentState == character.CharacterState.SHIELD\
+	|| character.currentState == character.CharacterState.GRAB:
 		return true
-	else: 
-		return false
+	return false
+
+func calc_characters_velocity(char1, char2, char1XInput, char2XInput):
+	if char1.global_position.x < char2.global_position.x:
+		if char1XInput != 0 && char2XInput == 0:
+			#character 1 is pushing char 2 is standing still
+			if char1.currentMoveDirection == char1.moveDirection.RIGHT:
+				char1.velocity.x = char1XInput * char1.currentPushSpeed
+				char2.velocity.x = char1.velocity.x
+			#charcter 1 is running away from character 2 is standing still
+			elif char1.currentMoveDirection == char1.moveDirection.LEFT:
+				char1.velocity.x = char1XInput * char1.currentMaxSpeed
+				char2.velocity.x = 0
+		elif char2XInput != 0 && char1XInput == 0:
+			#character 2 is pushing char 1 is standing still
+			if char2.currentMoveDirection == char1.moveDirection.LEFT:
+				char2.velocity.x = char2XInput * char2.currentPushSpeed
+				char1.velocity.x = char2.velocity.x
+			#charcter 2 is running away from character 1 is standing still
+			elif char2.currentMoveDirection == char1.moveDirection.RIGHT:
+				char1.velocity.x = 0
+				char2.velocity.x = char2XInput * char2.currentMaxSpeed
+		#both characters are standing still
+		elif char1XInput == 0 && char2XInput == 0: 
+			char1.velocity.x = 0
+			char2.velocity.x = 0
+		#both characters posess push force in direction
+		elif char1XInput != 0 && char2XInput != 0:
+			if char1.currentMoveDirection == char2.currentMoveDirection\
+			&& char1.currentMoveDirection == char1.moveDirection.RIGHT:
+				#character 1 is faster than character 2 therefore pushing both at character 1 speed 
+				if abs(char1XInput) > abs(char2XInput):
+					char1.velocity.x = char1XInput * char1.currentPushSpeed
+					char2.velocity.x = char1.velocity.x
+				else:
+				#character 2 is faster than character 1 both run at their own speed
+					char1.velocity.x = char1XInput * char1.currentMaxSpeed
+					char2.velocity.x = char2XInput * char2.currentMaxSpeed
+			elif char1.currentMoveDirection == char2.currentMoveDirection\
+			&& char1.currentMoveDirection == char1.moveDirection.LEFT:
+				#character 2 is faster than character 1 therefore pushing both at character 1 speed 
+				if abs(char2XInput) > abs(char1XInput):
+					char2.velocity.x = char2XInput * char2.currentPushSpeed
+					char1.velocity.x = char2.velocity.x
+				else:
+				#character 1 is faster than character 2 both run at their own speed
+					char2.velocity.x = char2XInput * char2.currentMaxSpeed
+					char1.velocity.x = char1XInput * char1.currentMaxSpeed
+			elif char1.currentMoveDirection != char2.currentMoveDirection:
+				#one is always negative the other one always positive therefore use addition
+				var combinedPushForce = (char1XInput * char1.currentPushSpeed) + (char2XInput * char2.currentPushSpeed)
+				char2.velocity.x = combinedPushForce
+				char1.velocity.x = combinedPushForce
+		#if velocity was calculated return true
+		return true
+	return false
 		
 func add_ground_colliding_character(character):
 	if !countGroundCollidingCharacters.has(character):
@@ -89,10 +116,6 @@ func add_ground_colliding_character(character):
 	
 func calc_push_slowdown(character1, character2):
 	character1.currentPushSpeed = character1.currentMaxSpeed/(character2.weight) 
-#	character.walkForce = 200
-	if character1.velocity.x > character1.currentPushSpeed:
-		character1.velocity.x = character1.currentPushSpeed * character1.get_input_direction_x()
-		
 
 func remove_ground_colliding_character(character):
 	countGroundCollidingCharacters.erase(character)

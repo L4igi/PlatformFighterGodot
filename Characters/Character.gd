@@ -66,6 +66,7 @@ onready var invincibilityTimer = $InvincibilityTimer
 #shield
 onready var characterShield = $Shield
 var rollDistance = 150
+var rolling = false
 #grab
 onready var grabTimer = $GrabTimer
 var grabbedCharacter = null
@@ -785,7 +786,7 @@ func input_movement_physics_ground(delta):
 					mirror_areas()
 					directionChange = true
 					change_max_speed(xInput)
-					emit_signal("character_turnaround")
+#					emit_signal("character_turnaround")
 			moveDirection.RIGHT:
 				if xInput < 0: 
 					currentMoveDirection = moveDirection.LEFT
@@ -793,7 +794,7 @@ func input_movement_physics_ground(delta):
 					mirror_areas()
 					directionChange = true
 					change_max_speed(xInput)
-					emit_signal("character_turnaround")
+#					emit_signal("character_turnaround")
 		if directionChange && ((velocity.x<= 0 && xInput >= 0) || (velocity.x>= 0 && xInput <= 0)): 
 			match currentMoveDirection:
 				moveDirection.LEFT:
@@ -928,8 +929,6 @@ func switch_to_state(state):
 			currentState = CharacterState.SPECIAL
 		CharacterState.EDGE:
 			currentState = CharacterState.EDGE
-		CharacterState.ROLL:
-			currentState = CharacterState.ROLL
 		CharacterState.GETUP:
 			currentState = CharacterState.GETUP
 			emit_signal("character_state_changed", currentState)
