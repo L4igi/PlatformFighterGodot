@@ -56,7 +56,11 @@ func disable_collision():
 	character.set_collision_mask_bit(0,false)
 
 func enable_collision():
-	if character.global_position.y < areaCollisionObject.global_position.y && character.velocity.y < 0:
+	print(character.name + "  "+str(character.global_position.y) + "  "+str(character.velocity.y))
+	print(areaCollisionObject.name + "  "+str(areaCollisionObject.global_position.y) + "  "+str(areaCollisionObject.velocity.y))
+	if character.global_position.y > areaCollisionObject.global_position.y && int(character.velocity.y) < 0:
+		return
+	elif areaCollisionObject.global_position.y > character.global_position.y && int(areaCollisionObject.velocity.y) < 0:
 		return
 	else:
 		character.pushingCharacter = areaCollisionObject
