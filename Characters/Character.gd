@@ -78,10 +78,9 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIAL, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK}
+enum CharacterState{GROUND, AIR, EDGE,ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK}
 #signal for character state change
 signal character_state_changed(state)
-signal character_turnaround()
 
 var currentState = CharacterState.GROUND
 
@@ -737,8 +736,10 @@ func apply_attack_movement_stats(step = 0):
 	pass
 	
 func process_movement_physics(delta):
+#	print(self.name + str(currentState))
 #	check_buffer_input()
 	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
+#		print("BOUNCING")
 #		velocity = velocity.bounce(Vector2(0,1))
 		if onSolidGround && int(velocity.y) > 0: 
 			velocity.y *= -1
@@ -786,7 +787,6 @@ func input_movement_physics_ground(delta):
 					mirror_areas()
 					directionChange = true
 					change_max_speed(xInput)
-#					emit_signal("character_turnaround")
 			moveDirection.RIGHT:
 				if xInput < 0: 
 					currentMoveDirection = moveDirection.LEFT
@@ -794,7 +794,6 @@ func input_movement_physics_ground(delta):
 					mirror_areas()
 					directionChange = true
 					change_max_speed(xInput)
-#					emit_signal("character_turnaround")
 		if directionChange && ((velocity.x<= 0 && xInput >= 0) || (velocity.x>= 0 && xInput <= 0)): 
 			match currentMoveDirection:
 				moveDirection.LEFT:
@@ -893,31 +892,19 @@ func switch_to_state(state):
 	match state: 
 		CharacterState.GROUND:
 			currentState = CharacterState.GROUND
-			airCollider.set_disabled(true)
-			airCollider.visible = false
-			groundCollider.set_disabled(false)
-			groundCollider.visible = true
+			enable_ground_collider()
 			emit_signal("character_state_changed", currentState)
 		CharacterState.AIR:
 			currentState = CharacterState.AIR
-			airCollider.set_disabled(false)
-			airCollider.visible = true
-			groundCollider.set_disabled(true)
-			groundCollider.visible = false
+			enable_air_collider()
 			emit_signal("character_state_changed", currentState)
 		CharacterState.HITSTUNAIR:
 			currentState = CharacterState.HITSTUNAIR
-#			airCollider.set_disabled(false)
-#			airCollider.visible = true
-#			groundCollider.set_disabled(true)
-#			groundCollider.visible = false
+			enable_air_collider()
 			emit_signal("character_state_changed", currentState)
 		CharacterState.HITSTUNGROUND:
 			currentState = CharacterState.HITSTUNGROUND
-#			airCollider.set_disabled(true)
-#			airCollider.visible = false
-#			groundCollider.set_disabled(false)
-#			groundCollider.visible = true
+			enable_ground_collider()
 			emit_signal("character_state_changed", currentState)
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR
@@ -925,8 +912,10 @@ func switch_to_state(state):
 		CharacterState.ATTACKGROUND:
 			currentState = CharacterState.ATTACKGROUND
 			emit_signal("character_state_changed", currentState)
-		CharacterState.SPECIAL:
-			currentState = CharacterState.SPECIAL
+		CharacterState.SPECIALGROUND:
+			currentState = CharacterState.SPECIALGROUND
+		CharacterState.SPECIALAIR:
+			currentState = CharacterState.SPECIALAIR
 		CharacterState.EDGE:
 			currentState = CharacterState.EDGE
 		CharacterState.GETUP:
@@ -949,6 +938,17 @@ func switch_to_state(state):
 			currentState = CharacterState.INGRAB
 			emit_signal("character_state_changed", currentState)
 
+func enable_ground_collider():
+	airCollider.set_deferred("disabled",true)
+	airCollider.visible = false
+	groundCollider.set_deferred("disabled",false)
+	groundCollider.visible = true
+func enable_air_collider():
+	airCollider.set_deferred("disabled",false)
+	airCollider.visible = true
+	groundCollider.set_deferred("disabled",true)
+	groundCollider.visible = false
+	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
 		gravity=baseGravity
@@ -1006,7 +1006,7 @@ func apply_throw(actionType):
 	var launchAngle = deg2rad(currentAttackData["launchAngle"])
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
 	var launchVectorX = launchVector.x
-	print(launchVectorX)
+	print(launchVector)
 	#inverse x launch diretion depending on character position
 	if global_position.x < inGrabByCharacter.global_position.x:
 		launchVectorX *= -1
