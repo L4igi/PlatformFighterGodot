@@ -56,8 +56,8 @@ func disable_collision():
 	character.set_collision_mask_bit(0,false)
 
 func enable_collision():
-	print(character.name + "  "+str(character.global_position.y) + "  "+str(character.velocity.y))
-	print(areaCollisionObject.name + "  "+str(areaCollisionObject.global_position.y) + "  "+str(areaCollisionObject.velocity.y))
+#	print(character.name + "  "+str(character.global_position.y) + "  "+str(character.velocity.y))
+#	print(areaCollisionObject.name + "  "+str(areaCollisionObject.global_position.y) + "  "+str(areaCollisionObject.velocity.y))
 	if character.global_position.y > areaCollisionObject.global_position.y && int(character.velocity.y) < 0:
 		return
 	elif areaCollisionObject.global_position.y > character.global_position.y && int(areaCollisionObject.velocity.y) < 0:
@@ -80,8 +80,8 @@ func _on_CollisionArea_area_exited(area):
 func _on_character_state_change(currentState):
 	if collisionAreaEntered != null: 
 		if currentState == character.CharacterState.GROUND \
-		|| currentState == character.CharacterState.HITSTUNGROUND \
-		|| currentState == character.CharacterState.SHIELD:
+		|| currentState == character.CharacterState.SHIELD\
+		|| currentState == character.CharacterState.HITSTUNGROUND:
 			character.set_collision_mask_bit(0,true)
 			character.pushingCharacter = areaCollisionObject
 			areaCollisionObject.pushingCharacter = character
@@ -115,7 +115,7 @@ func match_collision_ground(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
@@ -220,7 +220,7 @@ func match_collision_attackground(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
@@ -290,7 +290,7 @@ func match_collision_hitstunground(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
@@ -335,7 +335,7 @@ func match_collision_hitstunair(areaCollisionObject):
 		character.CharacterState.ROLL:
 			disable_collision()
 		character.CharacterState.GRAB:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.INGRAB:
 			disable_collision()
 		character.CharacterState.SPOTDODGE:
@@ -360,7 +360,7 @@ func match_collision_specialground(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
@@ -430,7 +430,7 @@ func match_collision_shield(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
@@ -500,7 +500,7 @@ func match_collision_grab(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
@@ -640,7 +640,7 @@ func match_collision_shieldbreak(areaCollisionObject):
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:

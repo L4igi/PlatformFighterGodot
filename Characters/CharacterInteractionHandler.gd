@@ -51,7 +51,8 @@ func disable_character_pushforce(character):
 	if character.currentState == character.CharacterState.HITSTUNGROUND \
 	|| character.inHitStun\
 	|| character.currentState == character.CharacterState.SHIELD\
-	|| character.currentState == character.CharacterState.GRAB:
+	|| character.currentState == character.CharacterState.GRAB\
+	|| character.currentState == character.CharacterState.AIR:
 		return true
 	return false
 

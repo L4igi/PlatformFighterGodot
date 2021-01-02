@@ -26,7 +26,7 @@
   },
   "FTILT":{
     "damage_neutral":5,
-    "hitStun_neutral":0.5,
+    "hitStun_neutral":5.0,
     "launchVelocity_neutral":750,
     "launchAngle_neutral":30,
     "knockBackGrowth_neutral" :100,
@@ -52,7 +52,7 @@
     "damage_neutral":5,
     "hitStun_neutral":0.3,
     "launchVelocity_neutral":500,
-    "launchAngle_neutral":45,
+    "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral"
   },
