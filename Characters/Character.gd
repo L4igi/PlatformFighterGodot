@@ -61,6 +61,8 @@ onready var hitStunTimer = $HitStunTimer
 var groundHitStun = 3.0
 var getupRollDistance = 100
 var tumblingThreashold = 500
+var characterBouncing = false
+var lastVelocity = 0
 #invincibility
 onready var invincibilityTimer = $InvincibilityTimer
 #shield
@@ -136,7 +138,10 @@ func _physics_process(delta):
 				switch_from_state_to_airborn()
 		#if character is in hitstun and lands on ground finish hurt animation
 		elif currentState == CharacterState.HITSTUNAIR:
+			if int(velocity.y) != 0:
+				lastVelocity = int(velocity.y)
 			if onSolidGround && int(velocity.y) == 0:
+				print("Swapping State")
 				disableInput = false
 				#plays rest of hitstun animation if hitting ground during hitstun
 		elif currentState == CharacterState.HITSTUNGROUND:
@@ -384,6 +389,8 @@ func create_jump_timer(waittime):
 	shortHopTimer.start()
 	
 func hitstun_handler(delta):
+	if int(velocity.y) != 0:
+		lastVelocity = int(velocity.y)
 	if onSolidGround && int(velocity.y) == 0 && currentState == CharacterState.HITSTUNAIR:
 		switch_to_state(CharacterState.HITSTUNGROUND)
 		#plays rest of hitstun animation if hitting ground during hitstun
@@ -391,8 +398,9 @@ func hitstun_handler(delta):
 		bufferAnimation = false
 		create_hitstun_timer(groundHitStun)
 	elif currentState == CharacterState.HITSTUNGROUND: 
-		if int(velocity.y) != 0:
-			switch_from_state_to_airborn()
+		print("ground")
+#		if int(velocity.y) != 0:
+#			switch_from_state_to_airborn()
 		#if not in hitstun check for jump, attack or special 
 		#todo: check for special
 		if Input.is_action_just_pressed(attack):
@@ -735,10 +743,7 @@ func process_movement_physics(delta):
 #	print(self.name + str(currentState))
 #	check_buffer_input()
 	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
-#		velocity = velocity.bounce(Vector2(0,1))
-		if onSolidGround && int(velocity.y) > 0:
-			velocity.y *= -1
-			switch_to_state(CharacterState.HITSTUNAIR)
+#		print(self.name + "  " + str(onSolidGround) + "  " +str(int(velocity.y)))
 		velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 	if disableInputDI:
 		var walk = disableInputInfluence * get_input_direction_x()
