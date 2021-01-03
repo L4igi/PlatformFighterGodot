@@ -24,7 +24,7 @@ position = Vector2( 864, 322.079 )
 position = Vector2( 608, 480 )
 
 [node name="Mario" parent="." instance=ExtResource( 3 )]
-position = Vector2( 352, 96 )
+position = Vector2( 336, -232 )
 
 [node name="Dark_Mario" parent="." instance=ExtResource( 4 )]
 position = Vector2( 848, 88 )

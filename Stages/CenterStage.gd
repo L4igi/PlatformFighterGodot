@@ -17,8 +17,9 @@ func _ready():
 
 func _on_CollisisionDetectionArea_body_entered(body):
 	if body.is_in_group("Character") && !collidingBodies.has(body):
-		collidingBodies.append(body)
-		body.onSolidGround = true
+		if int(body.velocity.y) >= 0:
+			collidingBodies.append(body)
+			body.onSolidGround = true
 
 
 func _on_CollisisionDetectionArea_body_exited(body):

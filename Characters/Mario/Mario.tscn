@@ -875,10 +875,7 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="AirCollider" parent="." index="0"]
-visible = false
-
-[node name="AnimatedSprite" parent="." index="3"]
+[node name="AnimatedSprite" parent="." index="2"]
 animation = "dair"
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
@@ -905,7 +902,7 @@ visible = false
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
 position = Vector2( 0, 10.277 )
 
-[node name="InteractionAreas" parent="." index="4"]
+[node name="InteractionAreas" parent="." index="3"]
 visible = false
 position = Vector2( -4.00001, 3.99999 )
 rotation = 1.5708
