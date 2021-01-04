@@ -125,7 +125,7 @@
   },
   "FTHROW":{
     "damage":5,
-    "hitStun":0.5,
+    "hitStun":0.3,
     "launchVelocity":1000,
     "launchAngle":330,
     "knockBackGrowth" :100,

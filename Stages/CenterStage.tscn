@@ -9,12 +9,13 @@
 extents = Vector2( 448, 48 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 448, 8 )
+extents = Vector2( 448, 24 )
 
 [node name="CenterStage" type="KinematicBody2D" groups=[
 "Ground",
 ]]
 collision_layer = 4
+collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -39,7 +40,10 @@ position = Vector2( 448, -32 )
 [node name="CollisisionDetectionArea" type="Area2D" parent="."]
 
 [node name="CollisisonDetectionShape" type="CollisionShape2D" parent="CollisisionDetectionArea"]
-position = Vector2( 0, -30 )
+position = Vector2( 0, -56 )
 shape = SubResource( 2 )
+
+[node name="CheckYPoint" type="Node2D" parent="."]
+position = Vector2( 0, -30 )
 [connection signal="body_entered" from="CollisisionDetectionArea" to="." method="_on_CollisisionDetectionArea_body_entered"]
 [connection signal="body_exited" from="CollisisionDetectionArea" to="." method="_on_CollisisionDetectionArea_body_exited"]

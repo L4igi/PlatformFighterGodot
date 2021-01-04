@@ -25,6 +25,7 @@ position = Vector2( 608, 480 )
 
 [node name="Mario" parent="." instance=ExtResource( 3 )]
 position = Vector2( 336, -232 )
+collision_mask = 6
 
 [node name="Dark_Mario" parent="." instance=ExtResource( 4 )]
 position = Vector2( 848, 88 )

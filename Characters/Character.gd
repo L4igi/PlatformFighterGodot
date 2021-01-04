@@ -5,7 +5,7 @@ var baseDisableInputInfluence = 1200
 var baseWalkMaxSpeed = 100
 var baseRunMaxSpeed = 600
 var baseStopForce = 1500
-var baseJumpSpeed = 800
+var baseJumpSpeed = 850
 var baseAirSpeed = 600
 
 #walkforce is only used when no input is detected to slow the character down
@@ -15,7 +15,7 @@ var runMaxSpeed = 600
 var airMaxSpeed = 600
 var airStopForce = 1000
 var groundStopForce = 1500
-var jumpSpeed = 850
+var jumpSpeed = 700
 var currentMaxSpeed = runMaxSpeed
 #jump
 var jumpCount = 0
@@ -23,11 +23,11 @@ var availabelJumps = 2
 var shortHop = true
 onready var shortHopTimer = $ShortHopTimer
 #platform
-var collidePlatforms = true
 var dropDownCount = 0
 onready var dropDownTimer = $DropDownTimer
 var inputTimeout = false
 var atPlatformEdge = null
+onready var lowestCheckYPoint = $LowestCheckYPoint
 #edge
 var snapEdge = false
 var snapEdgePosition = Vector2()
@@ -50,13 +50,15 @@ var walkThreashold = 0.3
 var currentPushSpeed = 0
 var directionChange = false
 var velocity = Vector2()
-var onSolidGround = false
-var onSolidGroundThreashold = 5
+var onSolidGround = null
+var onSolidGroundThreashold = 10
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
 var bufferAnimation = false
 #hitstun 
+var initLaunchVelocity = 0
+var launchSpeedDecay = 0.025
 var inHitStun = false
 onready var hitStunTimer = $HitStunTimer
 var groundHitStun = 3.0
@@ -65,6 +67,7 @@ var tumblingThreashold = 500
 var characterBouncing = false
 var lastVelocity = 0
 var bounceThreashold = 800
+var bounceReduction = 0.2
 #invincibility
 onready var invincibilityTimer = $InvincibilityTimer
 #shield
@@ -109,6 +112,7 @@ var grab = ""
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
+	self.set_collision_mask_bit(1,false)
 	var file = File.new()
 	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
 	var attacks = JSON.parse(file.get_as_text())
@@ -126,7 +130,7 @@ func _ready():
 func _physics_process(delta):
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
-	if velocity.y != 0: 
+	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
 		lastVelocity = velocity
 	if disableInput:
 		process_movement_physics(delta)
@@ -185,7 +189,7 @@ func attack_handler_ground():
 	if disableInput:
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
-	else:
+	elif !disableInput:
 		if smashAttack != null: 
 	#		print("SMASH " +str(smashAttack))
 			match smashAttack: 
@@ -246,11 +250,10 @@ func jab_handler():
 		jabCount = 0
 		
 func attack_handler_air():
-	if disableInput:
-		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-			switch_to_state(CharacterState.GROUND)
-			toggle_all_hitboxes("off")
-	else:
+	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
+		switch_to_state(CharacterState.GROUND)
+		toggle_all_hitboxes("off")
+	elif !disableInput:
 		if abs(get_input_direction_x()) < 0.1\
 		&& abs(get_input_direction_y()) < 0.1:
 			animation_handler(GlobalVariables.CharacterAnimations.NAIR)
@@ -276,7 +279,7 @@ func ground_handler(delta):
 	if disableInput:
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
-	else:
+	elif !disableInput:
 		#reset gravity if player is grounded
 		if gravity!=baseGravity:
 			gravity=baseGravity
@@ -315,13 +318,12 @@ func create_drop_platform_timer(waittime,setInputTimeout):
 	
 #is called when player is in the air 
 func air_handler(delta):
-	if disableInput:
-		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-			switch_to_state(CharacterState.GROUND)
+	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
+		switch_to_state(CharacterState.GROUND)
 #				animationPlayer.play("idle")
-			#if aerial attack is interrupted by ground cancel hitboxes
-			toggle_all_hitboxes("off")
-	else:
+		#if aerial attack is interrupted by ground cancel hitboxes
+		toggle_all_hitboxes("off")
+	elif !disableInput:
 		input_movement_physics_air(delta)
 		# Move based on the velocity and snap to the ground.
 		velocity = move_and_slide(velocity)
@@ -339,9 +341,10 @@ func air_handler(delta):
 		if Input.is_action_just_released(jump) && jumpCount == 1:
 			shortHop = true
 		#enable collisons with platforms if player is falling down
-		if !collidePlatforms && abs(int(velocity.y)) >= onSolidGroundThreashold: 
-			collidePlatforms = true
-			set_collision_mask_bit(1,true)
+		#and collision point is higer than the platform
+#		if !collidePlatforms && abs(int(velocity.y)) >= onSolidGroundThreashold:
+#			collidePlatforms = true
+#			set_collision_mask_bit(1,true)
 		#Fastfall
 		if Input.is_action_just_pressed(down) && !onSolidGround && abs(int(velocity.y)) >= onSolidGroundThreashold:
 			gravity = fastFallGravity
@@ -353,8 +356,6 @@ func air_handler(delta):
 func jump_handler():
 	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 	#reset gravity if player is jumping
-	collidePlatforms = true
-	set_collision_mask_bit(1,true)
 	dropDownCount = 0
 	velocity.y = -jumpSpeed
 	jumpCount = 1
@@ -383,7 +384,6 @@ func _on_drop_timer_timeout():
 		dropDownCount = 0
 	else:
 		switch_to_state(CharacterState.AIR)
-		collidePlatforms = false
 	
 #creates timer to determine if short or fullhop
 func create_jump_timer(waittime):
@@ -391,12 +391,22 @@ func create_jump_timer(waittime):
 	shortHopTimer.set_wait_time(waittime)
 	shortHopTimer.start()
 	
+func calc_hitstun_velocity(delta):
+	if velocity.x < 0: 
+		if(velocity.x - initLaunchVelocity.x *launchSpeedDecay) <= 0:
+			velocity.x -= (initLaunchVelocity.x *launchSpeedDecay)
+	else: 
+		if(velocity.x - initLaunchVelocity.x *launchSpeedDecay) >= 0:
+			velocity.x -= (initLaunchVelocity.x *launchSpeedDecay)
+	
+	velocity.y += gravity * delta
+	
 func hitstun_handler(delta):
 	if disableInput:
 		if currentState == CharacterState.HITSTUNAIR:
 			#BOUNCING CHARACTER
 			if onSolidGround && lastVelocity.y > bounceThreashold:
-				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))
+				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*0.5
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
 				switch_to_state(CharacterState.HITSTUNGROUND)
 				#plays rest of hitstun animation if hitting ground during hitstun
@@ -406,10 +416,9 @@ func hitstun_handler(delta):
 		elif currentState == CharacterState.HITSTUNGROUND:
 			if abs(int(velocity.y)) >= onSolidGroundThreashold:
 				switch_from_state_to_airborn()
-	else:
+	elif !disableInput:
 		if onSolidGround && lastVelocity.y > bounceThreashold:
-			print(lastVelocity)
-			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))
+			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
 			#plays rest of hitstun animation if hitting ground during hitstun
@@ -417,7 +426,6 @@ func hitstun_handler(delta):
 			bufferAnimation = false
 			create_hitstun_timer(groundHitStun)
 		elif currentState == CharacterState.HITSTUNGROUND: 
-			print("ground")
 	#		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 	#			switch_from_state_to_airborn()
 			#if not in hitstun check for jump, attack or special 
@@ -462,8 +470,9 @@ func create_hitstun_timer(stunTime):
 	hitStunTimer.start()
 	
 func _on_hitstun_timeout():
-#	print("hitstun timeout")
+	print("hitstun timeout")
 	inHitStun = false
+	disableInput = false
 #	if velocity.y != 0: 
 #		switch_to_state(CharacterState.AIR)
 #	else:
@@ -576,7 +585,6 @@ func edge_handler(delta):
 		velocity.y = -jumpSpeed
 		jumpCount += 1
 		#disables collisons with platforms if player is jumping upwards
-		collidePlatforms = false
 		set_collision_mask_bit(1,false)
 		snapEdge=false
 	elif Input.is_action_just_pressed(left):
@@ -760,15 +768,16 @@ func apply_attack_movement_stats(step = 0):
 	pass
 	
 func process_movement_physics(delta):
-#	print(self.name + str(currentState))
 #	check_buffer_input()
-#	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
-##		print(self.name + "  " + str(onSolidGround) + "  " +str(int(velocity.y)))
+	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
+#		print(self.name + "  " + str(onSolidGround) + "  " +str(velocity))
+		calc_hitstun_velocity(delta)
 #		velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 	if disableInputDI:
 		var walk = disableInputInfluence * get_input_direction_x()
 		velocity.x += walk * delta
 		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
+		velocity.y += gravity * delta
 	else:
 		if currentState == CharacterState.GROUND\
 		|| currentState == CharacterState.ATTACKGROUND\
@@ -777,11 +786,12 @@ func process_movement_physics(delta):
 		|| currentState == CharacterState.INGRAB:
 #		|| currentState == CharacterState.HITSTUNGROUND:
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
+			velocity.y += gravity * delta
 		elif currentState == CharacterState.AIR\
 		|| currentState == CharacterState.ATTACKAIR:
 #		|| currentState == CharacterState.HITSTUNAIR:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
-	velocity.y += gravity * delta
+			velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 
@@ -878,8 +888,11 @@ func input_movement_physics_air(delta):
 			velocity.x += (walk * delta)*2
 #	print(currentMaxSpeed)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
+	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
+		calc_hitstun_velocity(delta)
 	# Vertical movement code. Apply gravity.
-	velocity.y += gravity * delta
+	else:
+		velocity.y += gravity * delta
 	
 func toggle_all_hitboxes(onOff):
 	match onOff: 
@@ -965,6 +978,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	smashAttack = null
 	bufferInput = null
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
+	initLaunchVelocity = velocity
 	if launchVelocity > tumblingThreashold:
 	#todo: calculate if in tumble animation
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
