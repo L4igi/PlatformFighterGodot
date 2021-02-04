@@ -37,4 +37,5 @@ script = ExtResource( 5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TeleportToStart"]
 position = Vector2( 616, 872 )
 shape = SubResource( 1 )
+
 [connection signal="body_entered" from="TeleportToStart" to="TeleportToStart" method="_on_TeleportToStart_body_entered"]

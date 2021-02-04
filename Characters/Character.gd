@@ -112,7 +112,7 @@ var grab = ""
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
-	self.set_collision_mask_bit(1,false)
+	#self.set_collision_mask_bit(1,false)
 	var file = File.new()
 	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
 	var attacks = JSON.parse(file.get_as_text())
@@ -211,8 +211,8 @@ func attack_handler_ground():
 				GlobalVariables.SmashAttacks.SMASHDOWN:
 					animation_handler(GlobalVariables.CharacterAnimations.DSMASH)
 					currentAttack = GlobalVariables.CharacterAnimations.DSMASH
-		elif bufferInput != null || ((abs(get_input_direction_x()) == 0 || jabCount > 0) \
-		&& get_input_direction_y() == 0):
+		elif bufferInput != null || (abs(get_input_direction_x()) == 0 || jabCount > 0) \
+		&& get_input_direction_y() == 0:
 			jab_handler()
 		elif get_input_direction_y() < 0:
 			animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
@@ -1045,9 +1045,9 @@ func apply_throw(actionType):
 	
 func enable_player_input():
 	if buffered_input():
+		disableInput = false
 		attack_handler_ground()
 	elif bufferAnimation:
-		print("Buffer animation")
 		animationPlayer.play()
 		bufferAnimation = false
 	else:
@@ -1057,6 +1057,7 @@ func enable_player_input():
 		animationPlayer.set_speed_scale(1.0)
 		#reset InteractionArea Position/Rotation/Scale to default
 		$InteractionAreas.reset_global_transform()
+	
 
 func check_buffer_input():
 	#todo: add other inputs for buffer

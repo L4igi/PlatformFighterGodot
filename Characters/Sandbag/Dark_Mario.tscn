@@ -1133,13 +1133,9 @@ tracks/1/keys = {
 [node name="Dark_Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="AirCollider" parent="." index="0"]
-visible = false
-
-[node name="AnimatedSprite" parent="." index="3"]
+[node name="AnimatedSprite" parent="." index="2"]
 modulate = Color( 0.223529, 0.337255, 0.847059, 1 )
 animation = "dair"
-frame = 0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 1.5
@@ -1170,7 +1166,7 @@ visible = false
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
 position = Vector2( 0, 10.277 )
 
-[node name="InteractionAreas" parent="." index="4"]
+[node name="InteractionAreas" parent="." index="3"]
 visible = false
 
 [node name="CollisionArea" parent="InteractionAreas" index="1"]

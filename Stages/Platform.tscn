@@ -8,7 +8,7 @@
 extents = Vector2( 128, 8.00057 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 100, 22 )
+extents = Vector2( 100, 8 )
 
 [node name="Platform" type="KinematicBody2D" groups=[
 "Platform",
@@ -19,6 +19,7 @@ collision_mask = 2147483648
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( -1.81899e-12, 0 )
 shape = SubResource( 1 )
 one_way_collision = true
 one_way_collision_margin = 20.0
@@ -36,13 +37,15 @@ texture = ExtResource( 1 )
 collision_layer = 0
 
 [node name="CollisionDetectionShape" type="CollisionShape2D" parent="CollisionDetectionArea"]
-position = Vector2( -0.000113334, -28 )
+position = Vector2( 0, -5 )
 scale = Vector2( 1.28, 1 )
 shape = SubResource( 2 )
+one_way_collision = true
 one_way_collision_margin = 20.0
 
 [node name="CheckYPoint" type="Node2D" parent="."]
-position = Vector2( 0, -8 )
+position = Vector2( 0, -7 )
+
 [connection signal="body_entered" from="CollisionDetectionArea" to="." method="_on_CollisionDetectionArea_body_entered"]
 [connection signal="body_exited" from="CollisionDetectionArea" to="." method="_on_CollisionDetectionArea_body_exited"]
 
