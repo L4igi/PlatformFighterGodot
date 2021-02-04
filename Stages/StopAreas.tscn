@@ -2,9 +2,9 @@
 
 [ext_resource path="res://Stages/StopAreas.gd" type="Script" id=1]
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="RectangleShape2D" id=1]
 
-[sub_resource type="CircleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=2]
 
 [node name="StopAreas" type="Node2D"]
 script = ExtResource( 1 )
@@ -12,7 +12,7 @@ script = ExtResource( 1 )
 [node name="StopAreaRight" type="Area2D" parent="." groups=[
 "PlatformStopArea",
 ]]
-scale = Vector2( 0.5, 1 )
+scale = Vector2( 0.5, 0.5 )
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StopAreaRight"]
@@ -21,11 +21,12 @@ shape = SubResource( 1 )
 [node name="StopAreaLeft" type="Area2D" parent="." groups=[
 "PlatformStopArea",
 ]]
-scale = Vector2( 0.5, 1 )
+scale = Vector2( 0.5, 0.5 )
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StopAreaLeft"]
 shape = SubResource( 2 )
+
 [connection signal="body_entered" from="StopAreaRight" to="." method="_on_StopAreaRight_body_entered"]
 [connection signal="body_exited" from="StopAreaRight" to="." method="_on_StopAreaRight_body_exited"]
 [connection signal="body_entered" from="StopAreaLeft" to="." method="_on_StopAreaLeft_body_entered"]

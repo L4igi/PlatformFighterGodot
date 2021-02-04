@@ -42,9 +42,9 @@
   },
   "DTILT":{
     "damage_neutral":5,
-    "hitStun_neutral":0.5,
+    "hitStun_neutral":2.0,
     "launchVelocity_neutral":1000,
-    "launchAngle_neutral":330,
+    "launchAngle_neutral":350,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral"
   },

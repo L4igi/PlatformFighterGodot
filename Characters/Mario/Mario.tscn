@@ -887,8 +887,10 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
+[node name="AnimatedSprite" parent="." index="2"]
+animation = "idle"
+
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
-playback_speed = 2.0
 anims/bair = SubResource( 1 )
 anims/dair = SubResource( 2 )
 anims/dash_attack = SubResource( 3 )
