@@ -2257,18 +2257,19 @@ collision_mask = 0
 script = ExtResource( 1 )
 
 [node name="CharacterCollider" type="CollisionPolygon2D" parent="."]
-polygon = PoolVector2Array( 0, -2, -4, 24, 0, 32, 4, 24 )
+position = Vector2( 2.38419e-07, 0 )
+scale = Vector2( 1.875, 1 )
+polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24, 2.13333, 6 )
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "hurt"
+animation = "idle"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
-playback_speed = 2.0
 anims/attack_getup = SubResource( 2 )
 anims/bair = SubResource( 3 )
 anims/bthrow = SubResource( 4 )
@@ -2320,8 +2321,6 @@ disabled = false
 visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
-position = Vector2( 0, 20 )
-rotation = -0.785398
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
 position = Vector2( 2, -18 )

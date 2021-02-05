@@ -405,6 +405,8 @@ func calc_hitstun_velocity(delta):
 	
 func hitstun_handler(delta):
 	if disableInput:
+		if abs(int(velocity.y)) >= onSolidGroundThreashold && currentState == CharacterState.HITSTUNGROUND:
+			switch_from_state_to_airborn_hitstun()
 		if currentState == CharacterState.HITSTUNAIR:
 			#BOUNCING CHARACTER
 			if onSolidGround && lastVelocity.y > bounceThreashold:
@@ -797,7 +799,8 @@ func process_movement_physics(delta):
 			velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 #	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
-	if collisionAreaShape.disabled:
+	if collisionAreaShape.disabled && (currentState == CharacterState.HITSTUNGROUND\
+	|| currentState == CharacterState.HITSTUNAIR):
 		velocity = initLaunchVelocity
 		collisionAreaShape.set_deferred('disabled', false)
 		
@@ -1182,3 +1185,7 @@ func switch_from_state_to_airborn():
 	if currentState == CharacterState.HITSTUNGROUND:
 		inHitStun = false
 		hitStunTimer.stop()
+		
+func switch_from_state_to_airborn_hitstun():
+	switch_to_state(CharacterState.HITSTUNAIR)
+	jumpCount = 1
