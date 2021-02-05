@@ -61,5 +61,7 @@ func apply_grab(hbType):
 		elif attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.RIGHT:
 			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.RIGHT
 		attackedCharacter.mirror_areas()
-	attackedCharacter.is_grabbed_handler(character)
+	print(character.global_position)
+	print(neutralSpot.global_position)
+	attackedCharacter.is_grabbed_handler(character, neutralSpot.get_child(0).global_position)
 

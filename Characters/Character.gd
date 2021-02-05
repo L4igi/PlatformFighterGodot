@@ -800,7 +800,10 @@ func process_movement_physics(delta):
 	# Move based on the velocity and snap to the ground.
 #	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	if collisionAreaShape.disabled && (currentState == CharacterState.HITSTUNGROUND\
-	|| currentState == CharacterState.HITSTUNAIR):
+	|| currentState == CharacterState.HITSTUNAIR)\
+	|| (collisionAreaShape.disabled && (currentState != CharacterState.HITSTUNGROUND\
+	|| currentState != CharacterState.HITSTUNAIR)\
+	&& hitStunTimer.get_time_left()):
 		velocity = initLaunchVelocity
 		collisionAreaShape.set_deferred('disabled', false)
 		
@@ -993,10 +996,10 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold:
 	#todo: calculate if in tumble animation
-		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-			switch_to_state(CharacterState.HITSTUNGROUND)
-		else:
-			switch_to_state(CharacterState.HITSTUNAIR)
+#		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
+#			switch_to_state(CharacterState.HITSTUNGROUND)
+#		else:
+		switch_to_state(CharacterState.HITSTUNAIR)
 	#todo hitstun ground?
 	#play idle animation in hitstun 
 	#todo: replace with knockback/hurt animation
@@ -1009,13 +1012,15 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
 
-func is_grabbed_handler(byCharacter):
+func is_grabbed_handler(byCharacter, grabPosition):
 	inGrabByCharacter = byCharacter
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
+	self.global_position = grabPosition
+	velocity = Vector2.ZERO
 	switch_to_state(CharacterState.INGRAB)
 	animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
 	
@@ -1112,8 +1117,11 @@ func apply_hurt_animation_step(step =0):
 		0:
 			disableInputDI = false
 		1:
-			if !onSolidGround:
+			#if !onSolidGround:
+			if currentState == CharacterState.HITSTUNAIR:
 				animationPlayer.stop(false)
+			#else:
+				#print(onSolidGround.name)
 		2:
 			disableInput = false
 			
