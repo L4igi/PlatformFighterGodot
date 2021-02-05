@@ -2264,10 +2264,11 @@ polygon = PoolVector2Array( 0, -2, -4, 24, 0, 32, 4, 24 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "roll"
+animation = "hurt"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
+playback_speed = 2.0
 anims/attack_getup = SubResource( 2 )
 anims/bair = SubResource( 3 )
 anims/bthrow = SubResource( 4 )

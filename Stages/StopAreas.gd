@@ -24,6 +24,8 @@ func _on_StopAreaLeft_body_entered(body):
 func stop_character_velocity(body):
 	var stopCharacter = body
 	if stopCharacter.get_input_direction_x() == 0\
+	&& stopCharacter.currentState != stopCharacter.CharacterState.HITSTUNGROUND\
+	&&stopCharacter.currentState != stopCharacter.CharacterState.HITSTUNAIR\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.ATTACKGROUND\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.GETUP\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.SHIELD\

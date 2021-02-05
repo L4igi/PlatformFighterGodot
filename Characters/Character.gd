@@ -400,8 +400,6 @@ func calc_hitstun_velocity(delta):
 	else: 
 		if(velocity.x - initLaunchVelocity.x *launchSpeedDecay) >= 0:
 			velocity.x -= (initLaunchVelocity.x *launchSpeedDecay)
-			
-	print(velocity.x)
 	
 	velocity.y += gravity * delta
 	
@@ -411,13 +409,15 @@ func hitstun_handler(delta):
 			#BOUNCING CHARACTER
 			if onSolidGround && lastVelocity.y > bounceThreashold:
 				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*0.5
+				initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-				switch_to_state(CharacterState.HITSTUNGROUND)
 				#plays rest of hitstun animation if hitting ground during hitstun
 				animationPlayer.play()
 				bufferAnimation = false
 				create_hitstun_timer(groundHitStun)
-#		elif currentState == CharacterState.HITSTUNGROUND:
+				switch_to_state(CharacterState.HITSTUNGROUND)
+		elif currentState == CharacterState.HITSTUNGROUND:
+			pass
 #			if abs(int(velocity.y)) >= onSolidGroundThreashold:
 #				switch_from_state_to_airborn()
 	elif !disableInput:
@@ -796,7 +796,12 @@ func process_movement_physics(delta):
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 			velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
-	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
+#	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
+	if collisionAreaShape.disabled:
+		velocity = initLaunchVelocity
+		collisionAreaShape.set_deferred('disabled', false)
+		
+	velocity = move_and_slide(velocity)
 
 func input_movement_physics_ground(delta):
 	# Horizontal movement code. First, get the player's input.
@@ -982,6 +987,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	bufferInput = null
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
 	initLaunchVelocity = velocity
+	collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold:
 	#todo: calculate if in tumble animation
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
@@ -1163,9 +1169,9 @@ func _on_invincibility_timer_timeout():
 func enable_diable_hurtboxes(enable = true):
 	for singleHurtbox in hurtBox.get_children():
 		if enable:
-			singleHurtbox.set_disabled(false)
+			singleHurtbox.set_deferred("disabled",false)
 		else:
-			singleHurtbox.set_disabled(true)
+			singleHurtbox.set_deferred("disabled",true)
 
 func switch_from_state_to_airborn():
 	switch_to_state(CharacterState.AIR)
