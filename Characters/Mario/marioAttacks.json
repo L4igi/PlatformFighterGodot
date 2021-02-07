@@ -28,7 +28,7 @@
     "damage_neutral":5,
     "hitStun_neutral":5.0,
     "launchVelocity_neutral":750,
-    "launchAngle_neutral":30,
+    "launchAngle_neutral":330,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral"
   },
