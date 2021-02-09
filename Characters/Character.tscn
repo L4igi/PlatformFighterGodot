@@ -2348,5 +2348,8 @@ one_shot = true
 [node name="LowestCheckYPoint" type="Node2D" parent="."]
 position = Vector2( 0, 24 )
 
+[node name="GrabPoint" type="Position2D" parent="."]
+position = Vector2( 25, 0 )
+
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

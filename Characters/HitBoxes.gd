@@ -12,10 +12,6 @@ enum HitBoxType {SOUR, NEUTRAL, SWEET}
 func _ready():
 	pass
 
-func _physics_process(delta):
-	if !neutralSpot.get_child(0).disabled:
-		print("enabled")
-
 func _on_NeutralSpot_area_entered(area):
 	if area.is_in_group("Hurtbox"):
 		attackedCharacter = area.get_parent().get_parent()
@@ -66,5 +62,5 @@ func apply_grab(hbType):
 		elif attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.RIGHT:
 			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.RIGHT
 		attackedCharacter.mirror_areas()
-	attackedCharacter.is_grabbed_handler(character, neutralSpot.get_child(0).global_position)
+	attackedCharacter.is_grabbed_handler(character)
 

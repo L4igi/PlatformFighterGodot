@@ -80,6 +80,7 @@ onready var grabTimer = $GrabTimer
 var grabbedCharacter = null
 var inGrabByCharacter = null
 var grabTime = 4.0
+onready var grabPoint = $GrabPoint
 #character stats
 var weight = 100
 var fastFallGravity = 4000
@@ -572,6 +573,8 @@ func on_grab_release():
 	animationPlayer.play("freefall")
 	
 func in_grab_handler(delta):
+	if abs(int(inGrabByCharacter.velocity.x)) != 0: 
+		self.global_position = inGrabByCharacter.grabPoint.global_position
 	process_movement_physics(delta)
 	
 func create_grab_timer():
@@ -928,14 +931,14 @@ func toggle_all_hitboxes(onOff):
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
-						hitbox.disabled = false
+						hitbox.set_deferred('disabled',false)
 		"off":
 			if !inHitStun:
 				enable_player_input()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
-						hitbox.disabled = true
+						hitbox.set_deferred('disabled',true)
 			$InteractionAreas.set_position(Vector2(0,0))
 			$InteractionAreas.set_rotation(0)
 
@@ -1028,15 +1031,14 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
 
-func is_grabbed_handler(byCharacter, grabPosition):
-	print("here")
+func is_grabbed_handler(byCharacter):
 	inGrabByCharacter = byCharacter
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
-	self.global_position = grabPosition
+	self.global_position = byCharacter.grabPoint.global_position
 	velocity = Vector2.ZERO
 	gravity_on_off("off")
 	#collisionAreaShape.set_deferred("disabled",true)
@@ -1151,6 +1153,7 @@ func apply_grab_animation_step(step = 0):
 			if grabbedCharacter == null: 
 				switch_to_state(CharacterState.GROUND)
 			else: 
+				velocity.x = 0
 				create_grab_timer()
 				
 func disable_input_animation_step(step = 0):
