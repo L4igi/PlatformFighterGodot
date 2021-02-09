@@ -60,6 +60,7 @@ var bufferAnimation = false
 var initLaunchVelocity = 0
 var launchSpeedDecay = 0.025
 var inHitStun = false
+var shortHitStun = false
 onready var hitStunTimer = $HitStunTimer
 var groundHitStun = 3.0
 var getupRollDistance = 100
@@ -128,7 +129,7 @@ func _ready():
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
-#	if self.name == "Dark_Mario":
+#	if self.name == "Dark_Mario": 
 #		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
@@ -392,14 +393,21 @@ func calc_hitstun_velocity(delta):
 	if velocity.x < 0: 
 		if(velocity.x - initLaunchVelocity.x *launchSpeedDecay) <= 0:
 			velocity.x -= (initLaunchVelocity.x *launchSpeedDecay)
-	else: 
+		else: 
+			velocity.x = 0
+	elif velocity.x > 0: 
 		if(velocity.x - initLaunchVelocity.x *launchSpeedDecay) >= 0:
 			velocity.x -= (initLaunchVelocity.x *launchSpeedDecay)
-	
+		else: 
+			velocity.x = 0
+	else: 
+		velocity.x = 0
 	velocity.y += gravity * delta
 	
 func hitstun_handler(delta):
 	if disableInput:
+		if shortHitStun: 
+			return
 #		if abs(int(velocity.y)) >= onSolidGroundThreashold && currentState == CharacterState.HITSTUNGROUND:
 #			switch_from_state_to_airborn_hitstun()
 		if currentState == CharacterState.HITSTUNAIR:
@@ -472,7 +480,14 @@ func create_hitstun_timer(stunTime):
 func _on_hitstun_timeout():
 	inHitStun = false
 	disableInput = false
-#	if velocity.y != 0: 
+	if shortHitStun: 
+		if abs(int(velocity.y)) <= onSolidGroundThreashold:
+			animationPlayer.play("idle")
+			switch_to_state(CharacterState.GROUND)
+		else:
+			switch_from_state_to_airborn()
+	else:
+		pass
 #		switch_to_state(CharacterState.AIR)
 #	else:
 #		switch_to_state(CharacterState.GROUND)
@@ -806,14 +821,6 @@ func process_movement_physics(delta):
 			velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 #	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
-	if collisionAreaShape.disabled && (currentState == CharacterState.HITSTUNGROUND\
-	|| currentState == CharacterState.HITSTUNAIR)\
-	|| (collisionAreaShape.disabled && (currentState != CharacterState.HITSTUNGROUND\
-	|| currentState != CharacterState.HITSTUNAIR)\
-	&& hitStunTimer.get_time_left()):
-		velocity = initLaunchVelocity
-		collisionAreaShape.set_deferred('disabled', false)
-		
 	velocity = move_and_slide(velocity)
 
 func input_movement_physics_ground(delta):
@@ -946,6 +953,7 @@ func get_input_direction_y():
 	return Input.get_action_strength(down) - Input.get_action_strength(up)
 			
 func switch_to_state(state):
+	toggle_all_hitboxes("off")
 	match state: 
 		CharacterState.GROUND:
 			currentState = CharacterState.GROUND
@@ -1000,33 +1008,35 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	bufferInput = null
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
 	initLaunchVelocity = velocity
+	hitStunTimer.stop()
 	#collisionAreaShape.set_deferred('disabled',true)
-	if launchVelocity > tumblingThreashold:
+	if launchVelocity > tumblingThreashold || currentState == CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
-#		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-#			switch_to_state(CharacterState.HITSTUNGROUND)
-#		else:
+		shortHitStun = false
 		switch_to_state(CharacterState.HITSTUNAIR)
 	#todo hitstun ground?
 	#play idle animation in hitstun 
 	#todo: replace with knockback/hurt animation
 		animation_handler(GlobalVariables.CharacterAnimations.HURT)
 	else: 
-		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-			switch_to_state(CharacterState.GROUND)
-		else:
-			switch_to_state(CharacterState.AIR)
+#		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
+#			switch_to_state(CharacterState.GROUND)
+#		else:
+#			switch_to_state(CharacterState.AIR)
+		shortHitStun = true
+		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
 
 func is_grabbed_handler(byCharacter, grabPosition):
+	print("here")
 	inGrabByCharacter = byCharacter
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
-	#self.global_position = grabPosition
+	self.global_position = grabPosition
 	velocity = Vector2.ZERO
 	gravity_on_off("off")
 	#collisionAreaShape.set_deferred("disabled",true)
@@ -1034,19 +1044,6 @@ func is_grabbed_handler(byCharacter, grabPosition):
 	animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
 	
 func is_thrown_grabjabbed_handler(actionType):
-#	match actionType: 
-#		GlobalVariables.CharacterAnimations.GRABJAB:
-#			print("GRABJAB")
-#		GlobalVariables.CharacterAnimations.FTHROW:
-#			print("FTHROW")
-#		GlobalVariables.CharacterAnimations.BTHROW:
-#			print("BTHROW")
-#		GlobalVariables.CharacterAnimations.DTHROW:
-#			print("DTHROW")
-#		GlobalVariables.CharacterAnimations.UTHROW:
-#			print("UTHROW")
-#		GlobalVariables.CharacterAnimations.GRABRELEASE:
-#			print("GRABRELEASE")
 	gravity_on_off("on")
 	apply_throw(actionType)
 	
@@ -1059,7 +1056,6 @@ func apply_throw(actionType):
 	var launchAngle = deg2rad(currentAttackData["launchAngle"])
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
 	var launchVectorX = launchVector.x
-	print(launchVector)
 	#inverse x launch diretion depending on character position
 	if global_position.x < inGrabByCharacter.global_position.x:
 		launchVectorX *= -1
@@ -1177,7 +1173,6 @@ func apply_throw_animation_step(step = 0):
 			grabbedCharacter = null
 		2: 
 			disableInput = false
-			self.set_collision_mask_bit(0,true)
 			switch_to_state(CharacterState.GROUND)
 			
 func create_invincible_timer(duration = 0):
@@ -1199,7 +1194,6 @@ func switch_from_state_to_airborn():
 	switch_to_state(CharacterState.AIR)
 	jumpCount = 1
 	animationPlayer.play("freefall")
-	toggle_all_hitboxes("off")
 	enable_player_input()
 	if currentState == CharacterState.HITSTUNGROUND:
 		inHitStun = false

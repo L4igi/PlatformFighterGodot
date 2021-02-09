@@ -12,10 +12,9 @@ enum HitBoxType {SOUR, NEUTRAL, SWEET}
 func _ready():
 	pass
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _physics_process(delta):
+	if !neutralSpot.get_child(0).disabled:
+		print("enabled")
 
 func _on_NeutralSpot_area_entered(area):
 	if area.is_in_group("Hurtbox"):
@@ -25,8 +24,13 @@ func _on_NeutralSpot_area_entered(area):
 			|| character.currentState == character.CharacterState.ATTACKAIR:
 				apply_attack(HitBoxType.NEUTRAL)
 			elif character.currentState == character.CharacterState.GRAB:
+				disable_all_hitboxes()
 				apply_grab(HitBoxType.NEUTRAL)
 
+func disable_all_hitboxes():
+	for hitboxArea in self.get_children():
+		for hitBoxShape in hitboxArea.get_children():
+			hitBoxShape.set_deferred('disabled',true)
 		
 func apply_attack(hbType):
 	var currentAttackData = (character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack]])
@@ -54,6 +58,7 @@ func apply_attack(hbType):
 	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity)
 
 func apply_grab(hbType):
+	print("applying grab")
 	character.grabbedCharacter = attackedCharacter
 	if character.currentMoveDirection == attackedCharacter.currentMoveDirection:
 		if attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.LEFT:
@@ -61,7 +66,5 @@ func apply_grab(hbType):
 		elif attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.RIGHT:
 			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.RIGHT
 		attackedCharacter.mirror_areas()
-	print(character.global_position)
-	print(neutralSpot.global_position)
 	attackedCharacter.is_grabbed_handler(character, neutralSpot.get_child(0).global_position)
 

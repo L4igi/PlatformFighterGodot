@@ -77,9 +77,11 @@ func _on_CollisionArea_area_exited(area):
 		#set everything to base
 		CharacterInteractionHandler.remove_ground_colliding_character(character)
 		collisionAreaEntered = null
+		areaCollisionObject = null
 		character.pushingCharacter = null
 
 func _on_character_state_change(currentState):
+	#print("state changed to " +str(character.name) + " " + str(character.currentState))
 	if collisionAreaEntered != null: 
 		if !stateAlreadyChanged:
 			stateAlreadyChanged = true
@@ -90,6 +92,12 @@ func _on_character_state_change(currentState):
 				
 func reset_global_transform():
 	set_transform(_initial_position)
+	
+func check_character_above():
+	if areaCollisionObject.global_position.y >= character.global_position.y: 
+		return true
+	else: 
+		return false
 
 
 func match_collision_ground():
@@ -97,7 +105,10 @@ func match_collision_ground():
 		character.CharacterState.GROUND:
 			enable_collision()
 		character.CharacterState.AIR:
-			enable_collision()
+			if check_character_above():
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
@@ -130,7 +141,10 @@ func match_collision_ground():
 func match_collision_air():
 	match areaCollisionObject.currentState:
 		character.CharacterState.GROUND:
-			enable_collision()
+			if check_character_above():
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.AIR:
 			disable_collision()
 		character.CharacterState.EDGE:
@@ -140,7 +154,10 @@ func match_collision_air():
 		character.CharacterState.ATTACKAIR:
 			disable_collision()
 		character.CharacterState.HITSTUNGROUND:
-			enable_collision()
+			if check_character_above():
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.HITSTUNAIR:
 			disable_collision()
 		character.CharacterState.SPECIALGROUND:
