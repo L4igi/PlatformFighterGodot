@@ -2266,6 +2266,7 @@ tracks/1/keys = {
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
 ]]
+scale = Vector2( 10, 10 )
 collision_mask = 0
 script = ExtResource( 1 )
 
@@ -2279,7 +2280,7 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "dash_attack"
+animation = "grab"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2327,7 +2328,7 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 0, 0 )
+position = Vector2( 15, 1 )
 scale = Vector2( 1.14286, 1.14286 )
 disabled = false
 
@@ -2341,21 +2342,6 @@ position = Vector2( 2, -18 )
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
 position = Vector2( 2, 14 )
-
-[node name="HitStunTimer" type="Timer" parent="."]
-one_shot = true
-
-[node name="DropDownTimer" type="Timer" parent="."]
-one_shot = true
-
-[node name="ShortHopTimer" type="Timer" parent="."]
-one_shot = true
-
-[node name="InvincibilityTimer" type="Timer" parent="."]
-one_shot = true
-
-[node name="GrabTimer" type="Timer" parent="."]
-one_shot = true
 
 [node name="Shield" parent="." instance=ExtResource( 214 )]
 

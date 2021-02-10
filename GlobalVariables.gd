@@ -27,3 +27,4 @@ var controlsP2 = {
 	"shield" : "Shield2",
 	"grab" : "Grab2"
 }
+

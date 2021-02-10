@@ -25,10 +25,12 @@ position = Vector2( 608, 480 )
 
 [node name="Mario" parent="." instance=ExtResource( 3 )]
 position = Vector2( 336, -232 )
+scale = Vector2( 1, 1 )
 collision_mask = 6
 
 [node name="Dark_Mario" parent="." instance=ExtResource( 4 )]
 position = Vector2( 848, 88 )
+scale = Vector2( 1, 1 )
 collision_mask = 7
 
 [node name="TeleportToStart" type="Area2D" parent="."]

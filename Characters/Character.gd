@@ -21,13 +21,13 @@ var currentMaxSpeed = runMaxSpeed
 var jumpCount = 0
 var availabelJumps = 2
 var shortHop = true
-onready var shortHopTimer = $ShortHopTimer
+onready var shortHopTimer
 #platform
 var dropDownCount = 0
-onready var dropDownTimer = $DropDownTimer
+onready var dropDownTimer
 var inputTimeout = false
 var atPlatformEdge = null
-onready var lowestCheckYPoint = $LowestCheckYPoint
+onready var lowestCheckYPoint = get_node("LowestCheckYPoint")
 #edge
 var snapEdge = false
 var snapEdgePosition = Vector2()
@@ -62,7 +62,7 @@ var initLaunchVelocity = 0
 var launchSpeedDecay = 0.025
 var inHitStun = false
 var shortHitStun = false
-onready var hitStunTimer = $HitStunTimer
+onready var hitStunTimer 
 var groundHitStun = 3.0
 var getupRollDistance = 100
 var tumblingThreashold = 500
@@ -71,17 +71,17 @@ var lastVelocity = 0
 var bounceThreashold = 800
 var bounceReduction = 0.2
 #invincibility
-onready var invincibilityTimer = $InvincibilityTimer
+onready var invincibilityTimer
 #shield
-onready var characterShield = $Shield
+onready var characterShield = get_node("Shield")
 var rollDistance = 150
 var rolling = false
 #grab
-onready var grabTimer = $GrabTimer
+onready var grabTimer
 var grabbedCharacter = null
 var inGrabByCharacter = null
-var grabTime = 4.0
-onready var grabPoint = $GrabPoint
+var grabTime = 60
+onready var grabPoint = get_node("GrabPoint")
 #character stats
 var weight = 100
 var fastFallGravity = 4000
@@ -100,6 +100,8 @@ onready var characterSprite = $AnimatedSprite
 onready var animationPlayer = $AnimatedSprite/AnimationPlayer
 
 onready var hurtBox = $InteractionAreas/Hurtbox
+
+onready var frameTimer = preload("res://FrameTimer.tscn")
 
 var attackData = null
 
@@ -121,18 +123,33 @@ func _ready():
 	var attacks = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = attacks.get_result()
-	hitStunTimer.connect("timeout", self, "_on_hitstun_timeout")
-	shortHopTimer.connect("timeout", self, "_on_short_hop_timeout")
-	dropDownTimer.connect("timeout", self, "_on_drop_timer_timeout")
-	invincibilityTimer.connect("timeout", self, "_on_invincibility_timer_timeout")
-	grabTimer.connect("timeout", self, "_on_grab_timer_timeout")
 	if !onSolidGround:
 		switch_to_state(CharacterState.AIR)
+	#create all timers and connect signals 
+	hitStunTimer = frameTimer.instance()
+	add_child(hitStunTimer)
+	hitStunTimer.connect("timeout", self, "_on_hitstun_timeout")
+	hitStunTimer.set_name("HitStunTimer")
+	shortHopTimer = frameTimer.instance()
+	add_child(shortHopTimer)
+	shortHopTimer.connect("timeout", self, "_on_short_hop_timeout")
+	shortHopTimer.set_name("ShortHopTimer")
+	dropDownTimer = frameTimer.instance()
+	add_child(dropDownTimer)
+	dropDownTimer.connect("timeout", self, "_on_drop_timer_timeout")
+	dropDownTimer.set_name("DropDownTimer")
+	invincibilityTimer = frameTimer.instance()
+	add_child(invincibilityTimer)
+	invincibilityTimer.connect("timeout", self, "_on_invincibility_timer_timeout")
+	invincibilityTimer.set_name("InvincibilityTimer")
+	grabTimer = frameTimer.instance()
+	add_child(grabTimer)
+	grabTimer.connect("timeout", self, "_on_grab_timer_timeout")
+	grabTimer.set_name("GrabTimer")
+	
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
-#	if self.name == "Mario": 
-#		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -258,7 +275,7 @@ func jab_handler():
 func attack_handler_air():
 	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
 		switch_to_state(CharacterState.GROUND)
-		toggle_all_hitboxes("off")
+		#toggle_all_hitboxes("off")
 	elif !disableInput:
 		if abs(get_input_direction_x()) < 0.1\
 		&& abs(get_input_direction_y()) < 0.1:
@@ -302,9 +319,9 @@ func ground_handler(delta):
 				var collision = get_slide_collision(i)
 				if collision.get_collider().is_in_group("Platform") && dropDownCount >=2:
 					set_collision_mask_bit(1,false)
-					create_drop_platform_timer(0.3, false)
+					create_drop_platform_timer(20, false)
 				else: 
-					create_drop_platform_timer(0.5, true)
+					create_drop_platform_timer(30, true)
 		#checks if player walked off platform/stage
 		elif abs(int(velocity.y)) >= onSolidGroundThreashold:
 			jumpCount = 1
@@ -319,8 +336,8 @@ func create_drop_platform_timer(waittime,setInputTimeout):
 		inputTimeout = true
 	else: 
 		inputTimeout = false
-	dropDownTimer.set_wait_time(waittime)
-	dropDownTimer.start()
+	dropDownTimer.set_frames(waittime)
+	dropDownTimer.start_timer()
 	
 #is called when player is in the air 
 func air_handler(delta):
@@ -360,7 +377,7 @@ func jump_handler():
 	dropDownCount = 0
 	velocity.y = -jumpSpeed
 	jumpCount = 1
-	create_jump_timer(0.15)
+	create_jump_timer(10)
 	switch_to_state(CharacterState.AIR)
 		
 func double_jump_handler():
@@ -389,8 +406,8 @@ func _on_drop_timer_timeout():
 #creates timer to determine if short or fullhop
 func create_jump_timer(waittime):
 	shortHop = false
-	shortHopTimer.set_wait_time(waittime)
-	shortHopTimer.start()
+	shortHopTimer.set_frames(waittime)
+	shortHopTimer.start_timer()
 	
 func calc_hitstun_velocity(delta):
 	if velocity.x < 0: 
@@ -477,8 +494,8 @@ func create_hitstun_timer(stunTime):
 	disableInput = true
 	disableInputDI = false
 	inHitStun = true
-	hitStunTimer.set_wait_time(stunTime)
-	hitStunTimer.start()
+	hitStunTimer.set_frames(stunTime)
+	hitStunTimer.start_timer()
 	
 func _on_hitstun_timeout():
 	inHitStun = false
@@ -534,11 +551,14 @@ func shield_handler(delta):
 func grab_handler(delta):
 	process_movement_physics(delta)
 	if abs(int(velocity.y)) >= onSolidGroundThreashold:
-		grabTimer.stop()
+		grabTimer.stop_timer()
 		switch_to_state(CharacterState.GROUND)
 		if grabbedCharacter != null:
 			grabbedCharacter.on_grab_release()
-	if grabbedCharacter != null && !disableInput: 
+	if grabbedCharacter != null && !disableInput:
+		if !grabTimer.timer_running():
+				velocity.x = 0
+				create_grab_timer()
 		if Input.is_action_just_pressed(attack):
 			currentAttack = GlobalVariables.CharacterAnimations.GRABJAB
 			animation_handler(GlobalVariables.CharacterAnimations.GRABJAB)
@@ -546,10 +566,11 @@ func grab_handler(delta):
 			if currentMoveDirection == moveDirection.LEFT:
 				currentAttack = GlobalVariables.CharacterAnimations.FTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.FTHROW)
+				grabTimer.stop_timer()
 			else:
 				currentAttack = GlobalVariables.CharacterAnimations.BTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
-			grabTimer.stop()
+			grabTimer.stop_timer()
 		elif Input.is_action_just_pressed(right):
 			if currentMoveDirection == moveDirection.RIGHT:
 				currentAttack = GlobalVariables.CharacterAnimations.FTHROW
@@ -557,15 +578,15 @@ func grab_handler(delta):
 			else:
 				currentAttack = GlobalVariables.CharacterAnimations.BTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
-			grabTimer.stop()
+			grabTimer.stop_timer()
 		elif Input.is_action_just_pressed(up):
 			currentAttack = GlobalVariables.CharacterAnimations.UTHROW
 			animation_handler(GlobalVariables.CharacterAnimations.UTHROW)
-			grabTimer.stop()
+			grabTimer.stop_timer()
 		elif Input.is_action_just_pressed(down):
 			currentAttack = GlobalVariables.CharacterAnimations.DTHROW
 			animation_handler(GlobalVariables.CharacterAnimations.DTHROW)
-			grabTimer.stop()
+			grabTimer.stop_timer()
 	
 func on_grab_release():
 	#todo grab release motion
@@ -585,8 +606,8 @@ func in_grab_handler(delta):
 	process_movement_physics(delta)
 	
 func create_grab_timer():
-	grabTimer.set_wait_time(grabTime)
-	grabTimer.start()
+	grabTimer.set_frames(grabTime)
+	grabTimer.start_timer()
 	
 func _on_grab_timer_timeout():
 	grabbedCharacter.on_grab_release()
@@ -1022,7 +1043,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	bufferInput = null
 	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
 	initLaunchVelocity = velocity
-	hitStunTimer.stop()
+	hitStunTimer.stop_timer()
 	#collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold || currentState == CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
@@ -1150,7 +1171,7 @@ func animation_invincibility_handler(step = 0):
 		0:
 			disableInput = true
 			collisionAreaShape.set_deferred("disabled",true)
-			create_invincible_timer(animationPlayer.current_animation_length)
+			create_invincible_timer(animationPlayer.current_animation_length *60)
 		1:
 			disableInput = false
 			collisionAreaShape.set_deferred("disabled",false)
@@ -1191,9 +1212,10 @@ func apply_throw_animation_step(step = 0):
 			switch_to_state(CharacterState.GROUND)
 			
 func create_invincible_timer(duration = 0):
-	invincibilityTimer.set_wait_time(duration)
 	enable_disable_hurtboxes(false)
-	invincibilityTimer.start()
+	invincibilityTimer.set_frames(duration)
+	print("duration " +str(duration))
+	invincibilityTimer.start_timer()
 
 func _on_invincibility_timer_timeout():
 	enable_disable_hurtboxes(true)
@@ -1212,7 +1234,7 @@ func switch_from_state_to_airborn():
 	enable_player_input()
 	if currentState == CharacterState.HITSTUNGROUND:
 		inHitStun = false
-		hitStunTimer.stop()
+		hitStunTimer.stop_timer()
 		
 func switch_from_state_to_airborn_hitstun():
 	switch_to_state(CharacterState.HITSTUNAIR)
