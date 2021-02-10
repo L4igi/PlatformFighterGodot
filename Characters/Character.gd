@@ -130,7 +130,7 @@ func _ready():
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
-#	if self.name == "Dark_Mario": 
+#	if self.name == "Mario": 
 #		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
@@ -571,7 +571,12 @@ func on_grab_release():
 	inGrabByCharacter = null
 	switch_to_state(CharacterState.AIR)
 	animationPlayer.play("freefall")
-	
+	match currentMoveDirection: 
+		0: 
+			velocity = Vector2(400,-400)
+		1: 
+			velocity = Vector2(-400,-400)
+			
 func in_grab_handler(delta):
 	if abs(int(inGrabByCharacter.velocity.x)) != 0: 
 		self.global_position = inGrabByCharacter.grabPoint.global_position
@@ -998,6 +1003,7 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", currentState)
 		CharacterState.GRAB:
 			currentState = CharacterState.GRAB
+			disableInput = true
 			emit_signal("character_state_changed", currentState)
 		CharacterState.INGRAB:
 			currentState = CharacterState.INGRAB
@@ -1151,6 +1157,7 @@ func apply_grab_animation_step(step = 0):
 			grabbedCharacter = null
 		1:
 			if grabbedCharacter == null: 
+				disableInput = false
 				switch_to_state(CharacterState.GROUND)
 			else: 
 				velocity.x = 0

@@ -1173,5 +1173,4 @@ visible = false
 position = Vector2( 0, -4 )
 
 [editable path="AnimatedSprite/HitBoxes"]
-
 [editable path="InteractionAreas"]

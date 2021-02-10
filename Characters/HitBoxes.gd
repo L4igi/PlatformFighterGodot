@@ -19,9 +19,21 @@ func _on_NeutralSpot_area_entered(area):
 			if character.currentState == character.CharacterState.ATTACKGROUND\
 			|| character.currentState == character.CharacterState.ATTACKAIR:
 				apply_attack(HitBoxType.NEUTRAL)
+			#manage grab if character hit other character hitbox
 			elif character.currentState == character.CharacterState.GRAB:
-				disable_all_hitboxes()
-				apply_grab(HitBoxType.NEUTRAL)
+				if attackedCharacter.currentState == attackedCharacter.CharacterState.GROUND\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.AIR\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.ATTACKGROUND\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.ATTACKAIR\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.GRAB\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.SPECIALGROUND\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.SPECIALAIR\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.ROLL\
+				|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELDBREAK:
+					disable_all_hitboxes()
+					character.disableInput = false
+					apply_grab(HitBoxType.NEUTRAL)
 
 func disable_all_hitboxes():
 	for hitboxArea in self.get_children():
