@@ -39,6 +39,7 @@ var jabCount = 0
 var jabCombo = 3
 var dashAttackSpeed = 800
 var chargingSmashAttack = false
+var pushingAttack = false
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
@@ -228,12 +229,13 @@ func attack_handler_ground():
 			animation_handler(GlobalVariables.CharacterAnimations.FTILT)
 			currentAttack = GlobalVariables.CharacterAnimations.FTILT
 		else: 
-			#attack
+			#dash attack
 			match currentMoveDirection:
 				moveDirection.LEFT:
 					velocity.x = -dashAttackSpeed
 				moveDirection.RIGHT:
 					velocity.x = dashAttackSpeed
+			pushingAttack = true
 			animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 			currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 	#	switch_to_state(CharacterState.GROUND)
@@ -962,6 +964,9 @@ func get_input_direction_y():
 			
 func switch_to_state(state):
 	toggle_all_hitboxes("off")
+	pushingAttack = false
+	currentAttack = null
+	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:
 			currentState = CharacterState.GROUND
@@ -1215,3 +1220,11 @@ func switch_from_state_to_airborn_hitstun():
 
 func other_character_state_changed():
 	emit_signal("character_state_changed", currentState)
+	
+#resets character hitbox/hurtbox/collisionshapes to default layout
+#currentl 
+func reset_character_to_default():
+	pass
+
+func disable_pushing_attack():
+	pushingAttack = false

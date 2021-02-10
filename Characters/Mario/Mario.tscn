@@ -185,7 +185,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0.2, 0.9 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ true, true ]
+"values": [ false, true ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:position")
@@ -234,6 +234,20 @@ tracks/6/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
 "values": [ 90.0, 90.0, 15.0, 0.0 ]
+}
+tracks/7/type = "method"
+tracks/7/path = NodePath("..")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0.9 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "disable_pushing_attack"
+} ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -887,10 +901,8 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="AnimatedSprite" parent="." index="2"]
-animation = "idle"
-
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
+playback_speed = 1.5
 anims/bair = SubResource( 1 )
 anims/dair = SubResource( 2 )
 anims/dash_attack = SubResource( 3 )
@@ -909,9 +921,6 @@ anims/walk = SubResource( 15 )
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/SweetSpot" index="0"]
 visible = false
-
-[node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 0, 10.277 )
 
 [node name="InteractionAreas" parent="." index="3"]
 visible = false

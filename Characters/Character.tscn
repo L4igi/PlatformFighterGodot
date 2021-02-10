@@ -733,6 +733,20 @@ tracks/3/keys = {
 "update": 0,
 "values": [ Vector2( 0, 0 ), Vector2( 14.4, 5.625 ), Vector2( 9.6, 5.625 ), Vector2( 4.8, 5.625 ), Vector2( 4.8, 0 ) ]
 }
+tracks/4/type = "method"
+tracks/4/path = NodePath("..")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.9 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "disable_pushing_attack"
+} ]
+}
 
 [sub_resource type="Animation" id=7]
 length = 0.5
@@ -2265,7 +2279,7 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "grabjab"
+animation = "dash_attack"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2313,7 +2327,7 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 15, 1 )
+position = Vector2( 0, 0 )
 scale = Vector2( 1.14286, 1.14286 )
 disabled = false
 

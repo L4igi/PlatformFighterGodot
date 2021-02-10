@@ -217,7 +217,7 @@ func match_collision_edge():
 func match_collision_attackground():
 	match areaCollisionObject.currentState:
 		character.CharacterState.GROUND:
-			disable_collision()
+			enable_collision()
 		character.CharacterState.AIR:
 			disable_collision()
 		character.CharacterState.EDGE:
@@ -227,7 +227,7 @@ func match_collision_attackground():
 		character.CharacterState.ATTACKAIR:
 			disable_collision()
 		character.CharacterState.HITSTUNGROUND:
-			disable_collision()
+			enable_collision()
 		character.CharacterState.HITSTUNAIR:
 			disable_collision()
 		character.CharacterState.SPECIALGROUND:
@@ -293,7 +293,7 @@ func match_collision_hitstunground():
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
-			disable_collision()
+			enable_collision()
 		character.CharacterState.ATTACKAIR:
 			disable_collision()
 		character.CharacterState.HITSTUNGROUND:

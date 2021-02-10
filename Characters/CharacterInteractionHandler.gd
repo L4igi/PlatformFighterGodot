@@ -23,8 +23,8 @@ func set_combined_velocity(delta):
 		calc_push_slowdown(char1, char2)
 		calc_push_slowdown(char2, char1)
 		
-	var char1XInput = char1.get_input_direction_x()
-	var char2XInput = char2.get_input_direction_x()
+	var char1XInput = calc_push_force(char1)
+	var char2XInput = calc_push_force(char2)
 	
 	if disable_character_pushforce(char1):
 		char1XInput = 0
@@ -124,4 +124,16 @@ func remove_ground_colliding_character(character):
 	initCalculations = false
 	character.walkMaxSpeed = character.baseWalkMaxSpeed
 	character.disableInputInfluence = character.baseDisableInputInfluence
+
+func calc_push_force(character):
+	if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && character.pushingAttack: 
+		match character.currentMoveDirection:
+			character.moveDirection.LEFT:
+				return -2.0
+			character.moveDirection.RIGHT:
+				return 2.0
+	elif character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && !character.pushingAttack: 
+		return 0.0
+	else:
+		return character.get_input_direction_x()
 
