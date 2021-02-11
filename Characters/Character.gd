@@ -29,8 +29,7 @@ var inputTimeout = false
 var atPlatformEdge = null
 onready var lowestCheckYPoint = get_node("LowestCheckYPoint")
 #edge
-var snapEdge = false
-var snapEdgePosition = Vector2()
+var snappedEdge = null
 var disableInput = false
 #attack 
 var smashAttack = null
@@ -69,7 +68,7 @@ var tumblingThreashold = 500
 var characterBouncing = false
 var lastVelocity = 0
 var bounceThreashold = 800
-var bounceReduction = 0.2
+var bounceReduction = 0.7
 #invincibility
 onready var invincibilityTimer
 #shield
@@ -125,6 +124,7 @@ func _ready():
 	attackData = attacks.get_result()
 	if !onSolidGround:
 		switch_to_state(CharacterState.AIR)
+	GlobalVariables.charactersInGame.append(self)
 	#create all timers and connect signals 
 	hitStunTimer = frameTimer.instance()
 	add_child(hitStunTimer)
@@ -433,7 +433,7 @@ func hitstun_handler(delta):
 		if currentState == CharacterState.HITSTUNAIR:
 			#BOUNCING CHARACTER
 			if onSolidGround && lastVelocity.y > bounceThreashold:
-				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*0.5
+				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 				initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
 #				#plays rest of hitstun animation if hitting ground during hitstun
@@ -614,92 +614,99 @@ func _on_grab_timer_timeout():
 	switch_to_state(CharacterState.GROUND)
 	
 	
-func snap_edge(edgePosition):
-	if !onSolidGround:
+func snap_edge(collidingEdge):
+	var character_towards_edge = false
+	var character_over_edge = false
+	if collidingEdge.edgeSnapDirection == "left" \
+	&& self.global_position.x <= collidingEdge.global_position.x:
+		character_over_edge = true
+		if velocity.x >= 0:
+			character_towards_edge = true
+	elif collidingEdge.edgeSnapDirection == "right" \
+	&& self.global_position.x >= collidingEdge.global_position.x:
+		character_over_edge = true
+		if velocity.x <= 0:
+			character_towards_edge = true
+	if character_over_edge && currentState == CharacterState.AIR && (velocity.y <= 0\
+	|| character_towards_edge && velocity.y >= 0):
 		switch_to_state(CharacterState.EDGE)
 		disableInput = true
 		gravity = baseGravity
-		snapEdgePosition = edgePosition
+		snappedEdge = collidingEdge
 		velocity = Vector2.ZERO
-		var targetPosition = edgePosition + characterSprite.frames.get_frame("idle",0).get_size()/2
-		if global_position < edgePosition:
-			targetPosition = edgePosition + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/2).y)
-		$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		jumpCount = 1
+		var targetPosition = collidingEdge.global_position + characterSprite.frames.get_frame("idle",0).get_size()/2
+		if self.global_position < collidingEdge.global_position:
+			targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/2).y)
+		$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.3, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
-		snapEdge = true
-		enable_player_input()
 		
 func edge_handler(delta):
-	disableInput = true
-	jumpCount = 0
-	velocity = Vector2.ZERO
 	var targetPosition = Vector2.ZERO
 	if Input.is_action_just_pressed(down):
 		switch_to_state(CharacterState.AIR)
-		snapEdge=false
+		snappedEdge = null
 	elif Input.is_action_just_pressed(jump):
 		switch_to_state(CharacterState.AIR)
 		velocity.y = -jumpSpeed
 		jumpCount += 1
-		#disables collisons with platforms if player is jumping upwards
-		set_collision_mask_bit(1,false)
-		snapEdge=false
+		snappedEdge = null
 	elif Input.is_action_just_pressed(left):
-		if global_position < snapEdgePosition:
+		if global_position.x < snappedEdge.global_position.x:
 			switch_to_state(CharacterState.AIR)
 			velocity.x = -walkMaxSpeed/4
-			snapEdge=false
+			snappedEdge = null
 		else:
-			targetPosition = snapEdgePosition - get_character_size()/2
+			targetPosition = snappedEdge.global_position - get_character_size()
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
-			snapEdge=false
+			snappedEdge = null
 			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(right):
-		if global_position > snapEdgePosition:
-			velocity.x = walkMaxSpeed/4
-			snapEdge=false
+		if global_position.x > snappedEdge.global_position.x:
 			switch_to_state(CharacterState.AIR)
+			velocity.x = walkMaxSpeed/4
+			snappedEdge = null
 		else: 
-			targetPosition = snapEdgePosition - Vector2(-(get_character_size()/2).x,(get_character_size()/2).y)
+			targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
-			snapEdge=false
+			snappedEdge = null
 			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(up):
-		if global_position > snapEdgePosition:
+		if global_position > snappedEdge.global_position:
 			#normal getup right edge
-			targetPosition = snapEdgePosition - get_character_size()/2
+			targetPosition = snappedEdge.global_position - get_character_size()
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
-			snapEdge=false 
+			snappedEdge = null
 			switch_to_state(CharacterState.GROUND)
 		else: 
-			targetPosition = snapEdgePosition - Vector2(-(get_character_size()/2).x,(get_character_size()/2).y)
+			targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
-			snapEdge=false 
+			snappedEdge = null
 			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(shield):
-		if global_position > snapEdgePosition:
+		if global_position > snappedEdge.global_position:
 			#normal getup right edge
-			targetPosition = snapEdgePosition - Vector2((get_character_size()/2).x*4,(get_character_size()/2).y)
+			targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*4,(get_character_size()).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
-			snapEdge=false 
+			snappedEdge = null
 			switch_to_state(CharacterState.GROUND)
 		else: 
-			targetPosition = snapEdgePosition - Vector2(-(get_character_size()/2).x*4,(get_character_size()/2).y)
+			targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*4,(get_character_size()).y)
 			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Tween.start()
 			yield($Tween, "tween_all_completed")
-			snapEdge=false 
+			snappedEdge = null
 			switch_to_state(CharacterState.GROUND)
 	enable_player_input()
 
@@ -992,22 +999,22 @@ func switch_to_state(state):
 		CharacterState.GROUND:
 			currentState = CharacterState.GROUND
 #			enable_ground_collider()
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.AIR:
 			currentState = CharacterState.AIR
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.HITSTUNAIR:
 			currentState = CharacterState.HITSTUNAIR
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.HITSTUNGROUND:
 			currentState = CharacterState.HITSTUNGROUND
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.ATTACKAIR:
 			currentState = CharacterState.ATTACKAIR
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.ATTACKGROUND:
 			currentState = CharacterState.ATTACKGROUND
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.SPECIALGROUND:
 			currentState = CharacterState.SPECIALGROUND
 		CharacterState.SPECIALAIR:
@@ -1016,24 +1023,24 @@ func switch_to_state(state):
 			currentState = CharacterState.EDGE
 		CharacterState.GETUP:
 			currentState = CharacterState.GETUP
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.SHIELD:
 			currentState = CharacterState.SHIELD
 			characterShield.enable_shield()
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.ROLL:
 			currentState = CharacterState.ROLL
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.SPOTDODGE:
 			currentState = CharacterState.SPOTDODGE
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.GRAB:
 			currentState = CharacterState.GRAB
 			disableInput = true
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 		CharacterState.INGRAB:
 			currentState = CharacterState.INGRAB
-			emit_signal("character_state_changed", currentState)
+			emit_signal("character_state_changed", self, currentState)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
@@ -1241,7 +1248,7 @@ func switch_from_state_to_airborn_hitstun():
 	jumpCount = 1
 
 func other_character_state_changed():
-	emit_signal("character_state_changed", currentState)
+	emit_signal("character_state_changed", self, currentState)
 	
 #resets character hitbox/hurtbox/collisionshapes to default layout
 #currentl 

@@ -10,7 +10,7 @@ var timerStarted = false
 func _physics_process(delta):
 	if timerStarted && frames > 0 && !pausedTimer: 
 		frames -= 1
-		print(self.name + " : " + str(frames))
+		#print(self.name + " : " + str(frames))
 	elif pausedTimer && pauseDuration > 0: 
 		pauseDuration -= 1
 		if pauseDuration == 0: 

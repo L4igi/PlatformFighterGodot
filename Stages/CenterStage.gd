@@ -3,6 +3,8 @@ extends KinematicBody2D
 
 onready var stopAreaRight = $StopAreas/StopAreaRight
 onready var stopAreaLeft = $StopAreas/StopAreaLeft
+onready var edgeAreaLeft = $EdgeSnapLeft
+onready var edgeAreaRight = $EdgeSnapRight
 onready var checkYPoint = $CheckYPoint
 var collidingBodies = []
 
@@ -10,6 +12,10 @@ var collidingBodies = []
 func _ready():
 	stopAreaRight.set_position(Vector2(445,-30))
 	stopAreaLeft.set_position(Vector2(-445,-30))
+	edgeAreaLeft.set_position(Vector2(-445,-15))
+	edgeAreaLeft.edgeSnapDirection = "left"
+	edgeAreaRight.set_position(Vector2(445,-15))
+	edgeAreaRight.edgeSnapDirection = "right"
 
 func _physics_process(delta):
 	for body in collidingBodies: 

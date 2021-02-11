@@ -6,6 +6,10 @@ enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB
 
 enum SmashAttacks{SMASHRIGHT, SMASHLEFT, SMASHUP, SMASHDOWN}
 
+var countCharactersInGame = 2
+
+var charactersInGame = []
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",
