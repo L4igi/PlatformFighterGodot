@@ -15,20 +15,22 @@ func _ready():
 func _physics_process(delta):
 	for body in collidingBodies: 
 		if body.onSolidGround == null: 
-			if (body.lowestCheckYPoint.global_position.y <= checkYPoint.global_position.y):
+			if body.lowestCheckYPoint.global_position.y <= checkYPoint.global_position.y:
 				body.onSolidGround = self
 				body.set_collision_mask_bit(1,true)
 				
 func _on_CollisionDetectionArea_body_entered(body):
 	if body.is_in_group("Character") && body.velocity.y < 0:
 		collidingBodies.append(body)
+		body.platformCollision = self
 		body.set_collision_mask_bit(1,false)
 	elif body.is_in_group("Character") && body.velocity.y >= 0:
 		collidingBodies.append(body)
-
+		body.platformCollision = self
 
 func _on_CollisionDetectionArea_body_exited(body):
 	if body.is_in_group("Character"):
 		collidingBodies.erase(body)
 		body.onSolidGround = null
+		body.platformCollision = null
 		body.set_collision_mask_bit(1,true)

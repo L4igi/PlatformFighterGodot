@@ -125,14 +125,17 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.4, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "values": [ {
 "args": [ 0 ],
 "method": "apply_attack_movement_stats"
 }, {
 "args": [ 1 ],
 "method": "apply_attack_movement_stats"
+}, {
+"args": [  ],
+"method": "enable_player_input"
 } ]
 }
 tracks/5/type = "value"
@@ -902,7 +905,7 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-animation = "edgeSnap"
+animation = "dair"
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 1.5
@@ -924,6 +927,9 @@ anims/walk = SubResource( 15 )
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/SweetSpot" index="0"]
 visible = false
+
+[node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
+position = Vector2( 0, 10.277 )
 
 [node name="InteractionAreas" parent="." index="3"]
 visible = false

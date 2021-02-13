@@ -23,9 +23,9 @@ var availabelJumps = 2
 var shortHop = true
 onready var shortHopTimer
 #platform
-var dropDownCount = 0
 onready var dropDownTimer
 var inputTimeout = false
+var platformCollision = null
 var atPlatformEdge = null
 onready var lowestCheckYPoint = get_node("LowestCheckYPoint")
 #edge
@@ -271,7 +271,8 @@ func jab_handler():
 		jabCount = 0
 		
 func attack_handler_air():
-	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
+	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
+	&& !dropDownTimer.timer_running():
 		switch_to_state(CharacterState.GROUND)
 		#toggle_all_hitboxes("off")
 	elif !disableInput:
@@ -310,13 +311,14 @@ func ground_handler(delta):
 		if Input.is_action_just_pressed(jump):
 			jump_handler()
 		#shorthop depending on button press length 
-		elif Input.is_action_just_pressed(down):
-			dropDownCount += 1
+		elif get_input_direction_y() == 1.0:
 			for i in get_slide_count():
 				var collision = get_slide_collision(i)
-				if collision.get_collider().is_in_group("Platform") && dropDownCount >=2:
+				if collision.get_collider().is_in_group("Platform"):
+					jumpCount = 1
 					set_collision_mask_bit(1,false)
-					create_drop_platform_timer(20, false)
+					create_drop_platform_timer(30, false)
+					switch_to_state(CharacterState.AIR)
 				else: 
 					create_drop_platform_timer(30, true)
 		#checks if player walked off platform/stage
@@ -337,7 +339,8 @@ func create_drop_platform_timer(waittime,setInputTimeout):
 	
 #is called when player is in the air 
 func air_handler(delta):
-	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
+	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
+	&& !dropDownTimer.timer_running():
 		switch_to_state(CharacterState.GROUND)
 #				animationPlayer.play("idle")
 		#if aerial attack is interrupted by ground cancel hitboxes
@@ -366,11 +369,14 @@ func air_handler(delta):
 			switch_to_state(CharacterState.GROUND)
 			#if aerial attack is interrupted by ground cancel hitboxes
 			toggle_all_hitboxes("off")
+		if velocity.y > 0 && get_input_direction_y() >= 0.5: 
+			set_collision_mask_bit(1,false)
+		elif velocity.y > 0 && get_input_direction_y() < 0.5 && platformCollision == null:
+			set_collision_mask_bit(1,true)
 
 func jump_handler():
 	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 	#reset gravity if player is jumping
-	dropDownCount = 0
 	velocity.y = -jumpSpeed
 	jumpCount = 1
 	create_jump_timer(10)
@@ -395,9 +401,6 @@ func _on_short_hop_timeout():
 func _on_drop_timer_timeout():
 	if inputTimeout:
 		inputTimeout = false
-		dropDownCount = 0
-	else:
-		switch_to_state(CharacterState.AIR)
 	
 #creates timer to determine if short or fullhop
 func create_jump_timer(waittime):
@@ -720,6 +723,7 @@ func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
 	
 func animation_handler(animationToPlay):
+	#print("Switch to animation " +str(animationToPlay))
 	animationPlayer.playback_speed = 1
 	match animationToPlay:
 		GlobalVariables.CharacterAnimations.IDLE:
@@ -732,6 +736,7 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("jump")
 		GlobalVariables.CharacterAnimations.DOUBLEJUMP:
 			animationPlayer.play("doublejump")
+			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.FREEFALL: 
 			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.NAIR:
@@ -999,6 +1004,7 @@ func switch_to_state(state):
 	toggle_all_hitboxes("off")
 	pushingAttack = false
 	currentAttack = null
+#	print("to state " +str(state))
 	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:

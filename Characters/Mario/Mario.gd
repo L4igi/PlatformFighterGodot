@@ -44,6 +44,7 @@ func manage_dair(step):
 			gravity_on_off("on")
 			animationPlayer.stop(false)
 			bufferAnimation = true
-			
+
+
 func manage_dash_attack(step):
 	pass
