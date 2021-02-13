@@ -3,10 +3,11 @@
 [ext_resource path="res://Stages/EdgeSnap.gd" type="Script" id=1]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 36.0
+radius = 13.3333
 height = 0.0
 
 [node name="EdgeSnap" type="Area2D"]
+scale = Vector2( 1.5, 1 )
 collision_layer = 32
 collision_mask = 16
 script = ExtResource( 1 )

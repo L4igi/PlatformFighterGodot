@@ -9,6 +9,14 @@ func _ready():
 	for character in GlobalVariables.charactersInGame: 
 		character.connect("character_state_changed", self, "_on_character_state_change")
 
+func _physics_process(delta):
+	if !character_on_edge.empty(): 
+		for character in character_on_edge:
+			if character.currentState == character.CharacterState.AIR:
+				if edgeSnapDirection == "left" && character.get_input_direction_x() > 0: 
+					character.snap_edge(self)
+				elif edgeSnapDirection == "right" && character.get_input_direction_x() < 0: 
+					character.snap_edge(self)
 
 func _on_EdgeSnap_area_entered(area):
 	if area.is_in_group("CollisionArea"):
@@ -24,7 +32,9 @@ func _on_EdgeSnap_area_exited(area):
 
 
 func _on_character_state_change(character, currentState):
-	if character_on_edge.has(character):
-		if character.snappedEdge == null && currentState == character.CharacterState.AIR\
-		&& character.global_position.y >= centerStage.checkYPoint.global_position.y: 
-			character.snap_edge(self)
+	pass
+#	if character_on_edge.has(character) && character.currentState != character.CharacterState.EDGE:
+#		if edgeSnapDirection == "left" && character.get_input_direction_x() > 0: 
+#			character.snap_edge(self)
+#		elif edgeSnapDirection == "right" && character.get_input_direction_x() < 0: 
+#			character.snap_edge(self)

@@ -201,10 +201,9 @@ func check_input(delta):
 				CharacterState.GROUND:
 					switch_to_state(CharacterState.ATTACKGROUND)
 		elif Input.is_action_pressed(shield) && currentState == CharacterState.GROUND:
-			animation_handler(GlobalVariables.CharacterAnimations.SHIELD)
+			
 			switch_to_state(CharacterState.SHIELD)
 		if Input.is_action_just_pressed(grab) && currentState == CharacterState.GROUND:
-			animation_handler(GlobalVariables.CharacterAnimations.GRAB)
 			switch_to_state(CharacterState.GRAB)
 		
 func attack_handler_ground():
@@ -255,7 +254,6 @@ func attack_handler_ground():
 			pushingAttack = true
 			animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 			currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
-	#	switch_to_state(CharacterState.GROUND)
 			
 func jab_handler():
 	match jabCount:
@@ -296,7 +294,6 @@ func attack_handler_air():
 		elif get_input_direction_y() > 0:
 			animation_handler(GlobalVariables.CharacterAnimations.DAIR)
 			currentAttack = GlobalVariables.CharacterAnimations.DAIR
-		#	switch_to_state(CharacterState.AIR)
 			
 func ground_handler(delta):
 	if disableInput:
@@ -327,7 +324,6 @@ func ground_handler(delta):
 			jumpCount = 1
 			if currentState != CharacterState.AIR:
 				switch_to_state(CharacterState.AIR)
-			animationPlayer.play("freefall")
 			toggle_all_hitboxes("off")
 
 #creates timer after dropping through platform to enable/diable collision
@@ -525,28 +521,24 @@ func shield_handler(delta):
 		#todo implement grab mechanic
 		characterShield.disable_shield()
 		switch_to_state(CharacterState.GRAB)
-		animation_handler(GlobalVariables.CharacterAnimations.GRAB)
 	elif Input.is_action_just_pressed(right):
 		#todo implement roll mechanic
 		characterShield.disable_shield()
-		switch_to_state(CharacterState.ROLL)
 		if currentMoveDirection != moveDirection.RIGHT:
 			currentMoveDirection = moveDirection.RIGHT
 			mirror_areas()
-		animation_handler(GlobalVariables.CharacterAnimations.ROLL)
+		switch_to_state(CharacterState.ROLL)
 	elif Input.is_action_just_pressed(left):
 		#todo implement roll mechanic
 		characterShield.disable_shield()
-		switch_to_state(CharacterState.ROLL)
 		if currentMoveDirection != moveDirection.LEFT:
 			currentMoveDirection = moveDirection.LEFT
 			mirror_areas()
-		animation_handler(GlobalVariables.CharacterAnimations.ROLL)
+		switch_to_state(CharacterState.ROLL)
 	elif Input.is_action_just_pressed(down):
 		#todo implement spotdodge mechanic
 		characterShield.disable_shield()
 		switch_to_state(CharacterState.SPOTDODGE)
-		animation_handler(GlobalVariables.CharacterAnimations.SPOTDODGE)
 		
 func grab_handler(delta):
 	process_movement_physics(delta)
@@ -593,7 +585,6 @@ func on_grab_release():
 	gravity_on_off("on")
 	inGrabByCharacter = null
 	switch_to_state(CharacterState.AIR)
-	animationPlayer.play("freefall")
 	match currentMoveDirection: 
 		0: 
 			velocity = Vector2(400,-400)
@@ -615,100 +606,115 @@ func _on_grab_timer_timeout():
 	
 	
 func snap_edge(collidingEdge):
+	if get_input_direction_y() > 0:
+		return
 	var character_towards_edge = false
 	var character_over_edge = false
 	if collidingEdge.edgeSnapDirection == "left" \
 	&& self.global_position.x <= collidingEdge.global_position.x:
-		character_over_edge = true
-		if velocity.x >= 0:
+		character_over_edge = true 
+		if velocity.x >= 0 || currentMoveDirection == moveDirection.RIGHT:
 			character_towards_edge = true
+			
 	elif collidingEdge.edgeSnapDirection == "right" \
 	&& self.global_position.x >= collidingEdge.global_position.x:
 		character_over_edge = true
-		if velocity.x <= 0:
+		if velocity.x <= 0 || currentMoveDirection == moveDirection.LEFT:
 			character_towards_edge = true
-	if character_over_edge && currentState == CharacterState.AIR && (velocity.y <= 0\
-	|| character_towards_edge && velocity.y >= 0):
+			
+	if character_over_edge && currentState == CharacterState.AIR && (character_towards_edge && velocity.y >= 0):
 		switch_to_state(CharacterState.EDGE)
 		disableInput = true
 		gravity = baseGravity
-		snappedEdge = collidingEdge
 		velocity = Vector2.ZERO
 		jumpCount = 1
-		var targetPosition = collidingEdge.global_position + characterSprite.frames.get_frame("idle",0).get_size()/2
+		if currentMoveDirection == moveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
+			currentMoveDirection = moveDirection.LEFT
+			mirror_areas()
+		elif currentMoveDirection == moveDirection.LEFT && collidingEdge.edgeSnapDirection == "left": 
+			currentMoveDirection = moveDirection.RIGHT
+			mirror_areas()
+		var targetPosition = collidingEdge.global_position + Vector2((characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
 		if self.global_position < collidingEdge.global_position:
-			targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/2).y)
-		$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.3, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
+		animation_handler(GlobalVariables.CharacterAnimations.EDGESNAP)
+		$Tween.interpolate_property(self, "position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
+		snappedEdge = collidingEdge
 		
 func edge_handler(delta):
-	var targetPosition = Vector2.ZERO
-	if Input.is_action_just_pressed(down):
-		switch_to_state(CharacterState.AIR)
-		snappedEdge = null
-	elif Input.is_action_just_pressed(jump):
-		switch_to_state(CharacterState.AIR)
-		velocity.y = -jumpSpeed
-		jumpCount += 1
-		snappedEdge = null
-	elif Input.is_action_just_pressed(left):
-		if global_position.x < snappedEdge.global_position.x:
+	if snappedEdge != null: 
+		var targetPosition = Vector2.ZERO
+		if Input.is_action_just_pressed(down):
+			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
+			snappedEdge = null
 			switch_to_state(CharacterState.AIR)
-			velocity.x = -walkMaxSpeed/4
+		elif Input.is_action_just_pressed(jump):
+			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
-		else:
-			targetPosition = snappedEdge.global_position - get_character_size()
-			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			yield($Tween, "tween_all_completed")
-			snappedEdge = null
-			switch_to_state(CharacterState.GROUND)
-	elif Input.is_action_just_pressed(right):
-		if global_position.x > snappedEdge.global_position.x:
 			switch_to_state(CharacterState.AIR)
-			velocity.x = walkMaxSpeed/4
-			snappedEdge = null
-		else: 
-			targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
-			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			yield($Tween, "tween_all_completed")
-			snappedEdge = null
-			switch_to_state(CharacterState.GROUND)
-	elif Input.is_action_just_pressed(up):
-		if global_position > snappedEdge.global_position:
-			#normal getup right edge
-			targetPosition = snappedEdge.global_position - get_character_size()
-			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			yield($Tween, "tween_all_completed")
-			snappedEdge = null
-			switch_to_state(CharacterState.GROUND)
-		else: 
-			targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
-			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			yield($Tween, "tween_all_completed")
-			snappedEdge = null
-			switch_to_state(CharacterState.GROUND)
-	elif Input.is_action_just_pressed(shield):
-		if global_position > snappedEdge.global_position:
-			#normal getup right edge
-			targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*4,(get_character_size()).y)
-			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			yield($Tween, "tween_all_completed")
-			snappedEdge = null
-			switch_to_state(CharacterState.GROUND)
-		else: 
-			targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*4,(get_character_size()).y)
-			$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			yield($Tween, "tween_all_completed")
-			snappedEdge = null
-			switch_to_state(CharacterState.GROUND)
-	enable_player_input()
+			velocity.y = -jumpSpeed
+			jumpCount += 1
+		elif Input.is_action_just_pressed(left):
+			if global_position.x < snappedEdge.global_position.x:
+				snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
+				snappedEdge = null
+				switch_to_state(CharacterState.AIR)
+				velocity.x = -walkMaxSpeed/2
+			else:
+				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x*2, get_character_size().y)
+				snappedEdge = null
+				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.start()
+				yield($Tween, "tween_all_completed")
+				switch_to_state(CharacterState.GROUND)
+		elif Input.is_action_just_pressed(right):
+			if global_position.x > snappedEdge.global_position.x:
+				snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
+				snappedEdge = null
+				switch_to_state(CharacterState.AIR)
+				velocity.x = walkMaxSpeed/2
+			else: 
+				targetPosition = snappedEdge.global_position - Vector2(-get_character_size().x*2, get_character_size().y)
+				snappedEdge = null
+				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.start()
+				yield($Tween, "tween_all_completed")
+				switch_to_state(CharacterState.GROUND)
+		elif Input.is_action_just_pressed(up):
+			if global_position > snappedEdge.global_position:
+				#normal getup right edge
+				targetPosition = snappedEdge.global_position - get_character_size()
+				snappedEdge = null
+				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.start()
+				yield($Tween, "tween_all_completed")
+				switch_to_state(CharacterState.GROUND)
+			else: 
+				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
+				snappedEdge = null
+				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.start()
+				yield($Tween, "tween_all_completed")
+				switch_to_state(CharacterState.GROUND)
+		elif Input.is_action_just_pressed(shield):
+			if global_position > snappedEdge.global_position:
+				#normal getup right edge
+				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*4,(get_character_size()).y)
+				snappedEdge = null
+				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.start()
+				yield($Tween, "tween_all_completed")
+				switch_to_state(CharacterState.GROUND)
+			else: 
+				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*4,(get_character_size()).y)
+				snappedEdge = null
+				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.start()
+				yield($Tween, "tween_all_completed")
+				switch_to_state(CharacterState.GROUND)
+		enable_player_input()
 
 func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
@@ -717,17 +723,16 @@ func animation_handler(animationToPlay):
 	animationPlayer.playback_speed = 1
 	match animationToPlay:
 		GlobalVariables.CharacterAnimations.IDLE:
-			animationPlayer.play("idle")
+			animationPlayer.queue("idle")
 		GlobalVariables.CharacterAnimations.WALK:
 			animationPlayer.play("walk")
 		GlobalVariables.CharacterAnimations.RUN:
 			pass
 		GlobalVariables.CharacterAnimations.JUMP:
 			animationPlayer.play("jump")
-			animationPlayer.queue("freefall")
-#			yield(animationPlayer, "animation_finished")
 		GlobalVariables.CharacterAnimations.DOUBLEJUMP:
 			animationPlayer.play("doublejump")
+		GlobalVariables.CharacterAnimations.FREEFALL: 
 			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.NAIR:
 			play_attack_animation("nair")
@@ -798,6 +803,8 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("uthrow")
 		GlobalVariables.CharacterAnimations.DTHROW:
 			animationPlayer.play("dthrow")
+		GlobalVariables.CharacterAnimations.EDGESNAP: 
+			animationPlayer.play("edgeSnap")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -822,10 +829,8 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 		match currentState:
 			CharacterState.ATTACKGROUND:
 				switch_to_state(CharacterState.GROUND)
-				animationPlayer.queue("idle")
 			CharacterState.ATTACKAIR:
 				switch_to_state(CharacterState.AIR)
-				animationPlayer.queue("freefall")
 	bufferInput = null
 #	enable_player_input()
 
@@ -998,11 +1003,12 @@ func switch_to_state(state):
 	match state: 
 		CharacterState.GROUND:
 			currentState = CharacterState.GROUND
-#			enable_ground_collider()
+			animation_handler(GlobalVariables.CharacterAnimations.IDLE)
 			emit_signal("character_state_changed", self, currentState)
 		CharacterState.AIR:
 			currentState = CharacterState.AIR
 			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.FREEFALL)
 		CharacterState.HITSTUNAIR:
 			currentState = CharacterState.HITSTUNAIR
 			emit_signal("character_state_changed", self, currentState)
@@ -1028,19 +1034,24 @@ func switch_to_state(state):
 			currentState = CharacterState.SHIELD
 			characterShield.enable_shield()
 			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.SHIELD)
 		CharacterState.ROLL:
 			currentState = CharacterState.ROLL
 			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.ROLL)
 		CharacterState.SPOTDODGE:
 			currentState = CharacterState.SPOTDODGE
 			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.SPOTDODGE)
 		CharacterState.GRAB:
 			currentState = CharacterState.GRAB
 			disableInput = true
 			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.GRAB)
 		CharacterState.INGRAB:
 			currentState = CharacterState.INGRAB
 			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
 	if gravity!=baseGravity:
@@ -1082,7 +1093,6 @@ func is_grabbed_handler(byCharacter):
 	gravity_on_off("off")
 	#collisionAreaShape.set_deferred("disabled",true)
 	switch_to_state(CharacterState.INGRAB)
-	animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
 	
 func is_thrown_grabjabbed_handler(actionType):
 	gravity_on_off("on")
@@ -1237,7 +1247,6 @@ func enable_disable_hurtboxes(enable = true):
 func switch_from_state_to_airborn():
 	switch_to_state(CharacterState.AIR)
 	jumpCount = 1
-	animationPlayer.play("freefall")
 	enable_player_input()
 	if currentState == CharacterState.HITSTUNGROUND:
 		inHitStun = false
