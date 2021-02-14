@@ -37,7 +37,7 @@
     "hitStun_neutral":40,
     "launchVelocity_neutral":750,
     "launchAngle_neutral":270,
-    "knockBackGrowth_neutral" :100,
+    "knockBackGrowth_neutral" :150,
     "effect_neutral": "neutral"
   },
   "DTILT":{

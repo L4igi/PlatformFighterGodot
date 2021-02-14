@@ -54,6 +54,7 @@ func apply_attack(hbType):
 	var hitStun = currentAttackData["hitStun_"+hbString]
 	var launchAngle = deg2rad(currentAttackData["launchAngle_"+hbString])
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
+	var knockBackScaling = currentAttackData["knockBackGrowth_neutral"]/100
 	var launchVectorX = launchVector.x
 	#inverse x launch diretion depending on character position
 	if attackedCharacter.global_position.x < character.global_position.x:
@@ -63,7 +64,7 @@ func apply_attack(hbType):
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity_"+hbString]
 #	print(launchVector)
-	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity)
+	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
 
 func apply_grab(hbType):
 	print("applying grab")

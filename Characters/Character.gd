@@ -7,7 +7,7 @@ var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 850
 var baseAirSpeed = 600
-
+var damagePercent = 0.0
 #walkforce is only used when no input is detected to slow the character down
 var disableInputInfluence = 1200
 var walkMaxSpeed = 100
@@ -38,6 +38,9 @@ var jabCount = 0
 var jabCombo = 3
 var dashAttackSpeed = 800
 var chargingSmashAttack = false
+var smashAttackTimer 
+var smashAttackInputTime = 5
+var bufferedSmashAttack
 var pushingAttack = false
 #movement
 enum moveDirection {LEFT, RIGHT}
@@ -146,7 +149,10 @@ func _ready():
 	add_child(grabTimer)
 	grabTimer.connect("timeout", self, "_on_grab_timer_timeout")
 	grabTimer.set_name("GrabTimer")
-	
+	smashAttackTimer = frameTimer.instance()
+	add_child(smashAttackTimer)
+	smashAttackTimer.connect("timeout", self, "_on_smashAttack_timer_timeout")
+	smashAttackTimer.set_name("SmashAttackTimer")
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
@@ -182,16 +188,44 @@ func _physics_process(delta):
 			in_grab_handler(delta)
 
 func check_input(delta):
-		if Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
+		if Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
+			create_smashAttack_timer()
+			bufferedSmashAttack = "right"
+		elif Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
+			create_smashAttack_timer()
+			bufferedSmashAttack = "left"
+		elif Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
+			create_smashAttack_timer()
+			bufferedSmashAttack = "up"
+		elif Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
+			create_smashAttack_timer()
+			bufferedSmashAttack = "down"
+		if smashAttackTimer.timer_running()\
+		&& Input.is_action_just_pressed(attack)\
+		&& bufferedSmashAttack == "right"\
+		&& Input.is_action_pressed(right)\
+		&& currentState == CharacterState.GROUND:
 			smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
 			switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
+		elif smashAttackTimer.timer_running()\
+		&& Input.is_action_just_pressed(attack)\
+		&& bufferedSmashAttack == "left"\
+		&& Input.is_action_pressed(left)\
+		&& currentState == CharacterState.GROUND:
 			smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
 			switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
+		elif smashAttackTimer.timer_running()\
+		&& Input.is_action_just_pressed(attack)\
+		&& bufferedSmashAttack == "up"\
+		&& Input.is_action_pressed(up)\
+		&& currentState == CharacterState.GROUND:
 			smashAttack = GlobalVariables.SmashAttacks.SMASHUP
 			switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_just_pressed(attack) && Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
+		elif smashAttackTimer.timer_running()\
+		&& Input.is_action_just_pressed(attack)\
+		&& bufferedSmashAttack == "down"\
+		&& Input.is_action_pressed(down)\
+		&& currentState == CharacterState.GROUND:
 			smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
 			switch_to_state(CharacterState.ATTACKGROUND)
 		elif Input.is_action_just_pressed(attack) && !inHitStun:
@@ -431,7 +465,7 @@ func hitstun_handler(delta):
 #			switch_from_state_to_airborn_hitstun()
 		if currentState == CharacterState.HITSTUNAIR:
 			#BOUNCING CHARACTER
-			if onSolidGround && lastVelocity.y > bounceThreashold:
+			if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
 				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 				initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
@@ -444,7 +478,7 @@ func hitstun_handler(delta):
 #			if abs(int(velocity.y)) >= onSolidGroundThreashold:
 #				switch_from_state_to_airborn()
 	elif !disableInput:
-		if onSolidGround && lastVelocity.y > bounceThreashold:
+		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
 			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
@@ -607,6 +641,13 @@ func _on_grab_timer_timeout():
 	grabbedCharacter.on_grab_release()
 	switch_to_state(CharacterState.GROUND)
 	
+func create_smashAttack_timer():
+	smashAttackTimer.set_frames(smashAttackInputTime)
+	smashAttackTimer.start_timer()
+	
+func _on_smashAttack_timer_timeout():
+	pass
+	
 	
 func snap_edge(collidingEdge):
 	if get_input_direction_y() > 0:
@@ -641,7 +682,7 @@ func snap_edge(collidingEdge):
 		if self.global_position < collidingEdge.global_position:
 			targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
 		animation_handler(GlobalVariables.CharacterAnimations.EDGESNAP)
-		$Tween.interpolate_property(self, "position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
 		snappedEdge = collidingEdge
@@ -668,7 +709,7 @@ func edge_handler(delta):
 			else:
 				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x*2, get_character_size().y)
 				snappedEdge = null
-				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
@@ -681,7 +722,7 @@ func edge_handler(delta):
 			else: 
 				targetPosition = snappedEdge.global_position - Vector2(-get_character_size().x*2, get_character_size().y)
 				snappedEdge = null
-				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
@@ -690,14 +731,14 @@ func edge_handler(delta):
 				#normal getup right edge
 				targetPosition = snappedEdge.global_position - get_character_size()
 				snappedEdge = null
-				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
 			else: 
 				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
 				snappedEdge = null
-				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
@@ -706,14 +747,14 @@ func edge_handler(delta):
 				#normal getup right edge
 				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*4,(get_character_size()).y)
 				snappedEdge = null
-				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
 			else: 
 				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*4,(get_character_size()).y)
 				snappedEdge = null
-				$Tween.interpolate_property(self, "position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
@@ -1059,13 +1100,16 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
 	
-func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity):
+func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling):
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
-	velocity = Vector2(launchVectorX,launchVectorY)*launchVelocity
+	damagePercent += damage
+	var calulatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
+	#print(damagePercent)
+	velocity = Vector2(launchVectorX,launchVectorY) * calulatedVelocity
 	initLaunchVelocity = velocity
 	hitStunTimer.stop_timer()
 	#collisionAreaShape.set_deferred('disabled',true)
@@ -1086,6 +1130,12 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
+	
+func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
+	print("CALCULATING")
+	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
+	print("calculatedKnockBack " +str(calculatedKnockBack))
+	return calculatedKnockBack
 
 func is_grabbed_handler(byCharacter):
 	inGrabByCharacter = byCharacter
@@ -1113,6 +1163,7 @@ func apply_throw(actionType):
 	var launchAngle = deg2rad(currentAttackData["launchAngle"])
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
 	var launchVectorX = launchVector.x
+	var knockBackScaling = currentAttackData["knockBackGrowth"]/100
 	#inverse x launch diretion depending on character position
 	if global_position.x < inGrabByCharacter.global_position.x:
 		launchVectorX *= -1
@@ -1121,7 +1172,7 @@ func apply_throw(actionType):
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity"]
 	self.global_position = inGrabByCharacter.global_position
-	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity)
+	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
 	inGrabByCharacter = null
 	
 func enable_player_input():
