@@ -1,4 +1,4 @@
-[gd_scene load_steps=319 format=2]
+[gd_scene load_steps=323 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -281,12 +281,20 @@
 [ext_resource path="res://Characters/Mario/edgeHang/1.png" type="Texture" id=279]
 [ext_resource path="res://Characters/Mario/edgeHang/0.png" type="Texture" id=280]
 [ext_resource path="res://Characters/Mario/edgeHang/2.png" type="Texture" id=281]
+[ext_resource path="res://Characters/Mario/crouch/0.png" type="Texture" id=282]
+[ext_resource path="res://Characters/Mario/crouch/1.png" type="Texture" id=283]
+[ext_resource path="res://Characters/Mario/crouch/2.png" type="Texture" id=284]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 19 ), ExtResource( 18 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 22 ), ExtResource( 21 ), ExtResource( 20 ) ],
 "loop": true,
 "name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 282 ), ExtResource( 283 ), ExtResource( 284 ) ],
+"loop": true,
+"name": "crouch",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 201 ), ExtResource( 189 ), ExtResource( 197 ), ExtResource( 198 ), ExtResource( 188 ) ],
@@ -626,6 +634,46 @@ tracks/2/keys = {
 "args": [ 2 ],
 "method": "apply_throw_animation_step"
 } ]
+}
+
+[sub_resource type="Animation" id=38]
+resource_name = "crouch"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "crouch" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("AnimationPlayer:playback_speed")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 2.0 ]
 }
 
 [sub_resource type="Animation" id=5]
@@ -2313,7 +2361,8 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "jump"
+animation = "crouch"
+frame = 2
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2321,6 +2370,7 @@ autoplay = "idle"
 anims/attack_getup = SubResource( 2 )
 anims/bair = SubResource( 3 )
 anims/bthrow = SubResource( 4 )
+anims/crouch = SubResource( 38 )
 anims/dair = SubResource( 5 )
 anims/dash_attack = SubResource( 6 )
 anims/doublejump = SubResource( 7 )

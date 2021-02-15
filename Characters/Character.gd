@@ -55,6 +55,8 @@ var directionChange = false
 var velocity = Vector2()
 var onSolidGround = null
 var onSolidGroundThreashold = 10
+#crouch 
+var crouchMovement = false
 #bufferInput
 var bufferInput = null
 #animation needs to finish 
@@ -90,7 +92,7 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH}
 #signal for character state change
 signal character_state_changed(state)
 
@@ -186,6 +188,8 @@ func _physics_process(delta):
 			grab_handler(delta)
 		CharacterState.INGRAB:
 			in_grab_handler(delta)
+		CharacterState.CROUCH: 
+			crouch_handler(delta)
 
 func check_input(delta):
 		if Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
@@ -234,8 +238,8 @@ func check_input(delta):
 					switch_to_state(CharacterState.ATTACKAIR)
 				CharacterState.GROUND:
 					switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_pressed(shield) && currentState == CharacterState.GROUND:
-			
+		elif Input.is_action_pressed(shield) && (currentState == CharacterState.GROUND\
+		|| currentState == CharacterState.CROUCH):
 			switch_to_state(CharacterState.SHIELD)
 		if Input.is_action_just_pressed(grab) && currentState == CharacterState.GROUND:
 			switch_to_state(CharacterState.GRAB)
@@ -344,17 +348,6 @@ func ground_handler(delta):
 		# Check for jumping. grounded must be called after movement code
 		if Input.is_action_just_pressed(jump):
 			jump_handler()
-		#shorthop depending on button press length 
-		elif get_input_direction_y() == 1.0:
-			for i in get_slide_count():
-				var collision = get_slide_collision(i)
-				if collision.get_collider().is_in_group("Platform"):
-					jumpCount = 1
-					set_collision_mask_bit(1,false)
-					create_drop_platform_timer(30, false)
-					switch_to_state(CharacterState.AIR)
-				else: 
-					create_drop_platform_timer(30, true)
 		#checks if player walked off platform/stage
 		elif abs(int(velocity.y)) >= onSolidGroundThreashold:
 			jumpCount = 1
@@ -550,7 +543,10 @@ func shield_handler(delta):
 	process_movement_physics(delta)
 	if Input.is_action_just_released(shield):
 		characterShield.disable_shield()
-		switch_to_state(CharacterState.GROUND)
+		if get_input_direction_y() >= 0.5:
+			switch_to_state(CharacterState.CROUCH)
+		else:
+			switch_to_state(CharacterState.GROUND)
 	elif Input.is_action_just_pressed(jump):
 		characterShield.disable_shield()
 		jump_handler()
@@ -646,8 +642,31 @@ func create_smashAttack_timer():
 	smashAttackTimer.start_timer()
 	
 func _on_smashAttack_timer_timeout():
-	pass
+	print("timeout")
+	if currentState == CharacterState.GROUND && get_input_direction_y() == 1.0:
+		for i in get_slide_count():
+			var collision = get_slide_collision(i)
+			if collision.get_collider().is_in_group("Platform"):
+				jumpCount = 1
+				set_collision_mask_bit(1,false)
+				create_drop_platform_timer(30, false)
+				switch_to_state(CharacterState.AIR)
+			elif collision.get_collider().is_in_group("Ground"):
+				switch_to_state(CharacterState.CROUCH)
+	elif currentState == CharacterState.GROUND && get_input_direction_y() >=0.2:
+		switch_to_state(CharacterState.CROUCH)
 	
+func crouch_handler(delta):
+	if get_input_direction_y() <= 0.3:
+		switch_to_state(CharacterState.GROUND)
+	elif Input.is_action_just_pressed(attack):
+		switch_to_state(CharacterState.ATTACKGROUND)
+		animation_handler(GlobalVariables.CharacterAnimations.DTILT)
+		currentAttack = GlobalVariables.CharacterAnimations.DTILT
+	elif Input.is_action_just_pressed(jump):
+		jump_handler()
+#	elif Input.is_action_just_pressed(shield):
+		
 	
 func snap_edge(collidingEdge):
 	if get_input_direction_y() > 0:
@@ -851,6 +870,8 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("dthrow")
 		GlobalVariables.CharacterAnimations.EDGESNAP: 
 			animationPlayer.play("edgeSnap")
+		GlobalVariables.CharacterAnimations.CROUCH:
+			animationPlayer.play("crouch")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -867,6 +888,7 @@ func roll_calculator(distance):
 			velocity.x = distance
 	
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
+	print(currentState)
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
 	yield(animationPlayer, "animation_finished")
@@ -874,7 +896,11 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	if bufferInput == null:
 		match currentState:
 			CharacterState.ATTACKGROUND:
-				switch_to_state(CharacterState.GROUND)
+				if get_input_direction_y() >= 0.5: 
+					switch_to_state(CharacterState.CROUCH)
+				else:
+					switch_to_state(CharacterState.GROUND)
+				smashAttack = null
 			CharacterState.ATTACKAIR:
 				switch_to_state(CharacterState.AIR)
 	bufferInput = null
@@ -1099,6 +1125,10 @@ func switch_to_state(state):
 			currentState = CharacterState.INGRAB
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
+		CharacterState.CROUCH: 
+			currentState = CharacterState.CROUCH
+			emit_signal("character_state_changed", self, currentState)
+			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling):
 	if gravity!=baseGravity:
@@ -1225,7 +1255,6 @@ func apply_smash_attack_steps(step = 0):
 				animationPlayer.stop(false)
 		2:
 			animationPlayer.play()
-			smashAttack = null
 
 func apply_hurt_animation_step(step =0):
 	match step: 

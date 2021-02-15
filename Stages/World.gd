@@ -2,7 +2,7 @@ extends Node2D
 
 onready var characterStateUI = preload("res://UI/CharacterDamage.tscn")
 
-var characters = [$Mario, $Dark_Mario]
+#var characters = [$Mario, $Dark_Mario]
 # Called when the node enters the scene tree for the first time.
 #func _ready():
 #	for character in characters: 
