@@ -158,6 +158,8 @@ func _ready():
 #	animationPlayer.set_blend_time("fair","freefall", 0.05)
 
 func _physics_process(delta):
+	if name == "Mario": 
+		print(animationPlayer.get_current_animation())
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -333,6 +335,10 @@ func attack_handler_air():
 		elif get_input_direction_y() > 0:
 			animation_handler(GlobalVariables.CharacterAnimations.DAIR)
 			currentAttack = GlobalVariables.CharacterAnimations.DAIR
+	if velocity.y > 0 && get_input_direction_y() >= 0.5: 
+		set_collision_mask_bit(1,false)
+	elif velocity.y > 0 && get_input_direction_y() < 0.5 && platformCollision == null:
+		set_collision_mask_bit(1,true)
 			
 func ground_handler(delta):
 	if disableInput:
@@ -356,11 +362,7 @@ func ground_handler(delta):
 			toggle_all_hitboxes("off")
 
 #creates timer after dropping through platform to enable/diable collision
-func create_drop_platform_timer(waittime,setInputTimeout):
-	if setInputTimeout:
-		inputTimeout = true
-	else: 
-		inputTimeout = false
+func create_drop_platform_timer(waittime):
 	dropDownTimer.set_frames(waittime)
 	dropDownTimer.start_timer()
 	
@@ -402,12 +404,12 @@ func air_handler(delta):
 			set_collision_mask_bit(1,true)
 
 func jump_handler():
+	switch_to_state(CharacterState.AIR)
 	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 	#reset gravity if player is jumping
 	velocity.y = -jumpSpeed
 	jumpCount = 1
 	create_jump_timer(10)
-	switch_to_state(CharacterState.AIR)
 		
 func double_jump_handler():
 	animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
@@ -642,15 +644,14 @@ func create_smashAttack_timer():
 	smashAttackTimer.start_timer()
 	
 func _on_smashAttack_timer_timeout():
-	print("timeout")
 	if currentState == CharacterState.GROUND && get_input_direction_y() == 1.0:
 		for i in get_slide_count():
 			var collision = get_slide_collision(i)
 			if collision.get_collider().is_in_group("Platform"):
 				jumpCount = 1
 				set_collision_mask_bit(1,false)
-				create_drop_platform_timer(30, false)
-				switch_to_state(CharacterState.AIR)
+				create_drop_platform_timer(30)
+				switch_from_state_to_airborn()
 			elif collision.get_collider().is_in_group("Ground"):
 				switch_to_state(CharacterState.CROUCH)
 	elif currentState == CharacterState.GROUND && get_input_direction_y() >=0.2:
@@ -794,11 +795,12 @@ func animation_handler(animationToPlay):
 			pass
 		GlobalVariables.CharacterAnimations.JUMP:
 			animationPlayer.play("jump")
+			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.DOUBLEJUMP:
 			animationPlayer.play("doublejump")
 			animationPlayer.queue("freefall")
 		GlobalVariables.CharacterAnimations.FREEFALL: 
-			animationPlayer.queue("freefall")
+			animationPlayer.play("freefall")
 		GlobalVariables.CharacterAnimations.NAIR:
 			play_attack_animation("nair")
 			disableInputDI = true
@@ -1071,7 +1073,6 @@ func switch_to_state(state):
 	toggle_all_hitboxes("off")
 	pushingAttack = false
 	currentAttack = null
-#	print("to state " +str(state))
 	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:

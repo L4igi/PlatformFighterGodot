@@ -25,7 +25,6 @@ func stop_character_velocity(body):
 	|| stopCharacter.currentState == stopCharacter.CharacterState.GETUP\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.SHIELD\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.ROLL:
-		print("here " + str(body.currentState))
 		if stopCharacter.onSolidGround: 
 			if self.global_position < stopCharacter.global_position: 
 				stopCharacter.velocity.x = 0
