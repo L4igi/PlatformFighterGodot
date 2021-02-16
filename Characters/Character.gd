@@ -80,6 +80,7 @@ onready var invincibilityTimer
 onready var characterShield = get_node("Shield")
 var rollDistance = 150
 var rolling = false
+var shieldStunTimer
 #grab
 onready var grabTimer
 var grabbedCharacter = null
@@ -119,8 +120,11 @@ var attack = ""
 var shield = ""
 var grab = ""
 
+var framecounter = 0
+
 func _ready():
 	self.set_collision_mask_bit(0,false)
+	self.set_collision_mask_bit(2,true)
 	#self.set_collision_mask_bit(1,false)
 	var file = File.new()
 	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
@@ -155,11 +159,13 @@ func _ready():
 	add_child(smashAttackTimer)
 	smashAttackTimer.connect("timeout", self, "_on_smashAttack_timer_timeout")
 	smashAttackTimer.set_name("SmashAttackTimer")
-#	animationPlayer.set_blend_time("fair","freefall", 0.05)
+	shieldStunTimer = frameTimer.instance()
+	add_child(shieldStunTimer)
+	shieldStunTimer.connect("timeout", self, "_on_shieldStunTimer_timer_timeout")
+	shieldStunTimer.set_name("ShieldStunTimer")
+	animationPlayer.set_animation_process_mode(0)
 
 func _physics_process(delta):
-	if name == "Mario": 
-		print(animationPlayer.get_current_animation())
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -194,63 +200,71 @@ func _physics_process(delta):
 			crouch_handler(delta)
 
 func check_input(delta):
-		if Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
-			create_smashAttack_timer()
-			bufferedSmashAttack = "right"
-		elif Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
-			create_smashAttack_timer()
-			bufferedSmashAttack = "left"
-		elif Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
-			create_smashAttack_timer()
-			bufferedSmashAttack = "up"
-		elif Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
-			create_smashAttack_timer()
-			bufferedSmashAttack = "down"
-		if smashAttackTimer.timer_running()\
-		&& Input.is_action_just_pressed(attack)\
-		&& bufferedSmashAttack == "right"\
-		&& Input.is_action_pressed(right)\
-		&& currentState == CharacterState.GROUND:
-			smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
-			switch_to_state(CharacterState.ATTACKGROUND)
-		elif smashAttackTimer.timer_running()\
-		&& Input.is_action_just_pressed(attack)\
-		&& bufferedSmashAttack == "left"\
-		&& Input.is_action_pressed(left)\
-		&& currentState == CharacterState.GROUND:
-			smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
-			switch_to_state(CharacterState.ATTACKGROUND)
-		elif smashAttackTimer.timer_running()\
-		&& Input.is_action_just_pressed(attack)\
-		&& bufferedSmashAttack == "up"\
-		&& Input.is_action_pressed(up)\
-		&& currentState == CharacterState.GROUND:
-			smashAttack = GlobalVariables.SmashAttacks.SMASHUP
-			switch_to_state(CharacterState.ATTACKGROUND)
-		elif smashAttackTimer.timer_running()\
-		&& Input.is_action_just_pressed(attack)\
-		&& bufferedSmashAttack == "down"\
-		&& Input.is_action_pressed(down)\
-		&& currentState == CharacterState.GROUND:
-			smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
-			switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_just_pressed(attack) && !inHitStun:
-			match currentState:
-				CharacterState.AIR:
-					switch_to_state(CharacterState.ATTACKAIR)
-				CharacterState.GROUND:
-					switch_to_state(CharacterState.ATTACKGROUND)
-		elif Input.is_action_pressed(shield) && (currentState == CharacterState.GROUND\
-		|| currentState == CharacterState.CROUCH):
-			switch_to_state(CharacterState.SHIELD)
-		if Input.is_action_just_pressed(grab) && currentState == CharacterState.GROUND:
-			switch_to_state(CharacterState.GRAB)
+	if Input.is_action_just_pressed(jump) && currentState == CharacterState.GROUND:
+		jump_handler()
+	if Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
+		create_smashAttack_timer()
+		bufferedSmashAttack = "right"
+	elif Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
+		create_smashAttack_timer()
+		bufferedSmashAttack = "left"
+	elif Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
+		create_smashAttack_timer()
+		bufferedSmashAttack = "up"
+	elif Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
+		create_smashAttack_timer()
+		bufferedSmashAttack = "down"
+	if smashAttackTimer.timer_running()\
+	&& Input.is_action_just_pressed(attack)\
+	&& bufferedSmashAttack == "right"\
+	&& Input.is_action_pressed(right)\
+	&& currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif smashAttackTimer.timer_running()\
+	&& Input.is_action_just_pressed(attack)\
+	&& bufferedSmashAttack == "left"\
+	&& Input.is_action_pressed(left)\
+	&& currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif smashAttackTimer.timer_running()\
+	&& Input.is_action_just_pressed(attack)\
+	&& bufferedSmashAttack == "up"\
+	&& Input.is_action_pressed(up)\
+	&& currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHUP
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif smashAttackTimer.timer_running()\
+	&& Input.is_action_just_pressed(attack)\
+	&& bufferedSmashAttack == "down"\
+	&& Input.is_action_pressed(down)\
+	&& currentState == CharacterState.GROUND:
+		smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
+		switch_to_state(CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(attack) && !inHitStun:
+		match currentState:
+			CharacterState.AIR:
+				switch_to_state(CharacterState.ATTACKAIR)
+			CharacterState.GROUND:
+				switch_to_state(CharacterState.ATTACKGROUND)
+	elif Input.is_action_pressed(shield) && (currentState == CharacterState.GROUND\
+	|| currentState == CharacterState.CROUCH):
+		switch_to_state(CharacterState.SHIELD)
+	elif Input.is_action_just_pressed(grab) && currentState == CharacterState.GROUND:
+		switch_to_state(CharacterState.GRAB)
 		
 func attack_handler_ground():
 	if disableInput:
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
+	if chargingSmashAttack:
+		if Input.is_action_just_released(attack) && chargingSmashAttack:
+			chargingSmashAttack = false
+			smashAttack = null
+			apply_smash_attack_steps(2)
 	elif !disableInput:
+		print("smashattack " +str(smashAttack))
 		if smashAttack != null: 
 	#		print("SMASH " +str(smashAttack))
 			match smashAttack: 
@@ -351,15 +365,9 @@ func ground_handler(delta):
 		input_movement_physics_ground(delta)
 		# Move based on the velocity and snap to the ground.
 		velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
-		# Check for jumping. grounded must be called after movement code
-		if Input.is_action_just_pressed(jump):
-			jump_handler()
 		#checks if player walked off platform/stage
-		elif abs(int(velocity.y)) >= onSolidGroundThreashold:
-			jumpCount = 1
-			if currentState != CharacterState.AIR:
-				switch_to_state(CharacterState.AIR)
-			toggle_all_hitboxes("off")
+		if abs(int(velocity.y)) >= onSolidGroundThreashold:
+			switch_from_state_to_airborn()
 
 #creates timer after dropping through platform to enable/diable collision
 func create_drop_platform_timer(waittime):
@@ -373,12 +381,14 @@ func air_handler(delta):
 		switch_to_state(CharacterState.GROUND)
 #				animationPlayer.play("idle")
 		#if aerial attack is interrupted by ground cancel hitboxes
-		toggle_all_hitboxes("off")
 	elif !disableInput:
 		input_movement_physics_air(delta)
 		# Move based on the velocity and snap to the ground.
 		velocity = move_and_slide(velocity)
-		if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
+		if Input.is_action_just_pressed(jump) && jumpCount == 0: 
+			jumpCount = 1
+			create_jump_timer(10)
+		elif Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
 			animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
 			if gravity!=baseGravity:
 				gravity=baseGravity
@@ -397,19 +407,17 @@ func air_handler(delta):
 		if abs(int(velocity.y)) <= onSolidGroundThreashold && onSolidGround:
 			switch_to_state(CharacterState.GROUND)
 			#if aerial attack is interrupted by ground cancel hitboxes
-			toggle_all_hitboxes("off")
 		if velocity.y > 0 && get_input_direction_y() >= 0.5: 
 			set_collision_mask_bit(1,false)
 		elif velocity.y > 0 && get_input_direction_y() < 0.5 && platformCollision == null:
 			set_collision_mask_bit(1,true)
 
 func jump_handler():
+	jumpCount = 0
 	switch_to_state(CharacterState.AIR)
 	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 	#reset gravity if player is jumping
 	velocity.y = -jumpSpeed
-	jumpCount = 1
-	create_jump_timer(10)
 		
 func double_jump_handler():
 	animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
@@ -543,37 +551,38 @@ func _on_hitstun_timeout():
 	
 func shield_handler(delta):
 	process_movement_physics(delta)
-	if Input.is_action_just_released(shield):
-		characterShield.disable_shield()
-		if get_input_direction_y() >= 0.5:
-			switch_to_state(CharacterState.CROUCH)
-		else:
-			switch_to_state(CharacterState.GROUND)
-	elif Input.is_action_just_pressed(jump):
-		characterShield.disable_shield()
-		jump_handler()
-	elif Input.is_action_just_pressed(attack):
-		#todo implement grab mechanic
-		characterShield.disable_shield()
-		switch_to_state(CharacterState.GRAB)
-	elif Input.is_action_just_pressed(right):
-		#todo implement roll mechanic
-		characterShield.disable_shield()
-		if currentMoveDirection != moveDirection.RIGHT:
-			currentMoveDirection = moveDirection.RIGHT
-			mirror_areas()
-		switch_to_state(CharacterState.ROLL)
-	elif Input.is_action_just_pressed(left):
-		#todo implement roll mechanic
-		characterShield.disable_shield()
-		if currentMoveDirection != moveDirection.LEFT:
-			currentMoveDirection = moveDirection.LEFT
-			mirror_areas()
-		switch_to_state(CharacterState.ROLL)
-	elif Input.is_action_just_pressed(down):
-		#todo implement spotdodge mechanic
-		characterShield.disable_shield()
-		switch_to_state(CharacterState.SPOTDODGE)
+	if !shieldStunTimer.timer_running():
+		if Input.is_action_just_released(shield):
+			characterShield.disable_shield()
+			if get_input_direction_y() >= 0.5:
+				switch_to_state(CharacterState.CROUCH)
+			else:
+				switch_to_state(CharacterState.GROUND)
+		elif Input.is_action_just_pressed(jump):
+			characterShield.disable_shield()
+			jump_handler()
+		elif Input.is_action_just_pressed(attack):
+			#todo implement grab mechanic
+			characterShield.disable_shield()
+			switch_to_state(CharacterState.GRAB)
+		elif Input.is_action_just_pressed(right):
+			#todo implement roll mechanic
+			characterShield.disable_shield()
+			if currentMoveDirection != moveDirection.RIGHT:
+				currentMoveDirection = moveDirection.RIGHT
+				mirror_areas()
+			switch_to_state(CharacterState.ROLL)
+		elif Input.is_action_just_pressed(left):
+			#todo implement roll mechanic
+			characterShield.disable_shield()
+			if currentMoveDirection != moveDirection.LEFT:
+				currentMoveDirection = moveDirection.LEFT
+				mirror_areas()
+			switch_to_state(CharacterState.ROLL)
+		elif Input.is_action_just_pressed(down):
+			#todo implement spotdodge mechanic
+			characterShield.disable_shield()
+			switch_to_state(CharacterState.SPOTDODGE)
 		
 func grab_handler(delta):
 	process_movement_physics(delta)
@@ -583,9 +592,9 @@ func grab_handler(delta):
 		if grabbedCharacter != null:
 			grabbedCharacter.on_grab_release()
 	if grabbedCharacter != null && !disableInput:
-		if !grabTimer.timer_running():
-				velocity.x = 0
-				create_grab_timer()
+#		if !grabTimer.timer_running():
+#				velocity.x = 0
+#				create_grab_timer()
 		if Input.is_action_just_pressed(attack):
 			currentAttack = GlobalVariables.CharacterAnimations.GRABJAB
 			animation_handler(GlobalVariables.CharacterAnimations.GRABJAB)
@@ -636,8 +645,10 @@ func create_grab_timer():
 	grabTimer.start_timer()
 	
 func _on_grab_timer_timeout():
-	grabbedCharacter.on_grab_release()
-	switch_to_state(CharacterState.GROUND)
+	print("Grab timer timeout")
+	if grabbedCharacter:
+		grabbedCharacter.on_grab_release()
+		switch_to_state(CharacterState.GROUND)
 	
 func create_smashAttack_timer():
 	smashAttackTimer.set_frames(smashAttackInputTime)
@@ -890,11 +901,9 @@ func roll_calculator(distance):
 			velocity.x = distance
 	
 func play_attack_animation(animationToPlay, playBackSpeed = 1):
-	print(currentState)
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
 	yield(animationPlayer, "animation_finished")
-	toggle_all_hitboxes("off")
 	if bufferInput == null:
 		match currentState:
 			CharacterState.ATTACKGROUND:
@@ -905,14 +914,14 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 				smashAttack = null
 			CharacterState.ATTACKAIR:
 				switch_to_state(CharacterState.AIR)
-	bufferInput = null
-#	enable_player_input()
+		toggle_all_hitboxes("off")
+	else:
+		enable_player_input()
 
 func apply_attack_movement_stats(step = 0):
 	pass
 	
 func process_movement_physics(delta):
-#	check_buffer_input()
 	if currentState == CharacterState.HITSTUNAIR:
 #		print(self.name + "  " + str(onSolidGround) + "  " +str(velocity))
 		calc_hitstun_velocity(delta)
@@ -1047,7 +1056,7 @@ func toggle_all_hitboxes(onOff):
 					if hitbox is CollisionShape2D:
 						hitbox.set_deferred('disabled',false)
 		"off":
-			if !inHitStun:
+			if !inHitStun && bufferInput == null:
 				enable_player_input()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
@@ -1132,6 +1141,8 @@ func switch_to_state(state):
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling):
+	if currentState == CharacterState.SHIELD: 
+		return
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
@@ -1148,27 +1159,32 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	#todo: calculate if in tumble animation
 		shortHitStun = false
 		switch_to_state(CharacterState.HITSTUNAIR)
-	#todo hitstun ground?
-	#play idle animation in hitstun 
-	#todo: replace with knockback/hurt animation
 		animation_handler(GlobalVariables.CharacterAnimations.HURT)
 	else: 
-#		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold:
-#			switch_to_state(CharacterState.GROUND)
-#		else:
-#			switch_to_state(CharacterState.AIR)
 		shortHitStun = true
 		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	create_hitstun_timer(hitStun)
 	
+func is_attacked_in_shield_handler(damage, shieldStunMultiplier):
+	var shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
+	create_shieldStun_timer(shieldStunFrames)
+	#calculate shielddamge 
+	#calculate shield hit pushback
+	pass
+	
+func create_shieldStun_timer(shieldStunFrames):
+	shieldStunTimer.set_frames(60)
+	shieldStunTimer.start_timer()
+	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
-	print("CALCULATING")
+#	print("CALCULATING")
 	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-	print("calculatedKnockBack " +str(calculatedKnockBack))
+#	print("calculatedKnockBack " +str(calculatedKnockBack))
 	return calculatedKnockBack
 
 func is_grabbed_handler(byCharacter):
+	characterShield.disable_shield()
 	inGrabByCharacter = byCharacter
 	if gravity!=baseGravity:
 		gravity=baseGravity
@@ -1208,8 +1224,7 @@ func apply_throw(actionType):
 	
 func enable_player_input():
 	if buffered_input():
-		disableInput = false
-		attack_handler_ground()
+		enable_player_input()
 	elif bufferAnimation:
 		animationPlayer.play()
 		bufferAnimation = false
@@ -1223,21 +1238,96 @@ func enable_player_input():
 	
 
 func check_buffer_input():
+#	print(animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())
+#	print(int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60))
+# if 10 or less frames of current animation remain allow buffer input
 	#todo: add other inputs for buffer
-	if bufferInput == null: 
-		if currentState == CharacterState.ATTACKGROUND:
-			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-				bufferInput = attack
-	if chargingSmashAttack:
-		if Input.is_action_just_released(attack) && chargingSmashAttack:
-			chargingSmashAttack = false
-			apply_smash_attack_steps(2)
-	
+	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
+	if  (animationFramesLeft <= 10 || currentState == CharacterState.SHIELD)\
+	&& bufferInput == null: 
+		if currentState == CharacterState.ATTACKGROUND\
+		|| currentState == CharacterState.ROLL\
+		|| currentState == CharacterState.SHIELD:
+			pass
+#			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
+#				bufferInput = GlobalVariables.CharacterAnimations.JAB1
+#			elif Input.is_action_just_pressed(jump):
+#				print("jump")
+#				bufferInput = GlobalVariables.CharacterAnimations.JUMP
+#			elif Input.is_action_pressed(right) && Input.is_action_just_pressed(attack):
+#				bufferedSmashAttack = "right"
+#				bufferInput = GlobalVariables.CharacterAnimations.FSMASH
+#			elif Input.is_action_pressed(left) && Input.is_action_just_pressed(attack) :
+#				bufferedSmashAttack = "left"
+#				bufferInput = GlobalVariables.CharacterAnimations.FSMASH
+#			elif Input.is_action_pressed(up) && Input.is_action_just_pressed(attack):
+#				bufferedSmashAttack = "up"
+#				bufferInput = GlobalVariables.CharacterAnimations.UPSMASH
+#			elif Input.is_action_pressed(down) && Input.is_action_just_pressed(attack):
+#				bufferedSmashAttack = "down"
+#				bufferInput = GlobalVariables.CharacterAnimations.DSMASH
+#	elif  (animationFramesLeft <= 10 || currentState == CharacterState.SHIELD)\
+#	&& bufferInput != null: 
+#		if bufferInput == GlobalVariables.CharacterAnimations.FSMASH\
+#		&& Input.is_action_just_released(attack):
+#				bufferedSmashAttack = null
+#				bufferInput = GlobalVariables.CharacterAnimations.FTILT
+#		if bufferInput == GlobalVariables.CharacterAnimations.UPSMASH\
+#		&& Input.is_action_just_released(attack):
+#				bufferedSmashAttack = null
+#				bufferInput = GlobalVariables.CharacterAnimations.UPTILT
+#		if bufferInput == GlobalVariables.CharacterAnimations.DSMASH\
+#		&& Input.is_action_just_released(attack):
+#				bufferedSmashAttack = null
+#				bufferInput = GlobalVariables.CharacterAnimations.DTILT
 
 func buffered_input():
-	if bufferInput == null: 
+	if bufferInput == null:
 		jabCount = 0
 		return false
+#	match bufferInput: 
+#		GlobalVariables.CharacterAnimations.JAB1: 
+#			disableInput = false
+#			attack_handler_ground()
+#		GlobalVariables.CharacterAnimations.JUMP:
+#			disableInput = false
+#			jump_handler()
+#		GlobalVariables.CharacterAnimations.FSMASH:
+#			if bufferedSmashAttack == "right" && Input.is_action_pressed(right)\
+#			&& Input.is_action_pressed(attack):
+#				bufferedSmashAttack = null
+#				smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
+#				disableInput = false
+#			elif bufferedSmashAttack == "left" && Input.is_action_pressed(left)\
+#			&& Input.is_action_pressed(attack):
+#				bufferedSmashAttack = null
+#				smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
+#				disableInput = false
+#		GlobalVariables.CharacterAnimations.UPSMASH:
+#			if bufferedSmashAttack == "up" && Input.is_action_pressed(up)\
+#			&& Input.is_action_pressed(attack):
+#				bufferedSmashAttack = null
+#				smashAttack = GlobalVariables.SmashAttacks.SMASHUP
+#				disableInput = false
+#		GlobalVariables.CharacterAnimations.DSMASH:
+#			if bufferedSmashAttack == "down" && Input.is_action_pressed(down)\
+#			&& Input.is_action_pressed(attack):
+#				bufferedSmashAttack = null
+#				smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
+#				disableInput = false
+#		GlobalVariables.CharacterAnimations.FTILT: 
+#			disableInput = false
+#			animation_handler(GlobalVariables.CharacterAnimations.FTILT)
+#			currentAttack = GlobalVariables.CharacterAnimations.FTILT
+#		GlobalVariables.CharacterAnimations.DTILT: 
+#			disableInput = false
+#			animation_handler(GlobalVariables.CharacterAnimations.DTILT)
+#			currentAttack = GlobalVariables.CharacterAnimations.DTILT
+#		GlobalVariables.CharacterAnimations.UPTILT: 
+#			disableInput = false
+#			animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
+#			currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+	bufferInput = null
 	return true
 
 func gravity_on_off(status):

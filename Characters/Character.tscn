@@ -471,6 +471,7 @@ animations = [ {
 [sub_resource type="Animation" id=2]
 resource_name = "attack_getup"
 length = 0.7
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -663,18 +664,6 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 0, 1, 2 ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("AnimationPlayer:playback_speed")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 2.0 ]
-}
 
 [sub_resource type="Animation" id=5]
 length = 1.4
@@ -805,7 +794,8 @@ tracks/4/keys = {
 }
 
 [sub_resource type="Animation" id=7]
-length = 0.5
+length = 0.183333
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -825,7 +815,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.0333333, 0.0833333, 0.133333, 0.166667 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4 ]
@@ -837,7 +827,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.0333333, 0.0833333, 0.133333, 0.166667 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 12, -6 ), Vector2( 6, 8 ), Vector2( -12, 6 ), Vector2( -6, -8 ), Vector2( -2, -18 ) ]
@@ -849,7 +839,7 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.0333333, 0.0833333, 0.133333, 0.166667 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( -2, -2 ), Vector2( 0, -4 ), Vector2( 2, 2 ), Vector2( 0, 6 ), Vector2( 2, 14 ) ]
@@ -861,7 +851,7 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
+"times": PoolRealArray( 0, 0.0333333, 0.0833333, 0.133333, 0.166667 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ 93.2, 63.6, 93.2, 63.6, -4.2 ]
@@ -961,6 +951,7 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id=10]
 length = 0.7
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -1472,18 +1463,6 @@ tracks/2/keys = {
 "method": "apply_hurt_animation_step"
 } ]
 }
-tracks/3/type = "value"
-tracks/3/path = NodePath("AnimationPlayer:playback_speed")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 2.0 ]
-}
 
 [sub_resource type="Animation" id=20]
 length = 0.3
@@ -1510,18 +1489,6 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2 ]
-}
-tracks/2/type = "value"
-tracks/2/path = NodePath("AnimationPlayer:playback_speed")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 1.0 ]
 }
 
 [sub_resource type="Animation" id=21]
@@ -1574,18 +1541,6 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 2, 14 ), Vector2( 0, 14 ), Vector2( 2, 14 ) ]
-}
-tracks/4/type = "value"
-tracks/4/path = NodePath("AnimationPlayer:playback_speed")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 1.0 ]
 }
 
 [sub_resource type="Animation" id=22]
@@ -2347,7 +2302,6 @@ tracks/1/keys = {
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
 ]]
-scale = Vector2( 10, 10 )
 collision_mask = 0
 script = ExtResource( 1 )
 
@@ -2361,8 +2315,8 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "doublejump"
-frame = 3
+animation = "walk"
+frame = 1
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2412,7 +2366,7 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 15, 1 )
+position = Vector2( 9.6, -16.875 )
 scale = Vector2( 1.14286, 1.14286 )
 disabled = false
 
@@ -2422,11 +2376,11 @@ visible = false
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
-position = Vector2( -6, -8 )
+position = Vector2( -10, -13 )
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
-position = Vector2( 0, 6 )
-rotation = 1.11003
+position = Vector2( 2, 14 )
+rotation = -0.37001
 
 [node name="Shield" parent="." instance=ExtResource( 214 )]
 

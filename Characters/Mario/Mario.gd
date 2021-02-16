@@ -5,15 +5,6 @@ extends "res://Characters/Character.gd"
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#assign inputs to players
-	up = GlobalVariables.controlsP1.get("up")
-	down = GlobalVariables.controlsP1.get("down")
-	left = GlobalVariables.controlsP1.get("left")
-	right = GlobalVariables.controlsP1.get("right")
-	shield = GlobalVariables.controlsP1.get("shield")
-	jump = GlobalVariables.controlsP1.get("jump")
-	attack = GlobalVariables.controlsP1.get("attack")
-	shield = GlobalVariables.controlsP1.get("shield")
-	grab = GlobalVariables.controlsP1.get("grab")
 	
 	set_base_stats()
 	

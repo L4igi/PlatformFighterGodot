@@ -63,11 +63,13 @@ func apply_attack(hbType):
 		launchVectorX = abs(launchVectorX)
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity_"+hbString]
+	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier"]
 #	print(launchVector)
+	if attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD:
+		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier)
 	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
 
 func apply_grab(hbType):
-	print("applying grab")
 	character.grabbedCharacter = attackedCharacter
 	if character.currentMoveDirection == attackedCharacter.currentMoveDirection:
 		if attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.LEFT:
