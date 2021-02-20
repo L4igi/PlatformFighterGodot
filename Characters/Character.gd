@@ -39,7 +39,7 @@ var jabCombo = 3
 var dashAttackSpeed = 800
 var chargingSmashAttack = false
 var smashAttackTimer 
-var smashAttackInputTime = 5
+var smashAttackInputTime = 3
 var bufferedSmashAttack
 var pushingAttack = false
 #movement
@@ -204,43 +204,43 @@ func check_input(delta):
 		jump_handler()
 	if Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
 		create_smashAttack_timer()
-		bufferedSmashAttack = "right"
+		bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
 	elif Input.is_action_just_pressed(left) && currentState == CharacterState.GROUND:
 		create_smashAttack_timer()
-		bufferedSmashAttack = "left"
+		bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHL
 	elif Input.is_action_just_pressed(up) && currentState == CharacterState.GROUND:
 		create_smashAttack_timer()
-		bufferedSmashAttack = "up"
+		bufferedSmashAttack = GlobalVariables.CharacterAnimations.UPSMASH
 	elif Input.is_action_just_pressed(down) && currentState == CharacterState.GROUND:
 		create_smashAttack_timer()
-		bufferedSmashAttack = "down"
+		bufferedSmashAttack = GlobalVariables.CharacterAnimations.DSMASH
 	if smashAttackTimer.timer_running()\
 	&& Input.is_action_just_pressed(attack)\
-	&& bufferedSmashAttack == "right"\
+	&& bufferedSmashAttack != null\
 	&& Input.is_action_pressed(right)\
 	&& currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
+		smashAttack = bufferedSmashAttack
 		switch_to_state(CharacterState.ATTACKGROUND)
 	elif smashAttackTimer.timer_running()\
 	&& Input.is_action_just_pressed(attack)\
-	&& bufferedSmashAttack == "left"\
+	&& bufferedSmashAttack != null\
 	&& Input.is_action_pressed(left)\
 	&& currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
+		smashAttack = bufferedSmashAttack
 		switch_to_state(CharacterState.ATTACKGROUND)
 	elif smashAttackTimer.timer_running()\
 	&& Input.is_action_just_pressed(attack)\
-	&& bufferedSmashAttack == "up"\
+	&& bufferedSmashAttack != null\
 	&& Input.is_action_pressed(up)\
 	&& currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHUP
+		smashAttack = bufferedSmashAttack
 		switch_to_state(CharacterState.ATTACKGROUND)
 	elif smashAttackTimer.timer_running()\
 	&& Input.is_action_just_pressed(attack)\
-	&& bufferedSmashAttack == "down"\
+	&& bufferedSmashAttack != null\
 	&& Input.is_action_pressed(down)\
 	&& currentState == CharacterState.GROUND:
-		smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
+		smashAttack = bufferedSmashAttack
 		switch_to_state(CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(attack) && !inHitStun:
 		match currentState:
@@ -264,29 +264,9 @@ func attack_handler_ground():
 			smashAttack = null
 			apply_smash_attack_steps(2)
 	elif !disableInput:
-		print("smashattack " +str(smashAttack))
 		if smashAttack != null: 
-	#		print("SMASH " +str(smashAttack))
-			match smashAttack: 
-				GlobalVariables.SmashAttacks.SMASHRIGHT:
-					if currentMoveDirection != moveDirection.RIGHT:
-						currentMoveDirection = moveDirection.RIGHT
-						mirror_areas()
-					animation_handler(GlobalVariables.CharacterAnimations.FSMASH)
-					currentAttack = GlobalVariables.CharacterAnimations.FSMASH
-				GlobalVariables.SmashAttacks.SMASHLEFT:
-					if currentMoveDirection != moveDirection.LEFT:
-						currentMoveDirection = moveDirection.LEFT
-						mirror_areas()
-					animation_handler(GlobalVariables.CharacterAnimations.FSMASH)
-					currentAttack = GlobalVariables.CharacterAnimations.FSMASH
-				GlobalVariables.SmashAttacks.SMASHUP:
-					animation_handler(GlobalVariables.CharacterAnimations.UPSMASH)
-					currentAttack = GlobalVariables.CharacterAnimations.UPSMASH
-				GlobalVariables.SmashAttacks.SMASHDOWN:
-					animation_handler(GlobalVariables.CharacterAnimations.DSMASH)
-					currentAttack = GlobalVariables.CharacterAnimations.DSMASH
-		elif bufferInput != null || (abs(get_input_direction_x()) == 0 || jabCount > 0) \
+			attack_handler_ground_smash_attacks()
+		elif (abs(get_input_direction_x()) == 0 || jabCount > 0) \
 		&& get_input_direction_y() == 0:
 			jab_handler()
 		elif get_input_direction_y() < 0:
@@ -296,8 +276,12 @@ func attack_handler_ground():
 			animation_handler(GlobalVariables.CharacterAnimations.DTILT)
 			currentAttack = GlobalVariables.CharacterAnimations.DTILT
 		elif currentMaxSpeed == baseWalkMaxSpeed: 
-			animation_handler(GlobalVariables.CharacterAnimations.FTILT)
-			currentAttack = GlobalVariables.CharacterAnimations.FTILT
+			if currentMoveDirection == moveDirection.LEFT:
+				animation_handler(GlobalVariables.CharacterAnimations.FTILTL)
+				currentAttack = GlobalVariables.CharacterAnimations.FTILTL
+			elif currentMoveDirection == moveDirection.RIGHT:
+				animation_handler(GlobalVariables.CharacterAnimations.FTILTR)
+				currentAttack = GlobalVariables.CharacterAnimations.FTILTR
 		else: 
 			#dash attack
 			match currentMoveDirection:
@@ -308,6 +292,22 @@ func attack_handler_ground():
 			pushingAttack = true
 			animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 			currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
+			
+func attack_handler_ground_smash_attacks():
+	match smashAttack: 
+		GlobalVariables.CharacterAnimations.FSMASHR:
+			if currentMoveDirection != moveDirection.RIGHT:
+				currentMoveDirection = moveDirection.RIGHT
+				mirror_areas()
+			animation_handler(smashAttack)
+			currentAttack = smashAttack
+		GlobalVariables.CharacterAnimations.FSMASHL:
+			if currentMoveDirection != moveDirection.LEFT:
+				currentMoveDirection = moveDirection.LEFT
+				mirror_areas()
+	animation_handler(smashAttack)
+	currentAttack = smashAttack
+			
 			
 func jab_handler():
 	match jabCount:
@@ -823,7 +823,9 @@ func animation_handler(animationToPlay):
 			play_attack_animation("jab2")		
 		GlobalVariables.CharacterAnimations.JAB3:
 			play_attack_animation("jab2")
-		GlobalVariables.CharacterAnimations.FTILT:
+		GlobalVariables.CharacterAnimations.FTILTR:
+			play_attack_animation("ftilt")
+		GlobalVariables.CharacterAnimations.FTILTL:
 			play_attack_animation("ftilt")
 		GlobalVariables.CharacterAnimations.UPTILT:
 			play_attack_animation("uptilt")
@@ -845,7 +847,9 @@ func animation_handler(animationToPlay):
 			play_attack_animation("upsmash")
 		GlobalVariables.CharacterAnimations.DSMASH:
 			play_attack_animation("dsmash")
-		GlobalVariables.CharacterAnimations.FSMASH:
+		GlobalVariables.CharacterAnimations.FSMASHR:
+			play_attack_animation("fsmash")
+		GlobalVariables.CharacterAnimations.FSMASHL:
 			play_attack_animation("fsmash")
 		GlobalVariables.CharacterAnimations.HURT:
 			animationPlayer.stop(true)
@@ -1224,7 +1228,7 @@ func apply_throw(actionType):
 	
 func enable_player_input():
 	if buffered_input():
-		enable_player_input()
+		return
 	elif bufferAnimation:
 		animationPlayer.play()
 		bufferAnimation = false
@@ -1248,24 +1252,69 @@ func check_buffer_input():
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ROLL\
 		|| currentState == CharacterState.SHIELD:
-			pass
-#			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-#				bufferInput = GlobalVariables.CharacterAnimations.JAB1
-#			elif Input.is_action_just_pressed(jump):
-#				print("jump")
-#				bufferInput = GlobalVariables.CharacterAnimations.JUMP
-#			elif Input.is_action_pressed(right) && Input.is_action_just_pressed(attack):
-#				bufferedSmashAttack = "right"
-#				bufferInput = GlobalVariables.CharacterAnimations.FSMASH
-#			elif Input.is_action_pressed(left) && Input.is_action_just_pressed(attack) :
-#				bufferedSmashAttack = "left"
-#				bufferInput = GlobalVariables.CharacterAnimations.FSMASH
-#			elif Input.is_action_pressed(up) && Input.is_action_just_pressed(attack):
-#				bufferedSmashAttack = "up"
-#				bufferInput = GlobalVariables.CharacterAnimations.UPSMASH
-#			elif Input.is_action_pressed(down) && Input.is_action_just_pressed(attack):
-#				bufferedSmashAttack = "down"
-#				bufferInput = GlobalVariables.CharacterAnimations.DSMASH
+			if Input.is_action_just_released(right)\
+			|| Input.is_action_just_released(left)\
+			|| Input.is_action_just_released(up)\
+			|| Input.is_action_just_released(down):
+				bufferedSmashAttack = null
+				smashAttackTimer.stop_timer()
+			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
+				bufferInput = GlobalVariables.CharacterAnimations.JAB1
+			elif Input.is_action_just_pressed(jump):
+				bufferInput = GlobalVariables.CharacterAnimations.JUMP
+			elif Input.is_action_just_pressed(right):
+				create_smashAttack_timer()
+				bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
+			elif Input.is_action_just_pressed(left):
+				create_smashAttack_timer()
+				bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHL
+			elif Input.is_action_just_pressed(up):
+				create_smashAttack_timer()
+				bufferedSmashAttack = GlobalVariables.CharacterAnimations.UPSMASH
+			elif Input.is_action_just_pressed(down):
+				create_smashAttack_timer()
+				bufferedSmashAttack = GlobalVariables.CharacterAnimations.DSMASH
+			if smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& bufferedSmashAttack != null\
+			&& Input.is_action_pressed(right):
+				smashAttack = bufferedSmashAttack
+				bufferInput = bufferedSmashAttack
+			elif smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& bufferedSmashAttack != null\
+			&& Input.is_action_pressed(left):
+				smashAttack = bufferedSmashAttack
+				bufferInput = bufferedSmashAttack
+			elif smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& bufferedSmashAttack != null\
+			&& Input.is_action_pressed(up):
+				smashAttack = bufferedSmashAttack
+				bufferInput = bufferedSmashAttack
+			elif smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& bufferedSmashAttack != null\
+			&& Input.is_action_pressed(down):
+				smashAttack = bufferedSmashAttack
+				bufferInput = bufferedSmashAttack
+			if !smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(right):
+				bufferInput = GlobalVariables.CharacterAnimations.FTILTR
+			if !smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(left):
+				bufferInput = GlobalVariables.CharacterAnimations.FTILTL
+			if !smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(up):
+				bufferInput = GlobalVariables.CharacterAnimations.UPTILT
+			if !smashAttackTimer.timer_running()\
+			&& Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(down):
+				bufferInput = GlobalVariables.CharacterAnimations.DTILT
+				
 #	elif  (animationFramesLeft <= 10 || currentState == CharacterState.SHIELD)\
 #	&& bufferInput != null: 
 #		if bufferInput == GlobalVariables.CharacterAnimations.FSMASH\
@@ -1282,51 +1331,44 @@ func check_buffer_input():
 #				bufferInput = GlobalVariables.CharacterAnimations.DTILT
 
 func buffered_input():
+	#print("checking buffered Input")
 	if bufferInput == null:
 		jabCount = 0
 		return false
-#	match bufferInput: 
-#		GlobalVariables.CharacterAnimations.JAB1: 
-#			disableInput = false
-#			attack_handler_ground()
-#		GlobalVariables.CharacterAnimations.JUMP:
-#			disableInput = false
-#			jump_handler()
-#		GlobalVariables.CharacterAnimations.FSMASH:
-#			if bufferedSmashAttack == "right" && Input.is_action_pressed(right)\
-#			&& Input.is_action_pressed(attack):
-#				bufferedSmashAttack = null
-#				smashAttack = GlobalVariables.SmashAttacks.SMASHRIGHT
-#				disableInput = false
-#			elif bufferedSmashAttack == "left" && Input.is_action_pressed(left)\
-#			&& Input.is_action_pressed(attack):
-#				bufferedSmashAttack = null
-#				smashAttack = GlobalVariables.SmashAttacks.SMASHLEFT
-#				disableInput = false
-#		GlobalVariables.CharacterAnimations.UPSMASH:
-#			if bufferedSmashAttack == "up" && Input.is_action_pressed(up)\
-#			&& Input.is_action_pressed(attack):
-#				bufferedSmashAttack = null
-#				smashAttack = GlobalVariables.SmashAttacks.SMASHUP
-#				disableInput = false
-#		GlobalVariables.CharacterAnimations.DSMASH:
-#			if bufferedSmashAttack == "down" && Input.is_action_pressed(down)\
-#			&& Input.is_action_pressed(attack):
-#				bufferedSmashAttack = null
-#				smashAttack = GlobalVariables.SmashAttacks.SMASHDOWN
-#				disableInput = false
-#		GlobalVariables.CharacterAnimations.FTILT: 
-#			disableInput = false
-#			animation_handler(GlobalVariables.CharacterAnimations.FTILT)
-#			currentAttack = GlobalVariables.CharacterAnimations.FTILT
-#		GlobalVariables.CharacterAnimations.DTILT: 
-#			disableInput = false
-#			animation_handler(GlobalVariables.CharacterAnimations.DTILT)
-#			currentAttack = GlobalVariables.CharacterAnimations.DTILT
-#		GlobalVariables.CharacterAnimations.UPTILT: 
-#			disableInput = false
-#			animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
-#			currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+	else: 
+		match bufferInput: 
+			GlobalVariables.CharacterAnimations.JAB1:
+				jab_handler()
+			GlobalVariables.CharacterAnimations.JUMP:
+				jump_handler()
+			GlobalVariables.CharacterAnimations.FSMASHR:
+				attack_handler_ground_smash_attacks()
+			GlobalVariables.CharacterAnimations.FSMASHL:
+				attack_handler_ground_smash_attacks()
+			GlobalVariables.CharacterAnimations.UPSMASH:
+				attack_handler_ground_smash_attacks()
+			GlobalVariables.CharacterAnimations.DSMASH: 
+				attack_handler_ground_smash_attacks()
+			GlobalVariables.CharacterAnimations.UPTILT:
+				animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
+				currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+			GlobalVariables.CharacterAnimations.DTILT:
+				animation_handler(GlobalVariables.CharacterAnimations.DTILT)
+				currentAttack = GlobalVariables.CharacterAnimations.DTILT
+			GlobalVariables.CharacterAnimations.FTILTR:
+				if currentMoveDirection != moveDirection.RIGHT:
+					currentMoveDirection = moveDirection.RIGHT
+					mirror_areas()
+				animation_handler(GlobalVariables.CharacterAnimations.FTILTR)
+				currentAttack = GlobalVariables.CharacterAnimations.FTILTR
+			GlobalVariables.CharacterAnimations.FTILTL:
+				if currentMoveDirection != moveDirection.LEFT:
+					currentMoveDirection = moveDirection.LEFT
+					mirror_areas()
+				animation_handler(GlobalVariables.CharacterAnimations.FTILTL)
+				currentAttack = GlobalVariables.CharacterAnimations.FTILTL
+	if bufferInput != GlobalVariables.CharacterAnimations.JAB1: 
+		jabCount = 0
 	bufferInput = null
 	return true
 

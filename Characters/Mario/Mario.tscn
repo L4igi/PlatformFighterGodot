@@ -813,7 +813,7 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-animation = "fsmash"
+animation = "dair"
 frame = 0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
