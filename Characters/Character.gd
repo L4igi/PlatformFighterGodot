@@ -15,12 +15,15 @@ var runMaxSpeed = 600
 var airMaxSpeed = 600
 var airStopForce = 1000
 var groundStopForce = 1500
-var jumpSpeed = 700
+var jumpSpeed = 800
+var shortHopSpeed = 600
 var currentMaxSpeed = runMaxSpeed
 #jump
 var jumpCount = 0
 var availabelJumps = 2
-var shortHop = true
+var justJumped = false
+var shortHopFrames = 3
+var shortHop = false
 onready var shortHopTimer
 #platform
 onready var dropDownTimer
@@ -385,10 +388,7 @@ func air_handler(delta):
 		input_movement_physics_air(delta)
 		# Move based on the velocity and snap to the ground.
 		velocity = move_and_slide(velocity)
-		if Input.is_action_just_pressed(jump) && jumpCount == 0: 
-			jumpCount = 1
-			create_jump_timer(10)
-		elif Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
+		if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
 			animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
 			if gravity!=baseGravity:
 				gravity=baseGravity
@@ -399,8 +399,6 @@ func air_handler(delta):
 			elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() != 1:
 				velocity.x = 0
 			jumpCount += 1
-		if Input.is_action_just_released(jump) && jumpCount == 1:
-			shortHop = true
 		#Fastfall
 		if Input.is_action_just_pressed(down) && !onSolidGround && abs(int(velocity.y)) >= onSolidGroundThreashold:
 			gravity = fastFallGravity
@@ -413,11 +411,11 @@ func air_handler(delta):
 			set_collision_mask_bit(1,true)
 
 func jump_handler():
-	jumpCount = 0
-	switch_to_state(CharacterState.AIR)
-	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
-	#reset gravity if player is jumping
-	velocity.y = -jumpSpeed
+	#todo: if currentstate == edge : create edge hop
+	shortHop = false
+	jumpCount = 1
+	disableInput = true
+	create_shorthop_timer()
 		
 func double_jump_handler():
 	animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
@@ -430,20 +428,24 @@ func double_jump_handler():
 	elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() != 1:
 		velocity.x = 0
 	jumpCount += 1
+	
+func create_shorthop_timer():
+	shortHopTimer.set_frames(shortHopFrames)
+	shortHopTimer.start_timer()
 		
 func _on_short_hop_timeout():
-	if shortHop: 
-		velocity.y = 0
+	if shortHop:
+		velocity.y = -shortHopSpeed
+	else: 
+		velocity.y = -jumpSpeed
+	disableInput = false
+	switch_to_state(CharacterState.AIR)
+	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 				
 func _on_drop_timer_timeout():
 	if inputTimeout:
 		inputTimeout = false
 	
-#creates timer to determine if short or fullhop
-func create_jump_timer(waittime):
-	shortHop = false
-	shortHopTimer.set_frames(waittime)
-	shortHopTimer.start_timer()
 	
 func calc_hitstun_velocity(delta):
 	if velocity.x < 0: 
@@ -728,9 +730,7 @@ func edge_handler(delta):
 		elif Input.is_action_just_pressed(jump):
 			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
-			switch_to_state(CharacterState.AIR)
-			velocity.y = -jumpSpeed
-			jumpCount += 1
+			jump_handler()
 		elif Input.is_action_just_pressed(left):
 			if global_position.x < snappedEdge.global_position.x:
 				snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
@@ -1242,6 +1242,9 @@ func enable_player_input():
 	
 
 func check_buffer_input():
+	if shortHopTimer.timer_running():
+		if Input.is_action_just_released(jump):
+			shortHop = true
 #	print(animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())
 #	print(int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60))
 # if 10 or less frames of current animation remain allow buffer input
@@ -1252,12 +1255,6 @@ func check_buffer_input():
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ROLL\
 		|| currentState == CharacterState.SHIELD:
-			if Input.is_action_just_released(right)\
-			|| Input.is_action_just_released(left)\
-			|| Input.is_action_just_released(up)\
-			|| Input.is_action_just_released(down):
-				bufferedSmashAttack = null
-				smashAttackTimer.stop_timer()
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
 			elif Input.is_action_just_pressed(jump):
@@ -1464,8 +1461,8 @@ func enable_disable_hurtboxes(enable = true):
 			singleHurtbox.set_deferred("disabled",true)
 
 func switch_from_state_to_airborn():
-	switch_to_state(CharacterState.AIR)
 	jumpCount = 1
+	switch_to_state(CharacterState.AIR)
 	enable_player_input()
 	if currentState == CharacterState.HITSTUNGROUND:
 		inHitStun = false
