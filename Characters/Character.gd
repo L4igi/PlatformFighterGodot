@@ -1,5 +1,6 @@
 extends KinematicBody2D
-
+#update delta time to use in functions 
+var deltaTime = 0
 #base stats to return to after changes were made
 var baseDisableInputInfluence = 1200
 var baseWalkMaxSpeed = 100
@@ -84,6 +85,8 @@ onready var characterShield = get_node("Shield")
 var rollDistance = 150
 var rolling = false
 var shieldStunTimer
+var shieldDropTimer
+var shieldDropFrames = 15
 #grab
 onready var grabTimer
 var grabbedCharacter = null
@@ -166,9 +169,14 @@ func _ready():
 	add_child(shieldStunTimer)
 	shieldStunTimer.connect("timeout", self, "_on_shieldStunTimer_timer_timeout")
 	shieldStunTimer.set_name("ShieldStunTimer")
+	shieldDropTimer = frameTimer.instance()
+	add_child(shieldDropTimer)
+	shieldDropTimer.connect("timeout", self, "_on_shieldDropTimer_timer_timeout")
+	shieldDropTimer.set_name("shieldDropTimer")
 	animationPlayer.set_animation_process_mode(0)
 
 func _physics_process(delta):
+	deltaTime = delta
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -262,7 +270,7 @@ func attack_handler_ground():
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
 	if chargingSmashAttack:
-		if Input.is_action_just_released(attack) && chargingSmashAttack:
+		if (Input.is_action_just_released(attack) || !Input.is_action_pressed(attack)) && chargingSmashAttack:
 			chargingSmashAttack = false
 			smashAttack = null
 			apply_smash_attack_steps(2)
@@ -434,13 +442,14 @@ func create_shorthop_timer():
 	shortHopTimer.start_timer()
 		
 func _on_short_hop_timeout():
-	if shortHop:
-		velocity.y = -shortHopSpeed
-	else: 
-		velocity.y = -jumpSpeed
-	disableInput = false
-	switch_to_state(CharacterState.AIR)
-	animation_handler(GlobalVariables.CharacterAnimations.JUMP)
+	if !bufferInput:
+		if shortHop:
+			velocity.y = -shortHopSpeed
+		else: 
+			velocity.y = -jumpSpeed
+		disableInput = false
+		switch_to_state(CharacterState.AIR)
+		animation_handler(GlobalVariables.CharacterAnimations.JUMP)
 				
 func _on_drop_timer_timeout():
 	if inputTimeout:
@@ -553,13 +562,11 @@ func _on_hitstun_timeout():
 	
 func shield_handler(delta):
 	process_movement_physics(delta)
-	if !shieldStunTimer.timer_running():
+	if !shieldStunTimer.timer_running() && !shieldDropTimer.timer_running():
 		if Input.is_action_just_released(shield):
 			characterShield.disable_shield()
-			if get_input_direction_y() >= 0.5:
-				switch_to_state(CharacterState.CROUCH)
-			else:
-				switch_to_state(CharacterState.GROUND)
+			switch_to_state(CharacterState.GROUND)
+			create_shield_drop_timer()
 		elif Input.is_action_just_pressed(jump):
 			characterShield.disable_shield()
 			jump_handler()
@@ -585,7 +592,31 @@ func shield_handler(delta):
 			#todo implement spotdodge mechanic
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.SPOTDODGE)
-		
+
+func create_shieldStun_timer(shieldStunFrames):
+	#todo replace frames with shieldstunframes
+	shieldStunTimer.set_frames(60)
+	shieldStunTimer.start_timer()
+	
+func _on_shieldStunTimer_timer_timeout():
+	if !Input.is_action_pressed(shield):
+		characterShield.disable_shield()
+		if get_input_direction_y() >= 0.5:
+			switch_to_state(CharacterState.CROUCH)
+		else:
+			switch_to_state(CharacterState.GROUND)
+			
+func create_shield_drop_timer():
+	shieldDropTimer.set_frames(shieldDropFrames)
+	shieldDropTimer.start_timer()
+	disableInput = true
+	animation_handler(GlobalVariables.CharacterAnimations.SHIELDDROP)
+
+func _on_shieldDropTimer_timer_timeout():
+	if get_input_direction_y() >= 0.5:
+		switch_to_state(CharacterState.CROUCH)
+	disableInput = false
+
 func grab_handler(delta):
 	process_movement_physics(delta)
 	if abs(int(velocity.y)) >= onSolidGroundThreashold:
@@ -889,6 +920,8 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("edgeSnap")
 		GlobalVariables.CharacterAnimations.CROUCH:
 			animationPlayer.play("crouch")
+		GlobalVariables.CharacterAnimations.SHIELDDROP:
+			animationPlayer.play("shielddrop")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -1177,10 +1210,6 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier):
 	#calculate shield hit pushback
 	pass
 	
-func create_shieldStun_timer(shieldStunFrames):
-	shieldStunTimer.set_frames(60)
-	shieldStunTimer.start_timer()
-	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
 	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
@@ -1259,6 +1288,11 @@ func check_buffer_input():
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
 			elif Input.is_action_just_pressed(jump):
 				bufferInput = GlobalVariables.CharacterAnimations.JUMP
+				shortHop = false
+				jumpCount = 1
+				create_shorthop_timer()
+			elif Input.is_action_just_pressed(grab):
+				bufferInput = GlobalVariables.CharacterAnimations.GRAB
 			elif Input.is_action_just_pressed(right):
 				create_smashAttack_timer()
 				bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
@@ -1295,40 +1329,46 @@ func check_buffer_input():
 			&& Input.is_action_pressed(down):
 				smashAttack = bufferedSmashAttack
 				bufferInput = bufferedSmashAttack
-			if !smashAttackTimer.timer_running()\
+			elif !smashAttackTimer.timer_running()\
 			&& Input.is_action_just_pressed(attack)\
 			&& Input.is_action_pressed(right):
 				bufferInput = GlobalVariables.CharacterAnimations.FTILTR
-			if !smashAttackTimer.timer_running()\
+			elif !smashAttackTimer.timer_running()\
 			&& Input.is_action_just_pressed(attack)\
 			&& Input.is_action_pressed(left):
 				bufferInput = GlobalVariables.CharacterAnimations.FTILTL
-			if !smashAttackTimer.timer_running()\
+			elif !smashAttackTimer.timer_running()\
 			&& Input.is_action_just_pressed(attack)\
 			&& Input.is_action_pressed(up):
 				bufferInput = GlobalVariables.CharacterAnimations.UPTILT
-			if !smashAttackTimer.timer_running()\
+			elif !smashAttackTimer.timer_running()\
 			&& Input.is_action_just_pressed(attack)\
 			&& Input.is_action_pressed(down):
 				bufferInput = GlobalVariables.CharacterAnimations.DTILT
 				
-#	elif  (animationFramesLeft <= 10 || currentState == CharacterState.SHIELD)\
-#	&& bufferInput != null: 
-#		if bufferInput == GlobalVariables.CharacterAnimations.FSMASH\
-#		&& Input.is_action_just_released(attack):
-#				bufferedSmashAttack = null
-#				bufferInput = GlobalVariables.CharacterAnimations.FTILT
-#		if bufferInput == GlobalVariables.CharacterAnimations.UPSMASH\
-#		&& Input.is_action_just_released(attack):
-#				bufferedSmashAttack = null
-#				bufferInput = GlobalVariables.CharacterAnimations.UPTILT
-#		if bufferInput == GlobalVariables.CharacterAnimations.DSMASH\
-#		&& Input.is_action_just_released(attack):
-#				bufferedSmashAttack = null
-#				bufferInput = GlobalVariables.CharacterAnimations.DTILT
+		elif currentState == CharacterState.ATTACKAIR: 
+			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
+				bufferInput = GlobalVariables.CharacterAnimations.NAIR
+			elif Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(right):
+				if currentMoveDirection == moveDirection.RIGHT:
+					bufferInput = GlobalVariables.CharacterAnimations.FAIR
+				elif currentMoveDirection == moveDirection.LEFT:
+					bufferInput = GlobalVariables.CharacterAnimations.BAIR
+			elif Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(left):
+				if currentMoveDirection == moveDirection.LEFT:
+					bufferInput = GlobalVariables.CharacterAnimations.FAIR
+				elif currentMoveDirection == moveDirection.RIGHT:
+					bufferInput = GlobalVariables.CharacterAnimations.BAIR
+			elif Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(up):
+				bufferInput = GlobalVariables.CharacterAnimations.UPAIR
+			elif Input.is_action_just_pressed(attack)\
+			&& Input.is_action_pressed(down):
+				bufferInput = GlobalVariables.CharacterAnimations.DAIR
 
 func buffered_input():
-	#print("checking buffered Input")
 	if bufferInput == null:
 		jabCount = 0
 		return false
@@ -1337,7 +1377,16 @@ func buffered_input():
 			GlobalVariables.CharacterAnimations.JAB1:
 				jab_handler()
 			GlobalVariables.CharacterAnimations.JUMP:
-				jump_handler()
+				shortHopTimer.stop_timer()
+				if shortHop:
+					velocity.y = -shortHopSpeed
+				else: 
+					velocity.y = -jumpSpeed
+				disableInput = false
+				switch_to_state(CharacterState.AIR)
+				animation_handler(GlobalVariables.CharacterAnimations.JUMP)
+			GlobalVariables.CharacterAnimations.GRAB:
+				switch_to_state(CharacterState.GRAB)
 			GlobalVariables.CharacterAnimations.FSMASHR:
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.FSMASHL:
@@ -1364,6 +1413,21 @@ func buffered_input():
 					mirror_areas()
 				animation_handler(GlobalVariables.CharacterAnimations.FTILTL)
 				currentAttack = GlobalVariables.CharacterAnimations.FTILTL
+			GlobalVariables.CharacterAnimations.NAIR: 
+				animation_handler(GlobalVariables.CharacterAnimations.NAIR)
+				currentAttack = GlobalVariables.CharacterAnimations.NAIR
+			GlobalVariables.CharacterAnimations.FAIR: 
+				animation_handler(GlobalVariables.CharacterAnimations.FAIR)
+				currentAttack = GlobalVariables.CharacterAnimations.FAIR
+			GlobalVariables.CharacterAnimations.BAIR: 
+				animation_handler(GlobalVariables.CharacterAnimations.BAIR)
+				currentAttack = GlobalVariables.CharacterAnimations.BAIR
+			GlobalVariables.CharacterAnimations.UPAIR: 
+				animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
+				currentAttack = GlobalVariables.CharacterAnimations.UPAIR
+			GlobalVariables.CharacterAnimations.DAIR: 
+				animation_handler(GlobalVariables.CharacterAnimations.DAIR)
+				currentAttack = GlobalVariables.CharacterAnimations.DAIR
 	if bufferInput != GlobalVariables.CharacterAnimations.JAB1: 
 		jabCount = 0
 	bufferInput = null

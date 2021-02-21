@@ -107,10 +107,11 @@ func match_collision_ground():
 		character.CharacterState.GROUND:
 			enable_collision()
 		character.CharacterState.AIR:
-			if check_character_above():
-				enable_collision()
-			else: 
-				disable_collision()
+			disable_collision()
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
@@ -143,10 +144,11 @@ func match_collision_ground():
 func match_collision_air():
 	match areaCollisionObject.currentState:
 		character.CharacterState.GROUND:
-			if check_character_above():
-				enable_collision()
-			else: 
-				disable_collision()
+			disable_collision()
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
 		character.CharacterState.AIR:
 			disable_collision()
 		character.CharacterState.EDGE:
@@ -156,10 +158,11 @@ func match_collision_air():
 		character.CharacterState.ATTACKAIR:
 			disable_collision()
 		character.CharacterState.HITSTUNGROUND:
-			if check_character_above():
-				enable_collision()
-			else: 
-				disable_collision()
+			disable_collision()
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
 		character.CharacterState.HITSTUNAIR:
 			disable_collision()
 		character.CharacterState.SPECIALGROUND:
@@ -299,7 +302,7 @@ func match_collision_hitstunground():
 		character.CharacterState.GROUND:
 			enable_collision()
 		character.CharacterState.AIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
@@ -706,10 +709,11 @@ func match_collision_crouch():
 		character.CharacterState.GROUND:
 			enable_collision()
 		character.CharacterState.AIR:
-			if check_character_above():
-				enable_collision()
-			else: 
-				disable_collision()
+			disable_collision()
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
