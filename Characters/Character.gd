@@ -1,6 +1,4 @@
 extends KinematicBody2D
-#update delta time to use in functions 
-var deltaTime = 0
 #base stats to return to after changes were made
 var baseDisableInputInfluence = 1200
 var baseWalkMaxSpeed = 100
@@ -98,6 +96,11 @@ var weight = 100
 var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
+#hitlag 
+var hitLagTimer
+var backUpVelocity = 0
+var backUpHitStunTime = 0
+var backUpDisableInputDI = false
 
 enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH}
 #signal for character state change
@@ -173,10 +176,13 @@ func _ready():
 	add_child(shieldDropTimer)
 	shieldDropTimer.connect("timeout", self, "_on_shieldDropTimer_timer_timeout")
 	shieldDropTimer.set_name("shieldDropTimer")
+	hitLagTimer = frameTimer.instance()
+	add_child(hitLagTimer)
+	hitLagTimer.connect("timeout", self, "_on_hitLagTimer_timer_timeout")
+	hitLagTimer.set_name("hitLagTimer")
 	animationPlayer.set_animation_process_mode(0)
 
 func _physics_process(delta):
-	deltaTime = delta
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -337,7 +343,7 @@ func jab_handler():
 		
 func attack_handler_air():
 	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
-	&& !dropDownTimer.timer_running():
+	&& !dropDownTimer.timer_running() && !hitLagTimer.timer_running():
 		switch_to_state(CharacterState.GROUND)
 		#toggle_all_hitboxes("off")
 	elif !disableInput:
@@ -472,14 +478,14 @@ func calc_hitstun_velocity(delta):
 	velocity.y += gravity * delta
 	
 func hitstun_handler(delta):
-	if disableInput:
+	if disableInput && inHitStun:
 		if shortHitStun: 
 			return
 #		if abs(int(velocity.y)) >= onSolidGroundThreashold && currentState == CharacterState.HITSTUNGROUND:
 #			switch_from_state_to_airborn_hitstun()
 		if currentState == CharacterState.HITSTUNAIR:
 			#BOUNCING CHARACTER
-			if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
+			if onSolidGround && lastVelocity.y > bounceThreashold && inHitStun:
 				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 				initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
@@ -492,7 +498,7 @@ func hitstun_handler(delta):
 #			if abs(int(velocity.y)) >= onSolidGroundThreashold:
 #				switch_from_state_to_airborn()
 	elif !disableInput:
-		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
+		if onSolidGround && lastVelocity.y > bounceThreashold && inHitStun:
 			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
@@ -599,12 +605,9 @@ func create_shieldStun_timer(shieldStunFrames):
 	shieldStunTimer.start_timer()
 	
 func _on_shieldStunTimer_timer_timeout():
-	if !Input.is_action_pressed(shield):
-		characterShield.disable_shield()
-		if get_input_direction_y() >= 0.5:
-			switch_to_state(CharacterState.CROUCH)
-		else:
-			switch_to_state(CharacterState.GROUND)
+	characterShield.disable_shield()
+	switch_to_state(CharacterState.GROUND)
+	create_shield_drop_timer()
 			
 func create_shield_drop_timer():
 	shieldDropTimer.set_frames(shieldDropFrames)
@@ -1178,8 +1181,6 @@ func switch_to_state(state):
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling):
-	if currentState == CharacterState.SHIELD: 
-		return
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
@@ -1201,20 +1202,41 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		shortHitStun = true
 		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
-	create_hitstun_timer(hitStun)
+	backUpHitStunTime = hitStun
+	create_hitlag_timer()
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier):
 	var shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	create_shieldStun_timer(shieldStunFrames)
 	#calculate shielddamge 
 	#calculate shield hit pushback
-	pass
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
 	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
 #	print("calculatedKnockBack " +str(calculatedKnockBack))
 	return calculatedKnockBack
+
+func create_hitlag_timer():
+	print(name +str(" hitlag started"))
+	animationPlayer.stop(false)
+	gravity_on_off("off")
+	backUpVelocity = velocity
+	velocity = Vector2(0,0)
+	disableInput = true
+	backUpDisableInputDI = disableInputDI
+	disableInputDI = false
+	hitLagTimer.set_frames(60)
+	hitLagTimer.start_timer()
+
+func _on_hitLagTimer_timer_timeout():
+	print(name +str("hitlag ended"))
+	gravity_on_off("on")
+	velocity = backUpVelocity
+	animationPlayer.play()
+	disableInputDI = backUpDisableInputDI
+	if currentState == CharacterState.HITSTUNAIR: 
+		create_hitstun_timer(backUpHitStunTime)
 
 func is_grabbed_handler(byCharacter):
 	characterShield.disable_shield()
@@ -1268,7 +1290,7 @@ func enable_player_input():
 		animationPlayer.set_speed_scale(1.0)
 		#reset InteractionArea Position/Rotation/Scale to default
 		$InteractionAreas.reset_global_transform()
-	
+		
 
 func check_buffer_input():
 	if shortHopTimer.timer_running():

@@ -67,7 +67,11 @@ func apply_attack(hbType):
 #	print(launchVector)
 	if attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD:
 		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier)
-	attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
+	else:
+		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
+	disable_all_hitboxes()
+	character.create_hitlag_timer()
+
 
 func apply_grab(hbType):
 	character.grabbedCharacter = attackedCharacter

@@ -7,7 +7,8 @@
     "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "JAB2":{
     "damage_neutral":5,
@@ -16,7 +17,8 @@
     "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "JAB3":{
     "damage_neutral":5,
@@ -25,16 +27,28 @@
     "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
-  "FTILT":{
+  "FTILTR":{
     "damage_neutral":5,
     "hitStun_neutral":120,
     "launchVelocity_neutral":750,
     "launchAngle_neutral":330,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
+  },
+  "FTILTL":{
+    "damage_neutral":5,
+    "hitStun_neutral":120,
+    "launchVelocity_neutral":750,
+    "launchAngle_neutral":330,
+    "knockBackGrowth_neutral" :100,
+    "effect_neutral": "neutral",
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "UPTILT":{
     "damage_neutral":5,
@@ -43,7 +57,8 @@
     "launchAngle_neutral":270,
     "knockBackGrowth_neutral" :150,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "DTILT":{
     "damage_neutral":5,
@@ -52,7 +67,8 @@
     "launchAngle_neutral":350,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "NAIR":{
     "damage_neutral":5,
@@ -61,7 +77,8 @@
     "launchAngle_neutral":0,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "UPAIR":{
     "damage_neutral":5,
@@ -70,7 +87,8 @@
     "launchAngle_neutral":270,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "DAIR":{
     "damage_neutral":5,
@@ -79,7 +97,8 @@
     "launchAngle_neutral":340,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "FAIR":{
     "damage_neutral":5,
@@ -88,7 +107,8 @@
     "launchAngle_neutral":90,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "BAIR":{
     "damage_neutral":5,
@@ -97,7 +117,8 @@
     "launchAngle_neutral":10,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "DASHATTACK":{
     "damage_neutral":5,
@@ -106,7 +127,8 @@
     "launchAngle_neutral":330,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "UPSMASH":{
     "damage_neutral":5,
@@ -115,18 +137,19 @@
     "launchAngle_neutral":290,
     "knockBackGrowth_neutral" :100,
     "effect_neutral": "neutral",
-    "shieldStun_multiplier" : 1
+    "shieldStun_multiplier" : 1,
+    "hitlag_multiplier" : 1
   },
   "GRABJAB":{
-    "damage":2.5,
-  },
+    "damage":2.5
+},
   "UTHROW":{
     "damage":5,
     "hitStun":30,
     "launchVelocity":1100,
     "launchAngle":270,
     "knockBackGrowth" :100,
-    "effect": "neutral",
+    "effect": "neutral"
   },
   "DTHROW":{
     "damage":5,
@@ -134,7 +157,7 @@
     "launchVelocity":1100,
     "launchAngle":70,
     "knockBackGrowth" :100,
-    "effect": "neutral",
+    "effect": "neutral"
   },
   "FTHROW":{
     "damage":5,
@@ -142,7 +165,7 @@
     "launchVelocity":1000,
     "launchAngle":330,
     "knockBackGrowth" :100,
-    "effect": "neutral",
+    "effect": "neutral"
   },
   "BTHROW":{
     "damage":5,
@@ -150,6 +173,6 @@
     "launchVelocity":1000,
     "launchAngle":200,
     "knockBackGrowth" :100,
-    "effect": "neutral",
+    "effect": "neutral"
   }
 }
