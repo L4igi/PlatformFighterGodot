@@ -64,7 +64,7 @@ var bufferInput = null
 #animation needs to finish 
 var bufferAnimation = false
 #hitstun 
-var initLaunchVelocity = 0
+var initLaunchVelocity = Vector2.ZERO
 var launchSpeedDecay = 0.025
 var inHitStun = false
 var shortHitStun = false
@@ -1189,8 +1189,9 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	damagePercent += damage
 	var calulatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
 	#print(damagePercent)
-	velocity = Vector2(launchVectorX,launchVectorY) * calulatedVelocity
-	initLaunchVelocity = velocity
+	velocity = Vector2.ZERO
+	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * calulatedVelocity
+	backUpVelocity = initLaunchVelocity
 	hitStunTimer.stop_timer()
 	#collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold || currentState == CharacterState.INGRAB:
@@ -1218,10 +1219,12 @@ func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScal
 	return calculatedKnockBack
 
 func create_hitlag_timer():
-	print(name +str(" hitlag started"))
 	animationPlayer.stop(false)
 	gravity_on_off("off")
-	backUpVelocity = velocity
+	if currentState == CharacterState.HITSTUNAIR || currentState == CharacterState.HITSTUNGROUND:
+		backUpVelocity = initLaunchVelocity
+	else: 
+		backUpVelocity = velocity
 	velocity = Vector2(0,0)
 	disableInput = true
 	backUpDisableInputDI = disableInputDI
@@ -1230,7 +1233,6 @@ func create_hitlag_timer():
 	hitLagTimer.start_timer()
 
 func _on_hitLagTimer_timer_timeout():
-	print(name +str("hitlag ended"))
 	gravity_on_off("on")
 	velocity = backUpVelocity
 	animationPlayer.play()
@@ -1490,7 +1492,7 @@ func animation_invincibility_handler(step = 0):
 		0:
 			disableInput = true
 			collisionAreaShape.set_deferred("disabled",true)
-			create_invincible_timer(animationPlayer.current_animation_length *60)
+			create_invincible_timer(int(animationPlayer.current_animation_length *60))
 		1:
 			disableInput = false
 			collisionAreaShape.set_deferred("disabled",false)
@@ -1537,6 +1539,7 @@ func create_invincible_timer(duration = 0):
 	invincibilityTimer.start_timer()
 
 func _on_invincibility_timer_timeout():
+	print("invincibility timeout")
 	enable_disable_hurtboxes(true)
 
 func enable_disable_hurtboxes(enable = true):

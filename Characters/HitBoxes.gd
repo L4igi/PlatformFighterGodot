@@ -65,12 +65,14 @@ func apply_attack(hbType):
 	var launchVelocity = currentAttackData["launchVelocity_"+hbString]
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier"]
 #	print(launchVector)
+	if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
+		character.disable_pushing_attack()
+	disable_all_hitboxes()
+	character.create_hitlag_timer()
 	if attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD:
 		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier)
 	else:
 		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
-	disable_all_hitboxes()
-	character.create_hitlag_timer()
 
 
 func apply_grab(hbType):
