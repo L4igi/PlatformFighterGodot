@@ -2352,7 +2352,7 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "upair"
+animation = "jump"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2411,7 +2411,7 @@ visible = false
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
-position = Vector2( 2, -18 )
+position = Vector2( -10, -13 )
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
 position = Vector2( 0.528132, 14 )
@@ -2420,7 +2420,7 @@ rotation = -0.37001
 [node name="Shield" parent="." instance=ExtResource( 214 )]
 
 [node name="LowestCheckYPoint" type="Node2D" parent="."]
-position = Vector2( 0, 24 )
+position = Vector2( 0, 32 )
 
 [node name="GrabPoint" type="Position2D" parent="."]
 position = Vector2( 25, 0 )

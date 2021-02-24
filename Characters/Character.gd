@@ -14,7 +14,7 @@ var runMaxSpeed = 600
 var airMaxSpeed = 600
 var airStopForce = 1000
 var groundStopForce = 1500
-var jumpSpeed = 800
+var jumpSpeed = 710
 var shortHopSpeed = 600
 var currentMaxSpeed = runMaxSpeed
 #jump
@@ -1199,10 +1199,14 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		shortHitStun = false
 		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURT)
+		animationPlayer.get_parent().set_animation("hurt")
+		animationPlayer.get_parent().set_frame(0)
 	else: 
 		shortHitStun = true
 		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
+		animationPlayer.get_parent().set_animation("hurtshort")
+		animationPlayer.get_parent().set_frame(0)
 	backUpHitStunTime = hitStun
 	create_hitlag_timer()
 	
@@ -1569,5 +1573,5 @@ func other_character_state_changed():
 func reset_character_to_default():
 	pass
 
-func disable_pushing_attack():
-	pushingAttack = false
+#func disable_pushing_attack():
+#	pushingAttack = false

@@ -65,8 +65,8 @@ func apply_attack(hbType):
 	var launchVelocity = currentAttackData["launchVelocity_"+hbString]
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier"]
 #	print(launchVector)
-	if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
-		character.disable_pushing_attack()
+	#if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
+		#character.disable_pushing_attack()
 	disable_all_hitboxes()
 	character.create_hitlag_timer()
 	if attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD:
