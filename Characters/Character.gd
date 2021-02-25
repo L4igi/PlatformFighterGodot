@@ -14,7 +14,7 @@ var runMaxSpeed = 600
 var airMaxSpeed = 600
 var airStopForce = 1000
 var groundStopForce = 1500
-var jumpSpeed = 710
+var jumpSpeed = 850
 var shortHopSpeed = 600
 var currentMaxSpeed = runMaxSpeed
 #jump
@@ -44,6 +44,7 @@ var smashAttackTimer
 var smashAttackInputTime = 3
 var bufferedSmashAttack
 var pushingAttack = false
+var currentHitBox = 1
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
@@ -85,6 +86,7 @@ var rolling = false
 var shieldStunTimer
 var shieldDropTimer
 var shieldDropFrames = 15
+var shieldStunFrames = 0
 #grab
 onready var grabTimer
 var grabbedCharacter = null
@@ -92,7 +94,7 @@ var inGrabByCharacter = null
 var grabTime = 60
 onready var grabPoint = get_node("GrabPoint")
 #character stats
-var weight = 100
+var weight = 1
 var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
@@ -568,7 +570,9 @@ func _on_hitstun_timeout():
 	
 func shield_handler(delta):
 	process_movement_physics(delta)
-	if !shieldStunTimer.timer_running() && !shieldDropTimer.timer_running():
+	if !shieldStunTimer.timer_running()\
+	 && !shieldDropTimer.timer_running()\
+	 && !hitLagTimer.timer_running():
 		if Input.is_action_just_released(shield):
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.GROUND)
@@ -605,9 +609,10 @@ func create_shieldStun_timer(shieldStunFrames):
 	shieldStunTimer.start_timer()
 	
 func _on_shieldStunTimer_timer_timeout():
-	characterShield.disable_shield()
-	switch_to_state(CharacterState.GROUND)
-	create_shield_drop_timer()
+	if !Input.is_action_pressed(shield):
+		characterShield.disable_shield()
+		switch_to_state(CharacterState.GROUND)
+		create_shield_drop_timer()
 			
 func create_shield_drop_timer():
 	shieldDropTimer.set_frames(shieldDropFrames)
@@ -638,7 +643,6 @@ func grab_handler(delta):
 			if currentMoveDirection == moveDirection.LEFT:
 				currentAttack = GlobalVariables.CharacterAnimations.FTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.FTHROW)
-				grabTimer.stop_timer()
 			else:
 				currentAttack = GlobalVariables.CharacterAnimations.BTHROW
 				animation_handler(GlobalVariables.CharacterAnimations.BTHROW)
@@ -1139,9 +1143,11 @@ func switch_to_state(state):
 			currentState = CharacterState.HITSTUNGROUND
 			emit_signal("character_state_changed", self, currentState)
 		CharacterState.ATTACKAIR:
+			currentHitBox = 1
 			currentState = CharacterState.ATTACKAIR
 			emit_signal("character_state_changed", self, currentState)
 		CharacterState.ATTACKGROUND:
+			currentHitBox = 1
 			currentState = CharacterState.ATTACKGROUND
 			emit_signal("character_state_changed", self, currentState)
 		CharacterState.SPECIALGROUND:
@@ -1180,14 +1186,18 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
-func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling):
+func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling):
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	chargingSmashAttack = false
 	smashAttack = null
 	bufferInput = null
 	damagePercent += damage
-	var calulatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
+	var calulatedVelocity = 0
+	if weightLaunchVelocity == 0:
+		calulatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
+	else:
+		calulatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
 	#print(damagePercent)
 	velocity = Vector2.ZERO
 	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * calulatedVelocity
@@ -1205,21 +1215,27 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		shortHitStun = true
 		switch_to_state(CharacterState.HITSTUNAIR)
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
-		animationPlayer.get_parent().set_animation("hurtshort")
+		animationPlayer.get_parent().set_animation("hurt")
 		animationPlayer.get_parent().set_frame(0)
 	backUpHitStunTime = hitStun
 	create_hitlag_timer()
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier):
-	var shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
-	create_shieldStun_timer(shieldStunFrames)
+	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
+	create_hitlag_timer()
 	#calculate shielddamge 
 	#calculate shield hit pushback
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
 	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-#	print("calculatedKnockBack " +str(calculatedKnockBack))
+	#print("calculatedKnockBack " +str(calculatedKnockBack))
+	return calculatedKnockBack
+	
+func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, knockBackScaling):
+	knockBackScaling = 1
+	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
+	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
 	return calculatedKnockBack
 
 func create_hitlag_timer():
@@ -1243,6 +1259,8 @@ func _on_hitLagTimer_timer_timeout():
 	disableInputDI = backUpDisableInputDI
 	if currentState == CharacterState.HITSTUNAIR: 
 		create_hitstun_timer(backUpHitStunTime)
+	elif currentState == CharacterState.SHIELD:
+		create_shieldStun_timer(shieldStunFrames)
 
 func is_grabbed_handler(byCharacter):
 	characterShield.disable_shield()
@@ -1279,8 +1297,9 @@ func apply_throw(actionType):
 #		launchVectorX = abs(launchVectorX)
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity"]
+	var weightLaunchVelocity = currentAttackData["launchVelocityWeight"]
 	self.global_position = inGrabByCharacter.global_position
-	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, knockBackScaling)
+	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling)
 	inGrabByCharacter = null
 	
 func enable_player_input():
@@ -1532,6 +1551,7 @@ func apply_throw_animation_step(step = 0):
 		1:
 			grabbedCharacter.is_thrown_grabjabbed_handler(currentAttack)
 			grabbedCharacter = null
+			create_hitlag_timer()
 		2: 
 			disableInput = false
 			switch_to_state(CharacterState.GROUND)
@@ -1573,5 +1593,5 @@ func other_character_state_changed():
 func reset_character_to_default():
 	pass
 
-#func disable_pushing_attack():
-#	pushingAttack = false
+func set_current_hitbox(hitBoxNumber):
+	currentHitBox = hitBoxNumber

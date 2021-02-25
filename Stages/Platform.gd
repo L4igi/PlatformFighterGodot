@@ -24,8 +24,8 @@ func _physics_process(delta):
 		if body.onSolidGround == null: 
 			if body.lowestCheckYPoint.global_position.y <= checkYPoint.global_position.y\
 			&& !collidingEdgeBodies.has(body):
-				print("body lowest checkpoint " + str(body.lowestCheckYPoint.global_position.y))
-				print("platform lowest checkpoint " + str(checkYPoint.global_position.y))
+#				print("body lowest checkpoint " + str(body.lowestCheckYPoint.global_position.y))
+#				print("platform lowest checkpoint " + str(checkYPoint.global_position.y))
 				body.onSolidGround = self
 				body.set_collision_mask_bit(1,true)
 			else:

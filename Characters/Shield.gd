@@ -5,8 +5,10 @@ var shieldHealth = 1000.0
 var baseShieldHealth = 1000.0
 var shieldEnabled = false
 var shieldBreak = false
+var character 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	character = get_parent()
 	set_visible(false)
 	
 	
@@ -14,7 +16,8 @@ func _physics_process(delta):
 	if shieldHealth == 0 && !shieldBreak: 
 		shieldBreak = true
 		print("SHIELDBREAK!!!")
-	elif shieldEnabled && shieldHealth > 0: 
+	elif shieldEnabled && shieldHealth > 0\
+	&& !character.hitLagTimer.timer_running(): 
 		shieldHealth-=1
 		var shieldScale = shieldHealth/baseShieldHealth
 		shieldSprite.set_scale(Vector2(shieldScale, shieldScale))

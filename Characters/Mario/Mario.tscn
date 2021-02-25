@@ -127,7 +127,7 @@ tracks/4/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=3]
 resource_name = "dash_attack"
 length = 0.666667
 step = 0.0166667
@@ -338,6 +338,20 @@ tracks/5/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/6/type = "method"
+tracks/6/path = NodePath("..")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0.4 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 1 ],
+"method": "set_current_hitbox"
+} ]
+}
 
 [sub_resource type="Animation" id=7]
 resource_name = "freefall"
@@ -397,7 +411,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=9]
 resource_name = "jab1"
 length = 0.4
 tracks/0/type = "value"
@@ -531,6 +545,7 @@ tracks/1/keys = {
 [sub_resource type="Animation" id=12]
 resource_name = "nair"
 length = 0.7
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -568,64 +583,30 @@ tracks/2/keys = {
 "values": [ Vector2( 9.6, -16.875 ), Vector2( 4.8, 0 ), Vector2( -4.8, 5.625 ), Vector2( -14.4, 0 ), Vector2( 0, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 0, 5.625 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("HitBoxes/SweetSpot/Sweet:disabled")
+tracks/3/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0.1, 0.6 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ false, true ]
+"times": PoolRealArray( 0.1, 0.183333, 0.2, 0.283333, 0.3, 0.483333, 0.5, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false, true, false, true, false, true ]
 }
-tracks/4/type = "value"
-tracks/4/path = NodePath("HitBoxes/SweetSpot/Sweet:position")
+tracks/4/type = "method"
+tracks/4/path = NodePath("..")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( 24, -11.25 ), Vector2( -5, 2 ), Vector2( -19, -5 ), Vector2( -4.8, -16.875 ), Vector2( 19.2, -5.625 ), Vector2( 19.2, 0 ) ]
-}
-tracks/5/type = "value"
-tracks/5/path = NodePath("HitBoxes/SourSpot/Sour:disabled")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/keys = {
-"times": PoolRealArray( 0.1, 0.6 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ false, true ]
-}
-tracks/6/type = "value"
-tracks/6/path = NodePath("HitBoxes/SourSpot/Sour:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
-"update": 0,
-"values": [ Vector2( -4.8, -16.875 ), Vector2( 14.4, -5.625 ), Vector2( 14.4, 5.625 ), Vector2( -9.53674e-07, 5.625 ), Vector2( -14.4, -16.875 ), Vector2( 9.6, -11.25 ), Vector2( 9.6, 5.625 ) ]
-}
-tracks/7/type = "value"
-tracks/7/path = NodePath("HitBoxes/NeutralSpot/Neutral:disabled")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/keys = {
-"times": PoolRealArray( 0.1, 0.6 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ false, true ]
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 2 ],
+"method": "set_current_hitbox"
+} ]
 }
 
 [sub_resource type="Animation" id=13]
@@ -777,17 +758,20 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
+[node name="AnimatedSprite" parent="." index="2"]
+animation = "nair"
+
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
 anims/bair = SubResource( 1 )
 anims/dair = SubResource( 2 )
-anims/dash_attack = SubResource( 17 )
+anims/dash_attack = SubResource( 3 )
 anims/doublejump = SubResource( 4 )
 anims/dtilt = SubResource( 5 )
 anims/fair = SubResource( 6 )
 anims/freefall = SubResource( 7 )
 anims/idle = SubResource( 8 )
-anims/jab1 = SubResource( 16 )
+anims/jab1 = SubResource( 9 )
 anims/jab2 = SubResource( 10 )
 anims/jump = SubResource( 11 )
 anims/nair = SubResource( 12 )
@@ -797,9 +781,16 @@ anims/walk = SubResource( 15 )
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/SweetSpot" index="0"]
 visible = false
+position = Vector2( -7.16666, -14.8958 )
+disabled = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/NeutralSpot" index="0"]
-position = Vector2( 15, 0 )
+position = Vector2( 9.6, -16.875 )
+scale = Vector2( 1.2, 1.2 )
+
+[node name="Sour" parent="AnimatedSprite/HitBoxes/SourSpot" index="0"]
+position = Vector2( 2.4, 5.625 )
+disabled = false
 
 [node name="InteractionAreas" parent="." index="3"]
 visible = false
