@@ -55,7 +55,7 @@ var resetMovementSpeed = false
 var walkThreashold = 0.3
 var currentPushSpeed = 0
 var directionChange = false
-var velocity = Vector2()
+var velocity = Vector2.ZERO
 var onSolidGround = null
 var onSolidGroundThreashold = 10
 #crouch 
@@ -74,7 +74,7 @@ var groundHitStun = 3.0
 var getupRollDistance = 100
 var tumblingThreashold = 500
 var characterBouncing = false
-var lastVelocity = 0
+var lastVelocity = Vector2.ZERO
 var bounceThreashold = 800
 var bounceReduction = 0.7
 #invincibility
@@ -100,7 +100,7 @@ onready var gravity = 2000
 onready var baseGravity = gravity
 #hitlag 
 var hitLagTimer
-var backUpVelocity = 0
+var backUpVelocity = Vector2.ZERO
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 
@@ -1187,11 +1187,6 @@ func switch_to_state(state):
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling):
-	if gravity!=baseGravity:
-		gravity=baseGravity
-	chargingSmashAttack = false
-	smashAttack = null
-	bufferInput = null
 	damagePercent += damage
 	var calulatedVelocity = 0
 	if weightLaunchVelocity == 0:
@@ -1202,23 +1197,13 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	velocity = Vector2.ZERO
 	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * calulatedVelocity
 	backUpVelocity = initLaunchVelocity
-	hitStunTimer.stop_timer()
 	#collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold || currentState == CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
 		shortHitStun = false
-		switch_to_state(CharacterState.HITSTUNAIR)
-		animation_handler(GlobalVariables.CharacterAnimations.HURT)
-		animationPlayer.get_parent().set_animation("hurt")
-		animationPlayer.get_parent().set_frame(0)
 	else: 
 		shortHitStun = true
-		switch_to_state(CharacterState.HITSTUNAIR)
-		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
-		animationPlayer.get_parent().set_animation("hurt")
-		animationPlayer.get_parent().set_frame(0)
 	backUpHitStunTime = hitStun
-	create_hitlag_timer()
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
@@ -1241,16 +1226,24 @@ func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, 
 func create_hitlag_timer():
 	animationPlayer.stop(false)
 	gravity_on_off("off")
-	if currentState == CharacterState.HITSTUNAIR || currentState == CharacterState.HITSTUNGROUND:
-		backUpVelocity = initLaunchVelocity
-	else: 
-		backUpVelocity = velocity
-	velocity = Vector2(0,0)
+	velocity = Vector2.ZERO
 	disableInput = true
 	backUpDisableInputDI = disableInputDI
 	disableInputDI = false
 	hitLagTimer.set_frames(60)
 	hitLagTimer.start_timer()
+
+func create_hitlag_timer_attacked():
+	if gravity!=baseGravity:
+		gravity=baseGravity
+	chargingSmashAttack = false
+	smashAttack = null
+	bufferInput = null
+	hitStunTimer.stop_timer()
+	switch_to_state(CharacterState.HITSTUNAIR)
+	animationPlayer.get_parent().set_animation("hurt")
+	animationPlayer.get_parent().set_frame(0)
+	create_hitlag_timer()
 
 func _on_hitLagTimer_timer_timeout():
 	gravity_on_off("on")
@@ -1259,6 +1252,10 @@ func _on_hitLagTimer_timer_timeout():
 	disableInputDI = backUpDisableInputDI
 	if currentState == CharacterState.HITSTUNAIR: 
 		create_hitstun_timer(backUpHitStunTime)
+		if shortHitStun:
+			animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
+		else:
+			animation_handler(GlobalVariables.CharacterAnimations.HURT)
 	elif currentState == CharacterState.SHIELD:
 		create_shieldStun_timer(shieldStunFrames)
 
@@ -1300,6 +1297,11 @@ func apply_throw(actionType):
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight"]
 	self.global_position = inGrabByCharacter.global_position
 	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling)
+	if shortHitStun:
+		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
+	elif !shortHitStun:
+		animation_handler(GlobalVariables.CharacterAnimations.HURT)
+	create_hitlag_timer_attacked()
 	inGrabByCharacter = null
 	
 func enable_player_input():

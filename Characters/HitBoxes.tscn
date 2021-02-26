@@ -14,37 +14,34 @@ radius = 13.4963
 visible = false
 script = ExtResource( 1 )
 
-[node name="SweetSpot" type="Area2D" parent="." groups=[
+[node name="HitBoxSweetArea" type="Area2D" parent="." groups=[
 "Hitbox",
 ]]
 position = Vector2( 0, 5.68434e-14 )
+collision_mask = 0
 
-[node name="Sweet" type="CollisionShape2D" parent="SweetSpot"]
+[node name="Sweet" type="CollisionShape2D" parent="HitBoxSweetArea"]
 modulate = Color( 0, 0.976471, 1, 1 )
 position = Vector2( 24, -11.25 )
 shape = SubResource( 1 )
 disabled = true
 
-[node name="NeutralSpot" type="Area2D" parent="." groups=[
-"Hitbox",
-]]
-position = Vector2( 0, 5.68434e-14 )
+[node name="HitBoxNeutralArea" type="Area2D" parent="."]
 
-[node name="Neutral" type="CollisionShape2D" parent="NeutralSpot"]
+[node name="Neutral" type="CollisionShape2D" parent="HitBoxNeutralArea"]
 modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
-position = Vector2( 19.2, 0 )
+position = Vector2( 19.2, 5.68434e-14 )
 shape = SubResource( 2 )
 disabled = true
 
-[node name="SourSpot" type="Area2D" parent="." groups=[
-"Hitbox",
-]]
-position = Vector2( 0, 5.68434e-14 )
+[node name="HitBoxSourArea" type="Area2D" parent="."]
 
-[node name="Sour" type="CollisionShape2D" parent="SourSpot"]
+[node name="Sour" type="CollisionShape2D" parent="HitBoxSourArea"]
 modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 position = Vector2( -4.8, -16.875 )
 shape = SubResource( 3 )
 disabled = true
 
-[connection signal="area_entered" from="NeutralSpot" to="." method="_on_NeutralSpot_area_entered"]
+[connection signal="area_entered" from="HitBoxSweetArea" to="." method="_on_HitBoxSweetArea_area_entered"]
+[connection signal="area_entered" from="HitBoxNeutralArea" to="." method="_on_HitBoxNeutralArea_area_entered"]
+[connection signal="area_entered" from="HitBoxSourArea" to="." method="_on_HitBoxSourArea_area_entered"]
