@@ -1,7 +1,7 @@
 extends KinematicBody2D
 #base stats to return to after changes were made
 var baseDisableInputInfluence = 1200
-var baseWalkMaxSpeed = 100
+var baseWalkMaxSpeed = 300
 var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 850
@@ -9,14 +9,14 @@ var baseAirSpeed = 600
 var damagePercent = 0.0
 #walkforce is only used when no input is detected to slow the character down
 var disableInputInfluence = 1200
-var walkMaxSpeed = 100
+var walkMaxSpeed = 300
 var runMaxSpeed = 600
 var airMaxSpeed = 600
 var airStopForce = 1000
 var groundStopForce = 1500
 var jumpSpeed = 850
 var shortHopSpeed = 600
-var currentMaxSpeed = runMaxSpeed
+var currentMaxSpeed = baseWalkMaxSpeed
 #jump
 var jumpCount = 0
 var availabelJumps = 2
@@ -49,15 +49,22 @@ var currentHitBox = 1
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
 var turnaroundCoefficient = 1500
+var turnAroundTimer 
+var turnAroundFrames = 4
+var slideTurnAroundFrames = 21
+var stopMovementTimer
+var stopMovementFrames = 4
+var lastXInput = 0
 var pushingCharacter =  null
 var disableInputDI = false
-var resetMovementSpeed = false
-var walkThreashold = 0.3
+var bufferMovementSpeed = baseWalkMaxSpeed
+var walkThreashold = 0.2
 var currentPushSpeed = 0
-var directionChange = false
 var velocity = Vector2.ZERO
 var onSolidGround = null
 var onSolidGroundThreashold = 10
+var resetMovementSpeed = false
+var inMovementLag = false
 #crouch 
 var crouchMovement = false
 #bufferInput
@@ -87,6 +94,7 @@ var shieldStunTimer
 var shieldDropTimer
 var shieldDropFrames = 15
 var shieldStunFrames = 0
+var maxSheildPushBack = 500
 #grab
 onready var grabTimer
 var grabbedCharacter = null
@@ -142,9 +150,6 @@ func _ready():
 	var attacks = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = attacks.get_result()
-	if !onSolidGround:
-		switch_to_state(CharacterState.AIR)
-	GlobalVariables.charactersInGame.append(self)
 	#create all timers and connect signals 
 	hitStunTimer = frameTimer.instance()
 	add_child(hitStunTimer)
@@ -182,7 +187,18 @@ func _ready():
 	add_child(hitLagTimer)
 	hitLagTimer.connect("timeout", self, "_on_hitLagTimer_timer_timeout")
 	hitLagTimer.set_name("hitLagTimer")
+	turnAroundTimer = frameTimer.instance()
+	add_child(turnAroundTimer)
+	turnAroundTimer.connect("timeout", self, "_on_turnAroundTimer_timer_timeout")
+	turnAroundTimer.set_name("turnAroundTimer")
+	stopMovementTimer = frameTimer.instance()
+	add_child(stopMovementTimer)
+	stopMovementTimer.connect("timeout", self, "_on_stopMovementTimer_timer_timeout")
+	stopMovementTimer.set_name("stopMovementTimer")
 	animationPlayer.set_animation_process_mode(0)
+	if !onSolidGround:
+		switch_to_state(CharacterState.AIR)
+	GlobalVariables.charactersInGame.append(self)
 
 func _physics_process(delta):
 	#if character collides with floor/ground velocity instantly becomes zero
@@ -220,6 +236,22 @@ func _physics_process(delta):
 
 func check_input(delta):
 	if Input.is_action_just_pressed(jump) && currentState == CharacterState.GROUND:
+		if currentMoveDirection == moveDirection.RIGHT\
+		&& turnAroundTimer.timer_running() && get_input_direction_x() > 0: 
+			print("backwards jump right")
+			currentMoveDirection = moveDirection.LEFT
+			mirror_areas()
+		elif currentMoveDirection == moveDirection.RIGHT\
+		&& velocity.x <= 0: 
+			velocity = Vector2.ZERO
+		elif currentMoveDirection == moveDirection.LEFT\
+		&& turnAroundTimer.timer_running() && get_input_direction_x() < 0:
+			print("backwards jump left")
+			currentMoveDirection = moveDirection.RIGHT
+			mirror_areas()
+		elif currentMoveDirection == moveDirection.LEFT\
+		&& velocity.x >= 0: 
+			velocity = Vector2.ZERO
 		jump_handler()
 	if Input.is_action_just_pressed(right) && currentState == CharacterState.GROUND:
 		create_smashAttack_timer()
@@ -569,7 +601,8 @@ func _on_hitstun_timeout():
 #	enable_player_input()
 	
 func shield_handler(delta):
-	process_movement_physics(delta)
+	if !disableInput:
+		process_movement_physics(delta)
 	if !shieldStunTimer.timer_running()\
 	 && !shieldDropTimer.timer_running()\
 	 && !hitLagTimer.timer_running():
@@ -996,68 +1029,108 @@ func process_movement_physics(delta):
 func input_movement_physics_ground(delta):
 	# Horizontal movement code. First, get the player's input.
 	var xInput = get_input_direction_x()
-	if xInput == 0:
-		resetMovementSpeed = true
-	if resetMovementSpeed && xInput != 0 && pushingCharacter == null: 
-		resetMovementSpeed = false
-		change_max_speed(xInput)
-	# Slow down the player if they're not trying to move.
-	if abs(xInput) < 0.05:
-		if(currentState == CharacterState.GROUND):
-			animationPlayer.play("idle")
-		# The velocity, slowed down a bit, and then reassigned.
-		if pushingCharacter == null:
-			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
-	else:
-		if currentMaxSpeed == baseWalkMaxSpeed:
-			animationPlayer.play("walk")
-		else:
-			animationPlayer.play("run")
-		match currentMoveDirection:
-			moveDirection.LEFT:
-				if xInput > 0: 
-					currentMoveDirection = moveDirection.RIGHT
-#						characterSprite.flip_h = false
-					mirror_areas()
-					directionChange = true
-					change_max_speed(xInput)
-			moveDirection.RIGHT:
-				if xInput < 0: 
-					currentMoveDirection = moveDirection.LEFT
-#						characterSprite.flip_h = true
-					mirror_areas()
-					directionChange = true
-					change_max_speed(xInput)
-		if directionChange && ((velocity.x<= 0 && xInput >= 0) || (velocity.x>= 0 && xInput <= 0)): 
+	if !inMovementLag:
+#		if name == "Mario":
+#			print("timer not running")
+		if xInput == 0:
+			if(currentState == CharacterState.GROUND):
+				animationPlayer.play("idle")
+			# The velocity, slowed down a bit, and then reassigned.
+			if pushingCharacter == null:
+				resetMovementSpeed = true
+				velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
+		elif xInput != 0 && velocity.x != 0:
+			if currentMaxSpeed == baseWalkMaxSpeed:
+				velocity.x = xInput * currentMaxSpeed
+				animationPlayer.play("walk")
+			elif currentMaxSpeed == baseRunMaxSpeed:
+				animationPlayer.play("run")
+				if xInput > 0:
+					velocity.x = currentMaxSpeed
+				elif xInput < 0:
+					velocity.x = - currentMaxSpeed
+			velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+			direction_changer(xInput)
+		elif xInput != 0 && velocity.x == 0: 
+			#print("resseting")
+			resetMovementSpeed = false
 			match currentMoveDirection:
 				moveDirection.LEFT:
-					velocity.x -= turnaroundCoefficient * delta 
-					if velocity.x < 0: 
-						directionChange = false
+					if xInput > 0: 
+						create_turnaround_timer(turnAroundFrames)
 				moveDirection.RIGHT:
-					velocity.x += turnaroundCoefficient * delta 
-					if velocity.x > 0: 
-						directionChange = false
-#			directionChange = false
-		else: 
-			if currentMaxSpeed == baseWalkMaxSpeed:
-				if pushingCharacter != null:
-					pass
-					#handled in character collision response script
-	#				velocity.x += xInput * currentMaxSpeed
-				else:
-					velocity.x = xInput * currentMaxSpeed
-					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
-			else:
-				if pushingCharacter != null: 
-					#handled in character collision response script
-					pass
-	#				velocity.x += xInput * currentMaxSpeed
-				else:
-					velocity.x = xInput * currentMaxSpeed
-					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
-	# Vertical movement code. Apply gravity.
+					if xInput < 0: 
+						create_turnaround_timer(turnAroundFrames)
+			change_max_speed(xInput)
+			velocity.x = xInput * currentMaxSpeed
+			velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+	elif stopMovementTimer.timer_running():
+		direction_changer(xInput)
+		velocity.x = move_toward(velocity.x, 0.5, groundStopForce * delta)
+#		print("stopMovement timer")
+	elif turnAroundTimer.timer_running():
+		match currentMoveDirection:
+			moveDirection.LEFT:
+				velocity.x = -300
+			moveDirection.RIGHT:
+				velocity.x = 300
+#		print("turnaround timer")
+	lastXInput = xInput
 	velocity.y += gravity * delta
+		
+func direction_changer(xInput):
+	match currentMoveDirection:
+		moveDirection.LEFT:
+			if xInput > lastXInput && lastXInput != 0: 
+				if currentMaxSpeed == baseRunMaxSpeed:
+					create_stopMovementTimer_timer()
+			if xInput > 0: 
+				if currentMaxSpeed == baseRunMaxSpeed:
+					#print("slow turn")
+					create_turnaround_timer(slideTurnAroundFrames)
+				else: 
+					#print("fast turn")
+					create_turnaround_timer(turnAroundFrames)
+				change_max_speed(xInput)
+		moveDirection.RIGHT:
+			if xInput < lastXInput && lastXInput != 0:  
+				if currentMaxSpeed == baseRunMaxSpeed:
+					create_stopMovementTimer_timer()
+			if xInput < 0: 
+				print(abs(velocity.x))
+				if currentMaxSpeed == baseRunMaxSpeed:
+					#print("slow turn")
+					create_turnaround_timer(slideTurnAroundFrames)
+				else: 
+					#print("fast turn")
+					create_turnaround_timer(turnAroundFrames)
+				change_max_speed(xInput)
+	
+func create_turnaround_timer(turnFrames):
+	stopMovementTimer.stop_timer()
+	turnAroundTimer.set_frames(turnFrames)
+	turnAroundTimer.start_timer()
+	inMovementLag = true
+	
+func _on_turnAroundTimer_timer_timeout():
+	#print("timer ended")
+	match currentMoveDirection:
+		moveDirection.LEFT:
+			currentMoveDirection = moveDirection.RIGHT
+			mirror_areas()
+		moveDirection.RIGHT:
+			currentMoveDirection = moveDirection.LEFT
+			mirror_areas()
+	inMovementLag = false
+	
+func create_stopMovementTimer_timer():
+	inMovementLag = true
+	stopMovementTimer.set_frames(stopMovementFrames)
+	stopMovementTimer.start_timer()
+	
+func _on_stopMovementTimer_timer_timeout():
+	inMovementLag = false
+	currentMaxSpeed = baseWalkMaxSpeed
 	
 func change_max_speed(xInput):
 	if abs(xInput) > walkThreashold:
@@ -1124,6 +1197,10 @@ func get_input_direction_y():
 			
 func switch_to_state(state):
 	toggle_all_hitboxes("off")
+	stopMovementTimer.stop_timer()
+	turnAroundTimer.stop_timer()
+	currentMaxSpeed = baseWalkMaxSpeed
+	inMovementLag = false
 	pushingAttack = false
 	currentAttack = null
 	#todo: reset all hitboxes and collision shapes
@@ -1186,7 +1263,7 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
-func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling):
+func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile):
 	damagePercent += damage
 	var calulatedVelocity = 0
 	if weightLaunchVelocity == 0:
@@ -1205,11 +1282,13 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		shortHitStun = true
 	backUpHitStunTime = hitStun
 	
-func is_attacked_in_shield_handler(damage, shieldStunMultiplier):
+func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
-	create_hitlag_timer()
-	#calculate shielddamge 
-	#calculate shield hit pushback
+	characterShield.apply_shield_damage(damage, shieldDamage)
+	#todo: calculate shield hit pushback
+	var shieldPushBack = 0
+	backUpVelocity = Vector2(400, 0)
+	#((damage * parameters.shield.mult * projectileMult * perfectshieldMult * groundedMult * aerialMult) + parameters.shield.constant) * 0.09 * perfectshieldMult2;
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
@@ -1244,6 +1323,7 @@ func create_hitlag_timer_attacked():
 	animationPlayer.get_parent().set_animation("hurt")
 	animationPlayer.get_parent().set_frame(0)
 	create_hitlag_timer()
+	
 
 func _on_hitLagTimer_timer_timeout():
 	gravity_on_off("on")
@@ -1296,7 +1376,8 @@ func apply_throw(actionType):
 	var launchVelocity = currentAttackData["launchVelocity"]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight"]
 	self.global_position = inGrabByCharacter.global_position
-	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling)
+	var isProjectile = false
+	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile)
 	if shortHitStun:
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	elif !shortHitStun:

@@ -5,6 +5,7 @@ onready var sweetSpot = $HitBoxSweetArea/Sweet
 onready var neutralSpot = $HitBoxNeutralArea/Neutral
 onready var sourSpot = $HitBoxSourArea/Sour
 var attackedCharacter = null
+var attackedCharacterState = null
 
 var hitBoxesConnected = []
 
@@ -13,26 +14,27 @@ enum HitBoxType {SOUR, NEUTRAL, SWEET}
 func _physics_process(delta):
 	if !hitBoxesConnected.empty():
 		disable_all_hitboxes()
-		var highestHitboxPriority = 0
-		var highestHitBox = null
-		for hitbox in hitBoxesConnected: 
-			match hitbox:
-				HitBoxType.SOUR:
-					if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
-						highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sour"]["priority"]
-						highestHitBox = HitBoxType.SOUR
-				HitBoxType.NEUTRAL:
-					if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
-						highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]["priority"]
-						highestHitBox = HitBoxType.NEUTRAL
-				HitBoxType.SWEET:
-					if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
-						highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sweet"]["priority"]
-						highestHitBox = HitBoxType.SWEET
-		if character.currentState == character.CharacterState.ATTACKGROUND\
-		|| character.currentState == character.CharacterState.ATTACKAIR:
-			apply_attack(highestHitBox)
-			#apply_attack(HitBoxType.NEUTRAL)
+		if character.currentState != character.CharacterState.GRAB:
+			var highestHitboxPriority = 0
+			var highestHitBox = null
+			for hitbox in hitBoxesConnected: 
+				match hitbox:
+					HitBoxType.SOUR:
+						if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
+							highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sour"]["priority"]
+							highestHitBox = HitBoxType.SOUR
+					HitBoxType.NEUTRAL:
+						if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
+							highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]["priority"]
+							highestHitBox = HitBoxType.NEUTRAL
+					HitBoxType.SWEET:
+						if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
+							highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sweet"]["priority"]
+							highestHitBox = HitBoxType.SWEET
+			if character.currentState == character.CharacterState.ATTACKGROUND\
+			|| character.currentState == character.CharacterState.ATTACKAIR:
+				apply_attack(highestHitBox)
+				#apply_attack(HitBoxType.NEUTRAL)
 		hitBoxesConnected.clear()
 
 func disable_all_hitboxes():
@@ -50,7 +52,7 @@ func apply_attack(hbType):
 			combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[combinedAttackDataString] + "_neutral"
 		HitBoxType.SWEET:
 			combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[combinedAttackDataString] + "_sweet"
-	print(combinedAttackDataString)
+	#print(combinedAttackDataString)
 	var currentAttackData = character.attackData[combinedAttackDataString]
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
 	var hitStun = currentAttackData["hitStun_" + String(currentHitBoxNumber)]
@@ -67,10 +69,12 @@ func apply_attack(hbType):
 	var launchVelocity = currentAttackData["launchVelocity_" + String(currentHitBoxNumber)]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight_" + String(currentHitBoxNumber)]
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier_" + String(currentHitBoxNumber)]
-	if attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD:
-		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier)
+	var shieldDamage = currentAttackData["shield_damage_" + String(currentHitBoxNumber)]
+	var isProjectile = false
+	if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
+		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile)
 	else:
-		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling)
+		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile)
 
 
 func apply_grab():
@@ -110,13 +114,17 @@ func _on_HitBoxSourArea_area_entered(area):
 			
 func apply_hitlag(hitArea):
 	attackedCharacter = hitArea.get_parent().get_parent()
+	attackedCharacterState = attackedCharacter.currentState
 	if attackedCharacter != self.get_parent().get_parent():
 		if character.currentState == character.CharacterState.ATTACKGROUND\
 		|| character.currentState == character.CharacterState.ATTACKAIR:
 			character.backUpVelocity = character.velocity
 			character.create_hitlag_timer()
 			attackedCharacter = hitArea.get_parent().get_parent()
-			attackedCharacter.create_hitlag_timer_attacked()
+			if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
+				attackedCharacter.create_hitlag_timer()
+			else:
+				attackedCharacter.create_hitlag_timer_attacked()
 		#manage grab if character hit other character hitbox
 		elif character.currentState == character.CharacterState.GRAB:
 			if attackedCharacter.currentState == attackedCharacter.CharacterState.GROUND\
@@ -130,5 +138,6 @@ func apply_hitlag(hitArea):
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.ROLL\
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELDBREAK:
 				character.disableInput = false
+				character.backUpVelocity = Vector2.ZERO
 				character.grabbedCharacter = attackedCharacter
 				apply_grab()
