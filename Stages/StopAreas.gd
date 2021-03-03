@@ -24,7 +24,8 @@ func stop_character_velocity(body):
 	|| stopCharacter.currentState == stopCharacter.CharacterState.ATTACKGROUND\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.GETUP\
 	|| stopCharacter.currentState == stopCharacter.CharacterState.SHIELD\
-	|| stopCharacter.currentState == stopCharacter.CharacterState.ROLL:
+	|| stopCharacter.currentState == stopCharacter.CharacterState.ROLL\
+	|| stopCharacter.inMovementLag:
 		if stopCharacter.onSolidGround: 
 			if self.global_position < stopCharacter.global_position: 
 				stopCharacter.velocity.x = 0

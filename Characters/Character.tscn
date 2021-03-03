@@ -1,4 +1,4 @@
-[gd_scene load_steps=328 format=2]
+[gd_scene load_steps=339 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -288,6 +288,15 @@
 [ext_resource path="res://Characters/Mario/shieldDrop/1.png" type="Texture" id=286]
 [ext_resource path="res://Characters/Mario/shieldDrop/0.png" type="Texture" id=287]
 [ext_resource path="res://Characters/Mario/shieldDrop/3.png" type="Texture" id=288]
+[ext_resource path="res://Characters/Mario/slide_turnaround/3.png" type="Texture" id=289]
+[ext_resource path="res://Characters/Mario/slide_turnaround/4.png" type="Texture" id=290]
+[ext_resource path="res://Characters/Mario/slide_turnaround/0.png" type="Texture" id=291]
+[ext_resource path="res://Characters/Mario/slide_turnaround/6.png" type="Texture" id=292]
+[ext_resource path="res://Characters/Mario/slide_turnaround/5.png" type="Texture" id=293]
+[ext_resource path="res://Characters/Mario/slide_turnaround/8.png" type="Texture" id=294]
+[ext_resource path="res://Characters/Mario/slide_turnaround/1.png" type="Texture" id=295]
+[ext_resource path="res://Characters/Mario/slide_turnaround/7.png" type="Texture" id=296]
+[ext_resource path="res://Characters/Mario/slide_turnaround/2.png" type="Texture" id=297]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -474,6 +483,16 @@ animations = [ {
 "frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
 "loop": true,
 "name": "grab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
+"loop": true,
+"name": "turnaround_slow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
+"loop": true,
+"name": "turnaround_fast",
 "speed": 5.0
 } ]
 
@@ -1815,6 +1834,64 @@ tracks/2/keys = {
 } ]
 }
 
+[sub_resource type="Animation" id=40]
+resource_name = "turnaround_fast"
+length = 0.0666667
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "turnaround_fast" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"update": 1,
+"values": [  ]
+}
+
+[sub_resource type="Animation" id=41]
+resource_name = "turnaround_slow"
+length = 0.35
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "turnaround_slow" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 8 ]
+}
+
 [sub_resource type="Animation" id=35]
 length = 0.383333
 step = 0.0166667
@@ -2017,7 +2094,7 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 6, -2.13333, 24, 0, 32, 2.13333, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.66667, 1.42222 )
 frames = SubResource( 1 )
-animation = "upair"
+animation = "turnaround_fast"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2055,6 +2132,8 @@ anims/run = SubResource( 31 )
 anims/shield = SubResource( 32 )
 anims/shielddrop = SubResource( 33 )
 anims/spotdodge = SubResource( 34 )
+anims/turnaround_fast = SubResource( 40 )
+anims/turnaround_slow = SubResource( 41 )
 anims/upair = SubResource( 35 )
 anims/upsmash = SubResource( 36 )
 anims/uptilt = SubResource( 37 )
