@@ -48,7 +48,6 @@ var currentHitBox = 1
 #movement
 enum moveDirection {LEFT, RIGHT}
 var currentMoveDirection = moveDirection.RIGHT
-var turnaroundCoefficient = 1500
 var turnAroundTimer 
 var turnAroundFrames = 6
 var slideTurnAroundFrames = 21
@@ -57,7 +56,6 @@ var stopMovementFrames = 4
 var lastXInput = 0
 var pushingCharacter =  null
 var disableInputDI = false
-var bufferMovementSpeed = baseWalkMaxSpeed
 var walkThreashold = 0.2
 var currentPushSpeed = 0
 var velocity = Vector2.ZERO
@@ -67,7 +65,8 @@ var resetMovementSpeed = false
 var inMovementLag = false
 var sideStepTimer 
 var inSideStep = false
-var sideStepFrames = 15
+var sideStepFrames = 20
+var shortTurnAround = false
 #crouch 
 var crouchMovement = false
 #bufferInput
@@ -1040,10 +1039,11 @@ func process_movement_physics(delta):
 func input_movement_physics_ground(delta):
 	# Horizontal movement code. First, get the player's input.
 	var xInput = get_input_direction_x()
-	if name == "Mario":
-		print(xInput)
+#	if name == "Mario":
+#		print(currentMoveDirection)
 	if !inMovementLag:
 		if xInput == 0:
+			direction_changer(xInput)
 #			if lastXInput == 0 && velocity.x != 0: 
 #				print("here")
 #				create_sideStep_timer()
@@ -1055,72 +1055,91 @@ func input_movement_physics_ground(delta):
 				velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 		elif xInput != 0 && velocity.x != 0:
 			if currentMaxSpeed == baseWalkMaxSpeed:
-				velocity.x = xInput * currentMaxSpeed
 				animationPlayer.play("walk")
+				if !pushingCharacter:
+					velocity.x = xInput * currentMaxSpeed
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 			elif currentMaxSpeed == baseRunMaxSpeed:
 				animationPlayer.play("run")
-				if xInput > 0:
+				if xInput > 0 && !pushingCharacter:
 					velocity.x = currentMaxSpeed
-				elif xInput < 0:
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+				elif xInput < 0 && !pushingCharacter:
 					velocity.x = - currentMaxSpeed
-			velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 			direction_changer(xInput)
+			if pushingCharacter && lastXInput == 0: 
+				resetMovementSpeed = true
 		elif xInput != 0 && velocity.x == 0: 
-			direction_changer(xInput, true)
-			resetMovementSpeed = false
-			change_max_speed(xInput)
-			velocity.x = xInput * currentMaxSpeed
-			velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+			if !direction_changer(xInput, true):
+				create_sideStep_timer()
+				change_max_speed(xInput)
+				if !pushingCharacter:
+					velocity.x = xInput * currentMaxSpeed
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+					resetMovementSpeed = false
 	elif stopMovementTimer.timer_running():
+		#print("stopped movement")
 		direction_changer(xInput)
-		velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
+		if !pushingCharacter:
+			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 #		velocity.x = move_toward(velocity.x, 0.5, groundStopForce * delta)
 #		print("stopMovement timer")
 	elif turnAroundTimer.timer_running():
 		pass
+#		if !pushingCharacter:
+#		velocity.x = int(move_toward(velocity.x, 0, groundStopForce * delta))
 	lastXInput = xInput
 	velocity.y += gravity * delta
-		
+
+
 func direction_changer(xInput, fromIdle = false):
 	match currentMoveDirection:
 		moveDirection.LEFT:
 			if xInput <= 0 && xInput > lastXInput && !inMovementLag && !fromIdle:  
-				print("here left Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
+				#print("here left Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
 				if currentMaxSpeed == baseRunMaxSpeed:
 					create_stopMovementTimer_timer()
 			elif xInput > 0: 
-				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || (xInput > 0 && lastXInput < 0)) && inMovementLag && !inSideStep:
-					print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
+				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || lastXInput != 0) && !inSideStep && !pushingCharacter:
+					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
+					#print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDSLOW)
 					create_turnaround_timer(slideTurnAroundFrames)
+					currentMaxSpeed = baseWalkMaxSpeed
 					velocity.x = -300
+					shortTurnAround = false
 				else: 
-					print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
+					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
+					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDFAST)
 					create_turnaround_timer(turnAroundFrames)
 					velocity.x = 0
-				change_max_speed(xInput)
+					shortTurnAround = true
+				return true
 		moveDirection.RIGHT:
 			if xInput >= 0 && xInput < lastXInput && !inMovementLag && !fromIdle:  
-				print("here right Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
+				#print("here right Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
 				if currentMaxSpeed == baseRunMaxSpeed:
 					create_stopMovementTimer_timer()
 			elif xInput < 0: 
-				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || (xInput < 0 && lastXInput > 0)) && !inSideStep:
-					print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
+				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || lastXInput != 0) && !inSideStep && !pushingCharacter:
+					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
+					#print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDSLOW)
 					create_turnaround_timer(slideTurnAroundFrames)
+					currentMaxSpeed = baseWalkMaxSpeed
 					velocity.x = 300
+					shortTurnAround = false
 				else: 
-					print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
+					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
+					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDFAST)
 					create_turnaround_timer(turnAroundFrames)
 					velocity.x = 0
-				change_max_speed(xInput)
+					shortTurnAround = true
+				return true
+	return false
 	
 func create_turnaround_timer(turnFrames):
 	#print("turnaround timer started")
@@ -1138,8 +1157,11 @@ func create_turnaround_timer(turnFrames):
 	
 func _on_turnAroundTimer_timer_timeout():
 	#print("turnaround timer timeout")
+	change_max_speed(get_input_direction_x())
 	inMovementLag = false
 	create_sideStep_timer()
+	shortTurnAround = false
+	#CharacterInteractionHandler.recalculate_init_calculation()
 	
 func create_stopMovementTimer_timer():
 	#print("stop movement timer started")
@@ -1148,9 +1170,10 @@ func create_stopMovementTimer_timer():
 	stopMovementTimer.start_timer()
 	
 func _on_stopMovementTimer_timer_timeout():
+	#print("stop movement timer stopped timer")
 	inMovementLag = false
 	#currentMaxSpeed = baseWalkMaxSpeed
-#	change_max_speed(get_input_direction_x())
+	change_max_speed(get_input_direction_x())
 	
 func create_sideStep_timer():
 	#print("creating sidestep timer")
@@ -1163,6 +1186,7 @@ func _on_sideStepTimer_timer_timeout():
 	inSideStep = false
 	
 func change_max_speed(xInput):
+	resetMovementSpeed = true
 	if abs(xInput) > walkThreashold:
 		currentMaxSpeed = baseRunMaxSpeed
 	else:
@@ -1233,6 +1257,7 @@ func switch_to_state(state):
 	inMovementLag = false
 	pushingAttack = false
 	currentAttack = null
+	shortTurnAround = false
 	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:

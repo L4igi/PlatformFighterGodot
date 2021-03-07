@@ -543,7 +543,8 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-animation = "attack_getup"
+animation = "upair"
+frame = 3
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -563,12 +564,19 @@ anims/upair = SubResource( 13 )
 anims/uptilt = SubResource( 14 )
 anims/walk = SubResource( 15 )
 
+[node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
+visible = true
+
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
-position = Vector2( 21.6, 5.62501 )
+position = Vector2( 21.6, -2.81255 )
+disabled = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 14.4, 0 )
+position = Vector2( 10.8, -4.2188 )
 disabled = false
+
+[node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
+visible = true
 
 [node name="InteractionAreas" parent="." index="3"]
 visible = false
