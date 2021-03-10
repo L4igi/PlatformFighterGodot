@@ -53,8 +53,8 @@ func disable_character_pushforce(character):
 	|| character.currentState == character.CharacterState.SHIELD\
 	|| character.currentState == character.CharacterState.GRAB\
 	|| character.currentState == character.CharacterState.AIR\
-	|| (character.inMovementLag && character.shortTurnAround):
-#	|| (character.inMovementLag):
+	|| (character.inMovementLag && character.shortTurnAround)\
+	|| (character.disableInput):
 		return true
 	return false
 
@@ -141,9 +141,9 @@ func calc_push_force(character):
 	elif character.turnAroundTimer.timer_running():
 		match character.currentMoveDirection:
 			character.moveDirection.LEFT:
-				return 1.0
+				return 0.3
 			character.moveDirection.RIGHT:
-				return -1.0
+				return -0.3
 	else:
 		return character.get_input_direction_x()
 		

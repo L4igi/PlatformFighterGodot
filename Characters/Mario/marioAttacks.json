@@ -104,7 +104,8 @@
     "effect_2":"neutral",
     "shieldStun_multiplier_2":1,
     "hitlag_multiplier_2":1,
-    "shield_damage_2":1
+    "shield_damage_2":1,
+    "landingLag":4
   },
   "UPAIR_neutral":{
     "damage_1":5,
@@ -117,7 +118,8 @@
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
     "shield_damage_1":100,
-    "priority":0
+    "priority":0,
+    "landingLag":4
   },
   "UPAIR_sweet":{
     "damage_1":5,
@@ -155,7 +157,8 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":1
+    "shield_damage_1":1,
+    "landingLag":200
   },
   "FAIR_neutral":{
     "damage_1":5,
@@ -167,7 +170,8 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":1
+    "shield_damage_1":1,
+    "landingLag":4
   },
   "BAIR_neutral":{
     "damage_1":5,
@@ -179,7 +183,8 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":1
+    "shield_damage_1":1,
+    "landingLag":4
   },
   "DASHATTACK_neutral":{
     "damage_1":5,

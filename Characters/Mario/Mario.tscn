@@ -65,17 +65,14 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.4, 1.4 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
 "method": "apply_attack_movement_stats"
 }, {
 "args": [ 1 ],
 "method": "apply_attack_movement_stats"
-}, {
-"args": [  ],
-"method": "enable_player_input"
 } ]
 }
 
@@ -542,10 +539,6 @@ tracks/1/keys = {
 [node name="Mario" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="AnimatedSprite" parent="." index="2"]
-animation = "upair"
-frame = 3
-
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
 anims/bair = SubResource( 1 )
@@ -579,7 +572,6 @@ disabled = false
 visible = true
 
 [node name="InteractionAreas" parent="." index="3"]
-visible = false
 position = Vector2( -4, 4 )
 
 [node name="CollisionArea" parent="InteractionAreas" index="1"]

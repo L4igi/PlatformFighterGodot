@@ -6,7 +6,7 @@
 [ext_resource path="res://Stages/PlatformEdgeCollision.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 128, 8.00057 )
+extents = Vector2( 126, 8.00056 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 100, 8 )
