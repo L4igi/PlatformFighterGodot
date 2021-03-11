@@ -540,7 +540,8 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-animation = "dash_attack"
+animation = "upair"
+frame = 6
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -564,12 +565,10 @@ anims/walk = SubResource( 15 )
 visible = true
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
-position = Vector2( 21.6, -2.81255 )
-disabled = false
+position = Vector2( 21.6, 5.62501 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 10.8, -4.2188 )
-disabled = false
+position = Vector2( 10.8, 4.21876 )
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = true
