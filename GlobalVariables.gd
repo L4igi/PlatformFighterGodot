@@ -30,3 +30,28 @@ var controlsP2 = {
 	"grab" : "Grab2"
 }
 
+var gameRunning = 0
+var frameByFrame = false
+
+func _ready():
+	pause_mode = Node.PAUSE_MODE_PROCESS
+
+func _physics_process(delta):
+	if Input.is_action_just_pressed("toggleFrameByFrame"):
+		if frameByFrame == false: 
+			frameByFrame = true
+		else:
+			frameByFrame = false
+			get_tree().set_pause(false)
+	if frameByFrame:
+		get_tree().set_pause(true)
+		if Input.is_action_just_pressed("AdvanceFrame"):
+			if get_tree().is_paused():
+				get_tree().set_pause(false)
+		if Input.is_action_pressed("AdvanceFrame"):
+			gameRunning += 1
+			if gameRunning > 10:
+				get_tree().set_pause(false)
+		if Input.is_action_just_released("AdvanceFrame"):
+			gameRunning = 0
+

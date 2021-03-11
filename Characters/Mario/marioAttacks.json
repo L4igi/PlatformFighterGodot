@@ -158,7 +158,7 @@
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
     "shield_damage_1":1,
-    "landingLag":200
+    "landingLag":60
   },
   "FAIR_neutral":{
     "damage_1":5,

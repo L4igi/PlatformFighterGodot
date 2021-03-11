@@ -11,11 +11,13 @@ var damagePercent = 0.0
 var disableInputInfluence = 1200
 var walkMaxSpeed = 300
 var runMaxSpeed = 600
-var airMaxSpeed = 600
-var airStopForce = 500
+var airMaxSpeed = 500
+var airStopForce = 400
+var maxFallSpeed = 2000
 var groundStopForce = 1500
-var jumpSpeed = 850
+var jumpSpeed = 800
 var shortHopSpeed = 600
+var fallingSpeed = 1.0
 var currentMaxSpeed = baseWalkMaxSpeed
 #jump
 var jumpCount = 0
@@ -232,7 +234,7 @@ func _physics_process(delta):
 		CharacterState.AIR:
 			air_handler(delta)
 		CharacterState.ATTACKAIR:
-			attack_handler_air()
+			attack_handler_air(delta)
 		CharacterState.ATTACKGROUND:
 			attack_handler_ground()
 		CharacterState.GROUND:
@@ -252,6 +254,14 @@ func _physics_process(delta):
 
 func check_input(delta):
 	if Input.is_action_just_pressed(jump) && currentState == CharacterState.GROUND:
+		if currentMoveDirection == moveDirection.RIGHT\
+		&& inMovementLag && get_input_direction_x() > 0:
+			velocity.x = currentMaxSpeed
+			print("turnaround jump")
+		elif currentMoveDirection == moveDirection.LEFT\
+		&& inMovementLag && get_input_direction_x() < 0:
+			velocity.x = -1 * currentMaxSpeed
+			print("turnaround jump")
 #		if currentMoveDirection == moveDirection.RIGHT\
 #		&& turnAroundTimer.timer_running() && get_input_direction_x() > 0: 
 #			print("backwards jump right")
@@ -349,7 +359,7 @@ func attack_handler_ground():
 			elif currentMoveDirection == moveDirection.RIGHT:
 				animation_handler(GlobalVariables.CharacterAnimations.FTILTR)
 				currentAttack = GlobalVariables.CharacterAnimations.FTILTR
-		else: 
+		elif currentMaxSpeed == baseRunMaxSpeed: 
 			#dash attack
 			match currentMoveDirection:
 				moveDirection.LEFT:
@@ -391,11 +401,10 @@ func jab_handler():
 	if jabCount > jabCombo: 
 		jabCount = 0
 		
-func attack_handler_air():
+func attack_handler_air(delta):
 	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
 	&& !dropDownTimer.timer_running() && !hitLagTimer.timer_running():
 		var attackLandingLag = attackData[GlobalVariables.CharacterAnimations.keys()[currentAttack] + "_neutral"]["landingLag"]
-		print(attackLandingLag)
 		switch_from_air_to_ground(attackLandingLag)
 		#toggle_all_hitboxes("off")
 	elif !disableInput:
@@ -432,7 +441,7 @@ func ground_handler(delta):
 		if gravity!=baseGravity:
 			gravity=baseGravity
 		if inLandingLag:
-			velocity.y += gravity * delta
+			calculate_vertical_velocity(delta)
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 		else:
 			input_movement_physics_ground(delta)
@@ -442,6 +451,10 @@ func ground_handler(delta):
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
 
+func calculate_vertical_velocity(delta):
+	velocity.y += gravity * delta
+	if velocity.y >= maxFallSpeed: 
+		velocity.y = maxFallSpeed
 #creates timer after dropping through platform to enable/diable collision
 func create_drop_platform_timer(waittime):
 	dropDownTimer.set_frames(waittime)
@@ -464,17 +477,16 @@ func air_handler(delta):
 			if gravity!=baseGravity:
 				gravity=baseGravity
 			velocity.y = -jumpSpeed
-			if currentMoveDirection == moveDirection.LEFT && get_input_direction_x() != -1:
-				pass
+			if currentMoveDirection == moveDirection.LEFT && get_input_direction_x() >= 0:
 				velocity.x = 0
-			elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() != 1:
+			elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() <= 0:
 				velocity.x = 0
 			jumpCount += 1
 		#Fastfall
-		if Input.is_action_just_pressed(down) && !onSolidGround && abs(int(velocity.y)) >= onSolidGroundThreashold:
+		if Input.is_action_just_pressed(down) && !onSolidGround && int(velocity.y) >= 0:
 			gravity = fastFallGravity
-		if abs(int(velocity.y)) <= onSolidGroundThreashold && onSolidGround:
-			switch_to_state(CharacterState.GROUND)
+#		if abs(int(velocity.y)) <= onSolidGroundThreashold && onSolidGround:
+#			switch_to_state(CharacterState.GROUND)
 			#if aerial attack is interrupted by ground cancel hitboxes
 		if velocity.y > 0 && get_input_direction_y() >= 0.5: 
 			set_collision_mask_bit(1,false)
@@ -532,7 +544,7 @@ func calc_hitstun_velocity(delta):
 			velocity.x = 0
 	else: 
 		velocity.x = 0
-	velocity.y += gravity * delta
+	calculate_vertical_velocity(delta)
 	
 func hitstun_handler(delta):
 	if disableInput && inHitStun:
@@ -592,7 +604,7 @@ func hitstun_handler(delta):
 			if !inHitStun: 
 				if Input.is_action_just_pressed(attack):
 					switch_to_state(CharacterState.ATTACKAIR)
-					attack_handler_air()
+					attack_handler_air(delta)
 				elif Input.is_action_just_pressed(jump):
 					switch_to_state(CharacterState.AIR)
 					double_jump_handler()
@@ -1036,7 +1048,6 @@ func process_movement_physics(delta):
 		var walk = disableInputInfluence * get_input_direction_x()
 		velocity.x += walk * delta
 		velocity.x = clamp(velocity.x, -walkMaxSpeed, walkMaxSpeed)
-		velocity.y += gravity * delta
 	else:
 		if currentState == CharacterState.GROUND\
 		|| currentState == CharacterState.ATTACKGROUND\
@@ -1045,14 +1056,13 @@ func process_movement_physics(delta):
 		|| currentState == CharacterState.INGRAB\
 		|| currentState == CharacterState.HITSTUNGROUND:
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
-			velocity.y += gravity * delta
 		elif currentState == CharacterState.AIR\
 		|| currentState == CharacterState.ATTACKAIR:
 #		|| currentState == CharacterState.HITSTUNAIR:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
-			velocity.y += gravity * delta
 	# Move based on the velocity and snap to the ground.
 #	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
+	calculate_vertical_velocity(delta)
 	velocity = move_and_slide(velocity)
 
 func input_movement_physics_ground(delta):
@@ -1117,7 +1127,7 @@ func input_movement_physics_ground(delta):
 #		if !pushingCharacter:
 #		velocity.x = int(move_toward(velocity.x, 0, groundStopForce * delta))
 	lastXInput = xInput
-	velocity.y += gravity * delta
+	calculate_vertical_velocity(delta)
 
 
 func direction_changer(xInput, fromIdle = false):
@@ -1241,20 +1251,20 @@ func input_movement_physics_air(delta):
 		#improves are moveability when pressing the opposite direction as currently looking
 		if currentMoveDirection == moveDirection.LEFT &&\
 		xInput > 0: 
-			velocity.x += (walk * delta)*2
+			velocity.x += (walk * delta)*4
 		elif currentMoveDirection == moveDirection.RIGHT &&\
 		xInput < 0: 
-			velocity.x += (walk * delta)*2
+			velocity.x += (walk * delta)*4
 			
 		else:
-			velocity.x += (walk * delta)*2
+			velocity.x += (walk * delta)*4
 #	print(currentMaxSpeed)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
 		calc_hitstun_velocity(delta)
 	# Vertical movement code. Apply gravity.
 	else:
-		velocity.y += gravity * delta
+		calculate_vertical_velocity(delta)
 	
 func toggle_all_hitboxes(onOff):
 	match onOff: 
@@ -1289,6 +1299,7 @@ func get_input_direction_y():
 func switch_to_state(state):
 	toggle_all_hitboxes("off")
 	stopMovementTimer.stop_timer()
+	shortHopTimer.stop_timer()
 	turnAroundTimer.stop_timer()
 	if bufferAnimation:
 		animationPlayer.play()
@@ -1355,6 +1366,7 @@ func switch_to_state(state):
 			animation_handler(GlobalVariables.CharacterAnimations.INGRAB)
 		CharacterState.CROUCH: 
 			currentState = CharacterState.CROUCH
+			velocity.x = 0
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 	
@@ -1502,7 +1514,7 @@ func check_buffer_input():
 # if 10 or less frames of current animation remain allow buffer input
 	#todo: add other inputs for buffer
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
-	if  (animationFramesLeft <= 10 || currentState == CharacterState.SHIELD || inLandingLag)\
+	if  (animationFramesLeft <= 10 || currentState == CharacterState.SHIELD)\
 	&& bufferInput == null: 
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ROLL\
@@ -1766,19 +1778,36 @@ func other_character_state_changed():
 	emit_signal("character_state_changed", self, currentState)
 	
 func switch_from_air_to_ground(landingLag):
+	print("here!!!")
 	create_landing_lag_timer(landingLag)
 	if bufferAnimation:
 		animationPlayer.play()
 		bufferAnimation = false
 	else:
 		animation_handler(GlobalVariables.CharacterAnimations.LANDINGLAGNORMAL)
+		match currentMoveDirection:
+			moveDirection.LEFT:
+				if get_input_direction_x() > 0:
+					currentMoveDirection = moveDirection.RIGHT
+					mirror_areas()
+					print("here")
+			moveDirection.RIGHT:
+				if get_input_direction_x() < 0:
+					currentMoveDirection = moveDirection.LEFT
+					mirror_areas()
+					print("here2")
+		
 	
 func create_landing_lag_timer(landingLag):
+	gravity = baseGravity
 	inLandingLag = true
 	disableInput = true
 	disableInputDI = false
 	landingLagTimer.set_frames(landingLag)
 	landingLagTimer.start_timer()
+#	if bufferAnimation:
+#		switch_to_state(CharacterState.ATTACKGROUND)
+#	else:
 	switch_to_state(CharacterState.GROUND)
 	
 func _on_landingLagTimer_timer_timeout():

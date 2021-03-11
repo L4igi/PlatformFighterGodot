@@ -10,7 +10,7 @@ var characterList = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	spawn_characters()
-
+		
 
 func set_up_character_ui(character):
 	var charUI = characterStateUI.instance()
