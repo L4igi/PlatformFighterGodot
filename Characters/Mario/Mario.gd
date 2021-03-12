@@ -1,6 +1,6 @@
 extends "res://Characters/Character.gd"
 
-#add variable for shield size (scale)
+var specialCaseAttacks = [GlobalVariables.CharacterAnimations.DAIR]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,6 +36,13 @@ func manage_dair(step):
 			animationPlayer.stop(false)
 			bufferAnimation = true
 
+
+func check_special_case_attack():
+	if specialCaseAttacks.has(currentAttack):
+		if currentAttack == GlobalVariables.CharacterAnimations.DAIR: 
+			switch_to_state(CharacterState.ATTACKGROUND)
+		return true
+	return false
 
 func manage_dash_attack(step):
 	pass
