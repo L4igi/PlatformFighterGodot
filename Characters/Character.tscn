@@ -1,4 +1,4 @@
-[gd_scene load_steps=343 format=2]
+[gd_scene load_steps=346 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -300,6 +300,8 @@
 [ext_resource path="res://Characters/Mario/landinglag/1.png" type="Texture" id=298]
 [ext_resource path="res://Characters/Mario/landinglag/0.png" type="Texture" id=299]
 [ext_resource path="res://Characters/Mario/landinglag/2.png" type="Texture" id=300]
+[ext_resource path="res://Characters/Mario/backflip/1.png" type="Texture" id=301]
+[ext_resource path="res://Characters/Mario/backflip/0.png" type="Texture" id=302]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -502,6 +504,11 @@ animations = [ {
 "loop": true,
 "name": "grab",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 302 ), ExtResource( 301 ) ],
+"loop": true,
+"name": "backflip",
+"speed": 5.0
 } ]
 
 [sub_resource type="Animation" id=2]
@@ -548,6 +555,22 @@ tracks/2/keys = {
 "args": [ 1 ],
 "method": "ground_getup_handler"
 } ]
+}
+
+[sub_resource type="Animation" id=43]
+resource_name = "backflip"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "backflip" ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -2128,12 +2151,13 @@ polygon = PoolVector2Array( 0, -2, -3.2, 6, -3.2, 26, -3.2, 32, 3.2, 32, 3.2, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-animation = "dair"
+animation = "backflip"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
 anims/attack_getup = SubResource( 2 )
+anims/backflip = SubResource( 43 )
 anims/bair = SubResource( 3 )
 anims/bthrow = SubResource( 4 )
 anims/crouch = SubResource( 5 )

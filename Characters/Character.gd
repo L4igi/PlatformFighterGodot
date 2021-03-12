@@ -6,7 +6,7 @@ var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 850
 var baseAirSpeed = 600
-var damagePercent = 0.0
+var damagePercent = 200.0
 #walkforce is only used when no input is detected to slow the character down
 var disableInputInfluence = 1200
 var walkMaxSpeed = 300
@@ -437,15 +437,7 @@ func air_handler(delta):
 		# Move based on the velocity and snap to the ground.
 		velocity = move_and_slide(velocity)
 		if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
-			animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
-			if gravity!=baseGravity:
-				gravity=baseGravity
-			velocity.y = -jumpSpeed
-			if currentMoveDirection == moveDirection.LEFT && get_input_direction_x() >= 0:
-				velocity.x = 0
-			elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() <= 0:
-				velocity.x = 0
-			jumpCount += 1
+			double_jump_handler()
 		#Fastfall
 		if Input.is_action_just_pressed(down) && !onSolidGround && int(velocity.y) >= 0:
 			gravity = fastFallGravity
@@ -469,9 +461,9 @@ func double_jump_handler():
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	velocity.y = -jumpSpeed
-	if currentMoveDirection == moveDirection.LEFT && get_input_direction_x() != -1:
+	if get_input_direction_x() == 0:
 		velocity.x = 0
-	elif currentMoveDirection == moveDirection.RIGHT && get_input_direction_x() != 1:
+	elif get_input_direction_x() == 0:
 		velocity.x = 0
 	jumpCount += 1
 	
@@ -480,20 +472,30 @@ func create_shorthop_timer():
 	shortHopTimer.start_timer()
 		
 func _on_short_hop_timeout():
+	var animationToPlay = GlobalVariables.CharacterAnimations.JUMP
 	if !bufferInput:
 		if shortHop:
 			velocity.y = -shortHopSpeed
 		else: 
 			velocity.y = -jumpSpeed
-		if currentMoveDirection == moveDirection.RIGHT\
-		&& inMovementLag && get_input_direction_x() > 0:
-			velocity.x = currentMaxSpeed
-		elif currentMoveDirection == moveDirection.LEFT\
-		&& inMovementLag && get_input_direction_x() < 0:
-			velocity.x = -1 * currentMaxSpeed
-			disableInput = false
+		if currentMoveDirection == moveDirection.RIGHT:
+			if inMovementLag && get_input_direction_x() > 0:
+				velocity.x = airMaxSpeed
+			elif get_input_direction_x() > 0:
+				velocity.x = airMaxSpeed
+			elif get_input_direction_x() < 0:
+				animationToPlay = GlobalVariables.CharacterAnimations.BACKFLIP
+				velocity.x = -1*airMaxSpeed
+		elif currentMoveDirection == moveDirection.LEFT:
+			if inMovementLag && get_input_direction_x() < 0:
+				velocity.x = -1 * airMaxSpeed
+			elif get_input_direction_x() < 0:
+				velocity.x = -1 * airMaxSpeed
+			elif get_input_direction_x() > 0:
+				animationToPlay = GlobalVariables.CharacterAnimations.BACKFLIP
+				velocity.x = airMaxSpeed
 		switch_to_state(CharacterState.AIR)
-		animation_handler(GlobalVariables.CharacterAnimations.JUMP)
+		animation_handler(animationToPlay)
 				
 func _on_drop_timer_timeout():
 	if inputTimeout:
@@ -513,7 +515,6 @@ func calc_hitstun_velocity(delta):
 			velocity.x = 0
 	else: 
 		velocity.x = 0
-	calculate_vertical_velocity(delta)
 	
 func hitstun_handler(delta):
 	if disableInput && inHitStun:
@@ -589,6 +590,7 @@ func create_hitstun_timer(stunTime):
 	hitStunTimer.start_timer()
 	
 func _on_hitstun_timeout():
+	print("timeout")
 	inHitStun = false
 	disableInput = false
 	if shortHitStun: 
@@ -878,6 +880,7 @@ func get_character_size():
 func animation_handler(animationToPlay):
 	#print("Switch to animation " +str(animationToPlay))
 	animationPlayer.playback_speed = 1
+	$AnimatedSprite.set_rotation_degrees(0.0)
 	match animationToPlay:
 		GlobalVariables.CharacterAnimations.IDLE:
 			animationPlayer.queue("idle")
@@ -978,6 +981,8 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("turnaround_fast")
 		GlobalVariables.CharacterAnimations.LANDINGLAGNORMAL:
 			animationPlayer.play("landinglagnormal")
+		GlobalVariables.CharacterAnimations.BACKFLIP:
+			animationPlayer.play("backflip")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -1275,7 +1280,7 @@ func get_input_direction_y():
 func switch_to_state(state):
 	toggle_all_hitboxes("off")
 	stopMovementTimer.stop_timer()
-	shortHopTimer.stop_timer()
+	#shortHopTimer.stop_timer()
 	turnAroundTimer.stop_timer()
 	if bufferAnimation:
 		animationPlayer.play()

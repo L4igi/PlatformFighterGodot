@@ -1,7 +1,47 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Mario/Mario.gd" type="Script" id=2]
+
+[sub_resource type="Animation" id=16]
+resource_name = "backflip"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "backflip" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -112.3, -840.0 ]
+}
 
 [sub_resource type="Animation" id=1]
 resource_name = "bair"
@@ -540,10 +580,11 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-frame = 5
+rotation = -1.96
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
+anims/backflip = SubResource( 16 )
 anims/bair = SubResource( 1 )
 anims/dair = SubResource( 2 )
 anims/dash_attack = SubResource( 3 )
