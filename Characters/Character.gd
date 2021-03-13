@@ -248,6 +248,8 @@ func _physics_process(delta):
 			in_grab_handler(delta)
 		CharacterState.CROUCH: 
 			crouch_handler(delta)
+		CharacterState.ROLL:
+			pass
 
 func check_input_ground(delta):
 	if Input.is_action_just_pressed(jump):
@@ -529,7 +531,7 @@ func hitstun_handler(delta):
 				initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
 #				#plays rest of hitstun animation if hitting ground during hitstun
-				animationPlayer.play()
+				animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
 				bufferAnimation = false
 				create_hitstun_timer(groundHitStun)
 				switch_to_state(CharacterState.HITSTUNGROUND)
@@ -542,7 +544,7 @@ func hitstun_handler(delta):
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
 			#plays rest of hitstun animation if hitting ground during hitstun
-			animationPlayer.play()
+			animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
 			bufferAnimation = false
 			create_hitstun_timer(groundHitStun)
 		elif currentState == CharacterState.HITSTUNGROUND: 
@@ -568,6 +570,7 @@ func hitstun_handler(delta):
 					currentMoveDirection = moveDirection.RIGHT
 					mirror_areas()
 				animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
+			process_movement_physics(delta)
 		elif currentState == CharacterState.HITSTUNAIR:
 			#if not in hitstun check for jump, attack or special 
 			#todo: check for special
@@ -578,7 +581,9 @@ func hitstun_handler(delta):
 				elif Input.is_action_just_pressed(jump):
 					switch_to_state(CharacterState.AIR)
 					double_jump_handler()
-		process_movement_physics(delta)
+				input_movement_physics_air(delta)
+				velocity = move_and_slide(velocity)
+		
 	#switch to other animation on button press
 	
 	
@@ -594,13 +599,19 @@ func _on_hitstun_timeout():
 	inHitStun = false
 	disableInput = false
 	if shortHitStun: 
-		if abs(int(velocity.y)) <= onSolidGroundThreashold:
-			animationPlayer.play("idle")
-			switch_to_state(CharacterState.GROUND)
+		if onSolidGround:
+			switch_from_air_to_ground(normalLandingLag)
 		else:
 			switch_from_state_to_airborn()
-	else:
-		pass
+	else: 
+		if onSolidGround && bufferInput:
+			switch_from_air_to_ground(normalLandingLag)
+		elif !onSolidGround && bufferInput:
+			switch_from_state_to_airborn()
+		elif !onSolidGround: 
+			animation_handler(GlobalVariables.CharacterAnimations.TUMBLE)
+#	else:
+#		pass
 #		switch_to_state(CharacterState.AIR)
 #	else:
 #		switch_to_state(CharacterState.GROUND)
@@ -877,17 +888,20 @@ func edge_handler(delta):
 func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
 	
-func animation_handler(animationToPlay):
+func animation_handler(animationToPlay, notQueue = false):
 	#print("Switch to animation " +str(animationToPlay))
 	animationPlayer.playback_speed = 1
 	$AnimatedSprite.set_rotation_degrees(0.0)
 	match animationToPlay:
 		GlobalVariables.CharacterAnimations.IDLE:
-			animationPlayer.queue("idle")
+			if notQueue: 
+				animationPlayer.play("idle")
+			else:
+				animationPlayer.queue("idle")
 		GlobalVariables.CharacterAnimations.WALK:
 			animationPlayer.play("walk")
 		GlobalVariables.CharacterAnimations.RUN:
-			pass
+			animationPlayer.play("run")
 		GlobalVariables.CharacterAnimations.JUMP:
 			animationPlayer.play("jump")
 			animationPlayer.queue("freefall")
@@ -983,6 +997,10 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("landinglagnormal")
 		GlobalVariables.CharacterAnimations.BACKFLIP:
 			animationPlayer.play("backflip")
+		GlobalVariables.CharacterAnimations.TUMBLE:
+			animationPlayer.play("tumble")
+		GlobalVariables.CharacterAnimations.HURTTRANSITION:
+			animationPlayer.play("hurtTransition")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -1054,7 +1072,7 @@ func input_movement_physics_ground(delta):
 #			if lastXInput == 0 && velocity.x != 0: 
 #				create_sideStep_timer()
 			if(currentState == CharacterState.GROUND):
-				animationPlayer.play("idle")
+				animation_handler(GlobalVariables.CharacterAnimations.IDLE, true)
 			# The velocity, slowed down a bit, and then reassigned.
 			if pushingCharacter == null:
 				resetMovementSpeed = true
@@ -1063,12 +1081,12 @@ func input_movement_physics_ground(delta):
 			if lastXInput == 0: 
 				change_max_speed(xInput)
 			if currentMaxSpeed == baseWalkMaxSpeed:
-				animationPlayer.play("walk")
+				animation_handler(GlobalVariables.CharacterAnimations.WALK)
 				if !pushingCharacter:
 					velocity.x = xInput * currentMaxSpeed
 					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 			elif currentMaxSpeed == baseRunMaxSpeed:
-				animationPlayer.play("run")
+				animation_handler(GlobalVariables.CharacterAnimations.RUN)
 				if xInput > 0 && !pushingCharacter:
 					velocity.x = currentMaxSpeed
 					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
@@ -1213,13 +1231,13 @@ func change_max_speed(xInput):
 	resetMovementSpeed = true
 	if abs(useXInput) > walkThreashold:
 		currentMaxSpeed = baseRunMaxSpeed
-		animationPlayer.play("run")
+		animation_handler(GlobalVariables.CharacterAnimations.RUN)
 	elif abs(useXInput) == 0:
 		currentMaxSpeed = baseWalkMaxSpeed
-		animationPlayer.play("idle")
+		animation_handler(GlobalVariables.CharacterAnimations.IDLE, true)
 	else:
 		currentMaxSpeed = baseWalkMaxSpeed
-		animationPlayer.play("walk")
+		animation_handler(GlobalVariables.CharacterAnimations.WALK)
 
 func input_movement_physics_air(delta):
 	# Horizontal movement code. First, get the player's input.
@@ -1478,6 +1496,7 @@ func apply_throw(actionType):
 	inGrabByCharacter = null
 	
 func enable_player_input():
+	#print("buffered Input is: " +str(bufferInput))
 	if check_buffered_input():
 		return
 	elif bufferAnimation:
@@ -1499,14 +1518,18 @@ func buffer_input():
 # if 10 or less frames of current animation remain allow buffer input
 	#todo: add other inputs for buffer
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
-	if  (animationFramesLeft <= bufferInputWindow || currentState == CharacterState.SHIELD)\
+	if  ((animationFramesLeft <= bufferInputWindow || currentState == CharacterState.SHIELD)\
+	|| (inHitStun && hitStunTimer.get_frames_left() < 10))\
+	|| (currentState == CharacterState.ROLL && invincibilityTimer.get_frames_left() < 10)\
 	&& bufferInput == null: 
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ATTACKAIR\
 		|| currentState == CharacterState.ROLL\
 		|| currentState == CharacterState.SHIELD\
+		|| currentState == CharacterState.HITSTUNAIR\
 		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
+				print("buffering")
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
 			elif Input.is_action_just_pressed(jump):
 				bufferInput = GlobalVariables.CharacterAnimations.JUMP
@@ -1691,8 +1714,6 @@ func apply_hurt_animation_step(step =0):
 				animationPlayer.stop(false)
 			#else:
 				#print(onSolidGround.name)
-		2:
-			disableInput = false
 			
 func animation_invincibility_handler(step = 0):
 	match step: 
@@ -1701,9 +1722,13 @@ func animation_invincibility_handler(step = 0):
 			collisionAreaShape.set_deferred("disabled",true)
 			create_invincible_timer(int(animationPlayer.current_animation_length *60))
 		1:
-			disableInput = false
 			collisionAreaShape.set_deferred("disabled",false)
-			switch_to_state(CharacterState.GROUND)
+			if onSolidGround && Input.is_action_pressed(shield):
+				switch_to_state(CharacterState.SHIELD)
+			else:
+				create_sideStep_timer()
+				switch_to_state(CharacterState.GROUND)
+			enable_player_input()
 			
 func apply_grab_animation_step(step = 0):
 	match step: 
@@ -1743,11 +1768,12 @@ func apply_throw_animation_step(step = 0):
 func create_invincible_timer(duration = 0):
 	enable_disable_hurtboxes(false)
 	invincibilityTimer.set_frames(duration)
-	print("duration " +str(duration))
+	#print("duration " +str(duration))
 	invincibilityTimer.start_timer()
 
 func _on_invincibility_timer_timeout():
-	print("invincibility timeout")
+	#print("invincibility timeout")
+	check_character_crouch()
 	enable_disable_hurtboxes(true)
 
 func enable_disable_hurtboxes(enable = true):

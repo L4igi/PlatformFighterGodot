@@ -1,4 +1,4 @@
-[gd_scene load_steps=346 format=2]
+[gd_scene load_steps=348 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -320,11 +320,6 @@ animations = [ {
 "name": "dair",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
-"loop": true,
-"name": "dash_attack",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 282 ), ExtResource( 283 ), ExtResource( 284 ) ],
 "loop": true,
 "name": "crouch",
@@ -335,24 +330,14 @@ animations = [ {
 "name": "upsmash",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 235 ), ExtResource( 234 ) ],
+"frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
 "loop": true,
-"name": "ingrab",
+"name": "dash_attack",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 186 ), ExtResource( 185 ), ExtResource( 187 ), ExtResource( 180 ), ExtResource( 179 ), ExtResource( 181 ), ExtResource( 182 ), ExtResource( 183 ), ExtResource( 184 ), ExtResource( 175 ), ExtResource( 178 ), ExtResource( 177 ), ExtResource( 176 ) ],
+"frames": [ ExtResource( 268 ), ExtResource( 269 ), ExtResource( 270 ), ExtResource( 271 ), ExtResource( 272 ), ExtResource( 273 ), ExtResource( 274 ), ExtResource( 275 ), ExtResource( 276 ), ExtResource( 277 ), ExtResource( 278 ), ExtResource( 260 ), ExtResource( 245 ), ExtResource( 261 ), ExtResource( 253 ) ],
 "loop": true,
-"name": "hurt",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 190 ), ExtResource( 191 ), ExtResource( 192 ), ExtResource( 207 ), ExtResource( 203 ), ExtResource( 205 ), ExtResource( 206 ), ExtResource( 208 ), ExtResource( 204 ), ExtResource( 210 ), ExtResource( 209 ), ExtResource( 212 ), ExtResource( 211 ) ],
-"loop": true,
-"name": "roll_getup",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 84 ), ExtResource( 87 ), ExtResource( 88 ), ExtResource( 85 ), ExtResource( 86 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 94 ), ExtResource( 90 ), ExtResource( 92 ), ExtResource( 89 ) ],
-"loop": true,
-"name": "fair",
+"name": "bthrow",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 265 ), ExtResource( 241 ), ExtResource( 240 ), ExtResource( 244 ), ExtResource( 243 ), ExtResource( 242 ) ],
@@ -360,9 +345,14 @@ animations = [ {
 "name": "uthrow",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
+"frames": [ ExtResource( 201 ), ExtResource( 189 ), ExtResource( 197 ), ExtResource( 198 ), ExtResource( 188 ) ],
 "loop": true,
-"name": "nair",
+"name": "normal_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 190 ), ExtResource( 191 ), ExtResource( 192 ), ExtResource( 207 ), ExtResource( 203 ), ExtResource( 205 ), ExtResource( 206 ), ExtResource( 208 ), ExtResource( 204 ), ExtResource( 210 ), ExtResource( 209 ), ExtResource( 212 ), ExtResource( 211 ) ],
+"loop": true,
+"name": "roll_getup",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 67 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 70 ) ],
@@ -370,39 +360,19 @@ animations = [ {
 "name": "jab2",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
+"frames": [ ExtResource( 287 ), ExtResource( 286 ), ExtResource( 285 ), ExtResource( 288 ) ],
 "loop": true,
-"name": "jab1",
+"name": "shielddrop",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 163 ), ExtResource( 173 ), ExtResource( 164 ), ExtResource( 166 ), ExtResource( 167 ), ExtResource( 170 ), ExtResource( 168 ), ExtResource( 169 ), ExtResource( 172 ), ExtResource( 165 ), ExtResource( 174 ), ExtResource( 171 ) ],
+"frames": [ ExtResource( 123 ), ExtResource( 127 ), ExtResource( 128 ), ExtResource( 129 ), ExtResource( 124 ), ExtResource( 130 ), ExtResource( 126 ), ExtResource( 125 ), ExtResource( 131 ), ExtResource( 132 ), ExtResource( 133 ), ExtResource( 134 ) ],
 "loop": true,
-"name": "dsmash",
+"name": "walk",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 263 ), ExtResource( 266 ), ExtResource( 267 ), ExtResource( 262 ), ExtResource( 264 ) ],
+"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
 "loop": true,
-"name": "fthrow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ) ],
-"loop": true,
-"name": "attack_getup",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 237 ), ExtResource( 236 ), ExtResource( 239 ), ExtResource( 238 ) ],
-"loop": true,
-"name": "grabjab",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
-"loop": true,
-"name": "freefall",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 95 ), ExtResource( 96 ), ExtResource( 97 ), ExtResource( 98 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 99 ) ],
-"loop": true,
-"name": "bair",
+"name": "doublejump",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 299 ), ExtResource( 298 ), ExtResource( 300 ) ],
@@ -410,19 +380,34 @@ animations = [ {
 "name": "landing_lag",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 280 ), ExtResource( 279 ), ExtResource( 281 ) ],
+"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
 "loop": true,
-"name": "edgeSnap",
+"name": "nair",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 287 ), ExtResource( 286 ), ExtResource( 285 ), ExtResource( 288 ) ],
+"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ) ],
 "loop": true,
-"name": "shielddrop",
+"name": "attack_getup",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 153 ), ExtResource( 155 ), ExtResource( 154 ), ExtResource( 152 ), ExtResource( 156 ), ExtResource( 157 ), ExtResource( 162 ), ExtResource( 158 ), ExtResource( 159 ), ExtResource( 160 ), ExtResource( 161 ) ],
+"frames": [ ExtResource( 235 ), ExtResource( 234 ) ],
 "loop": true,
-"name": "fsmash",
+"name": "ingrab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 163 ), ExtResource( 173 ), ExtResource( 164 ), ExtResource( 166 ), ExtResource( 167 ), ExtResource( 170 ), ExtResource( 168 ), ExtResource( 169 ), ExtResource( 172 ), ExtResource( 165 ), ExtResource( 174 ), ExtResource( 171 ) ],
+"loop": true,
+"name": "dsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
+"loop": true,
+"name": "turnaround_slow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
+"loop": true,
+"name": "upair",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 138 ), ExtResource( 137 ), ExtResource( 139 ), ExtResource( 136 ), ExtResource( 135 ) ],
@@ -430,9 +415,24 @@ animations = [ {
 "name": "ftilt",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
+"loop": true,
+"name": "freefall",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 153 ), ExtResource( 155 ), ExtResource( 154 ), ExtResource( 152 ), ExtResource( 156 ), ExtResource( 157 ), ExtResource( 162 ), ExtResource( 158 ), ExtResource( 159 ), ExtResource( 160 ), ExtResource( 161 ) ],
+"loop": true,
+"name": "fsmash",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 224 ), ExtResource( 225 ), ExtResource( 226 ), ExtResource( 227 ), ExtResource( 228 ), ExtResource( 229 ), ExtResource( 223 ) ],
 "loop": true,
 "name": "spotdodge",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 302 ), ExtResource( 301 ) ],
+"loop": true,
+"name": "backflip",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 108 ), ExtResource( 107 ), ExtResource( 102 ), ExtResource( 103 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 106 ) ],
@@ -440,9 +440,34 @@ animations = [ {
 "name": "dtilt",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 123 ), ExtResource( 127 ), ExtResource( 128 ), ExtResource( 129 ), ExtResource( 124 ), ExtResource( 130 ), ExtResource( 126 ), ExtResource( 125 ), ExtResource( 131 ), ExtResource( 132 ), ExtResource( 133 ), ExtResource( 134 ) ],
+"frames": [ ExtResource( 84 ), ExtResource( 87 ), ExtResource( 88 ), ExtResource( 85 ), ExtResource( 86 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 94 ), ExtResource( 90 ), ExtResource( 92 ), ExtResource( 89 ) ],
 "loop": true,
-"name": "walk",
+"name": "fair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 263 ), ExtResource( 266 ), ExtResource( 267 ), ExtResource( 262 ), ExtResource( 264 ) ],
+"loop": true,
+"name": "fthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 95 ), ExtResource( 96 ), ExtResource( 97 ), ExtResource( 98 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 99 ) ],
+"loop": true,
+"name": "bair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 280 ), ExtResource( 279 ), ExtResource( 281 ) ],
+"loop": true,
+"name": "edgeSnap",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
+"loop": true,
+"name": "jab1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 237 ), ExtResource( 236 ), ExtResource( 239 ), ExtResource( 238 ) ],
+"loop": true,
+"name": "grabjab",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
@@ -455,19 +480,9 @@ animations = [ {
 "name": "uptilt",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
-"loop": true,
-"name": "doublejump",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
 "loop": true,
-"name": "turnaround_slow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 201 ), ExtResource( 189 ), ExtResource( 197 ), ExtResource( 198 ), ExtResource( 188 ) ],
-"loop": true,
-"name": "normal_getup",
+"name": "turnaround_fast",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 248 ), ExtResource( 246 ), ExtResource( 247 ), ExtResource( 256 ), ExtResource( 249 ), ExtResource( 255 ), ExtResource( 257 ), ExtResource( 258 ), ExtResource( 250 ), ExtResource( 251 ), ExtResource( 252 ), ExtResource( 254 ), ExtResource( 259 ) ],
@@ -475,29 +490,9 @@ animations = [ {
 "name": "dthrow",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 268 ), ExtResource( 269 ), ExtResource( 270 ), ExtResource( 271 ), ExtResource( 272 ), ExtResource( 273 ), ExtResource( 274 ), ExtResource( 275 ), ExtResource( 276 ), ExtResource( 277 ), ExtResource( 278 ), ExtResource( 260 ), ExtResource( 245 ), ExtResource( 261 ), ExtResource( 253 ) ],
+"frames": [ ExtResource( 186 ), ExtResource( 185 ), ExtResource( 187 ), ExtResource( 180 ), ExtResource( 179 ), ExtResource( 181 ), ExtResource( 182 ), ExtResource( 183 ), ExtResource( 184 ), ExtResource( 175 ), ExtResource( 178 ), ExtResource( 177 ), ExtResource( 176 ) ],
 "loop": true,
-"name": "bthrow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
-"loop": true,
-"name": "upair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
-"loop": true,
-"name": "turnaround_fast",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 213 ) ],
-"loop": true,
-"name": "shield",
+"name": "hurt",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
@@ -505,9 +500,14 @@ animations = [ {
 "name": "grab",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 302 ), ExtResource( 301 ) ],
+"frames": [ ExtResource( 213 ) ],
 "loop": true,
-"name": "backflip",
+"name": "shield",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
 "speed": 5.0
 } ]
 
@@ -557,7 +557,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=43]
+[sub_resource type="Animation" id=3]
 resource_name = "backflip"
 step = 0.0166667
 tracks/0/type = "value"
@@ -573,7 +573,7 @@ tracks/0/keys = {
 "values": [ "backflip" ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -624,8 +624,7 @@ tracks/3/keys = {
 "values": [ 0.0, -33.0, -6.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "bthrow"
+[sub_resource type="Animation" id=5]
 length = 1.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -672,8 +671,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "crouch"
+[sub_resource type="Animation" id=6]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -700,7 +698,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 length = 1.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -739,7 +737,7 @@ tracks/2/keys = {
 "values": [ Vector2( 10, 10 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
 length = 1.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -780,7 +778,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=9]
 length = 0.183333
 step = 0.0166667
 tracks/0/type = "value"
@@ -844,7 +842,7 @@ tracks/4/keys = {
 "values": [ 93.2, 63.6, 93.2, 63.6, -4.2 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=10]
 length = 1.2
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -888,7 +886,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=11]
 length = 1.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -935,7 +933,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=12]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -987,7 +985,7 @@ tracks/3/keys = {
 "values": [ 27.0, 0.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=13]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1014,7 +1012,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=14]
 length = 1.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1065,7 +1063,7 @@ tracks/3/keys = {
 "values": [ -45.0, -63.0, 0.0, 18.0, 54.0, 54.0, 27.0, 0.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -1093,7 +1091,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -1136,7 +1134,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=17]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1183,7 +1181,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=18]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1210,7 +1208,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=19]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -1279,7 +1277,7 @@ tracks/4/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id=20]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1323,7 +1321,8 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="Animation" id=21]
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -1366,7 +1365,36 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=21]
+[sub_resource type="Animation" id=44]
+resource_name = "hurtTransition"
+length = 0.583333
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "hurt" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 7, 8, 9, 10, 11, 12 ]
+}
+
+[sub_resource type="Animation" id=22]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1393,7 +1421,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id=23]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -1445,7 +1473,7 @@ tracks/3/keys = {
 "values": [ Vector2( 2, 14 ), Vector2( 0, 14 ), Vector2( 2, 14 ) ]
 }
 
-[sub_resource type="Animation" id=23]
+[sub_resource type="Animation" id=24]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -1473,7 +1501,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=24]
+[sub_resource type="Animation" id=25]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1500,7 +1528,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=26]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1527,7 +1555,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=26]
+[sub_resource type="Animation" id=27]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1578,8 +1606,7 @@ tracks/3/keys = {
 "values": [ -21.2, -8.5, 0.0 ]
 }
 
-[sub_resource type="Animation" id=27]
-resource_name = "landinglagnormal"
+[sub_resource type="Animation" id=28]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -1607,7 +1634,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=28]
+[sub_resource type="Animation" id=29]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1634,7 +1661,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=29]
+[sub_resource type="Animation" id=30]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1678,7 +1705,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=30]
+[sub_resource type="Animation" id=31]
 length = 0.8
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1722,7 +1749,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=31]
+[sub_resource type="Animation" id=32]
 length = 1.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1766,7 +1793,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=32]
+[sub_resource type="Animation" id=33]
 length = 1.2
 loop = true
 tracks/0/type = "value"
@@ -1794,7 +1821,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="Animation" id=33]
+[sub_resource type="Animation" id=34]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1821,7 +1848,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=34]
+[sub_resource type="Animation" id=35]
 length = 0.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -1849,7 +1876,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=35]
+[sub_resource type="Animation" id=36]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1893,7 +1920,23 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=36]
+[sub_resource type="Animation" id=45]
+resource_name = "tumble"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "backflip" ]
+}
+
+[sub_resource type="Animation" id=37]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -1921,7 +1964,7 @@ tracks/1/keys = {
 "values": [  ]
 }
 
-[sub_resource type="Animation" id=37]
+[sub_resource type="Animation" id=38]
 length = 0.35
 step = 0.0166667
 tracks/0/type = "value"
@@ -1949,7 +1992,7 @@ tracks/1/keys = {
 "values": [ 8 ]
 }
 
-[sub_resource type="Animation" id=38]
+[sub_resource type="Animation" id=39]
 length = 0.383333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1989,7 +2032,7 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=39]
+[sub_resource type="Animation" id=40]
 length = 1.2
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2033,7 +2076,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=40]
+[sub_resource type="Animation" id=41]
 length = 0.65
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2060,7 +2103,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=41]
+[sub_resource type="Animation" id=42]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2107,7 +2150,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=42]
+[sub_resource type="Animation" id=43]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -2157,47 +2200,49 @@ speed_scale = 2.0
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
 anims/attack_getup = SubResource( 2 )
-anims/backflip = SubResource( 43 )
-anims/bair = SubResource( 3 )
-anims/bthrow = SubResource( 4 )
-anims/crouch = SubResource( 5 )
-anims/dair = SubResource( 6 )
-anims/dash_attack = SubResource( 7 )
-anims/doublejump = SubResource( 8 )
-anims/dsmash = SubResource( 9 )
-anims/dthrow = SubResource( 10 )
-anims/dtilt = SubResource( 11 )
-anims/edgeSnap = SubResource( 12 )
-anims/fair = SubResource( 13 )
-anims/freefall = SubResource( 14 )
-anims/fsmash = SubResource( 15 )
-anims/fthrow = SubResource( 16 )
-anims/ftilt = SubResource( 17 )
-anims/grab = SubResource( 18 )
-anims/grabjab = SubResource( 19 )
-anims/hurt = SubResource( 20 )
-anims/hurt_short = SubResource( 21 )
-anims/idle = SubResource( 22 )
-anims/ingrab = SubResource( 23 )
-anims/jab1 = SubResource( 24 )
-anims/jab2 = SubResource( 25 )
-anims/jump = SubResource( 26 )
-anims/landinglagnormal = SubResource( 27 )
-anims/nair = SubResource( 28 )
-anims/normal_getup = SubResource( 29 )
-anims/roll = SubResource( 30 )
-anims/roll_getup = SubResource( 31 )
-anims/run = SubResource( 32 )
-anims/shield = SubResource( 33 )
-anims/shielddrop = SubResource( 34 )
-anims/spotdodge = SubResource( 35 )
-anims/turnaround_fast = SubResource( 36 )
-anims/turnaround_slow = SubResource( 37 )
-anims/upair = SubResource( 38 )
-anims/upsmash = SubResource( 39 )
-anims/uptilt = SubResource( 40 )
-anims/uthrow = SubResource( 41 )
-anims/walk = SubResource( 42 )
+anims/backflip = SubResource( 3 )
+anims/bair = SubResource( 4 )
+anims/bthrow = SubResource( 5 )
+anims/crouch = SubResource( 6 )
+anims/dair = SubResource( 7 )
+anims/dash_attack = SubResource( 8 )
+anims/doublejump = SubResource( 9 )
+anims/dsmash = SubResource( 10 )
+anims/dthrow = SubResource( 11 )
+anims/dtilt = SubResource( 12 )
+anims/edgeSnap = SubResource( 13 )
+anims/fair = SubResource( 14 )
+anims/freefall = SubResource( 15 )
+anims/fsmash = SubResource( 16 )
+anims/fthrow = SubResource( 17 )
+anims/ftilt = SubResource( 18 )
+anims/grab = SubResource( 19 )
+anims/grabjab = SubResource( 20 )
+anims/hurt = SubResource( 21 )
+anims/hurtTransition = SubResource( 44 )
+anims/hurt_short = SubResource( 22 )
+anims/idle = SubResource( 23 )
+anims/ingrab = SubResource( 24 )
+anims/jab1 = SubResource( 25 )
+anims/jab2 = SubResource( 26 )
+anims/jump = SubResource( 27 )
+anims/landinglagnormal = SubResource( 28 )
+anims/nair = SubResource( 29 )
+anims/normal_getup = SubResource( 30 )
+anims/roll = SubResource( 31 )
+anims/roll_getup = SubResource( 32 )
+anims/run = SubResource( 33 )
+anims/shield = SubResource( 34 )
+anims/shielddrop = SubResource( 35 )
+anims/spotdodge = SubResource( 36 )
+anims/tumble = SubResource( 45 )
+anims/turnaround_fast = SubResource( 37 )
+anims/turnaround_slow = SubResource( 38 )
+anims/upair = SubResource( 39 )
+anims/upsmash = SubResource( 40 )
+anims/uptilt = SubResource( 41 )
+anims/uthrow = SubResource( 42 )
+anims/walk = SubResource( 43 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
 visible = true

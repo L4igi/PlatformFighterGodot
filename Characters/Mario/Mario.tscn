@@ -1,9 +1,9 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Mario/Mario.gd" type="Script" id=2]
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=1]
 resource_name = "backflip"
 step = 0.0166667
 tracks/0/type = "value"
@@ -43,8 +43,7 @@ tracks/2/keys = {
 "values": [ -112.3, -840.0 ]
 }
 
-[sub_resource type="Animation" id=1]
-resource_name = "bair"
+[sub_resource type="Animation" id=2]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -71,8 +70,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "dair"
+[sub_resource type="Animation" id=3]
 length = 1.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -116,8 +114,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "dash_attack"
+[sub_resource type="Animation" id=4]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -145,8 +142,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "doublejump"
+[sub_resource type="Animation" id=5]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -174,8 +170,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "dtilt"
+[sub_resource type="Animation" id=6]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -203,8 +198,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=6]
-resource_name = "fair"
+[sub_resource type="Animation" id=7]
 length = 1.01667
 step = 0.0166667
 tracks/0/type = "value"
@@ -258,8 +252,7 @@ tracks/3/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "freefall"
+[sub_resource type="Animation" id=8]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -287,8 +280,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
-[sub_resource type="Animation" id=8]
-resource_name = "idle"
+[sub_resource type="Animation" id=9]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -316,8 +308,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=9]
-resource_name = "jab1"
+[sub_resource type="Animation" id=10]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -344,8 +335,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=10]
-resource_name = "jab2"
+[sub_resource type="Animation" id=11]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -372,7 +362,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=12]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -399,8 +389,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=12]
-resource_name = "nair"
+[sub_resource type="Animation" id=13]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -442,8 +431,49 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=13]
-resource_name = "upair"
+[sub_resource type="Animation" id=17]
+resource_name = "tumble"
+length = 0.5
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "backflip" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ -112.3, -480.0 ]
+}
+
+[sub_resource type="Animation" id=14]
 length = 0.500001
 step = 0.0166667
 tracks/0/type = "value"
@@ -519,8 +549,7 @@ tracks/5/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=14]
-resource_name = "uptilt"
+[sub_resource type="Animation" id=15]
 length = 0.65
 step = 0.0166667
 tracks/0/type = "value"
@@ -548,7 +577,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -581,25 +610,27 @@ script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = -1.96
+animation = "roll"
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
-anims/backflip = SubResource( 16 )
-anims/bair = SubResource( 1 )
-anims/dair = SubResource( 2 )
-anims/dash_attack = SubResource( 3 )
-anims/doublejump = SubResource( 4 )
-anims/dtilt = SubResource( 5 )
-anims/fair = SubResource( 6 )
-anims/freefall = SubResource( 7 )
-anims/idle = SubResource( 8 )
-anims/jab1 = SubResource( 9 )
-anims/jab2 = SubResource( 10 )
-anims/jump = SubResource( 11 )
-anims/nair = SubResource( 12 )
-anims/upair = SubResource( 13 )
-anims/uptilt = SubResource( 14 )
-anims/walk = SubResource( 15 )
+anims/backflip = SubResource( 1 )
+anims/bair = SubResource( 2 )
+anims/dair = SubResource( 3 )
+anims/dash_attack = SubResource( 4 )
+anims/doublejump = SubResource( 5 )
+anims/dtilt = SubResource( 6 )
+anims/fair = SubResource( 7 )
+anims/freefall = SubResource( 8 )
+anims/idle = SubResource( 9 )
+anims/jab1 = SubResource( 10 )
+anims/jab2 = SubResource( 11 )
+anims/jump = SubResource( 12 )
+anims/nair = SubResource( 13 )
+anims/tumble = SubResource( 17 )
+anims/upair = SubResource( 14 )
+anims/uptilt = SubResource( 15 )
+anims/walk = SubResource( 16 )
 
 [node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = true
