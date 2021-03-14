@@ -122,6 +122,12 @@ var landingLagTimer
 var normalLandingLag = 4
 var helplessLandingLag = 10
 var inLandingLag = false
+#invincibility lengths
+var rollInvincibilityFrames = 25
+var spotdodgeInvincibilityFrames = 25
+var rollGetupInvincibilityFrames = 20
+var normalGetupInvincibilityFrames = 10
+var attackGetupInvincibilityFrames = 10
 
 enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH}
 #signal for character state change
@@ -794,10 +800,8 @@ func snap_edge(collidingEdge):
 			character_towards_edge = true
 			
 	if character_over_edge && currentState == CharacterState.AIR && (character_towards_edge && velocity.y >= 0):
-		switch_to_state(CharacterState.EDGE)
 		disableInput = true
 		gravity = baseGravity
-		velocity = Vector2.ZERO
 		jumpCount = 1
 		if currentMoveDirection == moveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
 			currentMoveDirection = moveDirection.LEFT
@@ -812,6 +816,8 @@ func snap_edge(collidingEdge):
 		$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
+		velocity = Vector2.ZERO
+		switch_to_state(CharacterState.EDGE)
 		snappedEdge = collidingEdge
 		
 func edge_handler(delta):
@@ -883,7 +889,6 @@ func edge_handler(delta):
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
-		enable_player_input()
 
 func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
@@ -966,7 +971,6 @@ func animation_handler(animationToPlay, notQueue = false):
 			animationPlayer.play("shield")
 		GlobalVariables.CharacterAnimations.ROLL:
 			animationPlayer.play("roll")
-			roll_calculator(rollDistance)
 		GlobalVariables.CharacterAnimations.SPOTDODGE:
 			animationPlayer.play("spotdodge")
 		GlobalVariables.CharacterAnimations.GRAB:
@@ -986,6 +990,7 @@ func animation_handler(animationToPlay, notQueue = false):
 		GlobalVariables.CharacterAnimations.EDGESNAP: 
 			animationPlayer.play("edgeSnap")
 		GlobalVariables.CharacterAnimations.CROUCH:
+			animationPlayer.clear_queue()
 			animationPlayer.play("crouch")
 		GlobalVariables.CharacterAnimations.SHIELDDROP:
 			animationPlayer.play("shielddrop")
@@ -1020,13 +1025,12 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	disableInput = true
 	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
 	yield(animationPlayer, "animation_finished")
-	if bufferInput == null:
+	if !bufferInput:
 		match currentState:
 			CharacterState.ATTACKGROUND:
-				if get_input_direction_y() >= 0.5: 
-					switch_to_state(CharacterState.CROUCH)
-				else:
-					switch_to_state(CharacterState.GROUND)
+				create_sideStep_timer()
+				switch_to_state(CharacterState.GROUND)
+				check_character_crouch()
 				smashAttack = null
 			CharacterState.ATTACKAIR:
 				switch_to_state(CharacterState.AIR)
@@ -1034,7 +1038,7 @@ func play_attack_animation(animationToPlay, playBackSpeed = 1):
 	else:
 		enable_player_input()
 
-func apply_attack_movement_stats(step = 0):
+func apply_attack_animation_steps(step = 0):
 	pass
 	
 func process_movement_physics(delta):
@@ -1273,7 +1277,7 @@ func toggle_all_hitboxes(onOff):
 					if hitbox is CollisionShape2D:
 						hitbox.set_deferred('disabled',false)
 		"off":
-			if !inHitStun && bufferInput == null && !inLandingLag:
+			if !inHitStun && !bufferInput && !inLandingLag:
 				enable_player_input()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
@@ -1520,16 +1524,16 @@ func buffer_input():
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if  ((animationFramesLeft <= bufferInputWindow || currentState == CharacterState.SHIELD)\
 	|| (inHitStun && hitStunTimer.get_frames_left() < 10))\
-	|| (currentState == CharacterState.ROLL && invincibilityTimer.get_frames_left() < 10)\
 	&& bufferInput == null: 
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ATTACKAIR\
 		|| currentState == CharacterState.ROLL\
+		|| currentState == CharacterState.SPOTDODGE\
 		|| currentState == CharacterState.SHIELD\
 		|| currentState == CharacterState.HITSTUNAIR\
+		|| currentState == CharacterState.GETUP\
 		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-				print("buffering")
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
 			elif Input.is_action_just_pressed(jump):
 				bufferInput = GlobalVariables.CharacterAnimations.JUMP
@@ -1591,6 +1595,7 @@ func buffer_input():
 				bufferInput = GlobalVariables.CharacterAnimations.DTILT
 				
 func check_buffered_input():
+	#print("buffered Input " +str(bufferInput))
 	var tempBufferInput = bufferInput
 	bufferInput = null
 	if tempBufferInput == null:
@@ -1599,6 +1604,7 @@ func check_buffered_input():
 	elif onSolidGround:
 		match tempBufferInput: 
 			GlobalVariables.CharacterAnimations.JAB1:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				jab_handler()
 			GlobalVariables.CharacterAnimations.JUMP:
 				shortHopTimer.stop_timer()
@@ -1606,26 +1612,34 @@ func check_buffered_input():
 			GlobalVariables.CharacterAnimations.GRAB:
 				switch_to_state(CharacterState.GRAB)
 			GlobalVariables.CharacterAnimations.FSMASHR:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.FSMASHL:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.UPSMASH:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.DSMASH: 
+				switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.UPTILT:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
 				currentAttack = GlobalVariables.CharacterAnimations.UPTILT
 			GlobalVariables.CharacterAnimations.DTILT:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				animation_handler(GlobalVariables.CharacterAnimations.DTILT)
 				currentAttack = GlobalVariables.CharacterAnimations.DTILT
 			GlobalVariables.CharacterAnimations.FTILTR:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				if currentMoveDirection != moveDirection.RIGHT:
 					currentMoveDirection = moveDirection.RIGHT
 					mirror_areas()
 				animation_handler(GlobalVariables.CharacterAnimations.FTILTR)
 				currentAttack = GlobalVariables.CharacterAnimations.FTILTR
 			GlobalVariables.CharacterAnimations.FTILTL:
+				switch_to_state(CharacterState.ATTACKGROUND)
 				if currentMoveDirection != moveDirection.LEFT:
 					currentMoveDirection = moveDirection.LEFT
 					mirror_areas()
@@ -1634,6 +1648,7 @@ func check_buffered_input():
 	else:
 		match tempBufferInput: 
 			GlobalVariables.CharacterAnimations.JAB1:
+				switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.NAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.NAIR
 			GlobalVariables.CharacterAnimations.JUMP:
@@ -1642,8 +1657,10 @@ func check_buffered_input():
 					switch_to_state(CharacterState.AIR)
 					double_jump_handler()
 			GlobalVariables.CharacterAnimations.GRAB:
-				switch_to_state(CharacterState.GRAB)
+				pass
+				#airdodge
 			GlobalVariables.CharacterAnimations.FSMASHR:
+				switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.RIGHT:
 					animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.FAIR
@@ -1651,6 +1668,7 @@ func check_buffered_input():
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
 			GlobalVariables.CharacterAnimations.FSMASHL:
+				switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.LEFT:
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
@@ -1658,18 +1676,23 @@ func check_buffered_input():
 					animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.FAIR
 			GlobalVariables.CharacterAnimations.UPSMASH:
+				switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 			GlobalVariables.CharacterAnimations.DSMASH: 
+				switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.DAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.DAIR
 			GlobalVariables.CharacterAnimations.UPTILT:
+				switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 			GlobalVariables.CharacterAnimations.DTILT:
+				switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.DAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.DAIR
 			GlobalVariables.CharacterAnimations.FTILTR:
+				switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.RIGHT:
 					animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.FAIR
@@ -1677,6 +1700,7 @@ func check_buffered_input():
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
 			GlobalVariables.CharacterAnimations.FTILTL:
+				switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.LEFT:
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
@@ -1715,19 +1739,41 @@ func apply_hurt_animation_step(step =0):
 			#else:
 				#print(onSolidGround.name)
 			
-func animation_invincibility_handler(step = 0):
+func dodge_animation_step(step = 0):
+	match step: 
+		0:
+			match animationPlayer.get_current_animation():
+				"roll":
+					roll_calculator(rollDistance)
+			disableInput = true
+		1:
+			create_invincible_timer(rollInvincibilityFrames)
+		2:
+			if onSolidGround && Input.is_action_pressed(shield):
+				switch_to_state(CharacterState.SHIELD)
+			elif !bufferInput:
+				create_sideStep_timer()
+				switch_to_state(CharacterState.GROUND)
+				check_character_crouch()
+			enable_player_input()
+			
+func getup_animation_step(step = 0):
 	match step: 
 		0:
 			disableInput = true
-			collisionAreaShape.set_deferred("disabled",true)
-			create_invincible_timer(int(animationPlayer.current_animation_length *60))
+			match animationPlayer.get_current_animation():
+				"roll_getup":
+					create_invincible_timer(rollGetupInvincibilityFrames)
+				"normal_getup":
+					create_invincible_timer(normalGetupInvincibilityFrames)
+				"attack_getup":
+					create_invincible_timer(attackGetupInvincibilityFrames)
+			print(animationPlayer.get_current_animation())
 		1:
-			collisionAreaShape.set_deferred("disabled",false)
-			if onSolidGround && Input.is_action_pressed(shield):
-				switch_to_state(CharacterState.SHIELD)
-			else:
+			if !bufferInput:
 				create_sideStep_timer()
 				switch_to_state(CharacterState.GROUND)
+				check_character_crouch()
 			enable_player_input()
 			
 func apply_grab_animation_step(step = 0):
@@ -1768,12 +1814,10 @@ func apply_throw_animation_step(step = 0):
 func create_invincible_timer(duration = 0):
 	enable_disable_hurtboxes(false)
 	invincibilityTimer.set_frames(duration)
-	#print("duration " +str(duration))
 	invincibilityTimer.start_timer()
 
 func _on_invincibility_timer_timeout():
 	#print("invincibility timeout")
-	check_character_crouch()
 	enable_disable_hurtboxes(true)
 
 func enable_disable_hurtboxes(enable = true):
@@ -1785,7 +1829,8 @@ func enable_disable_hurtboxes(enable = true):
 
 func switch_from_state_to_airborn():
 	jumpCount = 1
-	switch_to_state(CharacterState.AIR)
+	if !bufferInput:
+		switch_to_state(CharacterState.AIR)
 	enable_player_input()
 	if currentState == CharacterState.HITSTUNGROUND:
 		inHitStun = false
@@ -1827,28 +1872,15 @@ func create_landing_lag_timer(landingLag):
 	
 	
 func _on_landingLagTimer_timer_timeout():
-	create_sideStep_timer()
 	inLandingLag = false
-	if bufferInput: 
-		match_buffered_input_landing_state()
-	else: 
+	if !bufferInput:
+		create_sideStep_timer()
 		check_character_crouch()
 	enable_player_input()
 	
 func check_special_case_attack():
 	return false
 	
-func match_buffered_input_landing_state():
-	if bufferInput == GlobalVariables.CharacterAnimations.JAB1\
-	|| bufferInput == GlobalVariables.CharacterAnimations.FTILTR\
-	|| bufferInput == GlobalVariables.CharacterAnimations.FTILTL\
-	|| bufferInput == GlobalVariables.CharacterAnimations.UPTILT\
-	|| bufferInput == GlobalVariables.CharacterAnimations.DTILT\
-	|| bufferInput == GlobalVariables.CharacterAnimations.UPSMASH\
-	|| bufferInput == GlobalVariables.CharacterAnimations.DSMASH\
-	|| bufferInput == GlobalVariables.CharacterAnimations.FSMASHR\
-	|| bufferInput == GlobalVariables.CharacterAnimations.FSMASHL:
-		switch_to_state(CharacterState.ATTACKGROUND)
 #	if bufferInput == 
 #resets character hitbox/hurtbox/collisionshapes to default layout
 #enum CharacterAnimations{IDLE, WALK, RUN, SLIDE, JUMP, DOUBLEJUMP, FREEFALL, JAB1, JAB2, JAB3, FTILTR, FTILTL ,UPTILT, DTILT, FAIR, BAIR, NAIR, UPAIR, DAIR, DASHATTACK, UPSMASH, DSMASH, FSMASHR, FSMASHL, HURT, HURTSHORT, ROLLGETUP, ATTACKGETUP, NORMALGETUP, SHIELD, ROLL, SPOTDODGE, SHIELDBREAK, GRAB, INGRAB, GRABJAB, BTHROW, FTHROW, UTHROW, DTHROW, GRABRELEASE, EDGESNAP, CROUCH, SHIELDDROP, TURNAROUNDSLOW, TURNAROUNDFAST, LANDINGLAGNORMAL} 

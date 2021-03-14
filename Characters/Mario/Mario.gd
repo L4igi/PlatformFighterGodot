@@ -18,7 +18,7 @@ func set_base_stats():
 	baseRunMaxSpeed = 600
 	jabCombo = 1
 
-func apply_attack_movement_stats(step = 0):
+func apply_attack_animation_steps(step = 0):
 	match currentAttack:
 		GlobalVariables.CharacterAnimations.DAIR: 
 			manage_dair(step)
@@ -45,4 +45,8 @@ func check_special_case_attack():
 	return false
 
 func manage_dash_attack(step):
-	pass
+	match step: 
+		0: 
+			pass
+		1: 
+			pass

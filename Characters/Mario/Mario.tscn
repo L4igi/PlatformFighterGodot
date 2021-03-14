@@ -107,10 +107,10 @@ tracks/2/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
-"method": "apply_attack_movement_stats"
+"method": "apply_attack_animation_steps"
 }, {
 "args": [ 1 ],
-"method": "apply_attack_movement_stats"
+"method": "apply_attack_animation_steps"
 } ]
 }
 
@@ -140,6 +140,23 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.666667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_attack_animation_steps"
+}, {
+"args": [ 1 ],
+"method": "apply_attack_animation_steps"
+} ]
 }
 
 [sub_resource type="Animation" id=5]
@@ -431,7 +448,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=14]
 resource_name = "tumble"
 length = 0.5
 loop = true
@@ -473,7 +490,7 @@ tracks/2/keys = {
 "values": [ -112.3, -480.0 ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 length = 0.500001
 step = 0.0166667
 tracks/0/type = "value"
@@ -549,7 +566,7 @@ tracks/5/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 0.65
 step = 0.0166667
 tracks/0/type = "value"
@@ -577,7 +594,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=17]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -610,7 +627,7 @@ script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = -1.96
-animation = "roll"
+animation = "edgeSnap"
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -627,10 +644,10 @@ anims/jab1 = SubResource( 10 )
 anims/jab2 = SubResource( 11 )
 anims/jump = SubResource( 12 )
 anims/nair = SubResource( 13 )
-anims/tumble = SubResource( 17 )
-anims/upair = SubResource( 14 )
-anims/uptilt = SubResource( 15 )
-anims/walk = SubResource( 16 )
+anims/tumble = SubResource( 14 )
+anims/upair = SubResource( 15 )
+anims/uptilt = SubResource( 16 )
+anims/walk = SubResource( 17 )
 
 [node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = true
