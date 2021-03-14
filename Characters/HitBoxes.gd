@@ -119,12 +119,12 @@ func apply_hitlag(hitArea):
 		if character.currentState == character.CharacterState.ATTACKGROUND\
 		|| character.currentState == character.CharacterState.ATTACKAIR:
 			character.backUpVelocity = character.velocity
-			character.create_hitlag_timer()
+			character.create_frame_timer(GlobalVariables.TimerType.HITLAG)
 			attackedCharacter = hitArea.get_parent().get_parent()
 			if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
-				attackedCharacter.create_hitlag_timer()
+				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAG)
 			else:
-				attackedCharacter.create_hitlag_timer_attacked()
+				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED)
 		#manage grab if character hit other character hitbox
 		elif character.currentState == character.CharacterState.GRAB:
 			if attackedCharacter.currentState == attackedCharacter.CharacterState.GROUND\

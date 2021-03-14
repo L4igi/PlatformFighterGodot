@@ -1,11 +1,17 @@
 extends Node
 
-signal timeout()
+signal timeout(timerType)
 
 var frames = 0
 var pauseDuration = 0
 var pausedTimer = false
 var timerStarted = false
+var timerType = null
+	
+func setup_frame_timer(timerType, character):
+	character.add_child(self)
+	self.timerType = timerType
+	self.connect("timeout", character, "_on_frametimer_timeout")
 
 func _physics_process(delta):
 	if timerStarted && frames > 0 && !pausedTimer: 
@@ -17,7 +23,7 @@ func _physics_process(delta):
 			pausedTimer = false
 	elif frames == 0 && timerStarted: 
 		timerStarted = false
-		emit_signal("timeout")
+		emit_signal("timeout", timerType)
 	
 func set_frames(frames):
 	self.frames = frames

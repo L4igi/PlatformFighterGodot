@@ -8,6 +8,8 @@ var countCharactersInGame = 2
 
 var charactersInGame = []
 
+enum TimerType{HITSTUN, SHORTHOP, DROPDOWN, INVINCIBILITY, GRAB, SMASHATTACK, SHIELDSTUN, SHIELDDROP, HITLAG, TURNAROUND, STOPMOVEMENT, SIDESTEP, LANDINGLAG, EDGEGRAB, HITLAGATTACKED}
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",
