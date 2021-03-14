@@ -213,6 +213,7 @@ toggleFrameByFrame={
 2d_physics/layer_4="Background"
 2d_physics/layer_5="CollisionBody"
 2d_physics/layer_6="Edge"
+2d_physics/layer_7="EdgeSnap"
 
 [rendering]
 

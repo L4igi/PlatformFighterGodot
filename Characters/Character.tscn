@@ -1,4 +1,4 @@
-[gd_scene load_steps=348 format=2]
+[gd_scene load_steps=349 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -986,7 +986,7 @@ tracks/3/keys = {
 }
 
 [sub_resource type="Animation" id=13]
-length = 0.166667
+length = 0.0333333
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1007,7 +1007,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.05, 0.166667 ),
+"times": PoolRealArray( 0, 0.0166667, 0.0333333 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2 ]
@@ -2189,6 +2189,9 @@ tracks/1/keys = {
 "values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
+[sub_resource type="RectangleShape2D" id=46]
+extents = Vector2( 42, 22 )
+
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
 ]]
@@ -2205,7 +2208,7 @@ polygon = PoolVector2Array( 0, -2, -3.2, 6, -3.2, 26, -3.2, 32, 3.2, 32, 3.2, 24
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-animation = "backflip"
+animation = "idle"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2256,13 +2259,6 @@ anims/uthrow = SubResource( 44 )
 anims/walk = SubResource( 45 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
-visible = true
-
-[node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
-visible = false
-
-[node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
-visible = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 visible = false
@@ -2270,11 +2266,11 @@ position = Vector2( 0, 20 )
 rotation = -0.785398
 
 [node name="HurtBoxHead" parent="InteractionAreas/Hurtbox" index="0"]
-position = Vector2( -10, -13 )
+position = Vector2( 2, -18 )
 disabled = true
 
 [node name="HurtBoxBody" parent="InteractionAreas/Hurtbox" index="1"]
-position = Vector2( -2, -2 )
+position = Vector2( 2, 14 )
 rotation = -0.37001
 
 [node name="Shield" parent="." instance=ExtResource( 214 )]
@@ -2284,6 +2280,16 @@ position = Vector2( 0, 32 )
 
 [node name="GrabPoint" type="Position2D" parent="."]
 position = Vector2( 25, 0 )
+
+[node name="CharacterEdgeGrabArea" type="Area2D" parent="." groups=[
+"EdgeGrabArea",
+]]
+collision_layer = 64
+collision_mask = 32
+
+[node name="CharacterEdgeGrabShape" type="CollisionShape2D" parent="CharacterEdgeGrabArea"]
+position = Vector2( 10, -22 )
+shape = SubResource( 46 )
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

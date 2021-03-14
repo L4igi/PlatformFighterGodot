@@ -35,6 +35,10 @@ onready var lowestCheckYPoint = get_node("LowestCheckYPoint")
 #edge
 var snappedEdge = null
 var disableInput = false
+onready var edgeGrabShape = $CharacterEdgeGrabArea/CharacterEdgeGrabShape
+var edgeRegrabTimer 
+var edgeRegrabFrames = 50
+var disabledEdgeGrab = false
 #attack 
 var smashAttack = null
 var currentAttack = null
@@ -218,6 +222,10 @@ func _ready():
 	add_child(landingLagTimer)
 	landingLagTimer.connect("timeout", self, "_on_landingLagTimer_timer_timeout")
 	landingLagTimer.set_name("landingLagTimer") 
+	edgeRegrabTimer = frameTimer.instance()
+	add_child(edgeRegrabTimer)
+	edgeRegrabTimer.connect("timeout", self, "_on_edgeRegrabTimer_timer_timeout")
+	edgeRegrabTimer.set_name("edgeRegrabTimer") 
 	animationPlayer.set_animation_process_mode(0)
 	if !onSolidGround:
 		switch_to_state(CharacterState.AIR)
@@ -800,8 +808,10 @@ func snap_edge(collidingEdge):
 			character_towards_edge = true
 			
 	if character_over_edge && currentState == CharacterState.AIR && (character_towards_edge && velocity.y >= 0):
+		switch_to_state(CharacterState.EDGE)
 		disableInput = true
-		gravity = baseGravity
+#		gravity = baseGravity
+		velocity = Vector2.ZERO
 		jumpCount = 1
 		if currentMoveDirection == moveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
 			currentMoveDirection = moveDirection.LEFT
@@ -816,9 +826,19 @@ func snap_edge(collidingEdge):
 		$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Tween.start()
 		yield($Tween, "tween_all_completed")
-		velocity = Vector2.ZERO
-		switch_to_state(CharacterState.EDGE)
 		snappedEdge = collidingEdge
+		
+func create_edge_grab_timer():
+	disabledEdgeGrab = true
+	edgeGrabShape.set_deferred("disabled", true)
+	edgeRegrabTimer.set_frames(edgeRegrabFrames)
+	edgeRegrabTimer.start_timer()
+	
+func _on_edgeRegrabTimer_timer_timeout():
+	disabledEdgeGrab = false
+	if currentState == CharacterState.AIR:
+		edgeGrabShape.set_deferred("disabled", false)
+		
 		
 func edge_handler(delta):
 	if snappedEdge != null: 
@@ -889,6 +909,9 @@ func edge_handler(delta):
 				$Tween.start()
 				yield($Tween, "tween_all_completed")
 				switch_to_state(CharacterState.GROUND)
+		if snappedEdge == null: 
+			create_edge_grab_timer()
+			#todo create edgeregrabtimer
 
 func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
@@ -1313,9 +1336,11 @@ func switch_to_state(state):
 	pushingAttack = false
 	currentAttack = null
 	shortTurnAround = false
+	edgeGrabShape.set_deferred("disabled", true)
 	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:
+			disabledEdgeGrab = false
 			#reset gravity if player is grounded
 			if gravity != baseGravity:
 				gravity=baseGravity
@@ -1323,6 +1348,9 @@ func switch_to_state(state):
 			animation_handler(GlobalVariables.CharacterAnimations.IDLE)
 			emit_signal("character_state_changed", self, currentState)
 		CharacterState.AIR:
+			gravity_on_off("on")
+			if !disabledEdgeGrab:
+				edgeGrabShape.set_deferred("disabled", false)
 			currentState = CharacterState.AIR
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.FREEFALL)
@@ -1345,6 +1373,7 @@ func switch_to_state(state):
 		CharacterState.SPECIALAIR:
 			currentState = CharacterState.SPECIALAIR
 		CharacterState.EDGE:
+			gravity_on_off("off")
 			currentState = CharacterState.EDGE
 		CharacterState.GETUP:
 			currentState = CharacterState.GETUP

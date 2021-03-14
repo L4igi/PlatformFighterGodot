@@ -649,17 +649,11 @@ anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
-[node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
-visible = true
-
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
 position = Vector2( 21.6, 5.62501 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
 position = Vector2( 10.8, 4.21876 )
-
-[node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
-visible = true
 
 [node name="InteractionAreas" parent="." index="3"]
 position = Vector2( -4, 4 )
