@@ -199,6 +199,7 @@ func _ready():
 	landingLagTimer.setup_frame_timer(GlobalVariables.TimerType.LANDINGLAG, self)
 	edgeRegrabTimer = frameTimer.instance()
 	edgeRegrabTimer.setup_frame_timer(GlobalVariables.TimerType.EDGEGRAB, self)
+	#connect animation finished signal
 	animationPlayer.set_animation_process_mode(0)
 	if !onSolidGround:
 		switch_to_state(CharacterState.AIR)
@@ -416,8 +417,6 @@ func air_handler(delta):
 #				animationPlayer.play("idle")
 		#if aerial attack is interrupted by ground cancel hitboxes
 	elif !disableInput:
-		if Input.is_action_just_pressed(attack) && !inHitStun:
-			switch_to_state(CharacterState.ATTACKAIR)
 		input_movement_physics_air(delta)
 		# Move based on the velocity and snap to the ground.
 		velocity = move_and_slide(velocity)
@@ -433,7 +432,13 @@ func air_handler(delta):
 			set_collision_mask_bit(1,false)
 		elif velocity.y > 0 && get_input_direction_y() < 0.5 && platformCollision == null:
 			set_collision_mask_bit(1,true)
-
+		if get_input_direction_y() >= 0.5: 
+			edgeGrabShape.set_deferred("disabled", true)
+		elif get_input_direction_y() < 0.5 && !disabledEdgeGrab: 
+			edgeGrabShape.set_deferred("disabled", false)
+		if Input.is_action_just_pressed(attack) && !inHitStun:
+			switch_to_state(CharacterState.ATTACKAIR)
+			
 func jump_handler():
 	#todo: if currentstate == edge : create edge hop
 	shortHop = false
@@ -442,14 +447,17 @@ func jump_handler():
 	create_frame_timer(GlobalVariables.TimerType.SHORTHOP)
 		
 func double_jump_handler():
+	var xInput = get_input_direction_x()
 	animation_handler(GlobalVariables.CharacterAnimations.DOUBLEJUMP)
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	velocity.y = -jumpSpeed
-	if get_input_direction_x() == 0:
+	if xInput == 0:
 		velocity.x = 0
-	elif get_input_direction_x() == 0:
-		velocity.x = 0
+#	if currentMoveDirection == moveDirection.LEFT && xInput >= 0:
+	velocity.x = airMaxSpeed * xInput 
+#	elif currentMoveDirection == moveDirection.RIGHT && xInput <= 0:
+#	velocity.x = airMaxSpeed * xInput 
 	jumpCount += 1
 	
 	
@@ -653,42 +661,42 @@ func crouch_handler(delta):
 		
 	
 func snap_edge(collidingEdge):
-	if get_input_direction_y() > 0:
-		return
-	var character_towards_edge = false
-	var character_over_edge = false
-	if collidingEdge.edgeSnapDirection == "left" \
-	&& self.global_position.x <= collidingEdge.global_position.x:
-		character_over_edge = true 
-		if velocity.x >= 0 || currentMoveDirection == moveDirection.RIGHT:
-			character_towards_edge = true
-			
-	elif collidingEdge.edgeSnapDirection == "right" \
-	&& self.global_position.x >= collidingEdge.global_position.x:
-		character_over_edge = true
-		if velocity.x <= 0 || currentMoveDirection == moveDirection.LEFT:
-			character_towards_edge = true
-			
-	if character_over_edge && currentState == CharacterState.AIR && (character_towards_edge && velocity.y >= 0):
-		switch_to_state(CharacterState.EDGE)
-		disableInput = true
+#	if get_input_direction_y() > 0:
+#		return
+#	var character_towards_edge = false
+#	var character_over_edge = false
+#	if collidingEdge.edgeSnapDirection == "left" \
+#	&& self.global_position.x <= collidingEdge.global_position.x:
+#		character_over_edge = true 
+#		if velocity.x >= 0 || currentMoveDirection == moveDirection.RIGHT:
+#			character_towards_edge = true
+#
+#	elif collidingEdge.edgeSnapDirection == "right" \
+#	&& self.global_position.x >= collidingEdge.global_position.x:
+#		character_over_edge = true
+#		if velocity.x <= 0 || currentMoveDirection == moveDirection.LEFT:
+#			character_towards_edge = true
+#
+#	if character_over_edge && currentState == CharacterState.AIR && (character_towards_edge && velocity.y >= 0):
+	switch_to_state(CharacterState.EDGE)
+	disableInput = true
 #		gravity = baseGravity
-		velocity = Vector2.ZERO
-		jumpCount = 1
-		if currentMoveDirection == moveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
-			currentMoveDirection = moveDirection.LEFT
-			mirror_areas()
-		elif currentMoveDirection == moveDirection.LEFT && collidingEdge.edgeSnapDirection == "left": 
-			currentMoveDirection = moveDirection.RIGHT
-			mirror_areas()
-		var targetPosition = collidingEdge.global_position + Vector2((characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
-		if self.global_position < collidingEdge.global_position:
-			targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
-		animation_handler(GlobalVariables.CharacterAnimations.EDGESNAP)
-		$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
-		$Tween.start()
-		yield($Tween, "tween_all_completed")
-		snappedEdge = collidingEdge
+	velocity = Vector2.ZERO
+	jumpCount = 1
+	if currentMoveDirection == moveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
+		currentMoveDirection = moveDirection.LEFT
+		mirror_areas()
+	elif currentMoveDirection == moveDirection.LEFT && collidingEdge.edgeSnapDirection == "left": 
+		currentMoveDirection = moveDirection.RIGHT
+		mirror_areas()
+	var targetPosition = collidingEdge.global_position + Vector2((characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
+	if self.global_position < collidingEdge.global_position:
+		targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
+	animation_handler(GlobalVariables.CharacterAnimations.EDGESNAP)
+	$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.start()
+	yield($Tween, "tween_all_completed")
+	snappedEdge = collidingEdge
 		
 		
 func edge_handler(delta):
@@ -895,23 +903,25 @@ func roll_calculator(distance):
 		else:
 			velocity.x = distance
 	
-func play_attack_animation(animationToPlay, playBackSpeed = 1):
+func play_attack_animation(animationToPlay):
 	disableInput = true
-	animationPlayer.play(animationToPlay, -1, playBackSpeed, false)
-	yield(animationPlayer, "animation_finished")
-	print("here")
-	if !bufferInput:
-		match currentState:
-			CharacterState.ATTACKGROUND:
-				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
-				switch_to_state(CharacterState.GROUND)
-				check_character_crouch()
-				smashAttack = null
-			CharacterState.ATTACKAIR:
-				switch_to_state(CharacterState.AIR)
-		toggle_all_hitboxes("off")
-	else:
-		enable_player_input()
+	animationPlayer.play(animationToPlay)
+		
+func finish_attack_animation(step):
+	match step:
+		0:
+			if !bufferInput:
+				match currentState:
+					CharacterState.ATTACKGROUND:
+						create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
+						switch_to_state(CharacterState.GROUND)
+						check_character_crouch()
+						smashAttack = null
+					CharacterState.ATTACKAIR:
+						switch_to_state(CharacterState.AIR)
+						smashAttack = null
+			else:
+				enable_player_input()
 
 func apply_attack_animation_steps(step = 0):
 	pass
@@ -1088,8 +1098,8 @@ func input_movement_physics_air(delta):
 #		xInput < 0: 
 #			velocity.x += (walk * delta)*4
 #
-#		else:
-	velocity.x += (walk * delta)*4
+	else:
+		velocity.x += (walk * delta) * 4
 #	print(currentMaxSpeed)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 #	if currentState == CharacterState.HITSTUNGROUND || currentState == CharacterState.HITSTUNAIR:
@@ -1297,7 +1307,8 @@ func apply_throw(actionType):
 	inGrabByCharacter = null
 	
 func enable_player_input():
-	#print("buffered Input is: " +str(bufferInput))
+	if name == "Mario":
+		print("enabling player input")
 	if check_buffered_input():
 		return
 	elif bufferAnimation:
@@ -1392,7 +1403,6 @@ func buffer_input():
 				bufferInput = GlobalVariables.CharacterAnimations.DTILT
 				
 func check_buffered_input():
-	#print("buffered Input " +str(bufferInput))
 	var tempBufferInput = bufferInput
 	bufferInput = null
 	if tempBufferInput == null:
@@ -1401,42 +1411,52 @@ func check_buffered_input():
 	elif onSolidGround:
 		match tempBufferInput: 
 			GlobalVariables.CharacterAnimations.JAB1:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				jab_handler()
 			GlobalVariables.CharacterAnimations.JUMP:
 				shortHopTimer.stop_timer()
 				_on_frametimer_timeout(GlobalVariables.TimerType.SHORTHOP)
 			GlobalVariables.CharacterAnimations.GRAB:
-				switch_to_state(CharacterState.GRAB)
+				if currentState != CharacterState.GRAB:
+					switch_to_state(CharacterState.GRAB)
 			GlobalVariables.CharacterAnimations.FSMASHR:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.FSMASHL:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.UPSMASH:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.DSMASH: 
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				attack_handler_ground_smash_attacks()
 			GlobalVariables.CharacterAnimations.UPTILT:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				animation_handler(GlobalVariables.CharacterAnimations.UPTILT)
 				currentAttack = GlobalVariables.CharacterAnimations.UPTILT
 			GlobalVariables.CharacterAnimations.DTILT:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				animation_handler(GlobalVariables.CharacterAnimations.DTILT)
 				currentAttack = GlobalVariables.CharacterAnimations.DTILT
 			GlobalVariables.CharacterAnimations.FTILTR:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				if currentMoveDirection != moveDirection.RIGHT:
 					currentMoveDirection = moveDirection.RIGHT
 					mirror_areas()
 				animation_handler(GlobalVariables.CharacterAnimations.FTILTR)
 				currentAttack = GlobalVariables.CharacterAnimations.FTILTR
 			GlobalVariables.CharacterAnimations.FTILTL:
-				switch_to_state(CharacterState.ATTACKGROUND)
+				if currentState != CharacterState.ATTACKGROUND:
+					switch_to_state(CharacterState.ATTACKGROUND)
 				if currentMoveDirection != moveDirection.LEFT:
 					currentMoveDirection = moveDirection.LEFT
 					mirror_areas()
@@ -1445,7 +1465,8 @@ func check_buffered_input():
 	else:
 		match tempBufferInput: 
 			GlobalVariables.CharacterAnimations.JAB1:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.NAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.NAIR
 			GlobalVariables.CharacterAnimations.JUMP:
@@ -1457,7 +1478,8 @@ func check_buffered_input():
 				pass
 				#airdodge
 			GlobalVariables.CharacterAnimations.FSMASHR:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.RIGHT:
 					animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.FAIR
@@ -1465,7 +1487,8 @@ func check_buffered_input():
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
 			GlobalVariables.CharacterAnimations.FSMASHL:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.LEFT:
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
@@ -1473,23 +1496,28 @@ func check_buffered_input():
 					animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.FAIR
 			GlobalVariables.CharacterAnimations.UPSMASH:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 			GlobalVariables.CharacterAnimations.DSMASH: 
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.DAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.DAIR
 			GlobalVariables.CharacterAnimations.UPTILT:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.UPAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 			GlobalVariables.CharacterAnimations.DTILT:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				animation_handler(GlobalVariables.CharacterAnimations.DAIR)
 				currentAttack = GlobalVariables.CharacterAnimations.DAIR
 			GlobalVariables.CharacterAnimations.FTILTR:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.RIGHT:
 					animation_handler(GlobalVariables.CharacterAnimations.FAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.FAIR
@@ -1497,7 +1525,8 @@ func check_buffered_input():
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
 			GlobalVariables.CharacterAnimations.FTILTL:
-				switch_to_state(CharacterState.ATTACKAIR)
+				if currentState != CharacterState.ATTACKAIR:
+					switch_to_state(CharacterState.ATTACKAIR)
 				if currentMoveDirection == moveDirection.LEFT:
 					animation_handler(GlobalVariables.CharacterAnimations.BAIR)
 					currentAttack = GlobalVariables.CharacterAnimations.BAIR
@@ -1565,7 +1594,6 @@ func getup_animation_step(step = 0):
 					create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, normalGetupInvincibilityFrames)
 				"attack_getup":
 					create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, attackGetupInvincibilityFrames)
-			print(animationPlayer.get_current_animation())
 		1:
 			if !bufferInput:
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
@@ -1636,6 +1664,7 @@ func switch_from_air_to_ground(landingLag):
 	create_frame_timer(GlobalVariables.TimerType.LANDINGLAG, landingLag)
 	if bufferAnimation:
 		animationPlayer.play()
+		bufferAnimation = false
 	else:
 		animation_handler(GlobalVariables.CharacterAnimations.LANDINGLAGNORMAL)
 		match currentMoveDirection:
@@ -1648,7 +1677,7 @@ func switch_from_air_to_ground(landingLag):
 					currentMoveDirection = moveDirection.LEFT
 					mirror_areas()
 
-func check_special_case_attack():
+func check_special_case_attack(switchState = false):
 	return false
 	
 #	if bufferInput == 
@@ -1739,7 +1768,7 @@ func create_frame_timer(timerType, timerFrames = 0):
 			disableInputDI = false
 			landingLagTimer.set_frames(timerFrames)
 			landingLagTimer.start_timer()
-			if !check_special_case_attack():
+			if !check_special_case_attack(true):
 				switch_to_state(CharacterState.GROUND)
 		GlobalVariables.TimerType.EDGEGRAB:
 			disabledEdgeGrab = true
@@ -1750,7 +1779,6 @@ func create_frame_timer(timerType, timerFrames = 0):
 func _on_frametimer_timeout(timerType):
 	match timerType:
 		GlobalVariables.TimerType.HITSTUN:
-			print("timeout")
 			inHitStun = false
 			disableInput = false
 			if shortHitStun: 
@@ -1845,7 +1873,16 @@ func _on_frametimer_timeout(timerType):
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				check_character_crouch()
 			enable_player_input()
+			if check_special_case_attack():
+				switch_to_state(CharacterState.GROUND)
+				currentAttack = null
 		GlobalVariables.TimerType.EDGEGRAB:
 			disabledEdgeGrab = false
-			if currentState == CharacterState.AIR:
+			if currentState == CharacterState.AIR && get_input_direction_y() < 0.5:
 				edgeGrabShape.set_deferred("disabled", false)
+				
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	if GlobalVariables.attackAnimationList.has(anim_name):
+		if !inLandingLag:
+			finish_attack_animation(0)

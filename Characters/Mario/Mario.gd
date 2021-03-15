@@ -37,10 +37,13 @@ func manage_dair(step):
 			bufferAnimation = true
 
 
-func check_special_case_attack():
+func check_special_case_attack(switchState = false):
+	var tempCurrentAttack = currentAttack
 	if specialCaseAttacks.has(currentAttack):
 		if currentAttack == GlobalVariables.CharacterAnimations.DAIR: 
-			switch_to_state(CharacterState.ATTACKGROUND)
+			if switchState:
+				switch_to_state(CharacterState.ATTACKGROUND)
+				currentAttack = tempCurrentAttack
 		return true
 	return false
 

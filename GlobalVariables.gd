@@ -10,6 +10,8 @@ var charactersInGame = []
 
 enum TimerType{HITSTUN, SHORTHOP, DROPDOWN, INVINCIBILITY, GRAB, SMASHATTACK, SHIELDSTUN, SHIELDDROP, HITLAG, TURNAROUND, STOPMOVEMENT, SIDESTEP, LANDINGLAG, EDGEGRAB, HITLAGATTACKED}
 
+var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmash", "dtilt", "fair", "fsmash", "ftilt", "jab1", "jab2", "nair", "upair", "upsmash", "uptilt"]
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",
