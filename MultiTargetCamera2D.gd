@@ -16,7 +16,7 @@ func _ready():
 		add_target(character)
 	make_current()
 
-func _physics_process(delta):
+func _process(delta):
 	if !targets.empty():
 		position+=Vector2(1,1)
 	# Keep the camera centered between the targets

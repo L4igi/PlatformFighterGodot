@@ -11,7 +11,7 @@ var hitBoxesConnected = []
 
 enum HitBoxType {SOUR, NEUTRAL, SWEET}
 
-func _physics_process(delta):
+func _process(delta):
 	if !hitBoxesConnected.empty():
 		disable_all_hitboxes()
 		if character.currentState != character.CharacterState.GRAB:

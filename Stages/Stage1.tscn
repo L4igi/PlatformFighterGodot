@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Stages/CenterStage.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Stages/Platform.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Stages/fpsText.gd" type="Script" id=3]
 [ext_resource path="res://Stages/TeleportToStart.gd" type="Script" id=5]
 [ext_resource path="res://MultiTargetCamera2D.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Stages/World.gd" type="Script" id=7]
@@ -53,11 +52,5 @@ shape = SubResource( 3 )
 position = Vector2( 608, 288 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="fpsText" type="TextEdit" parent="CanvasLayer"]
-margin_right = 60.0
-margin_bottom = 40.0
-text = "Hey"
-script = ExtResource( 3 )
 
 [connection signal="body_entered" from="BlastZones" to="BlastZones" method="_on_TeleportToStart_body_entered"]

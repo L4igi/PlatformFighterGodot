@@ -23,6 +23,7 @@ CharacterInteractionHandler="*res://Characters/CharacterInteractionHandler.gd"
 
 window/size/width=1224
 window/size/height=800
+window/vsync/vsync_via_compositor=true
 
 [importer_defaults]
 

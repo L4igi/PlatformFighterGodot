@@ -17,7 +17,7 @@ func _ready():
 	edgeAreaRight.set_position(Vector2(445,-15))
 	edgeAreaRight.edgeSnapDirection = "right"
 
-func _physics_process(delta):
+func _process(delta):
 	for body in collidingBodies: 
 		if body.onSolidGround == null: 
 			if (body.lowestCheckYPoint.global_position.y < checkYPoint.global_position.y):

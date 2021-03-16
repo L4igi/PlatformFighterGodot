@@ -9,15 +9,6 @@ func _ready():
 	for character in GlobalVariables.charactersInGame: 
 		character.connect("character_state_changed", self, "_on_character_state_change")
 
-#func _physics_process(delta):
-#	if !character_on_edge.empty(): 
-#		for character in character_on_edge:
-#			if character.currentState == character.CharacterState.AIR:
-#				if edgeSnapDirection == "left" && character.get_input_direction_x() > 0: 
-#					character.snap_edge(self)
-#				elif edgeSnapDirection == "right" && character.get_input_direction_x() < 0: 
-#					character.snap_edge(self)
-
 func _on_EdgeSnap_area_entered(area):
 	if area.is_in_group("EdgeGrabArea"):
 		var edgeCharacter = area.get_parent()

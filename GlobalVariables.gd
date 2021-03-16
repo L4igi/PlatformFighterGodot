@@ -39,7 +39,7 @@ var frameByFrame = false
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
 
-func _physics_process(delta):
+func _process(delta):
 	if Input.is_action_just_pressed("toggleFrameByFrame"):
 		if frameByFrame == false: 
 			frameByFrame = true
