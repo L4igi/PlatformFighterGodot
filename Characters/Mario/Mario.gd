@@ -50,6 +50,6 @@ func check_special_case_attack(switchState = false):
 func manage_dash_attack(step):
 	match step: 
 		0: 
-			pass
+			pushingAction = true
 		1: 
-			pass
+			pushingAction = false

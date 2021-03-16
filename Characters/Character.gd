@@ -42,6 +42,7 @@ var onEdge = false
 var rollGetUpVelocity = 650
 var normalGetUpVelocity = 0
 var attackgetUpVelocity = 400
+var edgeInvincibleDuration = 120
 #attack 
 var smashAttack = null
 var currentAttack = null
@@ -662,6 +663,7 @@ func snap_edge(collidingEdge):
 	$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
 	yield($Tween, "tween_all_completed")
+	create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, edgeInvincibleDuration)
 	snappedEdge = collidingEdge
 		
 		
@@ -1079,12 +1081,12 @@ func edge_getup_handler(delta):
 #	print("edge getup")
 			
 func switch_to_state(state):
+	#ends all tweens if still running
 	tween.remove_all()
 	toggle_all_hitboxes("off")
 	if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag && !pushingAction && !onEdge:
 		enable_player_input()
 	stopMovementTimer.stop_timer()
-	#shortHopTimer.stop_timer()
 	turnAroundTimer.stop_timer()
 	if bufferAnimation:
 		animationPlayer.play()
@@ -1525,7 +1527,6 @@ func getup_animation_step(step = 0):
 				"attack_getup":
 					create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, attackGetupInvincibilityFrames)
 		1:
-			pushingAction = false
 			if !bufferInput:
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				switch_to_state(CharacterState.GROUND)
@@ -1761,17 +1762,14 @@ func _on_frametimer_timeout(timerType):
 							velocity.x = direction*normalGetUpVelocity
 							switch_to_state(CharacterState.EDGEGETUP)
 							onEdge = false
-							#pushingAction = true
 						"roll_getup":
 							velocity.x = direction*rollGetUpVelocity
 							switch_to_state(CharacterState.EDGEGETUP)
 							onEdge = false
-							#pushingAction = true
 						"attack_getup":
 							velocity.x = direction*attackgetUpVelocity
 							switch_to_state(CharacterState.ATTACKGROUND)
 							onEdge = false
-							#pushingAction = true
 		GlobalVariables.TimerType.GRAB:
 			print("Grab timer timeout")
 			if grabbedCharacter:
