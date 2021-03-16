@@ -28,7 +28,7 @@ func set_combined_velocity(delta):
 	
 	if disable_character_pushforce(char1):
 		char1XInput = 0
-	elif char1.resetMovementSpeed && char1XInput != 0: 
+	elif char1.resetMovementSpeed && char1XInput != 0 && !char1.pushingAction: 
 		char1.change_max_speed(char1XInput)
 		char1.resetMovementSpeed = false
 		char1.currentPushSpeed = char1.currentMaxSpeed
@@ -36,7 +36,7 @@ func set_combined_velocity(delta):
 #
 	if disable_character_pushforce(char2):
 		char2XInput = 0
-	elif char2.resetMovementSpeed && char2XInput != 0:
+	elif char2.resetMovementSpeed && char2XInput != 0 && !char2.pushingAction: 
 		char2.change_max_speed(char2XInput)
 		char2.resetMovementSpeed = false
 		char2.currentPushSpeed = char2.currentMaxSpeed
@@ -54,7 +54,7 @@ func disable_character_pushforce(character):
 	|| character.currentState == character.CharacterState.GRAB\
 	|| character.currentState == character.CharacterState.AIR\
 	|| (character.inMovementLag && character.shortTurnAround)\
-	|| (character.disableInput):
+	|| (character.disableInput && !character.pushingAction):
 		return true
 	return false
 
@@ -130,13 +130,13 @@ func remove_ground_colliding_character(character):
 	character.disableInputInfluence = character.baseDisableInputInfluence
 
 func calc_push_force(character):
-	if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && character.pushingAttack: 
+	if character.pushingAction: 
 		match character.currentMoveDirection:
 			character.moveDirection.LEFT:
-				return -2.0
+				return -0.5
 			character.moveDirection.RIGHT:
-				return 2.0
-	elif character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && !character.pushingAttack: 
+				return 0.5
+	elif character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && !character.pushingAction: 
 		return 0.0
 	elif character.turnAroundTimer.timer_running():
 		match character.currentMoveDirection:

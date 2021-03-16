@@ -136,7 +136,8 @@ func apply_hitlag(hitArea):
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SPECIALAIR\
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD\
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.ROLL\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELDBREAK:
+			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELDBREAK\
+			|| attackedCharacter.currentState == attackedCharacter.CharacterState.EDGEGETUP:
 				character.disableInput = false
 				character.backUpVelocity = Vector2.ZERO
 				character.grabbedCharacter = attackedCharacter

@@ -39,9 +39,9 @@ var edgeGrabShape
 var edgeRegrabFrames = 50
 var disabledEdgeGrab = false
 var onEdge = false
-var rollGetUpVelocity = 600
+var rollGetUpVelocity = 650
 var normalGetUpVelocity = 0
-var attackgetUpVelocity = 300
+var attackgetUpVelocity = 400
 #attack 
 var smashAttack = null
 var currentAttack = null
@@ -138,7 +138,7 @@ var landingLagTimer
 
 var tween 
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP}
 #signal for character state change
 signal character_state_changed(state)
 
@@ -239,6 +239,8 @@ func _physics_process(delta):
 			crouch_handler(delta)
 		CharacterState.ROLL:
 			pass
+		CharacterState.EDGEGETUP:
+			edge_getup_handler(delta)
 
 func check_input_ground(delta):
 	if Input.is_action_just_pressed(jump):
@@ -311,7 +313,6 @@ func attack_handler_ground():
 					velocity.x = -dashAttackSpeed
 				moveDirection.RIGHT:
 					velocity.x = dashAttackSpeed
-			pushingAction = true
 			animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 			currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 			
@@ -641,8 +642,6 @@ func crouch_handler(delta):
 		currentAttack = GlobalVariables.CharacterAnimations.DTILT
 	elif Input.is_action_just_pressed(jump):
 		jump_handler()
-#	elif Input.is_action_just_pressed(shield):
-		
 	
 func snap_edge(collidingEdge):
 	disableInput = true
@@ -672,49 +671,53 @@ func edge_handler(delta):
 		if Input.is_action_just_pressed(down):
 			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
+			onEdge = false
 			switch_to_state(CharacterState.AIR)
 		elif Input.is_action_just_pressed(jump) || Input.is_action_just_pressed(up):
 			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
+			onEdge = false
 			jump_handler()
 		elif Input.is_action_just_pressed(left):
 			if global_position.x < snappedEdge.global_position.x:
 				snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 				snappedEdge = null
+				onEdge = false
 				switch_to_state(CharacterState.AIR)
 				velocity.x = -walkMaxSpeed/2
 			else:
-				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x*2, get_character_size().y)
-				manage_edge_getup(GlobalVariables.CharacterAnimations.NORMALGETUP, targetPosition)
+				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x/4, get_character_size().y)
+				manage_edge_getup_animation(GlobalVariables.CharacterAnimations.NORMALGETUP, targetPosition)
 		elif Input.is_action_just_pressed(right):
 			if global_position.x > snappedEdge.global_position.x:
 				snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 				snappedEdge = null
+				onEdge = false
 				switch_to_state(CharacterState.AIR)
 				velocity.x = walkMaxSpeed/2
 			else: 
-				targetPosition = snappedEdge.global_position - Vector2(-get_character_size().x*2, get_character_size().y)
-				manage_edge_getup(GlobalVariables.CharacterAnimations.NORMALGETUP, targetPosition)
+				targetPosition = snappedEdge.global_position - Vector2(-get_character_size().x/4, get_character_size().y)
+				manage_edge_getup_animation(GlobalVariables.CharacterAnimations.NORMALGETUP, targetPosition)
 		elif Input.is_action_just_pressed(shield):
 			if global_position > snappedEdge.global_position:
 				#normal getup right edge
 				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*2,(get_character_size()).y)
-				manage_edge_getup(GlobalVariables.CharacterAnimations.ROLLGETUP, targetPosition)
+				manage_edge_getup_animation(GlobalVariables.CharacterAnimations.ROLLGETUP, targetPosition)
 			else: 
 				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*2,(get_character_size()).y)
-				manage_edge_getup(GlobalVariables.CharacterAnimations.ROLLGETUP, targetPosition)
+				manage_edge_getup_animation(GlobalVariables.CharacterAnimations.ROLLGETUP, targetPosition)
 		elif Input.is_action_just_pressed(attack):
 			if global_position > snappedEdge.global_position:
-				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*2,(get_character_size()).y)
-				manage_edge_getup(GlobalVariables.CharacterAnimations.ATTACKGETUP, targetPosition)
+				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x/4,(get_character_size()).y)
+				manage_edge_getup_animation(GlobalVariables.CharacterAnimations.ATTACKGETUP, targetPosition)
 			else:
-				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*2,(get_character_size()).y)
-				manage_edge_getup(GlobalVariables.CharacterAnimations.ATTACKGETUP, targetPosition)
+				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x/4,(get_character_size()).y)
+				manage_edge_getup_animation(GlobalVariables.CharacterAnimations.ATTACKGETUP, targetPosition)
 		if !edgeRegrabTimer.timer_running() && snappedEdge == null: 
 			create_frame_timer(GlobalVariables.TimerType.EDGEGRAB)
 			#todo create edgeregrabtimer
 			
-func manage_edge_getup(getUpType, targetPosition):
+func manage_edge_getup_animation(getUpType, targetPosition):
 	snappedEdge = null
 	animation_handler(getUpType)
 	match getUpType: 
@@ -1069,11 +1072,16 @@ func get_input_direction_x():
 			
 func get_input_direction_y():
 	return Input.get_action_strength(down) - Input.get_action_strength(up)
+	
+func edge_getup_handler(delta):
+	velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
+#	print(disableInput)
+#	print("edge getup")
 			
 func switch_to_state(state):
 	tween.remove_all()
 	toggle_all_hitboxes("off")
-	if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag && !onEdge:
+	if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag && !pushingAction && !onEdge:
 		enable_player_input()
 	stopMovementTimer.stop_timer()
 	#shortHopTimer.stop_timer()
@@ -1158,6 +1166,9 @@ func switch_to_state(state):
 			velocity.x = 0
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
+		CharacterState.EDGEGETUP:
+			currentState = CharacterState.EDGEGETUP
+			emit_signal("character_state_changed", self, currentState)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile):
 	damagePercent += damage
@@ -1276,6 +1287,7 @@ func buffer_input():
 		|| currentState == CharacterState.SHIELD\
 		|| currentState == CharacterState.HITSTUNAIR\
 		|| currentState == CharacterState.GETUP\
+		|| currentState == CharacterState.EDGEGETUP\
 		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
@@ -1513,7 +1525,7 @@ func getup_animation_step(step = 0):
 				"attack_getup":
 					create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, attackGetupInvincibilityFrames)
 		1:
-			onEdge = false
+			pushingAction = false
 			if !bufferInput:
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				switch_to_state(CharacterState.GROUND)
@@ -1747,14 +1759,19 @@ func _on_frametimer_timeout(timerType):
 					match animationPlayer.get_current_animation():
 						"normal_getup":
 							velocity.x = direction*normalGetUpVelocity
-							switch_to_state(CharacterState.GROUND)
+							switch_to_state(CharacterState.EDGEGETUP)
+							onEdge = false
+							#pushingAction = true
 						"roll_getup":
-							pushingAction = true
 							velocity.x = direction*rollGetUpVelocity
-							switch_to_state(CharacterState.GROUND)
+							switch_to_state(CharacterState.EDGEGETUP)
+							onEdge = false
+							#pushingAction = true
 						"attack_getup":
 							velocity.x = direction*attackgetUpVelocity
 							switch_to_state(CharacterState.ATTACKGROUND)
+							onEdge = false
+							#pushingAction = true
 		GlobalVariables.TimerType.GRAB:
 			print("Grab timer timeout")
 			if grabbedCharacter:

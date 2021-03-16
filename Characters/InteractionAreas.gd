@@ -56,6 +56,8 @@ func match_character_states(characterState):
 			match_collision_shieldbreak()
 		character.CharacterState.CROUCH: 
 			match_collision_crouch()
+		character.CharacterState.EDGEGETUP:
+			match_collision_edgegetup()
 			
 func disable_collision():
 	character.set_collision_mask_bit(0,false)
@@ -140,6 +142,8 @@ func match_collision_ground():
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_air():
 	match areaCollisionObject.currentState:
@@ -185,6 +189,8 @@ func match_collision_air():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_edge():
 	match areaCollisionObject.currentState:
@@ -221,6 +227,8 @@ func match_collision_edge():
 		character.CharacterState.SHIELDBREAK:
 			disable_collision()
 		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
 func match_collision_attackground():
@@ -259,6 +267,8 @@ func match_collision_attackground():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 
 func match_collision_attackair():
 	match areaCollisionObject.currentState:
@@ -295,6 +305,8 @@ func match_collision_attackair():
 		character.CharacterState.SHIELDBREAK:
 			disable_collision()
 		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
 func match_collision_hitstunground():
@@ -333,6 +345,8 @@ func match_collision_hitstunground():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_hitstunair():
 	match areaCollisionObject.currentState:
@@ -369,6 +383,8 @@ func match_collision_hitstunair():
 		character.CharacterState.SHIELDBREAK:
 			disable_collision()
 		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
 func match_collision_specialground():
@@ -407,6 +423,8 @@ func match_collision_specialground():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_specialair():
 	match areaCollisionObject.currentState:
@@ -444,6 +462,8 @@ func match_collision_specialair():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_shield():
 	match areaCollisionObject.currentState:
@@ -481,6 +501,8 @@ func match_collision_shield():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_roll():
 	match areaCollisionObject.currentState:
@@ -517,6 +539,8 @@ func match_collision_roll():
 		character.CharacterState.SHIELDBREAK:
 			disable_collision()
 		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
 func match_collision_grab():
@@ -555,6 +579,8 @@ func match_collision_grab():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_ingrab():
 	match areaCollisionObject.currentState:
@@ -591,6 +617,8 @@ func match_collision_ingrab():
 		character.CharacterState.SHIELDBREAK:
 			disable_collision()
 		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
 func match_collision_spotdodge():
@@ -629,6 +657,8 @@ func match_collision_spotdodge():
 			disable_collision()
 		character.CharacterState.CROUCH:
 			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 			
 func match_collision_getup():
 	match areaCollisionObject.currentState:
@@ -665,6 +695,8 @@ func match_collision_getup():
 		character.CharacterState.SHIELDBREAK:
 			disable_collision()
 		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
 func match_collision_shieldbreak():
@@ -703,6 +735,8 @@ func match_collision_shieldbreak():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
 
 func match_collision_crouch():
 	match areaCollisionObject.currentState:
@@ -744,3 +778,44 @@ func match_collision_crouch():
 			enable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+			
+func match_collision_edgegetup():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
