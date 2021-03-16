@@ -1,4 +1,4 @@
-[gd_scene load_steps=349 format=2]
+[gd_scene load_steps=352 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -302,6 +302,9 @@
 [ext_resource path="res://Characters/Mario/landinglag/2.png" type="Texture" id=300]
 [ext_resource path="res://Characters/Mario/backflip/1.png" type="Texture" id=301]
 [ext_resource path="res://Characters/Mario/backflip/0.png" type="Texture" id=302]
+[ext_resource path="res://Characters/Mario/attack_getup/9.png" type="Texture" id=303]
+[ext_resource path="res://Characters/Mario/attack_getup/8.png" type="Texture" id=304]
+[ext_resource path="res://Characters/Mario/attack_getup/7.png" type="Texture" id=305]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -375,7 +378,7 @@ animations = [ {
 "name": "jab2",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ) ],
+"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ), ExtResource( 305 ), ExtResource( 304 ), ExtResource( 303 ) ],
 "loop": true,
 "name": "attack_getup",
 "speed": 5.0
@@ -534,10 +537,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.183333, 0.25, 0.333333, 0.416667, 0.5, 0.566668, 0.616667, 0.683333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 0, 1, 2, 3, 4, 5, 6 ]
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 }
 tracks/2/type = "method"
 tracks/2/path = NodePath("..")
@@ -546,7 +549,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.6 ),
+"times": PoolRealArray( 0, 0.7 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
@@ -1803,7 +1806,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 1.1 ),
+"times": PoolRealArray( 0, 1.292 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],

@@ -20,6 +20,7 @@ var shortHopSpeed = 600
 var fallingSpeed = 1.0
 var currentMaxSpeed = baseWalkMaxSpeed
 var dropPlatformTime = 30
+var pushingAction = false
 #jump
 var jumpCount = 0
 var availabelJumps = 2
@@ -37,6 +38,10 @@ var disableInput = false
 var edgeGrabShape
 var edgeRegrabFrames = 50
 var disabledEdgeGrab = false
+var onEdge = false
+var rollGetUpVelocity = 600
+var normalGetUpVelocity = 0
+var attackgetUpVelocity = 300
 #attack 
 var smashAttack = null
 var currentAttack = null
@@ -46,7 +51,6 @@ var dashAttackSpeed = 800
 var chargingSmashAttack = false
 var smashAttackInputTime = 5
 var bufferedSmashAttack
-var pushingAttack = false
 var currentHitBox = 1
 #movement
 enum moveDirection {LEFT, RIGHT}
@@ -115,7 +119,7 @@ var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
 var rollGetupInvincibilityFrames = 20
 var normalGetupInvincibilityFrames = 10
-var attackGetupInvincibilityFrames = 10
+var attackGetupInvincibilityFrames = 15
 #timers
 var shortHopTimer
 var dropDownTimer
@@ -131,6 +135,8 @@ var shieldDropTimer
 var grabTimer
 var hitLagTimer
 var landingLagTimer 
+
+var tween 
 
 enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH}
 #signal for character state change
@@ -177,6 +183,7 @@ func _ready():
 	animationPlayer = $AnimatedSprite/AnimationPlayer
 	hurtBox = $InteractionAreas/Hurtbox
 	frameTimersNode = $FrameTimers
+	tween = $Tween
 	#create all timers and connect signals 
 	hitStunTimer = frameTimer.new(GlobalVariables.TimerType.HITSTUN, self)
 	shortHopTimer = frameTimer.new(GlobalVariables.TimerType.SHORTHOP, self)
@@ -200,8 +207,6 @@ func _ready():
 	GlobalVariables.charactersInGame.append(self)
 
 func _physics_process(delta):
-#	if name == "Mario":
-#		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -306,7 +311,7 @@ func attack_handler_ground():
 					velocity.x = -dashAttackSpeed
 				moveDirection.RIGHT:
 					velocity.x = dashAttackSpeed
-			pushingAttack = true
+			pushingAction = true
 			animation_handler(GlobalVariables.CharacterAnimations.DASHATTACK)
 			currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 			
@@ -640,8 +645,9 @@ func crouch_handler(delta):
 		
 	
 func snap_edge(collidingEdge):
-	switch_to_state(CharacterState.EDGE)
 	disableInput = true
+	onEdge = true
+	switch_to_state(CharacterState.EDGE)
 	velocity = Vector2.ZERO
 	jumpCount = 1
 	if currentMoveDirection == moveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
@@ -667,7 +673,7 @@ func edge_handler(delta):
 			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
 			switch_to_state(CharacterState.AIR)
-		elif Input.is_action_just_pressed(jump):
+		elif Input.is_action_just_pressed(jump) || Input.is_action_just_pressed(up):
 			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
 			jump_handler()
@@ -679,11 +685,7 @@ func edge_handler(delta):
 				velocity.x = -walkMaxSpeed/2
 			else:
 				targetPosition = snappedEdge.global_position - Vector2(get_character_size().x*2, get_character_size().y)
-				snappedEdge = null
-				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-				$Tween.start()
-				yield($Tween, "tween_all_completed")
-				switch_to_state(CharacterState.GROUND)
+				manage_edge_getup(GlobalVariables.CharacterAnimations.NORMALGETUP, targetPosition)
 		elif Input.is_action_just_pressed(right):
 			if global_position.x > snappedEdge.global_position.x:
 				snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
@@ -692,46 +694,37 @@ func edge_handler(delta):
 				velocity.x = walkMaxSpeed/2
 			else: 
 				targetPosition = snappedEdge.global_position - Vector2(-get_character_size().x*2, get_character_size().y)
-				snappedEdge = null
-				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-				$Tween.start()
-				yield($Tween, "tween_all_completed")
-				switch_to_state(CharacterState.GROUND)
-		elif Input.is_action_just_pressed(up):
-			if global_position > snappedEdge.global_position:
-				#normal getup right edge
-				targetPosition = snappedEdge.global_position - get_character_size()
-				snappedEdge = null
-				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-				$Tween.start()
-				yield($Tween, "tween_all_completed")
-				switch_to_state(CharacterState.GROUND)
-			else: 
-				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x,(get_character_size()).y)
-				snappedEdge = null
-				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-				$Tween.start()
-				yield($Tween, "tween_all_completed")
-				switch_to_state(CharacterState.GROUND)
+				manage_edge_getup(GlobalVariables.CharacterAnimations.NORMALGETUP, targetPosition)
 		elif Input.is_action_just_pressed(shield):
 			if global_position > snappedEdge.global_position:
 				#normal getup right edge
-				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*4,(get_character_size()).y)
-				snappedEdge = null
-				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-				$Tween.start()
-				yield($Tween, "tween_all_completed")
-				switch_to_state(CharacterState.GROUND)
+				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*2,(get_character_size()).y)
+				manage_edge_getup(GlobalVariables.CharacterAnimations.ROLLGETUP, targetPosition)
 			else: 
-				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*4,(get_character_size()).y)
-				snappedEdge = null
-				$Tween.interpolate_property(self, "global_position", global_position, targetPosition , 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
-				$Tween.start()
-				yield($Tween, "tween_all_completed")
-				switch_to_state(CharacterState.GROUND)
-		if snappedEdge == null: 
+				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*2,(get_character_size()).y)
+				manage_edge_getup(GlobalVariables.CharacterAnimations.ROLLGETUP, targetPosition)
+		elif Input.is_action_just_pressed(attack):
+			if global_position > snappedEdge.global_position:
+				targetPosition = snappedEdge.global_position - Vector2((get_character_size()).x*2,(get_character_size()).y)
+				manage_edge_getup(GlobalVariables.CharacterAnimations.ATTACKGETUP, targetPosition)
+			else:
+				targetPosition = snappedEdge.global_position - Vector2(-(get_character_size()).x*2,(get_character_size()).y)
+				manage_edge_getup(GlobalVariables.CharacterAnimations.ATTACKGETUP, targetPosition)
+		if !edgeRegrabTimer.timer_running() && snappedEdge == null: 
 			create_frame_timer(GlobalVariables.TimerType.EDGEGRAB)
 			#todo create edgeregrabtimer
+			
+func manage_edge_getup(getUpType, targetPosition):
+	snappedEdge = null
+	animation_handler(getUpType)
+	match getUpType: 
+		GlobalVariables.CharacterAnimations.ROLLGETUP:
+			tween.interpolate_property(self, "global_position", global_position, targetPosition , float(rollGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		GlobalVariables.CharacterAnimations.NORMALGETUP:
+			tween.interpolate_property(self, "global_position", global_position, targetPosition , float(normalGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		GlobalVariables.CharacterAnimations.ATTACKGETUP:
+			tween.interpolate_property(self, "global_position", global_position, targetPosition , float(attackGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	tween.start()
 
 func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
@@ -1057,8 +1050,6 @@ func toggle_all_hitboxes(onOff):
 					if hitbox is CollisionShape2D:
 						hitbox.set_deferred('disabled',false)
 		"off":
-			if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag:
-				enable_player_input()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
@@ -1080,18 +1071,23 @@ func get_input_direction_y():
 	return Input.get_action_strength(down) - Input.get_action_strength(up)
 			
 func switch_to_state(state):
+	tween.remove_all()
 	toggle_all_hitboxes("off")
+	if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag && !onEdge:
+		enable_player_input()
 	stopMovementTimer.stop_timer()
 	#shortHopTimer.stop_timer()
 	turnAroundTimer.stop_timer()
 	if bufferAnimation:
 		animationPlayer.play()
 	elif state == CharacterState.GROUND && currentAttack != GlobalVariables.CharacterAnimations.FTILTL\
-	&& currentAttack != GlobalVariables.CharacterAnimations.FTILTR:
+	&& currentAttack != GlobalVariables.CharacterAnimations.FTILTR && currentState != CharacterState.EDGE:
 		change_max_speed(get_input_direction_x())
 	inMovementLag = false
-	pushingAttack = false
-	currentAttack = null
+	pushingAction = false
+	if currentState != CharacterState.ATTACKGROUND && state != CharacterState.ATTACKGROUND\
+	|| currentState != CharacterState.ATTACKAIR && state != CharacterState.ATTACKAIR:
+		currentAttack = null
 	shortTurnAround = false
 	edgeGrabShape.set_deferred("disabled", true)
 	#todo: reset all hitboxes and collision shapes
@@ -1517,11 +1513,13 @@ func getup_animation_step(step = 0):
 				"attack_getup":
 					create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, attackGetupInvincibilityFrames)
 		1:
+			onEdge = false
 			if !bufferInput:
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				switch_to_state(CharacterState.GROUND)
 				check_character_crouch()
-			enable_player_input()
+			else:
+				enable_player_input()
 			
 func apply_grab_animation_step(step = 0):
 	match step: 
@@ -1741,6 +1739,22 @@ func _on_frametimer_timeout(timerType):
 				inputTimeout = false
 		GlobalVariables.TimerType.INVINCIBILITY:
 			enable_disable_hurtboxes(true)
+			var direction = 1
+			if currentMoveDirection == moveDirection.LEFT: 
+				direction = -1
+			match currentState:
+				CharacterState.EDGE: 
+					match animationPlayer.get_current_animation():
+						"normal_getup":
+							velocity.x = direction*normalGetUpVelocity
+							switch_to_state(CharacterState.GROUND)
+						"roll_getup":
+							pushingAction = true
+							velocity.x = direction*rollGetUpVelocity
+							switch_to_state(CharacterState.GROUND)
+						"attack_getup":
+							velocity.x = direction*attackgetUpVelocity
+							switch_to_state(CharacterState.ATTACKGROUND)
 		GlobalVariables.TimerType.GRAB:
 			print("Grab timer timeout")
 			if grabbedCharacter:
