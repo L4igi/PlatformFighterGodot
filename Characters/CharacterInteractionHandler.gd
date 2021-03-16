@@ -49,7 +49,7 @@ func set_combined_velocity(delta):
 #sets pushForce to 0 if character is in certain state
 func disable_character_pushforce(character):
 	if character.currentState == character.CharacterState.HITSTUNGROUND \
-	|| character.inHitStun\
+	|| character.hitStunTimer.timer_running()\
 	|| character.currentState == character.CharacterState.SHIELD\
 	|| character.currentState == character.CharacterState.GRAB\
 	|| character.currentState == character.CharacterState.AIR\

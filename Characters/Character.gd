@@ -26,13 +26,11 @@ var availabelJumps = 2
 var justJumped = false
 var shortHopFrames = 3
 var shortHop = false
-var shortHopTimerRunning = false
 #platform
 var inputTimeout = false
 var platformCollision = null
 var atPlatformEdge = null
 var lowestCheckYPoint 
-var dropDownTimerRunning = false
 #edge
 var snappedEdge = null
 var disableInput = false
@@ -41,7 +39,6 @@ var edgeRegrabFrames = 50
 var disabledEdgeGrab = false
 #attack 
 var smashAttack = null
-var smashAttackTimerRunning = false
 var currentAttack = null
 var jabCount = 0
 var jabCombo = 1
@@ -67,12 +64,9 @@ var onSolidGround = null
 var onSolidGroundThreashold = 10
 var resetMovementSpeed = false
 var inMovementLag = false
-var sideStepTimerRunning = false
-var sideStepFrames = 10
+var sideStepFrames = 12
 var shortTurnAround = false
 var bufferXInput = 0
-var turnAroundTimerRunning = false
-var stopMovementTimerRunning = false
 #crouch 
 var crouchMovement = false
 #bufferInput
@@ -83,7 +77,6 @@ var bufferAnimation = false
 #hitstun 
 var initLaunchVelocity = Vector2.ZERO
 var launchSpeedDecay = 0.025
-var hitStunTimerRunning = false
 var shortHitStun = false
 var groundHitStun = 3.0
 var getupRollDistance = 100
@@ -92,8 +85,6 @@ var characterBouncing = false
 var lastVelocity = Vector2.ZERO
 var bounceThreashold = 800
 var bounceReduction = 0.7
-#hitlag
-var hitlagTimerRunning = false
 #shield
 onready var characterShield = get_node("Shield")
 var rollDistance = 150
@@ -101,8 +92,6 @@ var rolling = false
 var shieldDropFrames = 15
 var shieldStunFrames = 0
 var maxSheildPushBack = 500
-var shieldDropTimerRunning = false
-var shieldStunTimerRunning = false
 #grab
 var grabbedCharacter = null
 var inGrabByCharacter = null
@@ -120,7 +109,7 @@ var backUpDisableInputDI = false
 #landinglag 
 var normalLandingLag = 4
 var helplessLandingLag = 10
-var landingLagTimerRunning = false
+var inLandingLag = false
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -266,7 +255,7 @@ func check_input_ground(delta):
 		elif Input.is_action_just_pressed(down):
 			create_frame_timer(GlobalVariables.TimerType.SMASHATTACK)
 			bufferedSmashAttack = GlobalVariables.CharacterAnimations.DSMASH
-	elif Input.is_action_just_pressed(attack) && smashAttackTimerRunning && bufferedSmashAttack:
+	elif Input.is_action_just_pressed(attack) && smashAttackTimer.timer_running() && bufferedSmashAttack:
 		if Input.is_action_pressed(right):
 			smashAttack = bufferedSmashAttack
 			switch_to_state(CharacterState.ATTACKGROUND)
@@ -279,7 +268,7 @@ func check_input_ground(delta):
 		elif Input.is_action_pressed(down):
 			smashAttack = bufferedSmashAttack
 			switch_to_state(CharacterState.ATTACKGROUND)
-	if Input.is_action_just_pressed(attack) && !hitStunTimerRunning:
+	if Input.is_action_just_pressed(attack) && !hitStunTimer.timer_running():
 		switch_to_state(CharacterState.ATTACKGROUND)
 		
 func attack_handler_ground():
@@ -354,7 +343,7 @@ func jab_handler():
 		
 func attack_handler_air(delta):
 	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
-	&& !dropDownTimerRunning && !hitlagTimerRunning:
+	&& !dropDownTimer.timer_running() && !hitLagTimer.timer_running():
 		var attackLandingLag = attackData[GlobalVariables.CharacterAnimations.keys()[currentAttack] + "_neutral"]["landingLag"]
 		switch_from_air_to_ground(attackLandingLag)
 		#toggle_all_hitboxes("off")
@@ -387,7 +376,7 @@ func ground_handler(delta):
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
 	else:
-		if !landingLagTimerRunning:
+		if !inLandingLag:
 			input_movement_physics_ground(delta)
 			check_input_ground(delta)
 			# Move based on the velocity and snap to the ground.
@@ -407,13 +396,13 @@ func calculate_vertical_velocity(delta):
 #is called when player is in the air 
 func air_handler(delta):
 	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
-	&& !dropDownTimerRunning:
+	&& !dropDownTimer.timer_running():
 		switch_from_air_to_ground(normalLandingLag)
 		#switch_to_state(CharacterState.GROUND)
 #				animationPlayer.play("idle")
 		#if aerial attack is interrupted by ground cancel hitboxes
 	elif !disableInput:
-		if Input.is_action_just_pressed(attack) && !hitStunTimerRunning:
+		if Input.is_action_just_pressed(attack) && !hitStunTimer.timer_running():
 			switch_to_state(CharacterState.ATTACKAIR)
 		else:
 			input_movement_physics_air(delta)
@@ -469,14 +458,14 @@ func calc_hitstun_velocity(delta):
 		velocity.x = 0
 	
 func hitstun_handler(delta):
-	if disableInput && hitStunTimerRunning:
+	if disableInput && hitStunTimer.timer_running():
 		if shortHitStun: 
 			return
 #		if abs(int(velocity.y)) >= onSolidGroundThreashold && currentState == CharacterState.HITSTUNGROUND:
 #			switch_from_state_to_airborn_hitstun()
 		if currentState == CharacterState.HITSTUNAIR:
 			#BOUNCING CHARACTER
-			if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimerRunning:
+			if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
 				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 				initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
@@ -489,7 +478,7 @@ func hitstun_handler(delta):
 #			if abs(int(velocity.y)) >= onSolidGroundThreashold:
 #				switch_from_state_to_airborn()
 	elif !disableInput:
-		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimerRunning:
+		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
 			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
@@ -524,7 +513,7 @@ func hitstun_handler(delta):
 		elif currentState == CharacterState.HITSTUNAIR:
 			#if not in hitstun check for jump, attack or special 
 			#todo: check for special
-			if !hitStunTimerRunning: 
+			if !hitStunTimer.timer_running(): 
 				if Input.is_action_just_pressed(attack):
 					switch_to_state(CharacterState.ATTACKAIR)
 					attack_handler_air(delta)
@@ -538,9 +527,9 @@ func hitstun_handler(delta):
 func shield_handler(delta):
 	if !disableInput:
 		process_movement_physics(delta)
-	if !shieldStunTimerRunning\
-	 && !shieldDropTimerRunning\
-	 && !hitlagTimerRunning:
+	if !shieldStunTimer.timer_running()\
+	 && !shieldDropTimer.timer_running()\
+	 && !hitLagTimer.timer_running():
 		if Input.is_action_just_released(shield):
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.GROUND)
@@ -926,6 +915,7 @@ func input_movement_physics_ground(delta):
 	var xInput = get_input_direction_x()
 	if !inMovementLag:
 		if xInput == 0:
+			direction_changer(xInput)
 			animationPlayer.play("idle")
 			# The velocity, slowed down a bit, and then reassigned.
 			if pushingCharacter == null:
@@ -937,13 +927,12 @@ func input_movement_physics_ground(delta):
 				change_max_speed(xInput)
 			if currentMaxSpeed == baseRunMaxSpeed:
 				animation_handler(GlobalVariables.CharacterAnimations.RUN)
-				if !pushingCharacter:
-					if xInput > 0:
-						velocity.x = currentMaxSpeed
-						velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
-					elif xInput < 0:
-						velocity.x = - currentMaxSpeed
-						velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+				if xInput > 0 && !pushingCharacter:
+					velocity.x = currentMaxSpeed
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+				elif xInput < 0 && !pushingCharacter:
+					velocity.x = - currentMaxSpeed
+					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 			elif currentMaxSpeed == baseWalkMaxSpeed:
 				animation_handler(GlobalVariables.CharacterAnimations.WALK)
 				if !pushingCharacter:
@@ -961,14 +950,14 @@ func input_movement_physics_ground(delta):
 					velocity.x = xInput * currentMaxSpeed
 					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 					resetMovementSpeed = false
-	elif stopMovementTimerRunning:
+	elif stopMovementTimer.timer_running():
 		#print("stopped movement")
 		if !direction_changer(xInput):
 			if !pushingCharacter:
 				velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 #		velocity.x = move_toward(velocity.x, 0.5, groundStopForce * delta)
 		#print("stopMovement timer")
-	elif turnAroundTimerRunning:
+	elif turnAroundTimer.timer_running():
 		match currentMoveDirection:
 			moveDirection.LEFT:
 				if velocity.x > 0:
@@ -990,9 +979,9 @@ func direction_changer(xInput, fromIdle = false):
 				if currentMaxSpeed == baseRunMaxSpeed:
 					create_frame_timer(GlobalVariables.TimerType.STOPMOVEMENT)
 			elif xInput > 0: 
-				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || lastXInput != 0) && !sideStepTimerRunning && !pushingCharacter:
+				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || lastXInput != 0) && !sideStepTimer.timer_running() && !pushingCharacter:
 					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					#print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(sideStepTimerRunning))
+					#print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDSLOW)
 					create_frame_timer(GlobalVariables.TimerType.TURNAROUND,slideTurnAroundFrames)
 					currentMaxSpeed = baseWalkMaxSpeed
@@ -1000,7 +989,7 @@ func direction_changer(xInput, fromIdle = false):
 					shortTurnAround = false
 				else: 
 					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(sideStepTimerRunning))
+					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDFAST)
 					create_frame_timer(GlobalVariables.TimerType.TURNAROUND,turnAroundFrames)
 					velocity.x = 0
@@ -1013,9 +1002,9 @@ func direction_changer(xInput, fromIdle = false):
 				if currentMaxSpeed == baseRunMaxSpeed:
 					create_frame_timer(GlobalVariables.TimerType.STOPMOVEMENT)
 			elif xInput < 0: 
-				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || lastXInput != 0) && !sideStepTimerRunning && !pushingCharacter:
+				if currentMaxSpeed == baseRunMaxSpeed && (inMovementLag || lastXInput != 0) && !sideStepTimer.timer_running() && !pushingCharacter:
 					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					#print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(sideStepTimerRunning))
+					#print("slow turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDSLOW)
 					create_frame_timer(GlobalVariables.TimerType.TURNAROUND,slideTurnAroundFrames)
 					currentMaxSpeed = baseWalkMaxSpeed
@@ -1023,7 +1012,7 @@ func direction_changer(xInput, fromIdle = false):
 					shortTurnAround = false
 				else: 
 					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
-					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(sideStepTimerRunning))
+					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					animation_handler(GlobalVariables.CharacterAnimations.TURNAROUNDFAST)
 					create_frame_timer(GlobalVariables.TimerType.TURNAROUND,turnAroundFrames)
 					velocity.x = 0
@@ -1031,7 +1020,6 @@ func direction_changer(xInput, fromIdle = false):
 				bufferXInput = xInput
 				return true
 	return false
-	
 func change_max_speed(xInput):
 	var useXInput = xInput
 	if bufferXInput != 0: 
@@ -1069,7 +1057,7 @@ func toggle_all_hitboxes(onOff):
 					if hitbox is CollisionShape2D:
 						hitbox.set_deferred('disabled',false)
 		"off":
-			if !hitStunTimerRunning && !bufferInput && !landingLagTimerRunning:
+			if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag:
 				enable_player_input()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
@@ -1274,7 +1262,7 @@ func enable_player_input():
 		
 
 func buffer_input():
-	if shortHopTimerRunning:
+	if shortHopTimer.timer_running():
 		if Input.is_action_just_released(jump):
 			shortHop = true
 #	print(animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())
@@ -1283,7 +1271,7 @@ func buffer_input():
 	#todo: add other inputs for buffer
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if  ((animationFramesLeft <= bufferInputWindow || currentState == CharacterState.SHIELD)\
-	|| (hitStunTimerRunning && hitStunTimer.get_frames_left() < 10))\
+	|| (hitStunTimer.timer_running() && hitStunTimer.get_frames_left() < 10))\
 	&& bufferInput == null: 
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ATTACKAIR\
@@ -1292,7 +1280,7 @@ func buffer_input():
 		|| currentState == CharacterState.SHIELD\
 		|| currentState == CharacterState.HITSTUNAIR\
 		|| currentState == CharacterState.GETUP\
-		|| landingLagTimerRunning:
+		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
 			elif Input.is_action_just_pressed(jump):
@@ -1313,7 +1301,7 @@ func buffer_input():
 			elif Input.is_action_just_pressed(down):
 				create_frame_timer(GlobalVariables.TimerType.SMASHATTACK)
 				bufferedSmashAttack = GlobalVariables.CharacterAnimations.DSMASH
-			if smashAttackTimerRunning && Input.is_action_just_pressed(attack) && bufferedSmashAttack != null:
+			if smashAttackTimer.timer_running() && Input.is_action_just_pressed(attack) && bufferedSmashAttack != null:
 				if Input.is_action_pressed(right):
 					smashAttack = bufferedSmashAttack
 					bufferInput = bufferedSmashAttack
@@ -1326,7 +1314,7 @@ func buffer_input():
 				elif Input.is_action_pressed(down):
 					smashAttack = bufferedSmashAttack
 					bufferInput = bufferedSmashAttack
-			elif !smashAttackTimerRunning && Input.is_action_just_pressed(attack):
+			elif !smashAttackTimer.timer_running() && Input.is_action_just_pressed(attack):
 				if Input.is_action_pressed(right):
 					bufferInput = GlobalVariables.CharacterAnimations.FTILTR
 				elif Input.is_action_pressed(left):
@@ -1584,7 +1572,6 @@ func switch_from_state_to_airborn():
 		switch_to_state(CharacterState.AIR)
 	enable_player_input()
 	if currentState == CharacterState.HITSTUNGROUND:
-		hitStunTimerRunning = false
 		hitStunTimer.stop_timer()
 		
 func switch_from_state_to_airborn_hitstun():
@@ -1628,15 +1615,12 @@ func create_frame_timer(timerType, timerFrames = 0):
 		GlobalVariables.TimerType.HITSTUN:
 			disableInput = true
 			disableInputDI = false
-			hitStunTimerRunning = true
 			hitStunTimer.set_frames(timerFrames)
 			hitStunTimer.start_timer()
 		GlobalVariables.TimerType.SHORTHOP:
-			shortHopTimerRunning = true
 			shortHopTimer.set_frames(shortHopFrames)
 			shortHopTimer.start_timer()
 		GlobalVariables.TimerType.DROPDOWN:
-			dropDownTimerRunning = true
 			dropDownTimer.set_frames(timerFrames)
 			dropDownTimer.start_timer()
 		GlobalVariables.TimerType.INVINCIBILITY:
@@ -1647,21 +1631,17 @@ func create_frame_timer(timerType, timerFrames = 0):
 			grabTimer.set_frames(timerFrames)
 			grabTimer.start_timer()
 		GlobalVariables.TimerType.SMASHATTACK:
-			smashAttackTimerRunning = true
 			smashAttackTimer.set_frames(smashAttackInputTime)
 			smashAttackTimer.start_timer()
 		GlobalVariables.TimerType.SHIELDSTUN:
-			shieldStunTimerRunning = true
 			shieldStunTimer.set_frames(timerFrames)
 			shieldStunTimer.start_timer()
 		GlobalVariables.TimerType.SHIELDDROP:
-			shieldDropTimerRunning = true
 			shieldDropTimer.set_frames(shieldDropFrames)
 			shieldDropTimer.start_timer()
 			disableInput = true
 			animation_handler(GlobalVariables.CharacterAnimations.SHIELDDROP)
 		GlobalVariables.TimerType.HITLAG:
-			hitlagTimerRunning = true
 			animationPlayer.stop(false)
 			gravity_on_off("off")
 			velocity = Vector2.ZERO
@@ -1682,7 +1662,6 @@ func create_frame_timer(timerType, timerFrames = 0):
 			animationPlayer.get_parent().set_frame(0)
 			create_frame_timer(GlobalVariables.TimerType.HITLAG)
 		GlobalVariables.TimerType.TURNAROUND:
-			turnAroundTimerRunning = true
 			inMovementLag = true
 			stopMovementTimer.stop_timer()
 			turnAroundTimer.set_frames(timerFrames)
@@ -1695,17 +1674,15 @@ func create_frame_timer(timerType, timerFrames = 0):
 					currentMoveDirection = moveDirection.LEFT
 					mirror_areas()
 		GlobalVariables.TimerType.STOPMOVEMENT:
-			stopMovementTimerRunning = true
 			inMovementLag = true
 			stopMovementTimer.set_frames(stopMovementFrames)
 			stopMovementTimer.start_timer()
 		GlobalVariables.TimerType.SIDESTEP:
-			sideStepTimerRunning = true
 			sideStepTimer.set_frames(sideStepFrames)
 			sideStepTimer.start_timer()
 		GlobalVariables.TimerType.LANDINGLAG:
 			gravity = baseGravity
-			landingLagTimerRunning = true
+			inLandingLag = true
 			disableInput = true
 			disableInputDI = false
 			landingLagTimer.set_frames(timerFrames)
@@ -1721,7 +1698,6 @@ func create_frame_timer(timerType, timerFrames = 0):
 func _on_frametimer_timeout(timerType):
 	match timerType:
 		GlobalVariables.TimerType.HITSTUN:
-			hitStunTimerRunning = false
 			disableInput = false
 			if shortHitStun: 
 				if onSolidGround:
@@ -1736,7 +1712,6 @@ func _on_frametimer_timeout(timerType):
 				elif !onSolidGround: 
 					animation_handler(GlobalVariables.CharacterAnimations.TUMBLE)
 		GlobalVariables.TimerType.SHORTHOP:
-			shortHopTimerRunning = false
 			var animationToPlay = GlobalVariables.CharacterAnimations.JUMP
 			if !bufferInput:
 				if shortHop:
@@ -1762,7 +1737,6 @@ func _on_frametimer_timeout(timerType):
 				switch_to_state(CharacterState.AIR)
 				animation_handler(animationToPlay)
 		GlobalVariables.TimerType.DROPDOWN:
-			dropDownTimerRunning = false
 			if inputTimeout:
 				inputTimeout = false
 		GlobalVariables.TimerType.INVINCIBILITY:
@@ -1776,20 +1750,16 @@ func _on_frametimer_timeout(timerType):
 			if !inMovementLag: 
 				check_character_crouch()
 			bufferedSmashAttack = null
-			smashAttackTimerRunning = false
 		GlobalVariables.TimerType.SHIELDSTUN:
-			shieldStunTimerRunning = false
 			if !Input.is_action_pressed(shield):
 				characterShield.disable_shield()
 				switch_to_state(CharacterState.GROUND)
 				create_frame_timer(GlobalVariables.TimerType.SHIELDDROP)
 		GlobalVariables.TimerType.SHIELDDROP:
-			shieldDropTimerRunning = false
 			if get_input_direction_y() >= 0.5:
 				switch_to_state(CharacterState.CROUCH)
 			disableInput = false
 		GlobalVariables.TimerType.HITLAG:
-			hitlagTimerRunning = false
 			gravity_on_off("on")
 			velocity = backUpVelocity
 			animationPlayer.play()
@@ -1803,7 +1773,6 @@ func _on_frametimer_timeout(timerType):
 			elif currentState == CharacterState.SHIELD:
 				create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
 		GlobalVariables.TimerType.TURNAROUND:
-			turnAroundTimerRunning = false
 			velocity.x = 0
 			change_max_speed(get_input_direction_x())
 			check_character_crouch()
@@ -1811,14 +1780,13 @@ func _on_frametimer_timeout(timerType):
 			inMovementLag = false
 			shortTurnAround = false
 		GlobalVariables.TimerType.STOPMOVEMENT:
-			stopMovementTimerRunning = false
 			change_max_speed(get_input_direction_x())
 			check_character_crouch()
 			inMovementLag = false
 		GlobalVariables.TimerType.SIDESTEP:
-			sideStepTimerRunning = false
+			pass
 		GlobalVariables.TimerType.LANDINGLAG:
-			landingLagTimerRunning = false
+			inLandingLag = false
 			if !bufferInput:
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				if get_input_direction_x() == 0:
@@ -1836,6 +1804,6 @@ func _on_frametimer_timeout(timerType):
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if GlobalVariables.attackAnimationList.has(anim_name):
-		if !landingLagTimerRunning:
+		if !inLandingLag:
 			finish_attack_animation(0)
 			
