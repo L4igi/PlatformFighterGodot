@@ -630,7 +630,7 @@ script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = -1.96
-animation = "dash_attack"
+animation = "landing_lag"
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0

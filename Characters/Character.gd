@@ -115,7 +115,7 @@ var backUpVelocity = Vector2.ZERO
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 #landinglag 
-var normalLandingLag = 4
+var normalLandingLag = 3
 var helplessLandingLag = 10
 var inLandingLag = false
 #invincibility lengths
@@ -215,8 +215,6 @@ func _ready():
 	GlobalVariables.charactersInGame.append(self)
 
 func _physics_process(delta):
-#	if name == "DarkMario":
-#		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -360,10 +358,9 @@ func jab_handler():
 func attack_handler_air(delta):
 	if airTime <= 300: 
 		airTime += 1
-	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
-	&& !platformCollisionDisabledTimer.timer_running() && !hitLagTimer.timer_running():
-		var attackLandingLag = attackData[GlobalVariables.CharacterAnimations.keys()[currentAttack] + "_neutral"]["landingLag"]
-		switch_from_air_to_ground(attackLandingLag)
+	if check_ground_platform_collision():
+		switch_from_air_to_ground(normalLandingLag)
+		return
 		#toggle_all_hitboxes("off")
 	elif !disableInput:
 		if abs(get_input_direction_x()) == 0\
@@ -415,9 +412,12 @@ func calculate_vertical_velocity(delta):
 func air_handler(delta):
 	if airTime <= 300: 
 		airTime += 1
-	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
-	&& !platformCollisionDisabledTimer.timer_running():
+	if check_ground_platform_collision():
 		switch_from_air_to_ground(normalLandingLag)
+		return
+#	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
+#	&& !platformCollisionDisabledTimer.timer_running():
+#		switch_from_air_to_ground(normalLandingLag)
 		#switch_to_state(CharacterState.GROUND)
 #				animationPlayer.play("idle")
 		#if aerial attack is interrupted by ground cancel hitboxes
@@ -451,6 +451,17 @@ func air_handler(delta):
 				edgeGrabShape.set_deferred("disabled", true)
 			elif get_input_direction_y() < 0.5 && !disabledEdgeGrab: 
 				edgeGrabShape.set_deferred("disabled", false)
+				
+func check_ground_platform_collision():
+	if velocity.y >= 0:
+		var collidingWith = move_and_collide(Vector2(0,1), true, true, true)
+		if collidingWith \
+		&& ((collidingWith.get_collider().is_in_group("Platform")\
+		&& !platformCollisionDisabledTimer.timer_running())\
+		|| collidingWith.get_collider().is_in_group("Ground")):
+			platformCollision = collidingWith.get_collider()
+			return true
+	return false
 			
 func jump_handler():
 	#todo: if currentstate == edge : create edge hop
@@ -506,13 +517,14 @@ func hitstun_handler(delta):
 #			if abs(int(velocity.y)) >= onSolidGroundThreashold:
 #				switch_from_state_to_airborn()
 	elif !disableInput:
+		if check_ground_platform_collision():
+			onSolidGround = true
 		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
 			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
-		if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
+		elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
 			#plays rest of hitstun animation if hitting ground during hitstun
 			animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
-			bufferAnimation = false
 			create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
 		elif currentState == CharacterState.HITSTUNGROUND: 
 			if abs(int(velocity.y)) >= onSolidGroundThreashold:
@@ -1636,10 +1648,12 @@ func other_character_state_changed():
 	emit_signal("character_state_changed", self, currentState)
 	
 func switch_from_air_to_ground(landingLag):
+	onSolidGround = true
 	create_frame_timer(GlobalVariables.TimerType.LANDINGLAG, landingLag)
 	if bufferAnimation:
-		animationPlayer.play()
-		bufferAnimation = false
+		pass
+#		animationPlayer.play()
+#		bufferAnimation = false
 	else:
 		animation_handler(GlobalVariables.CharacterAnimations.LANDINGLAGNORMAL)
 		match currentMoveDirection:
@@ -1868,14 +1882,13 @@ func _on_frametimer_timeout(timerType):
 			pass
 		GlobalVariables.TimerType.LANDINGLAG:
 			inLandingLag = false
-			if !bufferInput:
+			if !bufferInput && !bufferAnimation:
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				if get_input_direction_x() == 0:
 					animationPlayer.play("idle")
 				check_character_crouch()
 			enable_player_input()
 			if check_special_case_attack():
-				switch_to_state(CharacterState.GROUND)
 				currentAttack = null
 		GlobalVariables.TimerType.EDGEGRAB:
 			disabledEdgeGrab = false
