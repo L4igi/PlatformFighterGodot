@@ -40,6 +40,7 @@ var edgeGrabShape
 var edgeRegrabFrames = 50
 var disabledEdgeGrab = false
 var onEdge = false
+var canGetEdgeInvincibility = true
 var rollGetUpVelocity = 650
 var normalGetUpVelocity = 0
 var attackgetUpVelocity = 400
@@ -83,6 +84,7 @@ var bufferInputWindow = 10
 #animation needs to finish 
 var bufferAnimation = false
 #hitstun 
+var attackedCalculatedVelocity = 0
 var initLaunchVelocity = Vector2.ZERO
 var launchSpeedDecay = 0.025
 var shortHitStun = false
@@ -111,9 +113,9 @@ var fastFallGravity = 4000
 onready var gravity = 2000
 onready var baseGravity = gravity
 #hitlag 
-var backUpVelocity = Vector2.ZERO
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
+var hitlagDI = Vector2.ZERO
 #landinglag 
 var normalLandingLag = 3
 var helplessLandingLag = 10
@@ -359,7 +361,8 @@ func attack_handler_air(delta):
 	if airTime <= 300: 
 		airTime += 1
 	if check_ground_platform_collision():
-		switch_from_air_to_ground(normalLandingLag)
+		var currentAttackData = attackData[GlobalVariables.CharacterAnimations.keys()[currentAttack] + "_neutral"]
+		switch_from_air_to_ground(currentAttackData["landingLag"])
 		return
 		#toggle_all_hitboxes("off")
 	elif !disableInput:
@@ -412,15 +415,6 @@ func calculate_vertical_velocity(delta):
 func air_handler(delta):
 	if airTime <= 300: 
 		airTime += 1
-	if check_ground_platform_collision():
-		switch_from_air_to_ground(normalLandingLag)
-		return
-#	if onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold\
-#	&& !platformCollisionDisabledTimer.timer_running():
-#		switch_from_air_to_ground(normalLandingLag)
-		#switch_to_state(CharacterState.GROUND)
-#				animationPlayer.play("idle")
-		#if aerial attack is interrupted by ground cancel hitboxes
 	if !disableInput:
 		if Input.is_action_just_pressed(attack) && !hitStunTimer.timer_running():
 			switch_to_state(CharacterState.ATTACKAIR)
@@ -428,21 +422,12 @@ func air_handler(delta):
 			input_movement_physics_air(delta)
 			# Move based on the velocity and snap to the ground.
 			velocity = move_and_slide(velocity)
-#			var collidingBody = move_and_collide(velocity.normalized()*10, true, true, true)
-#			if collidingBody:
-#				if collidingBody.get_collider().is_in_group("Platform")\
-#				|| collidingBody.get_collider().is_in_group("Ground"):
-#					onSolidGround = collidingBody.get_collider()
-#					switch_from_air_to_ground(normalLandingLag)
 			if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
 				double_jump_handler()
 			else:
 				#Fastfall
 				if Input.is_action_just_pressed(down) && !onSolidGround && int(velocity.y) >= 0:
 					gravity = fastFallGravity
-		#		if abs(int(velocity.y)) <= onSolidGroundThreashold && onSolidGround:
-		#			switch_to_state(CharacterState.GROUND)
-					#if aerial attack is interrupted by ground cancel hitboxes
 				if velocity.y > 0 && get_input_direction_y() >= 0.5: 
 					set_collision_mask_bit(1,false)
 				elif velocity.y > 0 && get_input_direction_y() < 0.5 && platformCollision == null && !platformCollisionDisabledTimer.timer_running():
@@ -451,6 +436,8 @@ func air_handler(delta):
 				edgeGrabShape.set_deferred("disabled", true)
 			elif get_input_direction_y() < 0.5 && !disabledEdgeGrab: 
 				edgeGrabShape.set_deferred("disabled", false)
+	if check_ground_platform_collision():
+		switch_from_air_to_ground(normalLandingLag)
 				
 func check_ground_platform_collision():
 	if velocity.y >= 0:
@@ -495,11 +482,11 @@ func calc_hitstun_velocity(delta):
 		velocity.x = 0
 	
 func hitstun_handler(delta):
+	if hitLagTimer.timer_running():
+		hitlagDI = Vector2(get_input_direction_x(), get_input_direction_y())
 	if disableInput && hitStunTimer.timer_running():
 		if shortHitStun: 
 			return
-#		if abs(int(velocity.y)) >= onSolidGroundThreashold && currentState == CharacterState.HITSTUNGROUND:
-#			switch_from_state_to_airborn_hitstun()
 		if currentState == CharacterState.HITSTUNAIR:
 			if airTime <= 300: 
 				airTime += 1
@@ -513,9 +500,6 @@ func hitstun_handler(delta):
 				bufferAnimation = false
 				create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
 				switch_to_state(CharacterState.HITSTUNGROUND)
-#		elif currentState == CharacterState.HITSTUNGROUND:
-#			if abs(int(velocity.y)) >= onSolidGroundThreashold:
-#				switch_from_state_to_airborn()
 	elif !disableInput:
 		if check_ground_platform_collision():
 			onSolidGround = true
@@ -708,7 +692,9 @@ func snap_edge(collidingEdge):
 		create_frame_timer(GlobalVariables.TimerType.EDGEDROPTIMER, edgeDropTimeLow)
 	else: 
 		create_frame_timer(GlobalVariables.TimerType.EDGEDROPTIMER, edgeDropTimeHigh)
-	create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, edgeInvincibleDuration)
+	if canGetEdgeInvincibility:
+		canGetEdgeInvincibility = false
+		create_frame_timer(GlobalVariables.TimerType.INVINCIBILITY, edgeInvincibleDuration)
 	snappedEdge = collidingEdge
 		
 		
@@ -939,9 +925,7 @@ func apply_attack_animation_steps(step = 0):
 	
 func process_movement_physics(delta):
 	if currentState == CharacterState.HITSTUNAIR:
-#		print(self.name + "  " + str(onSolidGround) + "  " +str(velocity))
 		calc_hitstun_velocity(delta)
-#		velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 	if disableInputDI:
 		var walk = disableInputInfluence * get_input_direction_x()
 		velocity.x += walk * delta
@@ -959,7 +943,6 @@ func process_movement_physics(delta):
 #		|| currentState == CharacterState.HITSTUNAIR:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	# Move based on the velocity and snap to the ground.
-#	velocity = move_and_slide_with_snap(velocity, Vector2.DOWN, Vector2.UP)
 	calculate_vertical_velocity(delta)
 	velocity = move_and_slide(velocity)
 
@@ -1004,12 +987,9 @@ func input_movement_physics_ground(delta):
 					velocity.x = clamp(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 					resetMovementSpeed = false
 	elif stopMovementTimer.timer_running():
-		#print("stopped movement")
 		if !direction_changer(xInput):
 			if !pushingCharacter:
 				velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
-#		velocity.x = move_toward(velocity.x, 0.5, groundStopForce * delta)
-		#print("stopMovement timer")
 	elif turnAroundTimer.timer_running():
 		match currentMoveDirection:
 			moveDirection.LEFT:
@@ -1018,8 +998,6 @@ func input_movement_physics_ground(delta):
 			moveDirection.RIGHT:
 				if velocity.x < 0:
 					velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
-#		if !pushingCharacter:
-#		velocity.x = int(move_toward(velocity.x, 0, groundStopForce * delta))
 	lastXInput = xInput
 	calculate_vertical_velocity(delta)
 
@@ -1132,8 +1110,6 @@ func get_input_direction_y():
 	
 func edge_getup_handler(delta):
 	velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
-#	print(disableInput)
-#	print("edge getup")
 			
 func switch_to_state(state):
 	#ends all tweens if still running
@@ -1159,6 +1135,7 @@ func switch_to_state(state):
 	match state: 
 		CharacterState.GROUND:
 			disabledEdgeGrab = false
+			canGetEdgeInvincibility = true
 			#reset gravity if player is grounded
 			if gravity != baseGravity:
 				gravity=baseGravity
@@ -1173,6 +1150,7 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.FREEFALL)
 		CharacterState.HITSTUNAIR:
+			canGetEdgeInvincibility = true
 			currentState = CharacterState.HITSTUNAIR
 			emit_signal("character_state_changed", self, currentState)
 		CharacterState.HITSTUNGROUND:
@@ -1224,20 +1202,20 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.CROUCH)
 		CharacterState.EDGEGETUP:
+			canGetEdgeInvincibility = true
 			currentState = CharacterState.EDGEGETUP
 			emit_signal("character_state_changed", self, currentState)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile):
 	damagePercent += damage
-	var calulatedVelocity = 0
 	if weightLaunchVelocity == 0:
-		calulatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
+		attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
 	else:
-		calulatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
+		attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
 	#print(damagePercent)
 	velocity = Vector2.ZERO
-	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * calulatedVelocity
-	backUpVelocity = initLaunchVelocity
+	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * attackedCalculatedVelocity
+	print("isattackedoriginVec " +str(Vector2(launchVectorX,launchVectorY)))
 	#collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold || currentState == CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
@@ -1245,13 +1223,15 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	else: 
 		shortHitStun = true
 	backUpHitStunTime = hitStun
+	#todo: reset other timers and set paramteres to null
+	landingLagTimer.stop_timer()
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	characterShield.apply_shield_damage(damage, shieldDamage)
 	#todo: calculate shield hit pushback
 	var pushBack = 0
-	backUpVelocity = Vector2(400, 0)
+	initLaunchVelocity = Vector2(400, 0)
 	#((damage * parameters.shield.mult * projectileMult * perfectshieldMult * groundedMult * aerialMult) + parameters.shield.constant) * 0.09 * perfectshieldMult2;
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
@@ -1856,10 +1836,11 @@ func _on_frametimer_timeout(timerType):
 			disableInput = false
 		GlobalVariables.TimerType.HITLAG:
 			gravity_on_off("on")
-			velocity = backUpVelocity
+			velocity = initLaunchVelocity
 			animationPlayer.play()
 			disableInputDI = backUpDisableInputDI
 			if currentState == CharacterState.HITSTUNAIR: 
+				calculate_hitlag_di()
 				create_frame_timer(GlobalVariables.TimerType.HITSTUN, backUpHitStunTime)
 				if shortHitStun:
 					animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
@@ -1901,6 +1882,7 @@ func _on_frametimer_timeout(timerType):
 			snappedEdge._on_EdgeSnap_area_exited(collisionAreaShape.get_parent())
 			snappedEdge = null
 			onEdge = false
+			disable_invincibility_edge_action()
 			switch_to_state(CharacterState.AIR)
 			match currentMoveDirection:
 				moveDirection.LEFT: 
@@ -1909,6 +1891,20 @@ func _on_frametimer_timeout(timerType):
 					velocity.x = -walkMaxSpeed/2
 				
 				
+				
+func calculate_hitlag_di():
+	var verticalInfluence = 0.17
+	var horizontalInfluence = 0.09
+	var originalLaunchRadian = atan2(initLaunchVelocity.y, initLaunchVelocity.x)
+	var newLaunchRadian = originalLaunchRadian + verticalInfluence * hitlagDI.x
+#	print("old radian " + str(originalLaunchRadian))
+#	print(Vector2(cos(originalLaunchRadian), sin(originalLaunchRadian)))
+#	print("new radian " + str(newLaunchRadian))
+#	print(Vector2(cos(newLaunchRadian), sin(newLaunchRadian)))
+	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
+	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
+	print(velocity)
+	
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if GlobalVariables.attackAnimationList.has(anim_name):

@@ -118,7 +118,7 @@ func apply_hitlag(hitArea):
 	if attackedCharacter != self.get_parent().get_parent():
 		if character.currentState == character.CharacterState.ATTACKGROUND\
 		|| character.currentState == character.CharacterState.ATTACKAIR:
-			character.backUpVelocity = character.velocity
+			character.initLaunchVelocity = character.velocity
 			character.create_frame_timer(GlobalVariables.TimerType.HITLAG)
 			attackedCharacter = hitArea.get_parent().get_parent()
 			if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
@@ -139,6 +139,6 @@ func apply_hitlag(hitArea):
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELDBREAK\
 			|| attackedCharacter.currentState == attackedCharacter.CharacterState.EDGEGETUP:
 				character.disableInput = false
-				character.backUpVelocity = Vector2.ZERO
+				character.initLaunchVelocity = Vector2.ZERO
 				character.grabbedCharacter = attackedCharacter
 				apply_grab()

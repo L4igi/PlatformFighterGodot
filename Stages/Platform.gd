@@ -19,15 +19,7 @@ func _ready():
 	collisionEdgeDetectionRight.set_position(Vector2(122,0))
 	collisionEdgeDetectionRight.set_scale(Vector2(1,0.8))
 	
-#func _physics_process(delta):
-#	for body in collidingBodies: 
-#		if body.onSolidGround == null: 
-#			if body.lowestCheckYPoint.global_position.y <= checkYPoint.global_position.y\
-#			&& !collidingEdgeBodies.has(body):
-#				body.set_collision_mask_bit(1,true)
-#			else:
-#				body.set_collision_mask_bit(1,false)
-				
+	
 func _on_CollisionDetectionArea_body_entered(body):
 	if body.is_in_group("Character") && body.velocity.y < 0:
 		collidingBodies.append(body)
