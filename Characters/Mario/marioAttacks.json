@@ -117,7 +117,7 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":100,
+    "shield_damage_1":10,
     "priority":0,
     "landingLag":4
   },
@@ -131,7 +131,7 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":1,
+    "shield_damage_1":10,
     "priority":1
   },
   "UPAIR_sour":{
@@ -144,7 +144,7 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":1,
+    "shield_damage_1":10,
     "priority":2
   },
   "DAIR_neutral":{

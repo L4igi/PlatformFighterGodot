@@ -8,6 +8,8 @@ var shieldEnabled = false
 var shieldBreak = false
 var character 
 var pauseShield = false
+var perfectShieldAble = true
+var bufferShieldDamage = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	character = get_parent()
@@ -16,11 +18,7 @@ func _ready():
 	
 func _physics_process(delta):
 	if shieldHealth <= 0 && !shieldBreak: 
-		shieldHealth = 0
-		shieldBreak = true
-		print("SHIELDBREAK!!!")
-		var shieldScale = shieldHealth/baseShieldHealth
-		shieldSprite.set_scale(Vector2(shieldScale, shieldScale))
+		apply_shield_break()
 	if !pauseShield && !shieldBreak:
 		if shieldEnabled && shieldHealth > 0\
 		&& !character.hitLagTimer.timer_running(): 
@@ -37,7 +35,6 @@ func enable_shield():
 	set_visible(true)
 	shieldEnabled = true
 	
-	
 func disable_shield():
 	set_visible(false)
 	shieldEnabled = false
@@ -48,5 +45,20 @@ func pause_shield():
 func unpause_shield():
 	pauseShield = false
 
-func apply_shield_damage(damage, shieldDamage):
-	shieldHealth -= (damage + shieldDamage) * 1.19
+func apply_shield_damage():
+	shieldHealth -= bufferShieldDamage
+	bufferShieldDamage = 0
+	
+func buffer_shield_damage(damage, shieldDamage):
+	bufferShieldDamage = (damage + shieldDamage) * 1.19
+	
+func apply_shield_break():
+	shieldHealth = 0
+	shieldBreak = true
+	character.switch_to_state(character.CharacterState.SHIELDBREAK)
+	var shieldScale = shieldHealth/baseShieldHealth
+	shieldSprite.set_scale(Vector2(shieldScale, shieldScale))
+	
+func shieldBreak_end():
+	shieldBreak = false
+	shieldHealth = shieldBreakHealth

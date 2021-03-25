@@ -17,11 +17,11 @@ func _ready():
 	edgeAreaRight.set_position(Vector2(445,-15))
 	edgeAreaRight.edgeSnapDirection = "right"
 
-func _process(delta):
-	for body in collidingBodies: 
-		if body.onSolidGround == null: 
-			if (body.lowestCheckYPoint.global_position.y < checkYPoint.global_position.y):
-				body.onSolidGround = self
+#func _process(delta):
+#	for body in collidingBodies: 
+#		if body.onSolidGround == null: 
+#			if (body.lowestCheckYPoint.global_position.y < checkYPoint.global_position.y):
+#				body.onSolidGround = self
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

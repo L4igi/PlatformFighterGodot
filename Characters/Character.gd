@@ -102,6 +102,9 @@ var rolling = false
 var shieldDropFrames = 15
 var shieldStunFrames = 0
 var maxSheildPushBack = 500
+var shieldBreakFrames = 500
+var shieldBreakVelocity = Vector2(0,-1000)
+var enableShieldBreakGroundCheck = false
 #grab
 var grabbedCharacter = null
 var inGrabByCharacter = null
@@ -143,6 +146,7 @@ var hitLagTimer
 var landingLagTimer 
 var platformCollisionDisabledTimer
 var edgeDropTimer 
+var shieldBreakTimer
 
 var tween 
 
@@ -209,6 +213,7 @@ func _ready():
 	edgeRegrabTimer = frameTimer.new(GlobalVariables.TimerType.EDGEGRAB, self)
 	platformCollisionDisabledTimer = frameTimer.new(GlobalVariables.TimerType.PLATFORMCOLLISION, self)
 	edgeDropTimer = frameTimer.new(GlobalVariables.TimerType.EDGEDROPTIMER, self)
+	shieldBreakTimer = frameTimer.new(GlobalVariables.TimerType.SHIELDBREAKTIMER, self)
 	frameTimerManager = frameTimerManagerNode.new(self)
 	#connect animation finished signal
 	animationPlayer.set_animation_process_mode(0)
@@ -251,6 +256,8 @@ func _physics_process(delta):
 			pass
 		CharacterState.EDGEGETUP:
 			edge_getup_handler(delta)
+		CharacterState.SHIELDBREAK:
+			shieldBreak_handler(delta)
 
 func check_input_ground(delta):
 	if Input.is_action_just_pressed(jump):
@@ -360,7 +367,9 @@ func jab_handler():
 func attack_handler_air(delta):
 	if airTime <= 300: 
 		airTime += 1
-	if check_ground_platform_collision():
+	var solidGroundCollision = check_ground_platform_collision()
+	if solidGroundCollision:
+		onSolidGround = solidGroundCollision
 		var currentAttackData = attackData[GlobalVariables.CharacterAnimations.keys()[currentAttack] + "_neutral"]
 		switch_from_air_to_ground(currentAttackData["landingLag"])
 		return
@@ -436,7 +445,9 @@ func air_handler(delta):
 				edgeGrabShape.set_deferred("disabled", true)
 			elif get_input_direction_y() < 0.5 && !disabledEdgeGrab: 
 				edgeGrabShape.set_deferred("disabled", false)
-	if check_ground_platform_collision():
+	var solidGroundCollision = check_ground_platform_collision()
+	if solidGroundCollision:
+		onSolidGround = solidGroundCollision
 		switch_from_air_to_ground(normalLandingLag)
 				
 func check_ground_platform_collision():
@@ -447,8 +458,8 @@ func check_ground_platform_collision():
 		&& !platformCollisionDisabledTimer.timer_running())\
 		|| collidingWith.get_collider().is_in_group("Ground")):
 			platformCollision = collidingWith.get_collider()
-			return true
-	return false
+			return platformCollision
+	return null
 			
 func jump_handler():
 	#todo: if currentstate == edge : create edge hop
@@ -501,8 +512,9 @@ func hitstun_handler(delta):
 				create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
 				switch_to_state(CharacterState.HITSTUNGROUND)
 	elif !disableInput:
-		if check_ground_platform_collision():
-			onSolidGround = true
+		var solidGroundCollision = check_ground_platform_collision()
+		if solidGroundCollision:
+			onSolidGround = solidGroundCollision
 		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
 			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 		elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
@@ -549,6 +561,10 @@ func hitstun_handler(delta):
 		
 	
 func shield_handler(delta):
+	if onSolidGround:
+		if velocity.y > 0: 
+			switch_from_state_to_airborn()
+			return 
 	if !disableInput:
 		process_movement_physics(delta)
 	if !shieldStunTimer.timer_running()\
@@ -663,6 +679,17 @@ func crouch_handler(delta):
 		currentAttack = GlobalVariables.CharacterAnimations.DTILT
 	elif Input.is_action_just_pressed(jump):
 		jump_handler()
+		
+func shieldBreak_handler(delta):
+	if enableShieldBreakGroundCheck && !onSolidGround:
+			var solidGroundCollision = check_ground_platform_collision()
+			if solidGroundCollision:
+				onSolidGround = solidGroundCollision
+				shieldbreak_animation_step(2)
+	elif enableShieldBreakGroundCheck && onSolidGround:
+		if velocity.y > 0: 
+			switch_from_state_to_airborn()
+			
 	
 func snap_edge(collidingEdge):
 	disableInput = true
@@ -885,6 +912,8 @@ func animation_handler(animationToPlay):
 			animationPlayer.play("tumble")
 		GlobalVariables.CharacterAnimations.HURTTRANSITION:
 			animationPlayer.play("hurtTransition")
+		GlobalVariables.CharacterAnimations.SHIELDBREAK:
+			animationPlayer.play("shieldBreakStart")
 			
 func roll_calculator(distance): 
 	if currentMoveDirection == moveDirection.LEFT:
@@ -936,10 +965,12 @@ func process_movement_physics(delta):
 		|| currentState == CharacterState.SHIELD\
 		|| currentState == CharacterState.GRAB\
 		|| currentState == CharacterState.INGRAB\
-		|| currentState == CharacterState.HITSTUNGROUND:
+		|| currentState == CharacterState.HITSTUNGROUND\
+		|| (currentState == CharacterState.SHIELDBREAK && onSolidGround):
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 		elif currentState == CharacterState.AIR\
-		|| currentState == CharacterState.ATTACKAIR:
+		|| currentState == CharacterState.ATTACKAIR\
+		|| (currentState == CharacterState.SHIELDBREAK && !onSolidGround):
 #		|| currentState == CharacterState.HITSTUNAIR:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	# Move based on the velocity and snap to the ground.
@@ -1115,7 +1146,12 @@ func switch_to_state(state):
 	#ends all tweens if still running
 	tween.remove_all()
 	toggle_all_hitboxes("off")
-	if !hitStunTimer.timer_running() && !bufferInput && !inLandingLag && !pushingAction && !onEdge:
+	if !hitStunTimer.timer_running()\
+	&& !bufferInput\
+	&& !inLandingLag\
+	&& !pushingAction\
+	&& !onEdge\
+	&& !characterShield.shieldBreak:
 		enable_player_input()
 	if state == CharacterState.GROUND && currentAttack != GlobalVariables.CharacterAnimations.FTILTL\
 	&& currentAttack != GlobalVariables.CharacterAnimations.FTILTR && currentState != CharacterState.EDGE:
@@ -1130,6 +1166,8 @@ func switch_to_state(state):
 	turnAroundTimer.stop_timer()
 	dropDownTimer.stop_timer()
 	edgeDropTimer.stop_timer()
+	shieldBreakTimer.stop_timer()
+	shieldStunTimer.stop_timer()
 	edgeGrabShape.set_deferred("disabled", true)
 	#todo: reset all hitboxes and collision shapes
 	match state: 
@@ -1205,6 +1243,16 @@ func switch_to_state(state):
 			canGetEdgeInvincibility = true
 			currentState = CharacterState.EDGEGETUP
 			emit_signal("character_state_changed", self, currentState)
+		CharacterState.SHIELDBREAK:
+			currentState = CharacterState.SHIELDBREAK
+			emit_signal("character_state_changed", self, currentState)
+			characterShield.disable_shield()
+			velocity = shieldBreakVelocity
+			disableInput = true
+			onSolidGround = null
+			enableShieldBreakGroundCheck = false
+			create_frame_timer(GlobalVariables.TimerType.SHIELDBREAKTIMER, shieldBreakFrames)
+			animation_handler(GlobalVariables.CharacterAnimations.SHIELDBREAK)
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile):
 	damagePercent += damage
@@ -1225,10 +1273,13 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	backUpHitStunTime = hitStun
 	#todo: reset other timers and set paramteres to null
 	landingLagTimer.stop_timer()
+	if characterShield.shieldBreak:
+		characterShield.shieldBreak_end()
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
-	characterShield.apply_shield_damage(damage, shieldDamage)
+	characterShield.buffer_shield_damage(damage, shieldDamage)
+#	characterShield.apply_shield_damage(damage, shieldDamage)
 	#todo: calculate shield hit pushback
 	var pushBack = 0
 	initLaunchVelocity = Vector2(400, 0)
@@ -1531,6 +1582,18 @@ func apply_hurt_animation_step(step =0):
 				animationPlayer.stop(false)
 			#else:
 				#print(onSolidGround.name)
+				
+func shieldbreak_animation_step(step = 0):
+	match step: 
+		0: 
+			enableShieldBreakGroundCheck = true
+		1:
+			animationPlayer.play("shieldBreakAirLoop")
+		2:
+			$AnimatedSprite.set_rotation_degrees(0.0)
+			animationPlayer.play("shieldBreakLanding")
+		3:
+			animationPlayer.play("shieldBreakGroundLoop")
 			
 func dodge_animation_step(step = 0):
 	match step: 
@@ -1613,12 +1676,18 @@ func enable_disable_hurtboxes(enable = true):
 			singleHurtbox.set_deferred("disabled",true)
 
 func switch_from_state_to_airborn():
+	match currentState:
+		CharacterState.HITSTUNGROUND:
+			hitStunTimer.stop_timer()
+		CharacterState.SHIELDBREAK:
+			characterShield.shieldBreak_end()
+			shieldBreakTimer.stop_timer()
+		CharacterState.SHIELD:
+			characterShield.disable_shield()
 	jumpCount = 1
 	if !bufferInput:
 		switch_to_state(CharacterState.AIR)
 	enable_player_input()
-	if currentState == CharacterState.HITSTUNGROUND:
-		hitStunTimer.stop_timer()
 		
 func switch_from_state_to_airborn_hitstun():
 	switch_to_state(CharacterState.HITSTUNAIR)
@@ -1628,7 +1697,6 @@ func other_character_state_changed():
 	emit_signal("character_state_changed", self, currentState)
 	
 func switch_from_air_to_ground(landingLag):
-	onSolidGround = true
 	create_frame_timer(GlobalVariables.TimerType.LANDINGLAG, landingLag)
 	if bufferAnimation:
 		pass
@@ -1748,6 +1816,9 @@ func create_frame_timer(timerType, timerFrames = 0):
 		GlobalVariables.TimerType.EDGEDROPTIMER:
 			edgeDropTimer.set_frames(timerFrames)
 			edgeDropTimer.start_timer()
+		GlobalVariables.TimerType.SHIELDBREAKTIMER:
+			shieldBreakTimer.set_frames(timerFrames)
+			shieldBreakTimer.start_timer()
 			
 func _on_frametimer_timeout(timerType):
 	match timerType:
@@ -1847,7 +1918,9 @@ func _on_frametimer_timeout(timerType):
 				else:
 					animation_handler(GlobalVariables.CharacterAnimations.HURT)
 			elif currentState == CharacterState.SHIELD:
-				create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
+				characterShield.apply_shield_damage()
+				if !characterShield.shieldBreak:
+					create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
 		GlobalVariables.TimerType.TURNAROUND:
 			velocity.x = 0
 			change_max_speed(get_input_direction_x())
@@ -1889,7 +1962,13 @@ func _on_frametimer_timeout(timerType):
 					velocity.x = walkMaxSpeed/2
 				moveDirection.RIGHT:
 					velocity.x = -walkMaxSpeed/2
-				
+		GlobalVariables.TimerType.SHIELDBREAKTIMER:
+			characterShield.shieldBreak_end()
+#			disableInput = false
+			if onSolidGround: 
+				switch_to_state(CharacterState.GROUND)
+			else:
+				switch_to_state(CharacterState.AIR)
 				
 				
 func calculate_hitlag_di():
@@ -1903,7 +1982,6 @@ func calculate_hitlag_di():
 #	print(Vector2(cos(newLaunchRadian), sin(newLaunchRadian)))
 	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
-	print(velocity)
 	
 
 func _on_AnimationPlayer_animation_finished(anim_name):

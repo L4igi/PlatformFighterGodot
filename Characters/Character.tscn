@@ -1,4 +1,4 @@
-[gd_scene load_steps=352 format=2]
+[gd_scene load_steps=370 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -305,6 +305,20 @@
 [ext_resource path="res://Characters/Mario/attack_getup/9.png" type="Texture" id=303]
 [ext_resource path="res://Characters/Mario/attack_getup/8.png" type="Texture" id=304]
 [ext_resource path="res://Characters/Mario/attack_getup/7.png" type="Texture" id=305]
+[ext_resource path="res://Characters/Mario/shieldbreak/0.png" type="Texture" id=306]
+[ext_resource path="res://Characters/Mario/shieldbreak/1.png" type="Texture" id=307]
+[ext_resource path="res://Characters/Mario/shieldbreak/2.png" type="Texture" id=308]
+[ext_resource path="res://Characters/Mario/shieldbreak/5.png" type="Texture" id=309]
+[ext_resource path="res://Characters/Mario/shieldbreak/4.png" type="Texture" id=310]
+[ext_resource path="res://Characters/Mario/shieldbreak/7.png" type="Texture" id=311]
+[ext_resource path="res://Characters/Mario/shieldbreak/6.png" type="Texture" id=312]
+[ext_resource path="res://Characters/Mario/shieldbreak/3.png" type="Texture" id=313]
+[ext_resource path="res://Characters/Mario/shieldbreak/8.png" type="Texture" id=314]
+[ext_resource path="res://Characters/Mario/shieldbreak/9.png" type="Texture" id=315]
+[ext_resource path="res://Characters/Mario/shieldbreak/11.png" type="Texture" id=316]
+[ext_resource path="res://Characters/Mario/shieldbreak/12.png" type="Texture" id=317]
+[ext_resource path="res://Characters/Mario/shieldbreak/10.png" type="Texture" id=318]
+[ext_resource path="res://Characters/Mario/shieldbreak/13.png" type="Texture" id=319]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -511,6 +525,11 @@ animations = [ {
 "frames": [ ExtResource( 218 ), ExtResource( 216 ), ExtResource( 217 ), ExtResource( 215 ), ExtResource( 219 ), ExtResource( 220 ), ExtResource( 221 ), ExtResource( 222 ) ],
 "loop": true,
 "name": "roll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 306 ), ExtResource( 307 ), ExtResource( 308 ), ExtResource( 313 ), ExtResource( 310 ), ExtResource( 309 ), ExtResource( 312 ), ExtResource( 311 ), ExtResource( 314 ), ExtResource( 315 ), ExtResource( 318 ), ExtResource( 316 ), ExtResource( 317 ), ExtResource( 319 ) ],
+"loop": true,
+"name": "shieldbreak",
 "speed": 5.0
 } ]
 
@@ -1872,6 +1891,165 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
+[sub_resource type="Animation" id=48]
+resource_name = "shieldBreakAirLoop"
+length = 0.5
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "shieldbreak" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 5 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, -360.0 ]
+}
+
+[sub_resource type="Animation" id=49]
+resource_name = "shieldBreakGroundLoop"
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "shieldbreak" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.233333, 0.45, 0.633333, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 9, 10, 11, 12, 13 ]
+}
+
+[sub_resource type="Animation" id=50]
+resource_name = "shieldBreakLanding"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "shieldbreak" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.266667, 0.65, 0.816667 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 7, 8, 0 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ 3 ],
+"method": "shieldbreak_animation_step"
+} ]
+}
+
+[sub_resource type="Animation" id=47]
+resource_name = "shieldBreakStart"
+length = 0.266667
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "shieldbreak" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.116667, 0.183333, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.183333, 0.266667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "shieldbreak_animation_step"
+}, {
+"args": [ 1 ],
+"method": "shieldbreak_animation_step"
+} ]
+}
+
 [sub_resource type="Animation" id=36]
 length = 0.25
 step = 0.0166667
@@ -2223,9 +2401,11 @@ polygon = PoolVector2Array( 0, -2, -3.2, 6, -3.2, 26, -3.2, 32, 3.2, 32, 3.2, 24
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+rotation = -2.30383
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-animation = "jab1"
+animation = "shieldbreak"
+frame = 6
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2264,6 +2444,10 @@ anims/roll = SubResource( 32 )
 anims/roll_getup = SubResource( 33 )
 anims/run = SubResource( 34 )
 anims/shield = SubResource( 35 )
+anims/shieldBreakAirLoop = SubResource( 48 )
+anims/shieldBreakGroundLoop = SubResource( 49 )
+anims/shieldBreakLanding = SubResource( 50 )
+anims/shieldBreakStart = SubResource( 47 )
 anims/shielddrop = SubResource( 36 )
 anims/spotdodge = SubResource( 37 )
 anims/tumble = SubResource( 38 )

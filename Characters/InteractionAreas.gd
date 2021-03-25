@@ -110,10 +110,6 @@ func match_collision_ground():
 			enable_collision()
 		character.CharacterState.AIR:
 			disable_collision()
-#			if check_character_above():
-#				enable_collision()
-#			else: 
-#				disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
@@ -141,7 +137,10 @@ func match_collision_ground():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
@@ -174,7 +173,7 @@ func match_collision_air():
 		character.CharacterState.SPECIALAIR:
 			disable_collision()
 		character.CharacterState.SHIELD:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.ROLL:
 			disable_collision()
 		character.CharacterState.GRAB:
@@ -186,9 +185,9 @@ func match_collision_air():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.CROUCH:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.EDGEGETUP:
 			disable_collision()
 			
@@ -264,7 +263,10 @@ func match_collision_attackground():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
@@ -342,7 +344,10 @@ func match_collision_hitstunground():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
@@ -420,7 +425,10 @@ func match_collision_specialground():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
@@ -447,7 +455,7 @@ func match_collision_specialair():
 		character.CharacterState.SPECIALAIR:
 			disable_collision()
 		character.CharacterState.SHIELD:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.ROLL:
 			disable_collision()
 		character.CharacterState.GRAB:
@@ -459,7 +467,7 @@ func match_collision_specialair():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
@@ -470,13 +478,13 @@ func match_collision_shield():
 		character.CharacterState.GROUND:
 			enable_collision()
 		character.CharacterState.AIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
 			enable_collision()
 		character.CharacterState.ATTACKAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
@@ -484,7 +492,7 @@ func match_collision_shield():
 		character.CharacterState.SPECIALGROUND:
 			enable_collision()
 		character.CharacterState.SPECIALAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.SHIELD:
 			enable_collision()
 		character.CharacterState.ROLL:
@@ -498,7 +506,10 @@ func match_collision_shield():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
@@ -576,7 +587,10 @@ func match_collision_grab():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
@@ -704,13 +718,13 @@ func match_collision_shieldbreak():
 		character.CharacterState.GROUND:
 			enable_collision()
 		character.CharacterState.AIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.EDGE:
 			disable_collision()
 		character.CharacterState.ATTACKGROUND:
 			enable_collision()
 		character.CharacterState.ATTACKAIR:
-			enable_collision()
+			disable_collision()
 		character.CharacterState.HITSTUNGROUND:
 			enable_collision()
 		character.CharacterState.HITSTUNAIR:
@@ -732,12 +746,13 @@ func match_collision_shieldbreak():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
-		character.CharacterState.CROUCH:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.EDGEGETUP:
 			disable_collision()
-
+			
 func match_collision_crouch():
 	match areaCollisionObject.currentState:
 		character.CharacterState.GROUND:
@@ -775,7 +790,10 @@ func match_collision_crouch():
 		character.CharacterState.GETUP:
 			disable_collision()
 		character.CharacterState.SHIELDBREAK:
-			enable_collision()
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
 		character.CharacterState.CROUCH:
 			enable_collision()
 		character.CharacterState.EDGEGETUP:
