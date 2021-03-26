@@ -8,7 +8,7 @@ var shieldEnabled = false
 var shieldBreak = false
 var character 
 var pauseShield = false
-var perfectShieldAble = true
+var enableShieldFrames = 3
 var bufferShieldDamage = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,6 +17,8 @@ func _ready():
 	
 	
 func _physics_process(delta):
+	if enableShieldFrames > 0: 
+		enableShieldFrames -= 1
 	if shieldHealth <= 0 && !shieldBreak: 
 		apply_shield_break()
 	if !pauseShield && !shieldBreak:
@@ -34,6 +36,7 @@ func _physics_process(delta):
 func enable_shield():
 	set_visible(true)
 	shieldEnabled = true
+	enableShieldFrames = 3
 	
 func disable_shield():
 	set_visible(false)

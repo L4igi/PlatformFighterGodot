@@ -263,7 +263,10 @@ func check_input_ground(delta):
 	if Input.is_action_just_pressed(jump):
 		jump_handler()
 	elif Input.is_action_pressed(shield):
-		switch_to_state(CharacterState.SHIELD)
+		if Input.is_action_just_pressed(attack):
+			switch_to_state(CharacterState.GRAB)
+		else:
+			switch_to_state(CharacterState.SHIELD)
 	elif Input.is_action_just_pressed(grab) :
 		switch_to_state(CharacterState.GRAB)
 	elif !bufferedSmashAttack:
@@ -402,6 +405,10 @@ func ground_handler(delta):
 	if disableInput:
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
+		if shieldDropTimer.timer_running():
+			if Input.is_action_just_pressed(jump):
+				shieldDropTimer.stop_timer()
+				jump_handler()
 	else:
 		if !inLandingLag:
 			input_movement_physics_ground(delta)
@@ -570,14 +577,14 @@ func shield_handler(delta):
 	if !shieldStunTimer.timer_running()\
 	 && !shieldDropTimer.timer_running()\
 	 && !hitLagTimer.timer_running():
-		if Input.is_action_just_released(shield):
+		if !Input.is_action_pressed(shield) && characterShield.enableShieldFrames == 0:
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.GROUND)
 			create_frame_timer(GlobalVariables.TimerType.SHIELDDROP)
 		elif Input.is_action_just_pressed(jump):
 			characterShield.disable_shield()
 			jump_handler()
-		elif Input.is_action_just_pressed(attack):
+		elif Input.is_action_just_pressed(attack) && characterShield.enableShieldFrames == 0:
 			#todo implement grab mechanic
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.GRAB)
@@ -602,7 +609,7 @@ func shield_handler(delta):
 			switch_to_state(CharacterState.SPOTDODGE)
 			
 func grab_handler(delta):
-	process_movement_physics(delta)
+#	process_movement_physics(delta)
 	if abs(int(velocity.y)) >= onSolidGroundThreashold:
 		grabTimer.stop_timer()
 		switch_to_state(CharacterState.GROUND)
@@ -1376,6 +1383,7 @@ func buffer_input():
 		|| currentState == CharacterState.HITSTUNAIR\
 		|| currentState == CharacterState.GETUP\
 		|| currentState == CharacterState.EDGEGETUP\
+		|| currentState == CharacterState.GRAB\
 		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
@@ -1639,7 +1647,11 @@ func apply_grab_animation_step(step = 0):
 		1:
 			if grabbedCharacter == null: 
 				disableInput = false
-				switch_to_state(CharacterState.GROUND)
+				if Input.is_action_pressed(shield):
+					switch_to_state(CharacterState.SHIELD)
+				else:
+					switch_to_state(CharacterState.GROUND)
+				enable_player_input()
 			else: 
 				velocity.x = 0
 				create_frame_timer(GlobalVariables.TimerType.GRAB)
@@ -1891,7 +1903,9 @@ func _on_frametimer_timeout(timerType):
 			print("Grab timer timeout")
 			if grabbedCharacter:
 				grabbedCharacter.on_grab_release()
+				grabbedCharacter = null
 				switch_to_state(CharacterState.GROUND)
+				enable_player_input()
 		GlobalVariables.TimerType.SMASHATTACK:
 			if !inMovementLag: 
 				check_character_crouch()
