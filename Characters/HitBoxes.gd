@@ -34,7 +34,6 @@ func _process(delta):
 			if character.currentState == character.CharacterState.ATTACKGROUND\
 			|| character.currentState == character.CharacterState.ATTACKAIR:
 				apply_attack(highestHitBox)
-				#apply_attack(HitBoxType.NEUTRAL)
 		hitBoxesConnected.clear()
 
 func disable_all_hitboxes():
@@ -73,6 +72,8 @@ func apply_attack(hbType):
 	var isProjectile = false
 	if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
 		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile)
+	elif attackedCharacter.perfectShieldActivated:
+		attackedCharacter.is_attacked_handler_perfect_shield()
 	else:
 		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile)
 
@@ -119,12 +120,18 @@ func apply_hitlag(hitArea):
 		if character.currentState == character.CharacterState.ATTACKGROUND\
 		|| character.currentState == character.CharacterState.ATTACKAIR:
 			character.initLaunchVelocity = character.velocity
-			character.create_frame_timer(GlobalVariables.TimerType.HITLAG)
 			attackedCharacter = hitArea.get_parent().get_parent()
 			if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
-				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAG)
+				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAG, attackedCharacter.hitLagFrames)
+				character.create_frame_timer(GlobalVariables.TimerType.HITLAG, character.hitLagFrames)
+			elif attackedCharacterState == attackedCharacter.CharacterState.GROUND\
+			&& attackedCharacter.shieldDropTimer.timer_running() && attackedCharacter.perfectShieldFramesLeft > 0:
+				attackedCharacter.perfectShieldActivated = true
+				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED, attackedCharacter.hitLagFrames + 8)
+				character.create_frame_timer(GlobalVariables.TimerType.HITLAG, attackedCharacter.hitLagFrames + 11)
 			else:
-				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED)
+				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED, attackedCharacter.hitLagFrames)
+				character.create_frame_timer(GlobalVariables.TimerType.HITLAG, character.hitLagFrames)
 		#manage grab if character hit other character hitbox
 		elif character.currentState == character.CharacterState.GRAB:
 			if attackedCharacter.currentState == attackedCharacter.CharacterState.GROUND\

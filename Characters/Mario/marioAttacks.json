@@ -10,7 +10,8 @@
     "effect_1":"neutral",
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
-    "shield_damage_1":1
+    "shield_damage_1":1,
+    "priority":0,
   },
   "JAB2_neutral":{
     "damage_1":5,

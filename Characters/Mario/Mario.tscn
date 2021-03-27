@@ -354,6 +354,30 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 14.6667, -4.76837e-07 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
 [sub_resource type="Animation" id=11]
 length = 0.4
@@ -629,8 +653,9 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-rotation = -1.96
-animation = "landing_lag"
+rotation = 0.0
+animation = "jab1"
+frame = 3
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -652,11 +677,21 @@ anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
+[node name="HitBoxes" parent="AnimatedSprite" index="1"]
+visible = true
+
+[node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
+visible = false
+
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
 position = Vector2( 21.6, 5.62501 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 10.8, 4.21876 )
+position = Vector2( 14.6667, -4.76837e-07 )
+disabled = false
+
+[node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
+visible = false
 
 [node name="InteractionAreas" parent="." index="3"]
 position = Vector2( -4, 4 )

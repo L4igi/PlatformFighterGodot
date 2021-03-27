@@ -99,12 +99,15 @@ var bounceReduction = 0.7
 onready var characterShield = get_node("Shield")
 var rollDistance = 150
 var rolling = false
-var shieldDropFrames = 15
+var shieldDropFrames = 11
 var shieldStunFrames = 0
 var maxSheildPushBack = 500
 var shieldBreakFrames = 500
 var shieldBreakVelocity = Vector2(0,-1000)
 var enableShieldBreakGroundCheck = false
+var perfectShieldFrames = 5
+var perfectShieldFramesLeft = 5
+var perfectShieldActivated = false
 #grab
 var grabbedCharacter = null
 var inGrabByCharacter = null
@@ -119,6 +122,7 @@ onready var baseGravity = gravity
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 var hitlagDI = Vector2.ZERO
+var hitLagFrames = 60
 #landinglag 
 var normalLandingLag = 3
 var helplessLandingLag = 10
@@ -406,6 +410,9 @@ func ground_handler(delta):
 		if abs(int(velocity.y)) >= onSolidGroundThreashold:
 			switch_from_state_to_airborn()
 		if shieldDropTimer.timer_running():
+			if perfectShieldFramesLeft > 0:
+				perfectShieldFramesLeft -= 1
+			print(perfectShieldFramesLeft)
 			if Input.is_action_just_pressed(jump):
 				shieldDropTimer.stop_timer()
 				jump_handler()
@@ -1175,6 +1182,7 @@ func switch_to_state(state):
 	edgeDropTimer.stop_timer()
 	shieldBreakTimer.stop_timer()
 	shieldStunTimer.stop_timer()
+	shieldDropTimer.stop_timer()
 	edgeGrabShape.set_deferred("disabled", true)
 	#todo: reset all hitboxes and collision shapes
 	match state: 
@@ -1282,6 +1290,10 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	landingLagTimer.stop_timer()
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
+		
+func is_attacked_handler_perfect_shield():
+	#todo: add perfect shield animation and particle effects
+	print("perfect shield")
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
@@ -1347,7 +1359,7 @@ func apply_throw(actionType):
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	elif !shortHitStun:
 		animation_handler(GlobalVariables.CharacterAnimations.HURT)
-	create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED)
+	create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED, hitLagFrames)
 	inGrabByCharacter = null
 	
 func enable_player_input():
@@ -1674,7 +1686,7 @@ func apply_throw_animation_step(step = 0):
 		1:
 			grabbedCharacter.is_thrown_grabjabbed_handler(currentAttack)
 			grabbedCharacter = null
-			create_frame_timer(GlobalVariables.TimerType.HITLAG)
+			create_frame_timer(GlobalVariables.TimerType.HITLAG, hitLagFrames)
 		2: 
 			disableInput = false
 			switch_to_state(CharacterState.GROUND)
@@ -1768,6 +1780,7 @@ func create_frame_timer(timerType, timerFrames = 0):
 			shieldDropTimer.set_frames(shieldDropFrames)
 			shieldDropTimer.start_timer()
 			disableInput = true
+			perfectShieldFramesLeft = perfectShieldFrames
 			animation_handler(GlobalVariables.CharacterAnimations.SHIELDDROP)
 		GlobalVariables.TimerType.HITLAG:
 			animationPlayer.stop(false)
@@ -1776,19 +1789,22 @@ func create_frame_timer(timerType, timerFrames = 0):
 			disableInput = true
 			backUpDisableInputDI = disableInputDI
 			disableInputDI = false
-			hitLagTimer.set_frames(60)
+			hitLagTimer.set_frames(timerFrames)
 			hitLagTimer.start_timer()
 		GlobalVariables.TimerType.HITLAGATTACKED:
 			if gravity!=baseGravity:
 				gravity=baseGravity
+			gravity_on_off("off")
 			chargingSmashAttack = false
 			smashAttack = null
 			bufferInput = null
 			hitStunTimer.stop_timer()
-			switch_to_state(CharacterState.HITSTUNAIR)
-			animationPlayer.get_parent().set_animation("hurt")
-			animationPlayer.get_parent().set_frame(0)
-			create_frame_timer(GlobalVariables.TimerType.HITLAG)
+			shieldDropTimer.stop_timer()
+			if !perfectShieldActivated:
+				switch_to_state(CharacterState.HITSTUNAIR)
+				animationPlayer.get_parent().set_animation("hurt")
+				animationPlayer.get_parent().set_frame(0)
+			create_frame_timer(GlobalVariables.TimerType.HITLAG, timerFrames)
 		GlobalVariables.TimerType.TURNAROUND:
 			inMovementLag = true
 			stopMovementTimer.stop_timer()
@@ -1935,6 +1951,8 @@ func _on_frametimer_timeout(timerType):
 				characterShield.apply_shield_damage()
 				if !characterShield.shieldBreak:
 					create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
+			elif currentState == CharacterState.GROUND && perfectShieldActivated:
+				disableInput = false
 		GlobalVariables.TimerType.TURNAROUND:
 			velocity.x = 0
 			change_max_speed(get_input_direction_x())
