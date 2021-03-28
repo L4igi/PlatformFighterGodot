@@ -1194,6 +1194,7 @@ func switch_to_state(state):
 	shieldStunTimer.stop_timer()
 	shieldDropTimer.stop_timer()
 	edgeGrabShape.set_deferred("disabled", true)
+	perfectShieldActivated = false
 	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:
@@ -1408,6 +1409,7 @@ func buffer_input():
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if  ((animationFramesLeft <= bufferInputWindow || currentState == CharacterState.SHIELD)\
 	|| (hitStunTimer.timer_running() && hitStunTimer.get_frames_left() < 10))\
+	|| perfectShieldActivated\
 	&& bufferInput == null: 
 		if currentState == CharacterState.ATTACKGROUND\
 		|| currentState == CharacterState.ATTACKAIR\
@@ -1418,6 +1420,7 @@ func buffer_input():
 		|| currentState == CharacterState.GETUP\
 		|| currentState == CharacterState.EDGEGETUP\
 		|| currentState == CharacterState.GRAB\
+		|| perfectShieldActivated\
 		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
@@ -1980,7 +1983,8 @@ func _on_frametimer_timeout(timerType):
 				else:
 					velocity = Vector2.ZERO
 			elif currentState == CharacterState.GROUND && perfectShieldActivated:
-				disableInput = false
+				initLaunchVelocity = Vector2.ZERO
+				enable_player_input()
 		GlobalVariables.TimerType.TURNAROUND:
 			velocity.x = 0
 			change_max_speed(get_input_direction_x())

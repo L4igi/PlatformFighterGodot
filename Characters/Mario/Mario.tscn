@@ -654,8 +654,8 @@ script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = 0.0
-animation = "jab1"
-frame = 1
+animation = "upair"
+frame = 2
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -680,24 +680,26 @@ anims/walk = SubResource( 17 )
 [node name="HitBoxes" parent="AnimatedSprite" index="1"]
 visible = true
 
-[node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
-visible = false
-
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
-position = Vector2( 21.6, 5.62501 )
+position = Vector2( -20.4, -2.8125 )
+disabled = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 14.6667, -4.76837e-07 )
-
-[node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
-visible = false
+position = Vector2( -10.8, -2.8125 )
+disabled = false
 
 [node name="InteractionAreas" parent="." index="3"]
-visible = true
 position = Vector2( -4, 4 )
 
+[node name="Hurtbox" parent="InteractionAreas" index="0"]
+visible = false
+
 [node name="CollisionArea" parent="InteractionAreas" index="1"]
+visible = false
 position = Vector2( 0, -4 )
+
+[node name="CharacterEdgeGrabArea" parent="." index="7"]
+visible = false
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]
