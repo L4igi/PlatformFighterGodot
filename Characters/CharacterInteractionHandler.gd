@@ -51,6 +51,7 @@ func disable_character_pushforce(character):
 	if character.currentState == character.CharacterState.HITSTUNGROUND \
 	|| character.hitStunTimer.timer_running()\
 	|| character.currentState == character.CharacterState.SHIELD\
+	|| character.currentState == character.CharacterState.SHIELDSTUN\
 	|| character.currentState == character.CharacterState.GRAB\
 	|| character.currentState == character.CharacterState.AIR\
 	|| (character.inMovementLag && character.shortTurnAround)\

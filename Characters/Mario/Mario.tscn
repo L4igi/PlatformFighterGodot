@@ -376,7 +376,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0.1, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ false, true ]
+"values": [ true, false ]
 }
 
 [sub_resource type="Animation" id=11]
@@ -655,7 +655,7 @@ script = ExtResource( 2 )
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = 0.0
 animation = "jab1"
-frame = 3
+frame = 1
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -688,12 +688,12 @@ position = Vector2( 21.6, 5.62501 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
 position = Vector2( 14.6667, -4.76837e-07 )
-disabled = false
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = false
 
 [node name="InteractionAreas" parent="." index="3"]
+visible = true
 position = Vector2( -4, 4 )
 
 [node name="CollisionArea" parent="InteractionAreas" index="1"]

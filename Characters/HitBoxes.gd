@@ -71,11 +71,11 @@ func apply_attack(hbType):
 	var shieldDamage = currentAttackData["shield_damage_" + String(currentHitBoxNumber)]
 	var isProjectile = false
 	if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
-		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile)
+		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile, character)
 	elif attackedCharacter.perfectShieldActivated:
 		attackedCharacter.is_attacked_handler_perfect_shield()
 	else:
-		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile)
+		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, character)
 
 
 func apply_grab():

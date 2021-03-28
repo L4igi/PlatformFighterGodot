@@ -64,7 +64,7 @@ var turnAroundFrames = 6
 var slideTurnAroundFrames = 21
 var stopMovementFrames = 4
 var lastXInput = 0
-var pushingCharacter =  null
+var pushingCharacter = null
 var disableInputDI = false
 var walkThreashold = 0.15
 var currentPushSpeed = 0
@@ -154,7 +154,7 @@ var shieldBreakTimer
 
 var tween 
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN}
 #signal for character state change
 signal character_state_changed(state)
 
@@ -226,6 +226,8 @@ func _ready():
 	GlobalVariables.charactersInGame.append(self)
 
 func _physics_process(delta):
+#	if name == "DarkMario":
+#		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -262,6 +264,8 @@ func _physics_process(delta):
 			edge_getup_handler(delta)
 		CharacterState.SHIELDBREAK:
 			shieldBreak_handler(delta)
+		CharacterState.SHIELDSTUN:
+			shieldstun_handler(delta)
 
 func check_input_ground(delta):
 	if Input.is_action_just_pressed(jump):
@@ -412,7 +416,6 @@ func ground_handler(delta):
 		if shieldDropTimer.timer_running():
 			if perfectShieldFramesLeft > 0:
 				perfectShieldFramesLeft -= 1
-			print(perfectShieldFramesLeft)
 			if Input.is_action_just_pressed(jump):
 				shieldDropTimer.stop_timer()
 				jump_handler()
@@ -584,14 +587,15 @@ func shield_handler(delta):
 	if !shieldStunTimer.timer_running()\
 	 && !shieldDropTimer.timer_running()\
 	 && !hitLagTimer.timer_running():
-		if !Input.is_action_pressed(shield) && characterShield.enableShieldFrames == 0:
+		if !Input.is_action_pressed(shield) && characterShield.enableShieldFrames == 0\
+		&& shieldStunFrames == 0:
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.GROUND)
 			create_frame_timer(GlobalVariables.TimerType.SHIELDDROP)
 		elif Input.is_action_just_pressed(jump):
 			characterShield.disable_shield()
 			jump_handler()
-		elif Input.is_action_just_pressed(attack) && characterShield.enableShieldFrames == 0:
+		elif Input.is_action_just_pressed(attack) && Input.is_action_pressed(shield):
 			#todo implement grab mechanic
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.GRAB)
@@ -615,6 +619,9 @@ func shield_handler(delta):
 			characterShield.disable_shield()
 			switch_to_state(CharacterState.SPOTDODGE)
 			
+func shieldstun_handler(delta):
+	print(velocity)
+	
 func grab_handler(delta):
 #	process_movement_physics(delta)
 	if abs(int(velocity.y)) >= onSolidGroundThreashold:
@@ -980,6 +987,7 @@ func process_movement_physics(delta):
 		|| currentState == CharacterState.GRAB\
 		|| currentState == CharacterState.INGRAB\
 		|| currentState == CharacterState.HITSTUNGROUND\
+		|| currentState == CharacterState.SHIELDSTUN\
 		|| (currentState == CharacterState.SHIELDBREAK && onSolidGround):
 			velocity.x = move_toward(velocity.x, 0, groundStopForce * delta)
 		elif currentState == CharacterState.AIR\
@@ -1096,6 +1104,7 @@ func direction_changer(xInput, fromIdle = false):
 				bufferXInput = xInput
 				return true
 	return false
+	
 func change_max_speed(xInput):
 	var useXInput = xInput
 	if bufferXInput != 0: 
@@ -1161,6 +1170,7 @@ func switch_to_state(state):
 	tween.remove_all()
 	toggle_all_hitboxes("off")
 	if !hitStunTimer.timer_running()\
+	&& !shieldStunTimer.timer_running()\
 	&& !bufferInput\
 	&& !inLandingLag\
 	&& !pushingAction\
@@ -1268,8 +1278,14 @@ func switch_to_state(state):
 			enableShieldBreakGroundCheck = false
 			create_frame_timer(GlobalVariables.TimerType.SHIELDBREAKTIMER, shieldBreakFrames)
 			animation_handler(GlobalVariables.CharacterAnimations.SHIELDBREAK)
+		CharacterState.SHIELDSTUN:
+			disableInput = true
+			currentState = CharacterState.SHIELDSTUN
+			CharacterInteractionHandler.remove_ground_colliding_character(self)
+			create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
+			emit_signal("character_state_changed", self, currentState)
 	
-func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile):
+func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
 		attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
@@ -1295,13 +1311,19 @@ func is_attacked_handler_perfect_shield():
 	#todo: add perfect shield animation and particle effects
 	print("perfect shield")
 	
-func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile):
+func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackedByCharacter):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	characterShield.buffer_shield_damage(damage, shieldDamage)
 #	characterShield.apply_shield_damage(damage, shieldDamage)
 	#todo: calculate shield hit pushback
 	var pushBack = 0
-	initLaunchVelocity = Vector2(400, 0)
+	velocity = Vector2.ZERO
+	var pushDirection = 1
+	if attackedByCharacter.global_position.x <= self.global_position.x:
+		pushDirection = 1
+	elif attackedByCharacter.global_position.x >= self.global_position.x:
+		pushDirection = -1
+	initLaunchVelocity = pushDirection * Vector2(400, 0)
 	#((damage * parameters.shield.mult * projectileMult * perfectshieldMult * groundedMult * aerialMult) + parameters.shield.constant) * 0.09 * perfectshieldMult2;
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
@@ -1354,7 +1376,7 @@ func apply_throw(actionType):
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight"]
 	self.global_position = inGrabByCharacter.global_position
 	var isProjectile = false
-	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile)
+	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
 	if shortHitStun:
 		animation_handler(GlobalVariables.CharacterAnimations.HURTSHORT)
 	elif !shortHitStun:
@@ -1774,6 +1796,7 @@ func create_frame_timer(timerType, timerFrames = 0):
 			smashAttackTimer.set_frames(smashAttackInputTime)
 			smashAttackTimer.start_timer()
 		GlobalVariables.TimerType.SHIELDSTUN:
+			set_collision_mask_bit(0,false)
 			shieldStunTimer.set_frames(timerFrames)
 			shieldStunTimer.start_timer()
 		GlobalVariables.TimerType.SHIELDDROP:
@@ -1927,10 +1950,13 @@ func _on_frametimer_timeout(timerType):
 				check_character_crouch()
 			bufferedSmashAttack = null
 		GlobalVariables.TimerType.SHIELDSTUN:
+			shieldStunFrames = 0
 			if !Input.is_action_pressed(shield):
 				characterShield.disable_shield()
 				switch_to_state(CharacterState.GROUND)
 				create_frame_timer(GlobalVariables.TimerType.SHIELDDROP)
+			else:
+				switch_to_state(CharacterState.SHIELD)
 		GlobalVariables.TimerType.SHIELDDROP:
 			if get_input_direction_y() >= 0.5:
 				switch_to_state(CharacterState.CROUCH)
@@ -1950,7 +1976,9 @@ func _on_frametimer_timeout(timerType):
 			elif currentState == CharacterState.SHIELD:
 				characterShield.apply_shield_damage()
 				if !characterShield.shieldBreak:
-					create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
+					switch_to_state(CharacterState.SHIELDSTUN)
+				else:
+					velocity = Vector2.ZERO
 			elif currentState == CharacterState.GROUND && perfectShieldActivated:
 				disableInput = false
 		GlobalVariables.TimerType.TURNAROUND:
