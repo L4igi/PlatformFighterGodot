@@ -12,7 +12,7 @@ var disableInputInfluence = 1200
 var walkMaxSpeed = 300
 var runMaxSpeed = 600
 var airMaxSpeed = 500
-var airStopForce = 400
+var airStopForce = 450
 var maxFallSpeed = 2000
 var groundStopForce = 1500
 var jumpSpeed = 800
@@ -33,6 +33,7 @@ var atPlatformEdge = null
 var lowestCheckYPoint 
 var dropPlatformTime = 2
 var platformCollisionDisabledFrames = 30
+onready var hitStunRayCast = get_node("CharacterCollider/HitStunRaycast")
 #edge
 var snappedEdge = null
 var disableInput = false
@@ -520,9 +521,11 @@ func hitstun_handler(delta):
 			if airTime <= 300: 
 				airTime += 1
 			#BOUNCING CHARACTER
-			if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
-				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
-				initLaunchVelocity = velocity
+			var bounceCollider = hitStunRayCast.get_collider()
+			if bounceCollider && lastVelocity.y > bounceThreashold:
+				if velocity.y >= 0 || bounceCollider.is_in_group("Ground"):
+					velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
+					initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
 #				#plays rest of hitstun animation if hitting ground during hitstun
 				animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
@@ -533,8 +536,11 @@ func hitstun_handler(delta):
 		var solidGroundCollision = check_ground_platform_collision()
 		if solidGroundCollision:
 			onSolidGround = solidGroundCollision
-		if onSolidGround && lastVelocity.y > bounceThreashold && hitStunTimer.timer_running():
-			velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
+		var bounceCollider = hitStunRayCast.get_collider()
+		if bounceCollider && lastVelocity.y > bounceThreashold:
+			if velocity.y >= 0 || bounceCollider.is_in_group("Ground"):
+				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
+				initLaunchVelocity = velocity
 		elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 			switch_to_state(CharacterState.HITSTUNGROUND)
 			#plays rest of hitstun animation if hitting ground during hitstun
@@ -1153,9 +1159,9 @@ func toggle_all_hitboxes(onOff):
 func mirror_areas():
 	match currentMoveDirection:
 		moveDirection.LEFT:
-			self.set_scale(Vector2(-1, 1))
+			self.set_scale(Vector2(-1*abs(self.get_scale().x), abs(self.get_scale().y)))
 		moveDirection.RIGHT:
-			self.set_scale(Vector2(-1, -1))
+			self.set_scale(Vector2(-1*abs(self.get_scale().x), -1*abs(self.get_scale().y)))
 				
 func get_input_direction_x():
 	return Input.get_action_strength(right) - Input.get_action_strength(left)
@@ -1189,6 +1195,7 @@ func switch_to_state(state):
 	pushingAction = false
 	perfectShieldActivated = false
 	currentAttack = null
+	hitStunRayCast.set_enabled(false)
 	stopMovementTimer.stop_timer()
 	turnAroundTimer.stop_timer()
 	dropDownTimer.stop_timer()
@@ -1216,6 +1223,7 @@ func switch_to_state(state):
 			emit_signal("character_state_changed", self, currentState)
 			animation_handler(GlobalVariables.CharacterAnimations.FREEFALL)
 		CharacterState.HITSTUNAIR:
+			hitStunRayCast.set_enabled(true)
 			canGetEdgeInvincibility = true
 			currentState = CharacterState.HITSTUNAIR
 			emit_signal("character_state_changed", self, currentState)
@@ -2042,11 +2050,17 @@ func calculate_hitlag_di():
 	var verticalInfluence = 0.17
 	var horizontalInfluence = 0.09
 	var originalLaunchRadian = atan2(initLaunchVelocity.y, initLaunchVelocity.x)
-	var newLaunchRadian = originalLaunchRadian + verticalInfluence * hitlagDI.x
+	var influenceDirection = 1
+#	if initLaunchVelocity.y >= 0:
+#		influenceDirection = -1
+	var newLaunchRadian = originalLaunchRadian + (verticalInfluence*influenceDirection) * hitlagDI.x
 #	print("old radian " + str(originalLaunchRadian))
 #	print(Vector2(cos(originalLaunchRadian), sin(originalLaunchRadian)))
-#	print("new radian " + str(newLaunchRadian))
-#	print(Vector2(cos(newLaunchRadian), sin(newLaunchRadian)))
+#	print("new radian " + str(rad2deg(newLaunchRadian)))
+	if currentMoveDirection == moveDirection.RIGHT:
+		hitStunRayCast.set_rotation(3*PI/2 + newLaunchRadian)
+	elif currentMoveDirection == moveDirection.LEFT:
+		hitStunRayCast.set_rotation(PI/2 - newLaunchRadian)
 	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
 	
