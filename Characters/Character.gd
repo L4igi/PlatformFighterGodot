@@ -226,8 +226,8 @@ func _ready():
 	GlobalVariables.charactersInGame.append(self)
 
 func _physics_process(delta):
-#	if name == "DarkMario":
-#		print(currentState)
+#	if name == "Mario":
+#		print(currentAttack)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -417,6 +417,7 @@ func ground_handler(delta):
 			if perfectShieldFramesLeft > 0:
 				perfectShieldFramesLeft -= 1
 			if Input.is_action_just_pressed(jump):
+				bufferInput = null
 				shieldDropTimer.stop_timer()
 				jump_handler()
 	else:
@@ -1184,8 +1185,10 @@ func switch_to_state(state):
 	&& state != CharacterState.SPECIALAIR && state != CharacterState.EDGE:
 		airTime = 0
 	inMovementLag = false
-	pushingAction = false
 	shortTurnAround = false
+	pushingAction = false
+	perfectShieldActivated = false
+	currentAttack = null
 	stopMovementTimer.stop_timer()
 	turnAroundTimer.stop_timer()
 	dropDownTimer.stop_timer()
@@ -1194,7 +1197,6 @@ func switch_to_state(state):
 	shieldStunTimer.stop_timer()
 	shieldDropTimer.stop_timer()
 	edgeGrabShape.set_deferred("disabled", true)
-	perfectShieldActivated = false
 	#todo: reset all hitboxes and collision shapes
 	match state: 
 		CharacterState.GROUND:
@@ -1421,6 +1423,7 @@ func buffer_input():
 		|| currentState == CharacterState.EDGEGETUP\
 		|| currentState == CharacterState.GRAB\
 		|| perfectShieldActivated\
+		|| shieldDropTimer.timer_running()\
 		|| inLandingLag:
 			if Input.is_action_just_pressed(attack) && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 				bufferInput = GlobalVariables.CharacterAnimations.JAB1
@@ -1963,7 +1966,7 @@ func _on_frametimer_timeout(timerType):
 		GlobalVariables.TimerType.SHIELDDROP:
 			if get_input_direction_y() >= 0.5:
 				switch_to_state(CharacterState.CROUCH)
-			disableInput = false
+			enable_player_input()
 		GlobalVariables.TimerType.HITLAG:
 			gravity_on_off("on")
 			velocity = initLaunchVelocity
