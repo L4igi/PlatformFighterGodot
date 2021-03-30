@@ -17,4 +17,4 @@ func _ready():
 
 
 func _on_TeleportToStart_body_entered(body):
-	body.global_position = get_parent().get_node("CenterStage").global_position + Vector2(0,-500)
+	body.global_position = Vector2(700,-500)

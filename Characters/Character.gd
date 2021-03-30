@@ -13,7 +13,7 @@ var walkMaxSpeed = 300
 var runMaxSpeed = 600
 var airMaxSpeed = 500
 var airStopForce = 450
-var maxFallSpeed = 2000
+var maxFallSpeed = 1800
 var groundStopForce = 1500
 var jumpSpeed = 800
 var shortHopSpeed = 600
@@ -465,14 +465,6 @@ func air_handler(delta):
 				edgeGrabShape.set_deferred("disabled", true)
 			elif get_input_direction_y() < 0.5 && !disabledEdgeGrab: 
 				edgeGrabShape.set_deferred("disabled", false)
-			#make sure that player moves up ground slope if jumping or recovering
-			var slideCollide = null
-			if get_input_direction_x() > 0: 
-				slideCollide = move_and_collide(Vector2(20,0), true, true, true)
-			elif get_input_direction_x() < 0: 
-				slideCollide = move_and_collide(Vector2(-20,0), true, true, true)
-			if slideCollide: 
-				velocity.x *= -1
 			velocity = move_and_slide(velocity)
 	var solidGroundCollision = check_ground_platform_collision()
 	if solidGroundCollision:
@@ -503,7 +495,10 @@ func double_jump_handler():
 	if gravity!=baseGravity:
 		gravity=baseGravity
 	velocity.y = -jumpSpeed
-	velocity.x = airMaxSpeed * xInput 
+	if check_stage_slide_collide(true):
+		velocity.x = 0
+	else:
+		velocity.x = airMaxSpeed * xInput 
 	jumpCount += 1
 	
 	
@@ -1151,9 +1146,26 @@ func input_movement_physics_air(delta):
 		if pushingCharacter == null:
 			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
 	else:
-		velocity.x += (walk * delta) * 4
+		#make sure that player moves up ground slope if jumping or recovering
+		if check_stage_slide_collide():
+			velocity.x = move_toward(velocity.x, 0, airStopForce * delta)
+		else:
+			velocity.x += (walk * delta) * 4
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 	calculate_vertical_velocity(delta)
+	
+func check_stage_slide_collide(doubleJump = false):
+	if stageSlideCollider: 
+		if (velocity.y <= 0 || doubleJump)\
+		&& global_position < stageSlideCollider.global_position: 
+			if get_input_direction_x() > 0: 
+				return true
+		elif (velocity.y <= 0 || doubleJump)\
+		&& global_position > stageSlideCollider.global_position: 
+			if get_input_direction_x() < 0: 
+				return true
+		else:
+			return false
 	
 func toggle_all_hitboxes(onOff):
 	match onOff: 
