@@ -44,7 +44,7 @@ tracks/2/keys = {
 }
 
 [sub_resource type="Animation" id=2]
-length = 0.7
+length = 0.500001
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -65,10 +65,34 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"times": PoolRealArray( 0, 0.0666667, 0.133333, 0.216667, 0.3, 0.383333, 0.483333 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.133334, 0.216667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1.02564, 9.23077 ), Vector2( -12.3077, 9.23077 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:disabled")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.133333, 0.383333 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -679,8 +703,8 @@ script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = 0.0
-animation = "fair"
-frame = 4
+animation = "bair"
+frame = 5
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -713,7 +737,7 @@ position = Vector2( -20.4, -2.8125 )
 disabled = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 17.3333, -17.3333 )
+position = Vector2( -12.3077, 9.23077 )
 disabled = false
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]

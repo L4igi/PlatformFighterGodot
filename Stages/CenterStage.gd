@@ -12,19 +12,12 @@ var collidingBodies = []
 func _ready():
 	stopAreaRight.set_position(Vector2(445,-30))
 	stopAreaLeft.set_position(Vector2(-445,-30))
-	edgeAreaLeft.set_position(Vector2(-445,-15))
+	edgeAreaLeft.set_position(Vector2(-447,-15))
 	edgeAreaLeft.edgeSnapDirection = "left"
-	edgeAreaRight.set_position(Vector2(445,-15))
+	edgeAreaRight.set_position(Vector2(447,-15))
 	edgeAreaRight.edgeSnapDirection = "right"
 
-#func _process(delta):
-#	for body in collidingBodies: 
-#		if body.onSolidGround == null: 
-#			if (body.lowestCheckYPoint.global_position.y < checkYPoint.global_position.y):
-#				body.onSolidGround = self
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+
 func _on_StopAreaRight_area_entered(area):
 	if area.is_in_group("CollisionArea"):
 		stop_character_velocity(area)
@@ -42,13 +35,13 @@ func stop_character_velocity(area):
 				stopCharacter.velocity.x = 200
 			else:
 				stopCharacter.velocity.x = -200
-
-func _on_CollisisionDetectionArea_body_entered(body):
-	if body.is_in_group("Character"):
-		collidingBodies.append(body)
-
-
-func _on_CollisisionDetectionArea_body_exited(body):
-	if body.is_in_group("Character"):
-		collidingBodies.erase(body)
-		body.onSolidGround = null
+#
+#func _on_CollisisionDetectionArea_body_entered(body):
+#	if body.is_in_group("Character"):
+#		collidingBodies.append(body)
+#
+#
+#func _on_CollisisionDetectionArea_body_exited(body):
+#	if body.is_in_group("Character"):
+#		collidingBodies.erase(body)
+#		body.onSolidGround = null

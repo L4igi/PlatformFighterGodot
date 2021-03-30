@@ -48,6 +48,7 @@ var attackgetUpVelocity = 400
 var edgeInvincibleDuration = 0
 var edgeDropTimeLow = 120
 var edgeDropTimeHigh = 150
+var stageSlideCollider = null
 #attack 
 var smashAttack = null
 var currentAttack = null
@@ -96,6 +97,7 @@ var characterBouncing = false
 var lastVelocity = Vector2.ZERO
 var bounceThreashold = 800
 var bounceReduction = 0.7
+var stageBounceCollider = null
 #shield
 onready var characterShield = get_node("Shield")
 var rollDistance = 150
@@ -449,7 +451,6 @@ func air_handler(delta):
 		else:
 			input_movement_physics_air(delta)
 			# Move based on the velocity and snap to the ground.
-			velocity = move_and_slide(velocity)
 			if Input.is_action_just_pressed(jump) && jumpCount < availabelJumps:
 				double_jump_handler()
 			else:
@@ -464,6 +465,15 @@ func air_handler(delta):
 				edgeGrabShape.set_deferred("disabled", true)
 			elif get_input_direction_y() < 0.5 && !disabledEdgeGrab: 
 				edgeGrabShape.set_deferred("disabled", false)
+			#make sure that player moves up ground slope if jumping or recovering
+			var slideCollide = null
+			if get_input_direction_x() > 0: 
+				slideCollide = move_and_collide(Vector2(20,0), true, true, true)
+			elif get_input_direction_x() < 0: 
+				slideCollide = move_and_collide(Vector2(-20,0), true, true, true)
+			if slideCollide: 
+				velocity.x *= -1
+			velocity = move_and_slide(velocity)
 	var solidGroundCollision = check_ground_platform_collision()
 	if solidGroundCollision:
 		onSolidGround = solidGroundCollision
@@ -521,10 +531,14 @@ func hitstun_handler(delta):
 			if airTime <= 300: 
 				airTime += 1
 			#BOUNCING CHARACTER
-			var bounceCollider = hitStunRayCast.get_collider()
-			if bounceCollider && lastVelocity.y > bounceThreashold:
-				if velocity.y >= 0 || bounceCollider.is_in_group("Ground"):
-					velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
+			if hitStunRayCast.get_collider():
+#				if stageBounceCollider != hitStunRayCast.get_collider():
+				stageBounceCollider = hitStunRayCast.get_collider()
+				if velocity.y >= 0 || stageBounceCollider.is_in_group("Ground"):
+					velocity = Vector2(lastVelocity.x,lastVelocity.y)
+					velocity = velocity.bounce(hitStunRayCast.get_collision_normal())
+					change_hitstunray_direction(atan2(velocity.y, velocity.x))
+#						velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 					initLaunchVelocity = velocity
 			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
 #				#plays rest of hitstun animation if hitting ground during hitstun
@@ -732,7 +746,7 @@ func snap_edge(collidingEdge):
 		currentMoveDirection = moveDirection.RIGHT
 		mirror_areas()
 	var targetPosition = collidingEdge.global_position + Vector2((characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
-	if self.global_position < collidingEdge.global_position:
+	if self.global_position < collidingEdge.centerStage.global_position:
 		targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
 	animation_handler(GlobalVariables.CharacterAnimations.EDGESNAP)
 	$Tween.interpolate_property(self, "global_position", global_position, targetPosition , animationPlayer.get_current_animation_length(), Tween.TRANS_LINEAR, Tween.EASE_IN)
@@ -2054,16 +2068,24 @@ func calculate_hitlag_di():
 #	if initLaunchVelocity.y >= 0:
 #		influenceDirection = -1
 	var newLaunchRadian = originalLaunchRadian + (verticalInfluence*influenceDirection) * hitlagDI.x
-#	print("old radian " + str(originalLaunchRadian))
-#	print(Vector2(cos(originalLaunchRadian), sin(originalLaunchRadian)))
-#	print("new radian " + str(rad2deg(newLaunchRadian)))
-	if currentMoveDirection == moveDirection.RIGHT:
-		hitStunRayCast.set_rotation(3*PI/2 + newLaunchRadian)
-	elif currentMoveDirection == moveDirection.LEFT:
-		hitStunRayCast.set_rotation(PI/2 - newLaunchRadian)
+	change_hitstunray_direction(newLaunchRadian)
 	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
 	
+func change_hitstunray_direction(radians):
+	if currentMoveDirection == moveDirection.RIGHT:
+		hitStunRayCast.set_rotation(radians - PI/2)
+	elif currentMoveDirection == moveDirection.LEFT:
+		hitStunRayCast.set_rotation(PI/2 - radians)
+	#scale length of ray up to detect different collision angles at the right distance to object
+	var absRayCastRot = abs(hitStunRayCast.get_rotation())
+	print("raycast angle " +str(absRayCastRot))
+	if (absRayCastRot >= 0 && absRayCastRot < PI/4)\
+	|| (absRayCastRot > 3*PI/4 && absRayCastRot < 5*PI/4)\
+	|| (absRayCastRot > 7*PI/4 && absRayCastRot <= 2*PI):
+		hitStunRayCast.set_cast_to(hitStunRayCast.get_cast_to().normalized()*20)
+	else:
+		hitStunRayCast.set_cast_to(hitStunRayCast.get_cast_to().normalized()*10)
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if GlobalVariables.attackAnimationList.has(anim_name):

@@ -1,15 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://Stages/CenterStage.gd" type="Script" id=2]
 [ext_resource path="res://Stages/EdgeSnap.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Stages/StopAreas.tscn" type="PackedScene" id=4]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 448, 48 )
-
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 448, 8 )
 
 [node name="CenterStage" type="KinematicBody2D" groups=[
 "Ground",
@@ -18,15 +12,16 @@ collision_layer = 4
 collision_mask = 0
 script = ExtResource( 2 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2( 0, 16 )
-shape = SubResource( 1 )
+polygon = PoolVector2Array( -448, -48, 448, -48, 320, 240, -320, 240 )
 one_way_collision_margin = 0.0
 
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 modulate = Color( 0, 0, 0, 1 )
-position = Vector2( 7.62939e-06, 16 )
-scale = Vector2( 14, 1.5 )
+position = Vector2( -7.62939e-06, 32 )
+scale = Vector2( 10.75, 2 )
 texture = ExtResource( 1 )
 
 [node name="EdgeSnapLeft" parent="." instance=ExtResource( 3 )]
@@ -35,15 +30,5 @@ texture = ExtResource( 1 )
 
 [node name="StopAreas" parent="." instance=ExtResource( 4 )]
 
-[node name="CollisisionDetectionArea" type="Area2D" parent="."]
-
-[node name="CollisisonDetectionShape" type="CollisionShape2D" parent="CollisisionDetectionArea"]
-position = Vector2( 0, -32.9692 )
-shape = SubResource( 2 )
-disabled = true
-
 [node name="CheckYPoint" type="Node2D" parent="."]
 position = Vector2( 0, -30 )
-
-[connection signal="body_entered" from="CollisisionDetectionArea" to="." method="_on_CollisisionDetectionArea_body_entered"]
-[connection signal="body_exited" from="CollisisionDetectionArea" to="." method="_on_CollisisionDetectionArea_body_exited"]

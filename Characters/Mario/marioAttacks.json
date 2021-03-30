@@ -186,7 +186,8 @@
     "shieldStun_multiplier_1":1,
     "hitlag_multiplier_1":1,
     "shield_damage_1":1,
-    "landingLag":4
+    "landingLag":4,
+    "priority":0,
   },
   "DASHATTACK_neutral":{
     "damage_1":5,
