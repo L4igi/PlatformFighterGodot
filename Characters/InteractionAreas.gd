@@ -23,47 +23,43 @@ func _on_CollisionArea_area_entered(area):
 func match_character_states(characterState):
 	match character.currentState:
 		character.CharacterState.GROUND:
-			match_standard_collision()
+			match_collision_ground()
 		character.CharacterState.AIR:
-			match_no_collision()
+			match_collision_air()
 		character.CharacterState.EDGE:
-			match_no_collision()
+			match_collision_edge()
 		character.CharacterState.ATTACKGROUND:
-			match_standard_collision()
+			match_collision_attackground()
 		character.CharacterState.ATTACKAIR:
-			match_no_collision()
+			match_collision_attackair()
 		character.CharacterState.HITSTUNGROUND:
-			match_standard_collision()
+			match_collision_hitstunground()
 		character.CharacterState.HITSTUNAIR:
-			match_no_collision()
+			match_collision_hitstunair()
 		character.CharacterState.SPECIALGROUND:
-			match_standard_collision()
+			match_collision_specialground()
 		character.CharacterState.SPECIALAIR:
-			match_no_collision()
+			match_collision_specialair()
 		character.CharacterState.SHIELD:
-			match_standard_collision()
+			match_collision_shield()
 		character.CharacterState.ROLL:
-			match_no_collision()
+			match_collision_roll()
 		character.CharacterState.GRAB:
-			match_standard_collision()
+			match_collision_grab()
 		character.CharacterState.INGRAB:
-			match_no_collision()
+			match_collision_ingrab()
 		character.CharacterState.SPOTDODGE:
-			match_no_collision()
+			match_collision_spotdodge()
 		character.CharacterState.GETUP:
-			match_no_collision()
+			match_collision_getup()
 		character.CharacterState.SHIELDBREAK:
-			match_standard_collision()
+			match_collision_shieldbreak()
 		character.CharacterState.CROUCH: 
-			match_standard_collision()
+			match_collision_crouch()
 		character.CharacterState.EDGEGETUP:
-			match_no_collision()
+			match_collision_edgegetup()
 		character.CharacterState.SHIELDSTUN:
-			match_no_collision()
-		character.CharacterState.TECHAIR:
-			match_no_collision()
-		character.CharacterState.TECHGROUND:
-			match_standard_collision()
+			match_collision_shieldstun()
 			
 func disable_collision():
 	character.set_collision_mask_bit(0,false)
@@ -109,7 +105,8 @@ func check_character_above():
 	else: 
 		return false
 
-func match_standard_collision():
+
+func match_collision_ground():
 	match areaCollisionObject.currentState:
 		character.CharacterState.GROUND:
 			enable_collision()
@@ -150,12 +147,57 @@ func match_standard_collision():
 			disable_collision()
 		character.CharacterState.SHIELDSTUN:
 			disable_collision()
-		character.CharacterState.TECHAIR:
+			
+func match_collision_air():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
 			disable_collision()
-		character.CharacterState.TECHGROUND:
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
 			enable_collision()
-
-func match_no_collision():
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_edge():
 	match areaCollisionObject.currentState:
 		character.CharacterState.GROUND:
 			disable_collision()
@@ -195,7 +237,682 @@ func match_no_collision():
 			disable_collision()
 		character.CharacterState.SHIELDSTUN:
 			disable_collision()
-		character.CharacterState.TECHAIR:
+			
+func match_collision_attackground():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
 			disable_collision()
-		character.CharacterState.TECHGROUND:
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			enable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			enable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+
+func match_collision_attackair():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_hitstunground():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			enable_collision()
+		character.CharacterState.SHIELD:
+			enable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_hitstunair():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_specialground():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			enable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			enable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			enable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			enable_collision()
+		character.CharacterState.SHIELD:
+			enable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_specialair():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			enable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_shield():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			enable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			enable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_roll():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_grab():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			enable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			enable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			enable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_ingrab():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_spotdodge():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_getup():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_shieldbreak():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			enable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			enable_collision()
+		character.CharacterState.SHIELD:
+			enable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_crouch():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			enable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+#			if check_character_above():
+#				enable_collision()
+#			else: 
+#				disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			enable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			enable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			enable_collision()
+		character.CharacterState.SPECIALAIR:
+			enable_collision()
+		character.CharacterState.SHIELD:
+			enable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			enable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			if character.onSolidGround:
+				enable_collision()
+			else: 
+				disable_collision()
+		character.CharacterState.CROUCH:
+			enable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_edgegetup():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
+			disable_collision()
+			
+func match_collision_shieldstun():
+	match areaCollisionObject.currentState:
+		character.CharacterState.GROUND:
+			disable_collision()
+		character.CharacterState.AIR:
+			disable_collision()
+		character.CharacterState.EDGE:
+			disable_collision()
+		character.CharacterState.ATTACKGROUND:
+			disable_collision()
+		character.CharacterState.ATTACKAIR:
+			disable_collision()
+		character.CharacterState.HITSTUNGROUND:
+			disable_collision()
+		character.CharacterState.HITSTUNAIR:
+			disable_collision()
+		character.CharacterState.SPECIALGROUND:
+			disable_collision()
+		character.CharacterState.SPECIALAIR:
+			disable_collision()
+		character.CharacterState.SHIELD:
+			disable_collision()
+		character.CharacterState.ROLL:
+			disable_collision()
+		character.CharacterState.GRAB:
+			disable_collision()
+		character.CharacterState.INGRAB:
+			disable_collision()
+		character.CharacterState.SPOTDODGE:
+			disable_collision()
+		character.CharacterState.GETUP:
+			disable_collision()
+		character.CharacterState.SHIELDBREAK:
+			disable_collision()
+		character.CharacterState.CROUCH:
+			disable_collision()
+		character.CharacterState.EDGEGETUP:
+			disable_collision()
+		character.CharacterState.SHIELDSTUN:
 			disable_collision()
