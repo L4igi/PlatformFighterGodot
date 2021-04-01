@@ -96,7 +96,7 @@ var tumblingThreashold = 500
 var characterBouncing = false
 var lastVelocity = Vector2.ZERO
 var bounceThreashold = 800
-var bounceReduction = 0.7
+var bounceReduction = 0.8
 var stageBounceCollider = null
 #shield
 onready var characterShield = get_node("Shield")
@@ -136,6 +136,9 @@ var spotdodgeInvincibilityFrames = 25
 var rollGetupInvincibilityFrames = 20
 var normalGetupInvincibilityFrames = 10
 var attackGetupInvincibilityFrames = 15
+#tech 
+var techCoolDownFrames = 40 
+var techWindowFrames = 11
 #timers
 var shortHopTimer
 var dropDownTimer
@@ -154,10 +157,12 @@ var landingLagTimer
 var platformCollisionDisabledTimer
 var edgeDropTimer 
 var shieldBreakTimer
+var techTimer
+var techCoolDownTimer
 
 var tween 
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR}
 #signal for character state change
 signal character_state_changed(state)
 
@@ -221,6 +226,8 @@ func _ready():
 	platformCollisionDisabledTimer = frameTimer.new(GlobalVariables.TimerType.PLATFORMCOLLISION, self)
 	edgeDropTimer = frameTimer.new(GlobalVariables.TimerType.EDGEDROPTIMER, self)
 	shieldBreakTimer = frameTimer.new(GlobalVariables.TimerType.SHIELDBREAKTIMER, self)
+	techTimer = frameTimer.new(GlobalVariables.TimerType.TECHTIMER, self)
+	techCoolDownTimer = frameTimer.new(GlobalVariables.TimerType.TECHCOOLDOWNTIMER, self)
 	frameTimerManager = frameTimerManagerNode.new(self)
 	#connect animation finished signal
 	animationPlayer.set_animation_process_mode(0)
@@ -229,8 +236,8 @@ func _ready():
 	GlobalVariables.charactersInGame.append(self)
 
 func _physics_process(delta):
-#	if name == "Mario":
-#		print(currentAttack)
+	if name == "DarkMario":
+		print(currentState)
 	#if character collides with floor/ground velocity instantly becomes zero
 	#to apply bounce save last velocity not zero
 	if abs(int(velocity.y)) >= onSolidGroundThreashold: 
@@ -269,6 +276,10 @@ func _physics_process(delta):
 			shieldBreak_handler(delta)
 		CharacterState.SHIELDSTUN:
 			shieldstun_handler(delta)
+		CharacterState.TECHAIR:
+			tech_handler_air(delta)
+		CharacterState.TECHGROUND:
+			tech_handler_ground(delta)
 
 func check_input_ground(delta):
 	if Input.is_action_just_pressed(jump):
@@ -519,70 +530,57 @@ func calc_hitstun_velocity(delta):
 func hitstun_handler(delta):
 	if hitLagTimer.timer_running():
 		hitlagDI = Vector2(get_input_direction_x(), get_input_direction_y())
-	if disableInput && hitStunTimer.timer_running():
-		if shortHitStun: 
-			return
-		if currentState == CharacterState.HITSTUNAIR:
-			if airTime <= 300: 
-				airTime += 1
-			#BOUNCING CHARACTER
-			if hitStunRayCast.get_collider():
-#				if stageBounceCollider != hitStunRayCast.get_collider():
+	elif !hitLagTimer.timer_running():
+		if Input.is_action_just_pressed(shield)\
+		&& !techTimer.timer_running() && !techCoolDownTimer.timer_running():
+			create_frame_timer(GlobalVariables.TimerType.TECHTIMER, techWindowFrames)
+			print("tech")
+		if disableInput && hitStunTimer.timer_running():
+			if shortHitStun: 
+				return
+			if currentState == CharacterState.HITSTUNAIR:
+				if airTime <= 300: 
+					airTime += 1
+				#BOUNCING CHARACTER
+				if hitStunRayCast.get_collider():
+	#				if stageBounceCollider != hitStunRayCast.get_collider():
+					stageBounceCollider = hitStunRayCast.get_collider()
+					if velocity.y >= 0 || stageBounceCollider.is_in_group("Ground"):
+						if techTimer.timer_running():
+							techTimer.stop_timer()
+							print("TECHED in hitStun!!!")
+						velocity = Vector2(lastVelocity.x,lastVelocity.y)
+						velocity = velocity.bounce(hitStunRayCast.get_collision_normal())*bounceReduction
+						change_hitstunray_direction(atan2(velocity.y, velocity.x))
+						initLaunchVelocity = velocity
+				elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
+	#				#plays rest of hitstun animation if hitting ground during hitstun
+					animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
+					bufferAnimation = false
+					create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
+					switch_to_state(CharacterState.HITSTUNGROUND)
+		elif !disableInput:
+			var solidGroundCollision = check_ground_platform_collision()
+			if solidGroundCollision:
+				if techTimer.timer_running():
+					techTimer.stop_timer()
+					print("TECHED solidGroundCollision!!!")
+				onSolidGround = solidGroundCollision
+			if !onSolidGround && hitStunRayCast.get_collider():
 				stageBounceCollider = hitStunRayCast.get_collider()
 				if velocity.y >= 0 || stageBounceCollider.is_in_group("Ground"):
+					if techTimer.timer_running():
+						print("TECHED!!!")
 					velocity = Vector2(lastVelocity.x,lastVelocity.y)
-					velocity = velocity.bounce(hitStunRayCast.get_collision_normal())
+					velocity = velocity.bounce(hitStunRayCast.get_collision_normal())*bounceReduction
 					change_hitstunray_direction(atan2(velocity.y, velocity.x))
-#						velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
 					initLaunchVelocity = velocity
-			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && abs(int(velocity.x)) == 0:
-#				#plays rest of hitstun animation if hitting ground during hitstun
-				animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
-				bufferAnimation = false
-				create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
+			elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
 				switch_to_state(CharacterState.HITSTUNGROUND)
-	elif !disableInput:
-		var solidGroundCollision = check_ground_platform_collision()
-		if solidGroundCollision:
-			onSolidGround = solidGroundCollision
-		var bounceCollider = hitStunRayCast.get_collider()
-		if bounceCollider && lastVelocity.y > bounceThreashold:
-			if velocity.y >= 0 || bounceCollider.is_in_group("Ground"):
-				velocity = Vector2(lastVelocity.x,lastVelocity.y*(-1))*bounceReduction
-				initLaunchVelocity = velocity
-		elif onSolidGround && abs(int(velocity.y)) <= onSolidGroundThreashold && currentState == CharacterState.HITSTUNAIR:
-			switch_to_state(CharacterState.HITSTUNGROUND)
-			#plays rest of hitstun animation if hitting ground during hitstun
-			animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
-			create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
-		elif currentState == CharacterState.HITSTUNGROUND: 
-			if abs(int(velocity.y)) >= onSolidGroundThreashold:
-				switch_from_state_to_airborn()
-			#if not in hitstun check for jump, attack or special 
-			#todo: check for special
-			elif Input.is_action_just_pressed(attack):
-				switch_to_state(CharacterState.GETUP)
-				animation_handler(GlobalVariables.CharacterAnimations.ATTACKGETUP)
-			elif Input.is_action_just_pressed(up):
-				switch_to_state(CharacterState.GETUP)
-				animation_handler(GlobalVariables.CharacterAnimations.NORMALGETUP)
-			elif Input.is_action_just_pressed(left):
-				switch_to_state(CharacterState.GETUP)
-				if currentMoveDirection != moveDirection.LEFT:
-					currentMoveDirection = moveDirection.LEFT
-					mirror_areas()
-				animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
-			elif Input.is_action_just_pressed(right):
-				switch_to_state(CharacterState.GETUP)
-				if currentMoveDirection != moveDirection.RIGHT:
-					currentMoveDirection = moveDirection.RIGHT
-					mirror_areas()
-				animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
-			process_movement_physics(delta)
-		elif currentState == CharacterState.HITSTUNAIR:
-			#if not in hitstun check for jump, attack or special 
-			#todo: check for special
-			if !hitStunTimer.timer_running(): 
+				#plays rest of hitstun animation if hitting ground during hitstun
+				animation_handler(GlobalVariables.CharacterAnimations.HURTTRANSITION)
+				create_frame_timer(GlobalVariables.TimerType.HITSTUN, groundHitStun)
+			elif currentState == CharacterState.HITSTUNAIR:
 				if Input.is_action_just_pressed(attack):
 					switch_to_state(CharacterState.ATTACKAIR)
 					attack_handler_air(delta)
@@ -591,6 +589,30 @@ func hitstun_handler(delta):
 					double_jump_handler()
 				input_movement_physics_air(delta)
 				velocity = move_and_slide(velocity)
+			elif currentState == CharacterState.HITSTUNGROUND: 
+				if abs(int(velocity.y)) >= onSolidGroundThreashold:
+					switch_from_state_to_airborn()
+				#if not in hitstun check for jump, attack or special 
+				#todo: check for special
+				elif Input.is_action_just_pressed(attack):
+					switch_to_state(CharacterState.GETUP)
+					animation_handler(GlobalVariables.CharacterAnimations.ATTACKGETUP)
+				elif Input.is_action_just_pressed(up):
+					switch_to_state(CharacterState.GETUP)
+					animation_handler(GlobalVariables.CharacterAnimations.NORMALGETUP)
+				elif Input.is_action_just_pressed(left):
+					switch_to_state(CharacterState.GETUP)
+					if currentMoveDirection != moveDirection.LEFT:
+						currentMoveDirection = moveDirection.LEFT
+						mirror_areas()
+					animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
+				elif Input.is_action_just_pressed(right):
+					switch_to_state(CharacterState.GETUP)
+					if currentMoveDirection != moveDirection.RIGHT:
+						currentMoveDirection = moveDirection.RIGHT
+						mirror_areas()
+					animation_handler(GlobalVariables.CharacterAnimations.ROLLGETUP)
+				process_movement_physics(delta)
 		
 	
 func shield_handler(delta):
@@ -1321,6 +1343,12 @@ func switch_to_state(state):
 			CharacterInteractionHandler.remove_ground_colliding_character(self)
 			create_frame_timer(GlobalVariables.TimerType.SHIELDSTUN, shieldStunFrames)
 			emit_signal("character_state_changed", self, currentState)
+		CharacterState.TECHAIR:
+			currentState = CharacterState.TECHAIR
+			disableInput = true
+		CharacterState.TECHGROUND:
+			currentState = CharacterState.TECHGROUND
+			disableInput = true
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
 	damagePercent += damage
@@ -1340,7 +1368,6 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		shortHitStun = true
 	backUpHitStunTime = hitStun
 	#todo: reset other timers and set paramteres to null
-	landingLagTimer.stop_timer()
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
 		
@@ -1420,6 +1447,12 @@ func apply_throw(actionType):
 		animation_handler(GlobalVariables.CharacterAnimations.HURT)
 	create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED, hitLagFrames)
 	inGrabByCharacter = null
+	
+func tech_handler_air(delta):
+	print("tech handler air")
+	
+func tech_handler_ground(delta):
+	print("tech handler ground")
 	
 func enable_player_input():
 	if check_buffered_input():
@@ -1711,8 +1744,7 @@ func getup_animation_step(step = 0):
 				create_frame_timer(GlobalVariables.TimerType.SIDESTEP)
 				switch_to_state(CharacterState.GROUND)
 				check_character_crouch()
-			else:
-				enable_player_input()
+			enable_player_input()
 			
 func apply_grab_animation_step(step = 0):
 	match step: 
@@ -1777,6 +1809,10 @@ func switch_from_state_to_airborn():
 		
 func switch_from_state_to_airborn_hitstun():
 	switch_to_state(CharacterState.HITSTUNAIR)
+	landingLagTimer.stop_timer()
+	inLandingLag = false
+	animationPlayer.get_parent().set_animation("hurt")
+	animationPlayer.get_parent().set_frame(0)
 	jumpCount = 1
 
 func other_character_state_changed():
@@ -1864,9 +1900,7 @@ func create_frame_timer(timerType, timerFrames = 0):
 			hitStunTimer.stop_timer()
 			shieldDropTimer.stop_timer()
 			if !perfectShieldActivated:
-				switch_to_state(CharacterState.HITSTUNAIR)
-				animationPlayer.get_parent().set_animation("hurt")
-				animationPlayer.get_parent().set_frame(0)
+				switch_from_state_to_airborn_hitstun()
 			create_frame_timer(GlobalVariables.TimerType.HITLAG, timerFrames)
 		GlobalVariables.TimerType.TURNAROUND:
 			inMovementLag = true
@@ -1910,6 +1944,12 @@ func create_frame_timer(timerType, timerFrames = 0):
 		GlobalVariables.TimerType.SHIELDBREAKTIMER:
 			shieldBreakTimer.set_frames(timerFrames)
 			shieldBreakTimer.start_timer()
+		GlobalVariables.TimerType.TECHTIMER:
+			techTimer.set_frames(timerFrames)
+			techTimer.start_timer()
+		GlobalVariables.TimerType.TECHCOOLDOWNTIMER: 
+			techCoolDownTimer.set_frames(timerFrames)
+			techCoolDownTimer.start_timer()
 			
 func _on_frametimer_timeout(timerType):
 	match timerType:
@@ -2070,6 +2110,10 @@ func _on_frametimer_timeout(timerType):
 				switch_to_state(CharacterState.GROUND)
 			else:
 				switch_to_state(CharacterState.AIR)
+		GlobalVariables.TimerType.TECHTIMER:
+			create_frame_timer(GlobalVariables.TimerType.TECHCOOLDOWNTIMER, techCoolDownFrames)
+		GlobalVariables.TimerType.TECHCOOLDOWNTIMER: 
+			pass
 				
 				
 func calculate_hitlag_di():
@@ -2091,7 +2135,6 @@ func change_hitstunray_direction(radians):
 		hitStunRayCast.set_rotation(PI/2 - radians)
 	#scale length of ray up to detect different collision angles at the right distance to object
 	var absRayCastRot = abs(hitStunRayCast.get_rotation())
-	print("raycast angle " +str(absRayCastRot))
 	if (absRayCastRot >= 0 && absRayCastRot < PI/4)\
 	|| (absRayCastRot > 3*PI/4 && absRayCastRot < 5*PI/4)\
 	|| (absRayCastRot > 7*PI/4 && absRayCastRot <= 2*PI):
