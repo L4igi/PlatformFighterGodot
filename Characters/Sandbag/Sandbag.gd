@@ -40,12 +40,11 @@ func manage_dair(step):
 	match step:
 		0:
 			velocity = Vector2.ZERO
-			gravity_on_off("off")
+			state.gravity_on_off("off")
 			disableInputDI = false
 		1:
-			gravity_on_off("on")
+			state.gravity_on_off("on")
 			animationPlayer.stop(false)
-			bufferAnimation = true
 			
 func manage_dash_attack(step):
 	pass

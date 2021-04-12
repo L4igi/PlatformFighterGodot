@@ -15,6 +15,9 @@ func _ready():
 	character = get_parent()
 	set_visible(false)
 	
+func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
+	.setup(change_state, animationPlayer, character, bufferedAnimation)
+	character.jumpCount = 0
 	
 func _physics_process(delta):
 	if enableShieldFrames > 0: 
@@ -22,8 +25,7 @@ func _physics_process(delta):
 	if shieldHealth <= 0 && !shieldBreak: 
 		apply_shield_break()
 	if !pauseShield && !shieldBreak:
-		if shieldEnabled && shieldHealth > 0\
-		&& !character.hitLagTimer.timer_running(): 
+		if shieldEnabled && shieldHealth > 0: 
 			shieldHealth -= 0.15
 			var shieldScale = shieldHealth/baseShieldHealth
 			shieldSprite.set_scale(Vector2(shieldScale, shieldScale))
@@ -58,7 +60,7 @@ func buffer_shield_damage(damage, shieldDamage):
 func apply_shield_break():
 	shieldHealth = 0
 	shieldBreak = true
-	character.switch_to_state(character.CharacterState.SHIELDBREAK)
+	character.change_state(GlobalVariables.CharacterState.SHIELDBREAK)
 	var shieldScale = shieldHealth/baseShieldHealth
 	shieldSprite.set_scale(Vector2(shieldScale, shieldScale))
 	

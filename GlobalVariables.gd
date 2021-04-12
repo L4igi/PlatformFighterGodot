@@ -12,6 +12,10 @@ enum TimerType{HITSTUN, SHORTHOP, DROPDOWN, INVINCIBILITY, GRAB, SMASHATTACK, SH
 
 var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmash", "dtilt", "fair", "fsmash", "ftilt", "jab1", "jab2", "nair", "upair", "upsmash", "uptilt"]
 
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR}
+
+enum MoveDirection {LEFT, RIGHT}
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",
@@ -39,7 +43,7 @@ var frameByFrame = false
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("toggleFrameByFrame"):
 		if frameByFrame == false: 
 			frameByFrame = true

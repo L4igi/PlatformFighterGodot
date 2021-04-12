@@ -8,6 +8,130 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "State",
+"class": "AirState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/AirState.gd"
+}, {
+"base": "State",
+"class": "AttackAirState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/AttackAirState.gd"
+}, {
+"base": "State",
+"class": "AttackGroundState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/AttackGroundState.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Character",
+"language": "GDScript",
+"path": "res://Characters/Character.gd"
+}, {
+"base": "State",
+"class": "CrouchState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/CrouchState.gd"
+}, {
+"base": "State",
+"class": "EdgeGetUpState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/EdgeGetUpState.gd"
+}, {
+"base": "State",
+"class": "EdgeState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/EdgeState.gd"
+}, {
+"base": "State",
+"class": "GetUpState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/GetUpState.gd"
+}, {
+"base": "State",
+"class": "GrabState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/GrabState.gd"
+}, {
+"base": "State",
+"class": "GroundState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/GroundState.gd"
+}, {
+"base": "State",
+"class": "HitStunAirState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/HitStunAirState.gd"
+}, {
+"base": "State",
+"class": "HitStunGroundState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/HitStunGroundState.gd"
+}, {
+"base": "State",
+"class": "InGrabState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/InGrabState.gd"
+}, {
+"base": "State",
+"class": "RollState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/RollState.gd"
+}, {
+"base": "State",
+"class": "ShieldBreakState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/ShieldBreakState.gd"
+}, {
+"base": "State",
+"class": "ShieldState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/ShieldState.gd"
+}, {
+"base": "State",
+"class": "ShieldStunState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/ShieldStunState.gd"
+}, {
+"base": "State",
+"class": "SpotDodgeState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/SpotDodgeState.gd"
+}, {
+"base": "Node2D",
+"class": "State",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/State.gd"
+}, {
+"base": "Reference",
+"class": "StateFactory",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/StateFactory.gd"
+} ]
+_global_script_class_icons={
+"AirState": "",
+"AttackAirState": "",
+"AttackGroundState": "",
+"Character": "",
+"CrouchState": "",
+"EdgeGetUpState": "",
+"EdgeState": "",
+"GetUpState": "",
+"GrabState": "",
+"GroundState": "",
+"HitStunAirState": "",
+"HitStunGroundState": "",
+"InGrabState": "",
+"RollState": "",
+"ShieldBreakState": "",
+"ShieldState": "",
+"ShieldStunState": "",
+"SpotDodgeState": "",
+"State": "",
+"StateFactory": ""
+}
+
 [application]
 
 config/name="SmashBro"
@@ -19,11 +143,14 @@ config/icon="res://icon.png"
 GlobalVariables="*res://GlobalVariables.gd"
 CharacterInteractionHandler="*res://Characters/CharacterInteractionHandler.gd"
 
+[debug]
+
+settings/fps/force_fps=60
+
 [display]
 
 window/size/width=1224
 window/size/height=800
-window/vsync/vsync_via_compositor=true
 
 [importer_defaults]
 

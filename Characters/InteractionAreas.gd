@@ -22,47 +22,47 @@ func _on_CollisionArea_area_entered(area):
 				
 func match_character_states(characterState):
 	match character.currentState:
-		character.CharacterState.GROUND:
+		GlobalVariables.CharacterState.GROUND:
 			match_standard_collision()
-		character.CharacterState.AIR:
+		GlobalVariables.CharacterState.AIR:
 			match_no_collision()
-		character.CharacterState.EDGE:
+		GlobalVariables.CharacterState.EDGE:
 			match_no_collision()
-		character.CharacterState.ATTACKGROUND:
+		GlobalVariables.CharacterState.ATTACKGROUND:
 			match_standard_collision()
-		character.CharacterState.ATTACKAIR:
+		GlobalVariables.CharacterState.ATTACKAIR:
 			match_no_collision()
-		character.CharacterState.HITSTUNGROUND:
+		GlobalVariables.CharacterState.HITSTUNGROUND:
 			match_standard_collision()
-		character.CharacterState.HITSTUNAIR:
+		GlobalVariables.CharacterState.HITSTUNAIR:
 			match_no_collision()
-		character.CharacterState.SPECIALGROUND:
+		GlobalVariables.CharacterState.SPECIALGROUND:
 			match_standard_collision()
-		character.CharacterState.SPECIALAIR:
+		GlobalVariables.CharacterState.SPECIALAIR:
 			match_no_collision()
-		character.CharacterState.SHIELD:
+		GlobalVariables.CharacterState.SHIELD:
 			match_standard_collision()
-		character.CharacterState.ROLL:
+		GlobalVariables.CharacterState.ROLL:
 			match_no_collision()
-		character.CharacterState.GRAB:
+		GlobalVariables.CharacterState.GRAB:
 			match_standard_collision()
-		character.CharacterState.INGRAB:
+		GlobalVariables.CharacterState.INGRAB:
 			match_no_collision()
-		character.CharacterState.SPOTDODGE:
+		GlobalVariables.CharacterState.SPOTDODGE:
 			match_no_collision()
-		character.CharacterState.GETUP:
+		GlobalVariables.CharacterState.GETUP:
 			match_no_collision()
-		character.CharacterState.SHIELDBREAK:
+		GlobalVariables.CharacterState.SHIELDBREAK:
 			match_standard_collision()
-		character.CharacterState.CROUCH: 
+		GlobalVariables.CharacterState.CROUCH: 
 			match_standard_collision()
-		character.CharacterState.EDGEGETUP:
+		GlobalVariables.CharacterState.EDGEGETUP:
 			match_no_collision()
-		character.CharacterState.SHIELDSTUN:
+		GlobalVariables.CharacterState.SHIELDSTUN:
 			match_no_collision()
-		character.CharacterState.TECHAIR:
+		GlobalVariables.CharacterState.TECHAIR:
 			match_no_collision()
-		character.CharacterState.TECHGROUND:
+		GlobalVariables.CharacterState.TECHGROUND:
 			match_standard_collision()
 			
 func disable_collision():
@@ -111,91 +111,91 @@ func check_character_above():
 
 func match_standard_collision():
 	match areaCollisionObject.currentState:
-		character.CharacterState.GROUND:
+		GlobalVariables.CharacterState.GROUND:
 			enable_collision()
-		character.CharacterState.AIR:
+		GlobalVariables.CharacterState.AIR:
 			disable_collision()
-		character.CharacterState.EDGE:
+		GlobalVariables.CharacterState.EDGE:
 			disable_collision()
-		character.CharacterState.ATTACKGROUND:
+		GlobalVariables.CharacterState.ATTACKGROUND:
 			enable_collision()
-		character.CharacterState.ATTACKAIR:
+		GlobalVariables.CharacterState.ATTACKAIR:
 			disable_collision()
-		character.CharacterState.HITSTUNGROUND:
+		GlobalVariables.CharacterState.HITSTUNGROUND:
 			enable_collision()
-		character.CharacterState.HITSTUNAIR:
+		GlobalVariables.CharacterState.HITSTUNAIR:
 			disable_collision()
-		character.CharacterState.SPECIALGROUND:
+		GlobalVariables.CharacterState.SPECIALGROUND:
 			enable_collision()
-		character.CharacterState.SPECIALAIR:
+		GlobalVariables.CharacterState.SPECIALAIR:
 			enable_collision()
-		character.CharacterState.SHIELD:
+		GlobalVariables.CharacterState.SHIELD:
 			enable_collision()
-		character.CharacterState.ROLL:
+		GlobalVariables.CharacterState.ROLL:
 			disable_collision()
-		character.CharacterState.GRAB:
+		GlobalVariables.CharacterState.GRAB:
 			enable_collision()
-		character.CharacterState.INGRAB:
+		GlobalVariables.CharacterState.INGRAB:
 			disable_collision()
-		character.CharacterState.SPOTDODGE:
+		GlobalVariables.CharacterState.SPOTDODGE:
 			disable_collision()
-		character.CharacterState.GETUP:
+		GlobalVariables.CharacterState.GETUP:
 			disable_collision()
-		character.CharacterState.SHIELDBREAK:
+		GlobalVariables.CharacterState.SHIELDBREAK:
 			if character.onSolidGround:
 				enable_collision()
 			else: 
 				disable_collision()
-		character.CharacterState.EDGEGETUP:
+		GlobalVariables.CharacterState.EDGEGETUP:
 			disable_collision()
-		character.CharacterState.SHIELDSTUN:
+		GlobalVariables.CharacterState.SHIELDSTUN:
 			disable_collision()
-		character.CharacterState.TECHAIR:
+		GlobalVariables.CharacterState.TECHAIR:
 			disable_collision()
-		character.CharacterState.TECHGROUND:
+		GlobalVariables.CharacterState.TECHGROUND:
 			enable_collision()
 
 func match_no_collision():
 	match areaCollisionObject.currentState:
-		character.CharacterState.GROUND:
+		GlobalVariables.CharacterState.GROUND:
 			disable_collision()
-		character.CharacterState.AIR:
+		GlobalVariables.CharacterState.AIR:
 			disable_collision()
-		character.CharacterState.EDGE:
+		GlobalVariables.CharacterState.EDGE:
 			disable_collision()
-		character.CharacterState.ATTACKGROUND:
+		GlobalVariables.CharacterState.ATTACKGROUND:
 			disable_collision()
-		character.CharacterState.ATTACKAIR:
+		GlobalVariables.CharacterState.ATTACKAIR:
 			disable_collision()
-		character.CharacterState.HITSTUNGROUND:
+		GlobalVariables.CharacterState.HITSTUNGROUND:
 			disable_collision()
-		character.CharacterState.HITSTUNAIR:
+		GlobalVariables.CharacterState.HITSTUNAIR:
 			disable_collision()
-		character.CharacterState.SPECIALGROUND:
+		GlobalVariables.CharacterState.SPECIALGROUND:
 			disable_collision()
-		character.CharacterState.SPECIALAIR:
+		GlobalVariables.CharacterState.SPECIALAIR:
 			disable_collision()
-		character.CharacterState.SHIELD:
+		GlobalVariables.CharacterState.SHIELD:
 			disable_collision()
-		character.CharacterState.ROLL:
+		GlobalVariables.CharacterState.ROLL:
 			disable_collision()
-		character.CharacterState.GRAB:
+		GlobalVariables.CharacterState.GRAB:
 			disable_collision()
-		character.CharacterState.INGRAB:
+		GlobalVariables.CharacterState.INGRAB:
 			disable_collision()
-		character.CharacterState.SPOTDODGE:
+		GlobalVariables.CharacterState.SPOTDODGE:
 			disable_collision()
-		character.CharacterState.GETUP:
+		GlobalVariables.CharacterState.GETUP:
 			disable_collision()
-		character.CharacterState.SHIELDBREAK:
+		GlobalVariables.CharacterState.SHIELDBREAK:
 			disable_collision()
-		character.CharacterState.CROUCH:
+		GlobalVariables.CharacterState.CROUCH:
 			disable_collision()
-		character.CharacterState.EDGEGETUP:
+		GlobalVariables.CharacterState.EDGEGETUP:
 			disable_collision()
-		character.CharacterState.SHIELDSTUN:
+		GlobalVariables.CharacterState.SHIELDSTUN:
 			disable_collision()
-		character.CharacterState.TECHAIR:
+		GlobalVariables.CharacterState.TECHAIR:
 			disable_collision()
-		character.CharacterState.TECHGROUND:
+		GlobalVariables.CharacterState.TECHGROUND:
 			disable_collision()

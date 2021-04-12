@@ -14,7 +14,7 @@ enum HitBoxType {SOUR, NEUTRAL, SWEET}
 func _process(delta):
 	if !hitBoxesConnected.empty():
 		disable_all_hitboxes()
-		if character.currentState != character.CharacterState.GRAB:
+		if character.currentState != GlobalVariables.CharacterState.GRAB:
 			var highestHitboxPriority = 0
 			var highestHitBox = null
 			for hitbox in hitBoxesConnected: 
@@ -31,8 +31,8 @@ func _process(delta):
 						if character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
 							highestHitboxPriority = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_sweet"]["priority"]
 							highestHitBox = HitBoxType.SWEET
-			if character.currentState == character.CharacterState.ATTACKGROUND\
-			|| character.currentState == character.CharacterState.ATTACKAIR:
+			if character.currentState == GlobalVariables.CharacterState.ATTACKGROUND\
+			|| character.currentState == GlobalVariables.CharacterState.ATTACKAIR:
 				apply_attack(highestHitBox)
 		hitBoxesConnected.clear()
 
@@ -51,7 +51,6 @@ func apply_attack(hbType):
 			combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[combinedAttackDataString] + "_neutral"
 		HitBoxType.SWEET:
 			combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[combinedAttackDataString] + "_sweet"
-	#print(combinedAttackDataString)
 	var currentAttackData = character.attackData[combinedAttackDataString]
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
 	var hitStun = currentAttackData["hitStun_" + String(currentHitBoxNumber)]
@@ -70,7 +69,7 @@ func apply_attack(hbType):
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier_" + String(currentHitBoxNumber)]
 	var shieldDamage = currentAttackData["shield_damage_" + String(currentHitBoxNumber)]
 	var isProjectile = false
-	if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
+	if attackedCharacterState == GlobalVariables.CharacterState.SHIELD:
 		attackedCharacter.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile, character)
 	elif attackedCharacter.perfectShieldActivated:
 		attackedCharacter.is_attacked_handler_perfect_shield()
@@ -80,12 +79,13 @@ func apply_attack(hbType):
 
 func apply_grab():
 	if character.currentMoveDirection == attackedCharacter.currentMoveDirection:
-		if attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.LEFT:
-			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.LEFT
-		elif attackedCharacter.currentMoveDirection != attackedCharacter.moveDirection.RIGHT:
-			attackedCharacter.currentMoveDirection = attackedCharacter.moveDirection.RIGHT
-		attackedCharacter.mirror_areas()
-	attackedCharacter.is_grabbed_handler(character)
+		if attackedCharacter.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
+			attackedCharacter.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		elif attackedCharacter.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
+			attackedCharacter.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		attackedCharacter.state.mirror_areas()
+	attackedCharacter.inGrabByCharacter = character
+	attackedCharacter.change_state(GlobalVariables.CharacterState.INGRAB)
 
 func _on_HitBoxSweetArea_area_entered(area):
 	if area.is_in_group("Hurtbox")\
@@ -117,35 +117,34 @@ func apply_hitlag(hitArea):
 	attackedCharacter = hitArea.get_parent().get_parent()
 	attackedCharacterState = attackedCharacter.currentState
 	if attackedCharacter != self.get_parent().get_parent():
-		if character.currentState == character.CharacterState.ATTACKGROUND\
-		|| character.currentState == character.CharacterState.ATTACKAIR:
+		if character.currentState == GlobalVariables.CharacterState.ATTACKGROUND\
+		|| character.currentState == GlobalVariables.CharacterState.ATTACKAIR:
 			character.initLaunchVelocity = character.velocity
 			attackedCharacter = hitArea.get_parent().get_parent()
-			if attackedCharacterState == attackedCharacter.CharacterState.SHIELD:
-				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAG, attackedCharacter.hitLagFrames)
-				character.create_frame_timer(GlobalVariables.TimerType.HITLAG, character.hitLagFrames)
-			elif attackedCharacterState == attackedCharacter.CharacterState.GROUND\
-			&& attackedCharacter.shieldDropTimer.timer_running() && attackedCharacter.perfectShieldFramesLeft > 0:
+			if attackedCharacterState == GlobalVariables.CharacterState.SHIELD:
+				attackedCharacter.character_attacked_shield_handler(attackedCharacter.hitLagFrames)
+				character.state.create_hitlag_timer(character.hitLagFrames)
+			elif attackedCharacterState == GlobalVariables.CharacterState.GROUND\
+			&& attackedCharacter.state.shieldDropTimer.get_time_left() && attackedCharacter.perfectShieldFramesLeft > 0:
 				attackedCharacter.perfectShieldActivated = true
-				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED, attackedCharacter.hitLagFrames + 8)
-				character.create_frame_timer(GlobalVariables.TimerType.HITLAG, attackedCharacter.hitLagFrames + 11)
+				attackedCharacter.character_attacked_handler(attackedCharacter.hitLagFrames + (8.0/60.0))
+				character.state.create_hitlag_timer(character.hitLagFrames + (11.0/60.0))
 			else:
-				attackedCharacter.create_frame_timer(GlobalVariables.TimerType.HITLAGATTACKED, attackedCharacter.hitLagFrames)
-				character.create_frame_timer(GlobalVariables.TimerType.HITLAG, character.hitLagFrames)
+				attackedCharacter.character_attacked_handler(attackedCharacter.hitLagFrames)
+				character.state.create_hitlag_timer(character.hitLagFrames)
 		#manage grab if character hit other character hitbox
-		elif character.currentState == character.CharacterState.GRAB:
-			if attackedCharacter.currentState == attackedCharacter.CharacterState.GROUND\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.AIR\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.ATTACKGROUND\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.ATTACKAIR\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.GRAB\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SPECIALGROUND\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SPECIALAIR\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELD\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.ROLL\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.SHIELDBREAK\
-			|| attackedCharacter.currentState == attackedCharacter.CharacterState.EDGEGETUP:
-				character.disableInput = false
-				character.initLaunchVelocity = Vector2.ZERO
+		elif character.currentState == GlobalVariables.CharacterState.GRAB:
+			if attackedCharacter.currentState == GlobalVariables.CharacterState.GROUND\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.AIR\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.ATTACKGROUND\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.ATTACKAIR\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.GRAB\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.SPECIALGROUND\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.SPECIALAIR\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.SHIELD\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.ROLL\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.SHIELDBREAK\
+			|| attackedCharacter.currentState == GlobalVariables.CharacterState.EDGEGETUP:
 				character.grabbedCharacter = attackedCharacter
 				apply_grab()
+				

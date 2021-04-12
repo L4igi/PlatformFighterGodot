@@ -23,8 +23,8 @@ func _on_EdgeSnap_area_exited(area):
 
 func _on_character_state_change(character, currentState):
 	pass
-#	if character_on_edge.has(character) && character.currentState != character.CharacterState.EDGE:
-#		if edgeSnapDirection == "left" && character.get_input_direction_x() > 0: 
+#	if character_on_edge.has(character) && character.currentState != GlobalVariables.CharacterState.EDGE:
+#		if edgeSnapDirection == "left" && character.state.get_input_direction_x() > 0: 
 #			character.snap_edge(self)
-#		elif edgeSnapDirection == "right" && character.get_input_direction_x() < 0: 
+#		elif edgeSnapDirection == "right" && character.state.get_input_direction_x() < 0: 
 #			character.snap_edge(self)

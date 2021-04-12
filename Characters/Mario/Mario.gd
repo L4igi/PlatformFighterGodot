@@ -1,4 +1,4 @@
-extends "res://Characters/Character.gd"
+extends Character
 
 var specialCaseAttacks = [GlobalVariables.CharacterAnimations.DAIR]
 
@@ -29,23 +29,12 @@ func manage_dair(step):
 	match step:
 		0:
 			velocity = Vector2.ZERO
-			gravity_on_off("off")
+			state.gravity_on_off("off")
 			disableInputDI = false
 		1:
-			gravity_on_off("on")
+			state.gravity_on_off("on")
 			animationPlayer.stop(false)
-			bufferAnimation = true
-
-
-func check_special_case_attack(switchState = false):
-	var tempCurrentAttack = currentAttack
-	if specialCaseAttacks.has(currentAttack):
-		if currentAttack == GlobalVariables.CharacterAnimations.DAIR: 
-			if switchState:
-				switch_to_state(CharacterState.ATTACKGROUND)
-				currentAttack = tempCurrentAttack
-		return true
-	return false
+			state.bufferedAnimation = true
 
 func manage_dash_attack(step):
 	match step: 

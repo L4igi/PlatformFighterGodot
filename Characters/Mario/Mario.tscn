@@ -348,8 +348,8 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=9]
-length = 0.7
 loop = true
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -369,7 +369,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 ),
+"times": PoolRealArray( 0, 0.166667, 0.316667, 0.45, 0.6, 0.733333, 0.883333 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
@@ -703,8 +703,7 @@ script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
 rotation = 0.0
-animation = "bair"
-frame = 5
+animation = "run"
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -737,7 +736,7 @@ position = Vector2( -20.4, -2.8125 )
 disabled = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( -12.3077, 9.23077 )
+position = Vector2( 14.4, 0 )
 disabled = false
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
@@ -757,4 +756,5 @@ position = Vector2( 0, -4 )
 visible = false
 
 [editable path="AnimatedSprite/HitBoxes"]
+
 [editable path="InteractionAreas"]

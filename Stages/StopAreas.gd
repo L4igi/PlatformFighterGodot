@@ -6,37 +6,26 @@ func _ready():
 
 func _on_StopAreaRight_body_entered(body):
 	if body.is_in_group("Character"):
-		body.atPlatformEdge = body.moveDirection.RIGHT
+		body.atPlatformEdge = GlobalVariables.MoveDirection.RIGHT
 		stop_character_velocity(body)
 
 func _on_StopAreaLeft_body_entered(body):
 	if body.is_in_group("Character"):
-		body.atPlatformEdge = body.moveDirection.LEFT
+		body.atPlatformEdge = GlobalVariables.MoveDirection.LEFT
 		stop_character_velocity(body)
 
 
 func stop_character_velocity(body):
 	var stopCharacter = body
-#	if stopCharacter.currentState != stopCharacter.CharacterState.HITSTUNGROUND\
-#	&& stopCharacter.currentState != stopCharacter.CharacterState.HITSTUNAIR\
-	if (stopCharacter.get_input_direction_x() == 0\
-	&& stopCharacter.currentState == stopCharacter.CharacterState.GROUND)\
-	|| stopCharacter.currentState == stopCharacter.CharacterState.ATTACKGROUND\
-	|| stopCharacter.currentState == stopCharacter.CharacterState.GETUP\
-	|| stopCharacter.currentState == stopCharacter.CharacterState.SHIELD\
-	|| stopCharacter.currentState == stopCharacter.CharacterState.ROLL\
-	|| stopCharacter.inMovementLag:
-		if stopCharacter.onSolidGround: 
-			if self.global_position < stopCharacter.global_position: 
-				stopCharacter.velocity.x = 0
-			else:
-				stopCharacter.velocity.x = 0
+	stopCharacter.stopAreaEntered = true
 
 
 
 func _on_StopAreaRight_body_exited(body):
+	body.stopAreaEntered = false
 	body.atPlatformEdge = null
 
 
 func _on_StopAreaLeft_body_exited(body):
+	body.stopAreaEntered = false
 	body.atPlatformEdge = null

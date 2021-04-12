@@ -26,7 +26,6 @@ collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StopAreaLeft"]
 shape = SubResource( 2 )
-
 [connection signal="body_entered" from="StopAreaRight" to="." method="_on_StopAreaRight_body_entered"]
 [connection signal="body_exited" from="StopAreaRight" to="." method="_on_StopAreaRight_body_exited"]
 [connection signal="body_entered" from="StopAreaLeft" to="." method="_on_StopAreaLeft_body_entered"]
