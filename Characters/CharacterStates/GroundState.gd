@@ -117,6 +117,7 @@ func handle_input_disabled():
 func _physics_process(_delta):
 	if !stateDone:
 		if character.disableInput || inMovementLag:
+			check_in_air(_delta)
 			if !inLandingLag:
 				if character.disableInput:
 					handle_input_disabled()
@@ -124,15 +125,14 @@ func _physics_process(_delta):
 					handle_input()
 			else:
 				buffer_input()
-			check_in_air(_delta)
 			process_movement_physics(_delta)
 			check_stop_area_entered()
 			if shieldDropTimer.get_time_left():
 				if perfectShieldFramesLeft > 0:
 					perfectShieldFramesLeft -= 1
 		else:
-			handle_input()
 			check_in_air(_delta)
+			handle_input()
 			input_movement_physics(_delta)
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
 			#checks if player walked off platform/stage
@@ -318,6 +318,7 @@ func on_shielddrop_timeout():
 		character.change_state(GlobalVariables.CharacterState.CROUCH)
 	else:
 		play_animation("idle")
+		character.currentMaxSpeed = character.baseWalkMaxSpeed
 		enable_player_input()
 		
 func check_ground_animations():

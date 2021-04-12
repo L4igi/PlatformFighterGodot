@@ -4,6 +4,8 @@ class_name EdgeGetUpState
 var rollGetUpVelocity = 650
 var normalGetUpVelocity = 0
 var attackgetUpVelocity = 400
+var jumpGetUpVelocity = 0
+var tempGetUpType = null
 
 func _ready():
 	var direction = 1
@@ -17,12 +19,44 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
 	character.airTime = 0
 
+func manage_buffered_input_air():
+	match bufferedInput: 
+		GlobalVariables.CharacterAnimations.JAB1:
+			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+		GlobalVariables.CharacterAnimations.JUMP:
+#			double_jump_handler()
+			character.change_state(GlobalVariables.CharacterState.AIR)
+#			character.disableInput = false
+#		GlobalVariables.CharacterAnimations.GRAB:
+#			character.change_state(GlobalVariables.CharacterState.GRAB)
+		GlobalVariables.CharacterAnimations.FSMASHR:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.FSMASHL:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.UPSMASH:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.DSMASH: 
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.UPTILT:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.DTILT:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.FTILTR:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.FTILTL:
+			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+	bufferedInput = null
+
 func manage_buffered_input():
-	manage_buffered_input_ground()
+	if tempGetUpType == GlobalVariables.CharacterAnimations.JUMPGETUP:
+		manage_buffered_input_air()
+	else:
+		manage_buffered_input_ground()
 
 func manage_edge_getup_animation(getUpType, targetPosition, direction):
 	character.snappedEdge = null
 	character.getUpType = getUpType
+	tempGetUpType = getUpType
 	match getUpType: 
 		GlobalVariables.CharacterAnimations.ROLLGETUP:
 			character.velocity.x = direction*normalGetUpVelocity
@@ -39,6 +73,11 @@ func manage_edge_getup_animation(getUpType, targetPosition, direction):
 			character.onEdge = false
 			character.tween.interpolate_property(character, "global_position", character.global_position, targetPosition , float(character.attackGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			play_attack_animation("attack_getup")
+		GlobalVariables.CharacterAnimations.JUMPGETUP:
+			character.velocity.x = direction*attackgetUpVelocity
+			character.onEdge = false
+			character.tween.interpolate_property(character, "global_position", character.global_position, targetPosition , float(character.attackGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			play_attack_animation("jump_getup")
 	
 	character.tween.start()
 	

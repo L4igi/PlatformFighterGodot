@@ -112,6 +112,7 @@ var spotdodgeInvincibilityFrames = 25
 var rollGetupInvincibilityFrames = 20
 var normalGetupInvincibilityFrames = 10
 var attackGetupInvincibilityFrames = 15
+var jumpGetupInvincibilityFrames = 15
 
 var tween 
 
@@ -154,7 +155,8 @@ var stopAreaEntered = false
 var invincibilityTimer = null
 var applyLandingLag = null
 var inLandingLag = false
-var playFreeFall = false
+var queueFreeFall = false
+var bufferMoveAirTransition = false
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -179,7 +181,6 @@ func _ready():
 	state_factory = StateFactory.new()
 	if !onSolidGround:
 		change_state(GlobalVariables.CharacterState.AIR)
-	
 	
 func calc_hitstun_velocity(delta):
 	if velocity.x < 0: 
@@ -412,6 +413,8 @@ func getup_animation_step(step = 0):
 					state.create_invincibility_timer(normalGetupInvincibilityFrames)
 				"attack_getup":
 					state.create_invincibility_timer(attackGetupInvincibilityFrames)
+				"jump_getup":
+					state.create_invincibility_timer(jumpGetupInvincibilityFrames)
 		1:
 			if !state.bufferedInput:
 				applySideStepFrames = true
@@ -420,6 +423,27 @@ func getup_animation_step(step = 0):
 			else:
 				velocity = Vector2.ZERO
 				state.enable_player_input()
+
+func jump_getup_animation_step(step = 0):
+	match step:
+		0:
+			if !state.bufferedInput:
+				queueFreeFall = true
+				match currentMoveDirection:
+					GlobalVariables.MoveDirection.LEFT:
+						velocity = Vector2(-150, -1000)
+					GlobalVariables.MoveDirection.RIGHT:
+						velocity = Vector2(150, -1000)
+				change_state(GlobalVariables.CharacterState.AIR)
+			else:
+				match currentMoveDirection:
+					GlobalVariables.MoveDirection.LEFT:
+						velocity = Vector2(-150, -1000)
+					GlobalVariables.MoveDirection.RIGHT:
+						velocity = Vector2(150, -1000)
+				queueFreeFall = true
+				state.enable_player_input()
+
 			
 func apply_grab_animation_step(step = 0):
 	match step: 
@@ -480,22 +504,43 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if GlobalVariables.attackAnimationList.has(anim_name):
 		finish_attack_animation(0)
 			
+			
+func check_state_transition(changeToState, bufferedInput):
+	if bufferMoveAirTransition:
+		bufferMoveAirTransition = false
+		match currentState:
+			GlobalVariables.CharacterState.ATTACKGROUND:
+				if changeToState == GlobalVariables.CharacterState.AIR:
+					bufferedInput = currentAttack
+					changeToState = GlobalVariables.CharacterState.ATTACKAIR
+			GlobalVariables.CharacterState.SHIELD:
+				if changeToState == GlobalVariables.CharacterState.AIR:
+					print("AIRDODGE")
+	#				bufferedInput = currentAttack
+	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
+	return [bufferedInput, changeToState]
+	
 
 func change_state(new_state):
+	var changeToState = new_state
 	var bufferedInput = null
 	var bufferedAnimation = null
 	enable_disable_hurtboxes(true)
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[new_state]))
 #	check_character_tilt_walk(new_state)
 	if state != null:
 		bufferedInput = state.bufferedInput
+		var checkedTransition = check_state_transition(changeToState, bufferedInput)
+		bufferedInput = checkedTransition[0]
+		changeToState = checkedTransition[1]
+		currentAttack = null
 		bufferedAnimation = state.bufferedAnimation
 		state.stateDone = true
 		state.queue_free()
-	state = state_factory.get_state(new_state).new()
+	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+	state = state_factory.get_state(changeToState).new()
 	state.setup(funcref(self, "change_state"), animationPlayer, self, bufferedInput, bufferedAnimation)
 	toggle_all_hitboxes("off")
-	currentState = new_state
+	currentState = changeToState
 	add_child(state)
 	
 #func check_character_tilt_walk(new_state):

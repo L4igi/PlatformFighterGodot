@@ -37,6 +37,7 @@ func manage_getup_animation(getUpType, direction):
 		GlobalVariables.CharacterAnimations.ATTACKGETUP:
 			play_attack_animation("attack_getup")
 
+
 func check_stop_area_entered():
 	if character.stopAreaEntered: 
 		match character.atPlatformEdge:

@@ -35,13 +35,17 @@ func stop_character_velocity(area):
 				stopCharacter.velocity.x = 200
 			else:
 				stopCharacter.velocity.x = -200
-#
-#func _on_CollisisionDetectionArea_body_entered(body):
-#	if body.is_in_group("Character"):
-#		collidingBodies.append(body)
-#
-#
-#func _on_CollisisionDetectionArea_body_exited(body):
-#	if body.is_in_group("Character"):
-#		collidingBodies.erase(body)
-#		body.onSolidGround = null
+
+func _on_CollisionDetectionArea_body_entered(body):
+	if body.is_in_group("Character"):
+		collidingBodies.append(body)
+
+
+
+func _on_CollisionDetectionArea_body_exited(body):
+	if body.is_in_group("Character"):
+		collidingBodies.erase(body)
+		body.onSolidGround = null
+
+
+

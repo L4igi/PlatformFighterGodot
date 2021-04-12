@@ -13,8 +13,8 @@ func _ready():
 	if !character.disabledEdgeGrab:
 		character.edgeGrabShape.set_deferred("disabled", false)
 #	character.emit_signal("character_state_changed", self, currentState)
-	if character.playFreeFall:
-		character.playFreeFall = false
+	if character.queueFreeFall:
+		character.queueFreeFall = false
 		play_animation("freefall",true)
 	else:
 		play_animation("freefall")
@@ -24,7 +24,6 @@ func _ready():
 
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
-	character.jumpCount = 1
 
 func manage_buffered_input():
 	manage_buffered_input_air()

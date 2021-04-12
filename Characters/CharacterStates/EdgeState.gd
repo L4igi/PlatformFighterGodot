@@ -39,13 +39,19 @@ func handle_input():
 		character.onEdge = false
 		character.change_state(GlobalVariables.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.jump) || Input.is_action_just_pressed(character.up):
-		disable_invincibility_edge_action()
-		character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())
-		character.snappedEdge = null
-		character.onEdge = false
-		shortHopTimer.stop()
-		bufferedInput = null
-		on_shorthop_timeout()
+		character.getUpType = GlobalVariables.CharacterAnimations.JUMPGETUP
+		if character.global_position.x < character.snappedEdge.global_position.x:
+			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
+		elif character.global_position.x > character.snappedEdge.global_position.x:
+			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
+		character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+#		disable_invincibility_edge_action()
+#		character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())
+#		character.snappedEdge = null
+#		character.onEdge = false
+#		shortHopTimer.stop()
+#		bufferedInput = null
+#		on_shorthop_timeout()
 	elif Input.is_action_just_pressed(character.left):
 		disable_invincibility_edge_action()
 		if character.global_position.x < character.snappedEdge.global_position.x:
@@ -84,7 +90,7 @@ func handle_input():
 		disable_invincibility_edge_action()
 		if character.global_position > character.snappedEdge.global_position:
 			character.getUpType = GlobalVariables.CharacterAnimations.ATTACKGETUP
-			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
+			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 		else:
 			character.getUpType = GlobalVariables.CharacterAnimations.ATTACKGETUP

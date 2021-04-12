@@ -23,48 +23,65 @@ func manage_buffered_input():
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		GlobalVariables.CharacterAnimations.JAB1:
+			disableInputDi = true
 			play_attack_animation("nair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.NAIR
 		GlobalVariables.CharacterAnimations.DSMASH:
+			disableInputDi = true
 			play_attack_animation("dair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
 		GlobalVariables.CharacterAnimations.UPSMASH:
+			disableInputDi = true
 			play_attack_animation("upair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 		GlobalVariables.CharacterAnimations.FSMASHL:
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				disableInputDi = true
 				play_attack_animation("fair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
 			elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				disableInputDi = true
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.FSMASHR:
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				disableInputDi = true
 				play_attack_animation("fair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
 			elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				disableInputDi = true
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.UPTILT:
+			disableInputDi = true
 			play_attack_animation("upair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 		GlobalVariables.CharacterAnimations.DTILT:
+			disableInputDi = true
 			play_attack_animation("dair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
 		GlobalVariables.CharacterAnimations.FTILTL:
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				disableInputDi = true
 				play_attack_animation("fair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
 			elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				disableInputDi = true
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.FTILTR:
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				disableInputDi = true
 				play_attack_animation("fair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
 			elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				disableInputDi = true
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
+		GlobalVariables.CharacterAnimations.DASHATTACK:
+			disableInputDi = true
+			play_attack_animation("fair")
+			character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
 		_:
 			character.currentAttack = null
 	bufferedInput = null

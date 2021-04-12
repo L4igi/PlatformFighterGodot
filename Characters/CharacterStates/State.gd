@@ -115,11 +115,12 @@ func process_disable_input_direction_influence(_delta):
 func buffer_input():
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if animationFramesLeft <= character.bufferInputWindow\
+	|| (character.currentState == GlobalVariables.CharacterState.EDGEGETUP && animationPlayer.get_current_animation_position()*60 > 5)\
 	&& bufferedInput == null: 
-		if Input.is_action_pressed(character.attack)\
+		if Input.is_action_just_pressed(character.attack)\
 		&& get_input_direction_x() == 0 && get_input_direction_y() == 0:
 			bufferedInput = GlobalVariables.CharacterAnimations.JAB1
-		elif Input.is_action_pressed(character.jump):
+		elif Input.is_action_just_pressed(character.jump):
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			if character.onSolidGround: 
 				create_shortHop_timer()
@@ -257,12 +258,13 @@ func play_attack_animation(animationToPlay, queue = false):
 		animationPlayer.play(animationToPlay)
 
 func check_in_air(_delta):
-#	if !character.onSolidGround\
-	if abs(int(character.velocity.y)) > character.gravity * _delta:
+	var collidingWith = character.move_and_collide(Vector2(0,1), true, true, true)
+	if !collidingWith:
 		if shortHopTimer.get_time_left():
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		else:
+			character.bufferMoveAirTransition = true
 			character.jumpCount = 1
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		return true
@@ -304,7 +306,8 @@ func on_shorthop_timeout():
 func process_jump():
 #	print("no buffer input jumping")
 	inMovementLag = false
-	character.playFreeFall = true
+	character.queueFreeFall = true
+	character.jumpCount += 1
 	var animationToPlay = "jump"
 	if shortHop:
 		character.velocity.y = -character.shortHopSpeed
@@ -444,6 +447,7 @@ func check_stop_area_entered():
 
 func double_jump_handler():
 	if character.jumpCount < character.availabelJumps:
+		character.jumpCount += 1
 		var xInput = get_input_direction_x()
 		play_animation("doublejump")
 		reset_gravity()
@@ -452,4 +456,3 @@ func double_jump_handler():
 			character.velocity.x = 0
 		else:
 			character.velocity.x = character.airMaxSpeed * xInput 
-		character.jumpCount += 1
