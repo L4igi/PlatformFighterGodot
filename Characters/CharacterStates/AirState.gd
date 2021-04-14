@@ -24,6 +24,8 @@ func _ready():
 
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+	character.environmentRayCast.set_enabled(true)
+#	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 func manage_buffered_input():
 	manage_buffered_input_air()
@@ -91,7 +93,7 @@ func input_movement_physics(_delta):
 			character.velocity.x += (walk * _delta) * 4
 	character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
 	calculate_vertical_velocity(_delta)
-	character.velocity = character.velocity
+	character.change_environmentRayCast_direction(atan2(character.velocity.y, character.velocity.x))
 
 func create_platformCollisionDisabled_timer(waitTime):
 	start_timer(platformCollisionDisabledTimer, waitTime)

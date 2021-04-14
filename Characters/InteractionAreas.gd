@@ -91,7 +91,7 @@ func _on_CollisionArea_area_exited(area):
 		character.pushingCharacter = null
 
 func _on_character_state_change(character, currentState):
-	#print("state changed to " +str(character.name) + " " + str(character.currentState))
+	print("state changed to " +str(character.name) + " " + str(character.currentState))
 	if collisionAreaEntered != null: 
 		if !stateAlreadyChanged:
 			stateAlreadyChanged = true

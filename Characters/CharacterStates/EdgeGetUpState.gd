@@ -93,5 +93,5 @@ func _physics_process(_delta):
 			handle_input_disabled()
 		else:
 			handle_input()
-		character.velocity = character.move_and_slide(character.velocity)
+		character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP, true)
 	#	process_movement_physics(_delta)

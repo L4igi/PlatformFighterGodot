@@ -19,7 +19,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	animationPlayer.get_parent().set_animation("hurt")
 	animationPlayer.get_parent().set_frame(0)
 	character.jumpCount = 1
-	character.hitStunRayCast.set_enabled(true)
+	character.environmentRayCast.set_enabled(true)
 	character.canGetEdgeInvincibility = true
 	character.onSolidGround = null
 	character.disabledEdgeGrab = false
@@ -62,7 +62,7 @@ func _physics_process(_delta):
 					return
 				if character.airTime <= 300: 
 					character.airTime += 1
-#				print("degrees " +str(character.hitStunRayCast.get_rotation()))
+#				print("degrees " +str(character.environmentRayCast.get_rotation()))
 				#BOUNCING CHARACTER
 				if handle_character_bounce():
 					pass
@@ -88,16 +88,16 @@ func _physics_process(_delta):
 				character.velocity = character.move_and_slide(character.velocity)
 				
 func handle_character_bounce():
-	if character.hitStunRayCast.get_collider():
-		character.stageBounceCollider = character.hitStunRayCast.get_collider()
-		if abs(character.hitStunRayCast.get_rotation()) <= bounceDegreeThreashold || character.stageBounceCollider.is_in_group("Ground"):
-			print("collision normal " +str(character.hitStunRayCast.get_collision_normal()))
+	if character.environmentRayCast.get_collider():
+		character.stageBounceCollider = character.environmentRayCast.get_collider()
+		if abs(character.environmentRayCast.get_rotation()) <= bounceDegreeThreashold || character.stageBounceCollider.is_in_group("Ground"):
+			print("collision normal " +str(character.environmentRayCast.get_collision_normal()))
 			if handle_tech():
 				return false
 #			print("bounced "+ str(character.lastVelocity))
 			character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
-			character.velocity = character.velocity.bounce(character.hitStunRayCast.get_collision_normal())*character.bounceReduction
-			character.change_hitstunray_direction(atan2(character.velocity.y, character.velocity.x))
+			character.velocity = character.velocity.bounce(character.environmentRayCast.get_collision_normal())*character.bounceReduction
+			character.change_environmentRayCast_direction(atan2(character.velocity.y, character.velocity.x))
 			character.initLaunchVelocity = character.velocity
 			print(character.airTime)
 			return true

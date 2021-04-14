@@ -9,7 +9,7 @@
 extents = Vector2( 126, 8.00056 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 100, 8 )
+extents = Vector2( 100, 6 )
 
 [node name="Platform" type="KinematicBody2D" groups=[
 "Platform",
@@ -38,7 +38,7 @@ visible = false
 collision_layer = 0
 
 [node name="CollisionDetectionShape" type="CollisionShape2D" parent="CollisionDetectionArea"]
-position = Vector2( 0, -10 )
+position = Vector2( 0, -7 )
 scale = Vector2( 1.28, 1 )
 shape = SubResource( 2 )
 

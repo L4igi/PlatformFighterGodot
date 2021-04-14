@@ -169,12 +169,12 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	hitlagTimer = create_timer("on_hitlag_timeout", "HitLagTimer")
 	hitStunTimer = create_timer("on_hitstun_timeout", "HitStunTimer")
 	hitlagAttackedTimer = create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer")
+#	character.environmentRayCast.set_enabled(false)
 	self.change_state = change_state
 	self.animationPlayer = animationPlayer
 	self.character = character
 	self.bufferedInput = bufferedInput
 	self.bufferedAnimation = bufferedAnimation
-	character.emit_signal("character_state_changed", character, character.currentState)
 	reset_attributes()
 
 func reset_attributes():
@@ -190,7 +190,8 @@ func _unhandled_input(event):
 	pass
 	
 func input_movement_physics(_delta):
-	character.move_and_slide(character.velocity, Vector2.UP)
+#	character.move_and_slide(character.velocity, Vector2.UP)
+	character.move_and_slide(character.velocity)
 
 func create_timer(timeout_function, timerName):
 	var timer = Timer.new()    
@@ -222,8 +223,12 @@ func gravity_on_off(status):
 		character.gravity = 0
 		
 func check_ground_platform_collision(platformCollisionDisabledTimerRunning = 0):
+	var checkCollisionVector = Vector2(0,1)
+	if character.environmentRayCast.get_collider():
+		checkCollisionVector = checkCollisionVector.rotated(2*PI-character.environmentRayCast.get_collider().get_rotation())
+	print(checkCollisionVector)
 	if character.velocity.y >= 0:
-		var collidingWith = character.move_and_collide(Vector2(0,1), true, true, true)
+		var collidingWith = character.move_and_collide(checkCollisionVector, true, true, true)
 		if collidingWith \
 		&& ((collidingWith.get_collider().is_in_group("Platform")\
 		&& platformCollisionDisabledTimerRunning == 0)\
@@ -258,7 +263,10 @@ func play_attack_animation(animationToPlay, queue = false):
 		animationPlayer.play(animationToPlay)
 
 func check_in_air(_delta):
-	var collidingWith = character.move_and_collide(Vector2(0,1), true, true, true)
+	var checkCollisionVector = Vector2(0,1)
+	if character.onSolidGround:
+		checkCollisionVector = checkCollisionVector.rotated(2*PI-character.onSolidGround.get_rotation())
+	var collidingWith = character.move_and_collide(checkCollisionVector, true, true, true)
 	if !collidingWith:
 		if shortHopTimer.get_time_left():
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP

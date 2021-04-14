@@ -8,6 +8,7 @@ func _ready():
 
 func _process(delta):
 	if countGroundCollidingCharacters.size() == 2: 
+		print("here")
 		set_combined_velocity(delta)
 		
 func set_combined_velocity(_delta):
@@ -130,6 +131,7 @@ func calc_push_slowdown(character1, character2):
 	character1.currentPushSpeed = character1.currentMaxSpeed/(character2.weight) 
 
 func remove_ground_colliding_character(character):
+	print("removed")
 	countGroundCollidingCharacters.erase(character)
 	character.pushingCharacter = null
 	initCalculations = false

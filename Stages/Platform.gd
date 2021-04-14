@@ -9,6 +9,7 @@ onready var collisionEdgeDetectionLeft = $PlatformEdgeCollision/EdgeCollisionAre
 onready var collisionEdgeDetectionRight = $PlatformEdgeCollision/EdgeCollisionAreaRight
 var collidingBodies = []
 var collidingEdgeBodies = []
+var platformNormalVector = Vector2(0,-1)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -18,7 +19,6 @@ func _ready():
 	collisionEdgeDetectionLeft.set_scale(Vector2(1,0.8))
 	collisionEdgeDetectionRight.set_position(Vector2(122,0))
 	collisionEdgeDetectionRight.set_scale(Vector2(1,0.8))
-	
 	
 func _on_CollisionDetectionArea_body_entered(body):
 	if body.is_in_group("Character") && body.velocity.y < 0:
@@ -44,3 +44,5 @@ func add_collding_edge_body(body):
 func remove_colliding_edge_body(body):
 	if collidingEdgeBodies.has(body):
 		collidingEdgeBodies.erase(body)
+
+

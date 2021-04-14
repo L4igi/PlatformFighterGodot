@@ -28,11 +28,12 @@ var walkThreashold = 0.15
 var jumpCount = 0
 var availabelJumps = 2
 var airTime = 0
+var abovePlatGround = null
 #platform
 var platformCollision = null
 var atPlatformEdge = null
 var lowestCheckYPoint 
-onready var hitStunRayCast = get_node("CharacterCollider/HitStunRaycast")
+onready var environmentRayCast = get_node("CharacterCollider/EnvironmentRaycast")
 #edge
 var snappedEdge = null
 var disableInput = false
@@ -541,6 +542,7 @@ func change_state(new_state):
 	state.setup(funcref(self, "change_state"), animationPlayer, self, bufferedInput, bufferedAnimation)
 	toggle_all_hitboxes("off")
 	currentState = changeToState
+	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
 	
 #func check_character_tilt_walk(new_state):
@@ -602,23 +604,26 @@ func calculate_hitlag_di():
 #	if initLaunchVelocity.y >= 0:
 #		influenceDirection = -1
 	var newLaunchRadian = originalLaunchRadian + (verticalInfluence*influenceDirection) * hitlagDI.x
-	change_hitstunray_direction(newLaunchRadian)
+	change_environmentRayCast_direction(newLaunchRadian)
 	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
 	
-func change_hitstunray_direction(radians):
+func change_environmentRayCast_direction(radians):
 	if currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-		hitStunRayCast.set_rotation(radians - PI/2)
+		environmentRayCast.set_rotation(radians - PI/2)
 	elif currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-		hitStunRayCast.set_rotation(PI/2 - radians)
+		environmentRayCast.set_rotation(PI/2 - radians)
 	#scale length of ray up to detect different collision angles at the right distance to object
-	var absRayCastRot = abs(hitStunRayCast.get_rotation())
-	if (absRayCastRot >= 0 && absRayCastRot < PI/4)\
-	|| (absRayCastRot > 3*PI/4 && absRayCastRot < 5*PI/4)\
-	|| (absRayCastRot > 7*PI/4 && absRayCastRot <= 2*PI):
-		hitStunRayCast.set_cast_to(hitStunRayCast.get_cast_to().normalized()*20)
+	if currentState == GlobalVariables.CharacterState.HITSTUNAIR:
+		var absRayCastRot = abs(environmentRayCast.get_rotation())
+		if (absRayCastRot >= 0 && absRayCastRot < PI/4)\
+		|| (absRayCastRot > 3*PI/4 && absRayCastRot < 5*PI/4)\
+		|| (absRayCastRot > 7*PI/4 && absRayCastRot <= 2*PI):
+			environmentRayCast.set_cast_to(environmentRayCast.get_cast_to().normalized()*20)
+		else:
+			environmentRayCast.set_cast_to(environmentRayCast.get_cast_to().normalized()*10)
 	else:
-		hitStunRayCast.set_cast_to(hitStunRayCast.get_cast_to().normalized()*10)
+		environmentRayCast.set_cast_to(environmentRayCast.get_cast_to().normalized()*50)
 		
 func character_attacked_handler(hitLagFrames):
 	bufferHitLagFrames = hitLagFrames

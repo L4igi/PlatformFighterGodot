@@ -2465,7 +2465,7 @@ position = Vector2( 2.38419e-07, 0 )
 scale = Vector2( 1.875, 1 )
 polygon = PoolVector2Array( 0, -2, -2.13333, 8, -2.13333, 24, -2.13333, 32, 2.13333, 32, 2.13333, 24, 2.13333, 8 )
 
-[node name="HitStunRaycast" type="RayCast2D" parent="CharacterCollider"]
+[node name="EnvironmentRaycast" type="RayCast2D" parent="CharacterCollider"]
 position = Vector2( 0, 15 )
 rotation = 5.67232
 cast_to = Vector2( 0, 20 )
