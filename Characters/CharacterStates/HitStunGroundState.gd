@@ -7,6 +7,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0
+	character.velocity = Vector2.ZERO
 
 
 func handle_input():

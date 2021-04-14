@@ -23,6 +23,8 @@ func _init():
 		GlobalVariables.CharacterState.HITSTUNAIR: HitStunAirState, 
 		GlobalVariables.CharacterState.HITSTUNGROUND: HitStunGroundState,
 		GlobalVariables.CharacterState.GETUP: GetUpState,
+		GlobalVariables.CharacterState.TECHAIR: AirTechState, 
+		GlobalVariables.CharacterState.TECHGROUND: GroundTechState,
 }
 
 func get_state(state_name):

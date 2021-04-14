@@ -270,7 +270,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	#print(damagePercent)
 	velocity = Vector2.ZERO
 	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * attackedCalculatedVelocity
-	print("isattackedoriginVec " +str(Vector2(launchVectorX,launchVectorY)))
+	print("is attacked velocity " +str(Vector2(launchVectorX,launchVectorY)))
 	#collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
@@ -632,17 +632,18 @@ func character_attacked_shield_handler(hitLagFrames):
 	change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	
 func change_max_speed(xInput):
-	var useXInput = xInput
-	if bufferXInput != 0: 
-		useXInput = bufferXInput
-		bufferXInput = 0
-	resetMovementSpeed = true
-	if abs(useXInput) > walkThreashold:
-		currentMaxSpeed = baseRunMaxSpeed
-		state.play_animation("run")
-	elif abs(useXInput) == 0:
-		currentMaxSpeed = baseWalkMaxSpeed
-		state.play_animation("idle")
-	else:
-		currentMaxSpeed = baseWalkMaxSpeed
-		state.play_animation("walk")
+	if !state.inMovementLag:
+		var useXInput = xInput
+		if bufferXInput != 0: 
+			useXInput = bufferXInput
+			bufferXInput = 0
+		resetMovementSpeed = true
+		if abs(useXInput) > walkThreashold:
+			currentMaxSpeed = baseRunMaxSpeed
+			state.play_animation("run")
+		elif abs(useXInput) == 0:
+			currentMaxSpeed = baseWalkMaxSpeed
+			state.play_animation("idle")
+		else:
+			currentMaxSpeed = baseWalkMaxSpeed
+			state.play_animation("walk")

@@ -4,7 +4,6 @@ class_name GroundState
 
 var xInput = 0
 var lastXInput = 0
-var shortTurnAround = false
 #stopMovement
 var stopMovementFrames = 4.0/60.0
 var stopMovementTimer = null
@@ -220,14 +219,14 @@ func direction_changer(xInput, fromIdle = false):
 					create_turnAround_timer(slideTurnAroundFrames)
 					character.currentMaxSpeed = character.baseWalkMaxSpeed
 					character.velocity.x = -600
-					shortTurnAround = false
+					character.shortTurnAround = false
 				else: 
 					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
 					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					play_animation("turnaround_fast")
 					create_turnAround_timer(turnAroundFrames)
 					character.velocity.x = 0
-					shortTurnAround = true
+					character.shortTurnAround = true
 				return true
 		GlobalVariables.MoveDirection.RIGHT:
 			if xInput >= 0 && xInput < lastXInput && !inMovementLag && !fromIdle:  
@@ -244,20 +243,21 @@ func direction_changer(xInput, fromIdle = false):
 					create_turnAround_timer(slideTurnAroundFrames)
 					character.currentMaxSpeed = character.baseWalkMaxSpeed
 					character.velocity.x = 600
-					shortTurnAround = false
+					character.shortTurnAround = false
 				else: 
 					#print("Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
 					#print("fast turn " +str(currentMaxSpeed) + " in movement lag " +str(inMovementLag) + " in slide step " + str(inSideStep))
 					play_animation("turnaround_fast")
 					create_turnAround_timer(turnAroundFrames)
 					character.velocity.x = 0
-					shortTurnAround = true
+					character.shortTurnAround = true
 				return true
 	return false
 	
 func change_max_speed(xInput):
 	var useXInput = xInput
 	character.resetMovementSpeed = true
+	CharacterInteractionHandler.initCalculations = false
 	if abs(useXInput) > character.walkThreashold:
 		character.currentMaxSpeed = character.baseRunMaxSpeed
 		play_animation("run")
@@ -297,7 +297,7 @@ func on_turnAroundTimer_timeout():
 	check_character_crouch()
 	create_sidestep_timer(sideStepFrames)
 	inMovementLag = false
-	shortTurnAround = false
+	character.shortTurnAround = false
 	enable_player_input()
 
 func create_sidestep_timer(waitTime):

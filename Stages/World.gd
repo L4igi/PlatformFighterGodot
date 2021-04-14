@@ -29,6 +29,7 @@ func spawn_characters():
 	char2.global_position = Vector2(700, -500)
 	char2.set_name("DarkMario")
 	characterList.append(char2)
+	char2.get_node("AnimatedSprite").set_self_modulate(Color(0,1,0,1))
 	setup_controls_characters(char2, GlobalVariables.controlsP2)
 	
 func setup_controls_characters(character, globalControls):

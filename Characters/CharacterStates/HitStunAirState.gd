@@ -1,9 +1,16 @@
 extends State
 
-class_name HitStunAirState#
+class_name HitStunAirState
 var bounceDegreeThreashold = 0.35
+var techTimer = null 
+var techCoolDownTimer = null
+var techWindowFrames = 11.0/60.0
+var techCooldownFrames = 40.0/60.0
+var teched = false
 
 func _ready():
+	techTimer = create_timer("on_tech_timeout", "TechTimer")
+	techCoolDownTimer = create_timer("on_techCooldown_timeout", "TechCooldownTimer")
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 	
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
@@ -16,6 +23,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.canGetEdgeInvincibility = true
 	character.onSolidGround = null
 	character.disabledEdgeGrab = false
+	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 
 func handle_input():
@@ -25,10 +33,16 @@ func handle_input():
 #			attack_handler_air(delta)
 		elif Input.is_action_just_pressed(character.jump):
 			character.change_state(GlobalVariables.CharacterState.AIR)
+		elif Input.is_action_just_pressed(character.shield)\
+		&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
+			create_tech_timer(techWindowFrames)
+			print ("tech")
 
 func handle_input_disabled():
-	if Input.is_action_just_pressed(character.shield):
-		pass
+	if Input.is_action_just_pressed(character.shield)\
+	&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
+		create_tech_timer(techWindowFrames)
+		print ("tech")
 #		&& !techTimer.timer_running() && !techCoolDownTimer.timer_running():
 #			create_frame_timer(GlobalVariables.TimerType.TECHTIMER, techWindowFrames)
 #			print("tech")
@@ -50,21 +64,12 @@ func _physics_process(_delta):
 					character.airTime += 1
 #				print("degrees " +str(character.hitStunRayCast.get_rotation()))
 				#BOUNCING CHARACTER
-				if character.hitStunRayCast.get_collider():
-		#				if stageBounceCollider != hitStunRayCast.get_collider():
-					character.stageBounceCollider = character.hitStunRayCast.get_collider()
-					if abs(character.hitStunRayCast.get_rotation()) <= bounceDegreeThreashold || character.stageBounceCollider.is_in_group("Ground"):
-						print("bounced "+ str(character.lastVelocity))
-		#					if techTimer.timer_running():
-		#						techTimer.stop_timer()
-		#						print("TECHED in hitStun!!!")
-						character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
-						character.velocity = character.velocity.bounce(character.hitStunRayCast.get_collision_normal())*character.bounceReduction
-						character.change_hitstunray_direction(atan2(character.velocity.y, character.velocity.x))
-						character.initLaunchVelocity = character.velocity
+				if handle_character_bounce():
+					pass
 				elif character.onSolidGround:
-					play_animation("hurtTransition")
-					character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
+					if !handle_tech():
+						play_animation("hurtTransition")
+						character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
 			elif !character.disableInput:
 				handle_input()
 				var solidGroundCollision = check_ground_platform_collision()
@@ -73,20 +78,41 @@ func _physics_process(_delta):
 		#					techTimer.stop_timer()
 		#					print("TECHED solidGroundCollision!!!")
 					character.onSolidGround = solidGroundCollision
-				if !character.onSolidGround && character.hitStunRayCast.get_collider():
-					character.stageBounceCollider = character.hitStunRayCast.get_collider()
-					if character.velocity.y >= 0 || character.stageBounceCollider.is_in_group("Ground"):
-		#					if techTimer.timer_running():
-		#						print("TECHED!!!")
-						character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
-						character.velocity = character.velocity.bounce(character.hitStunRayCast.get_collision_normal())*character.bounceReduction
-						character.change_hitstunray_direction(atan2(character.velocity.y, character.velocity.x))
-						character.initLaunchVelocity = character.velocity
+				if handle_character_bounce():
+					pass
 				elif character.onSolidGround:
-					play_animation("hurtTransition")
-					character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
+					if !handle_tech():
+						play_animation("hurtTransition")
+						character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
 				input_movement_physics(_delta)
 				character.velocity = character.move_and_slide(character.velocity)
+				
+func handle_character_bounce():
+	if character.hitStunRayCast.get_collider():
+		character.stageBounceCollider = character.hitStunRayCast.get_collider()
+		if abs(character.hitStunRayCast.get_rotation()) <= bounceDegreeThreashold || character.stageBounceCollider.is_in_group("Ground"):
+			print("collision normal " +str(character.hitStunRayCast.get_collision_normal()))
+			if handle_tech():
+				return false
+#			print("bounced "+ str(character.lastVelocity))
+			character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
+			character.velocity = character.velocity.bounce(character.hitStunRayCast.get_collision_normal())*character.bounceReduction
+			character.change_hitstunray_direction(atan2(character.velocity.y, character.velocity.x))
+			character.initLaunchVelocity = character.velocity
+			print(character.airTime)
+			return true
+	return false
+	
+func handle_tech():
+	print("techtimer " +str(techTimer.get_time_left()) + " " + str(character.airTime))
+	if techTimer.get_time_left() && character.airTime > 1:
+		techTimer.stop()
+		print("TECHED in hitStun!!!")
+		character.velocity = Vector2.ZERO
+		#change to TechGround/Techair
+		character.change_state(GlobalVariables.CharacterState.GROUND)
+		return true
+	return false
 
 func on_hitlagAttacked_timeout():
 	.on_hitlagAttacked_timeout()
@@ -113,4 +139,18 @@ func input_movement_physics(_delta):
 			character.velocity.x += (walk * _delta) * 4
 	character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
 	calculate_vertical_velocity(_delta)
-	character.velocity = character.velocity
+	
+	
+func create_tech_timer(waitTime):
+	teched = true
+	start_timer(techTimer, waitTime)
+	
+func on_tech_timeout():
+	teched = false
+	create_techCooldown_timer(techCooldownFrames)
+	
+func create_techCooldown_timer(waitTime):
+	start_timer(techCoolDownTimer, waitTime)
+	
+func on_techCooldown_timeout():
+	print("timeout")
