@@ -1,4 +1,4 @@
-[gd_scene load_steps=388 format=2]
+[gd_scene load_steps=414 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -336,6 +336,31 @@
 [ext_resource path="res://Characters/Mario/jump_getup/13.png" type="Texture" id=334]
 [ext_resource path="res://Characters/Mario/jump_getup/5.png" type="Texture" id=335]
 [ext_resource path="res://Characters/Mario/jump_getup/8.png" type="Texture" id=336]
+[ext_resource path="res://Characters/Mario/techGround/2.png" type="Texture" id=337]
+[ext_resource path="res://Characters/Mario/techGround/0.png" type="Texture" id=338]
+[ext_resource path="res://Characters/Mario/techGround/8.png" type="Texture" id=339]
+[ext_resource path="res://Characters/Mario/techGround/7.png" type="Texture" id=340]
+[ext_resource path="res://Characters/Mario/techroll/5.png" type="Texture" id=341]
+[ext_resource path="res://Characters/Mario/techGround/3.png" type="Texture" id=342]
+[ext_resource path="res://Characters/Mario/techGround/4.png" type="Texture" id=343]
+[ext_resource path="res://Characters/Mario/techGround/6.png" type="Texture" id=344]
+[ext_resource path="res://Characters/Mario/techGround/1.png" type="Texture" id=345]
+[ext_resource path="res://Characters/Mario/techroll/6.png" type="Texture" id=346]
+[ext_resource path="res://Characters/Mario/techroll/7.png" type="Texture" id=347]
+[ext_resource path="res://Characters/Mario/techroll/0.png" type="Texture" id=348]
+[ext_resource path="res://Characters/Mario/techroll/3.png" type="Texture" id=349]
+[ext_resource path="res://Characters/Mario/techroll/8.png" type="Texture" id=350]
+[ext_resource path="res://Characters/Mario/techroll/2.png" type="Texture" id=351]
+[ext_resource path="res://Characters/Mario/techroll/4.png" type="Texture" id=352]
+[ext_resource path="res://Characters/Mario/techroll/1.png" type="Texture" id=353]
+[ext_resource path="res://Characters/Mario/techair/2.png" type="Texture" id=354]
+[ext_resource path="res://Characters/Mario/techair/4.png" type="Texture" id=355]
+[ext_resource path="res://Characters/Mario/techair/3.png" type="Texture" id=356]
+[ext_resource path="res://Characters/Mario/techair/5.png" type="Texture" id=357]
+[ext_resource path="res://Characters/Mario/techair/1.png" type="Texture" id=358]
+
+[sub_resource type="StreamTexture" id=54]
+load_path = "res://.import/5.png-43fbad497e5c0940070c19a1cd231129.stex"
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -344,9 +369,9 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
 "loop": true,
-"name": "jump",
+"name": "techroll",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
@@ -354,14 +379,29 @@ animations = [ {
 "name": "grab",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 322 ), ExtResource( 332 ), ExtResource( 320 ), ExtResource( 335 ), ExtResource( 323 ), ExtResource( 333 ), ExtResource( 336 ), ExtResource( 328 ), ExtResource( 331 ), ExtResource( 324 ), ExtResource( 326 ), ExtResource( 327 ), ExtResource( 330 ), ExtResource( 334 ), ExtResource( 325 ), ExtResource( 329 ), ExtResource( 321 ) ],
+"frames": [ ExtResource( 338 ), ExtResource( 345 ), ExtResource( 337 ), ExtResource( 342 ), ExtResource( 343 ), SubResource( 54 ), ExtResource( 344 ), ExtResource( 340 ), ExtResource( 339 ) ],
 "loop": true,
-"name": "jump_getup",
+"name": "techground",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 213 ) ],
 "loop": true,
 "name": "shield",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 358 ), ExtResource( 354 ), ExtResource( 356 ), ExtResource( 355 ), ExtResource( 357 ) ],
+"loop": true,
+"name": "techair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 322 ), ExtResource( 332 ), ExtResource( 320 ), ExtResource( 335 ), ExtResource( 323 ), ExtResource( 333 ), ExtResource( 336 ), ExtResource( 328 ), ExtResource( 331 ), ExtResource( 324 ), ExtResource( 326 ), ExtResource( 327 ), ExtResource( 330 ), ExtResource( 334 ), ExtResource( 325 ), ExtResource( 329 ), ExtResource( 321 ) ],
+"loop": true,
+"name": "jump_getup",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
@@ -1665,7 +1705,7 @@ tracks/3/keys = {
 "values": [ -21.2, -8.5, 0.0 ]
 }
 
-[sub_resource type="Animation" id=51]
+[sub_resource type="Animation" id=29]
 resource_name = "jump_getup"
 length = 0.75
 step = 0.0166667
@@ -1711,7 +1751,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=29]
+[sub_resource type="Animation" id=30]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -1739,7 +1779,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=30]
+[sub_resource type="Animation" id=31]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1766,7 +1806,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=31]
+[sub_resource type="Animation" id=32]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -1811,7 +1851,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=32]
+[sub_resource type="Animation" id=33]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -1859,7 +1899,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=33]
+[sub_resource type="Animation" id=34]
 length = 1.3
 step = 0.0166667
 tracks/0/type = "value"
@@ -1904,7 +1944,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=34]
+[sub_resource type="Animation" id=35]
 length = 1.2
 loop = true
 tracks/0/type = "value"
@@ -1932,7 +1972,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="Animation" id=35]
+[sub_resource type="Animation" id=36]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1959,8 +1999,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=36]
-resource_name = "shieldBreakAirLoop"
+[sub_resource type="Animation" id=37]
 length = 0.5
 loop = true
 step = 0.0166667
@@ -2001,8 +2040,7 @@ tracks/2/keys = {
 "values": [ 0.0, -360.0 ]
 }
 
-[sub_resource type="Animation" id=37]
-resource_name = "shieldBreakGroundLoop"
+[sub_resource type="Animation" id=38]
 loop = true
 step = 0.0166667
 tracks/0/type = "value"
@@ -2030,8 +2068,7 @@ tracks/1/keys = {
 "values": [ 9, 10, 11, 12, 13 ]
 }
 
-[sub_resource type="Animation" id=38]
-resource_name = "shieldBreakLanding"
+[sub_resource type="Animation" id=39]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2072,8 +2109,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=39]
-resource_name = "shieldBreakStart"
+[sub_resource type="Animation" id=40]
 length = 0.266667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2118,7 +2154,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=40]
+[sub_resource type="Animation" id=41]
 length = 0.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -2146,7 +2182,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=41]
+[sub_resource type="Animation" id=42]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -2194,7 +2230,144 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=42]
+[sub_resource type="Animation" id=55]
+resource_name = "techair"
+length = 0.25
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "techair" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.133333, 0.233333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 4 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.233333 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_tech_animation_step_air"
+}, {
+"args": [ 1 ],
+"method": "apply_tech_animation_step_air"
+} ]
+}
+
+[sub_resource type="Animation" id=43]
+resource_name = "techground"
+length = 0.75
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "techground" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.133333, 0.283333, 0.416667, 0.55, 0.683333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 1, 3, 5, 7, 8 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.75 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_tech_animation_step_ground"
+}, {
+"args": [ 1 ],
+"method": "apply_tech_animation_step_ground"
+} ]
+}
+
+[sub_resource type="Animation" id=53]
+resource_name = "techroll"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "techroll" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.233333, 0.366667, 0.533333, 0.683333, 0.833333, 0.966667 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 1, 3, 4, 2, 3, 7, 8 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_tech_roll_animation_step_ground"
+}, {
+"args": [ 1 ],
+"method": "apply_tech_roll_animation_step_ground"
+} ]
+}
+
+[sub_resource type="Animation" id=44]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2209,7 +2382,7 @@ tracks/0/keys = {
 "values": [ "backflip" ]
 }
 
-[sub_resource type="Animation" id=43]
+[sub_resource type="Animation" id=45]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2237,7 +2410,7 @@ tracks/1/keys = {
 "values": [  ]
 }
 
-[sub_resource type="Animation" id=44]
+[sub_resource type="Animation" id=46]
 length = 0.35
 step = 0.0166667
 tracks/0/type = "value"
@@ -2265,7 +2438,7 @@ tracks/1/keys = {
 "values": [ 8 ]
 }
 
-[sub_resource type="Animation" id=45]
+[sub_resource type="Animation" id=47]
 length = 0.383333
 step = 0.0166667
 tracks/0/type = "value"
@@ -2305,7 +2478,7 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=46]
+[sub_resource type="Animation" id=48]
 length = 1.2
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2349,7 +2522,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=47]
+[sub_resource type="Animation" id=49]
 length = 0.65
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2376,7 +2549,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=48]
+[sub_resource type="Animation" id=50]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2423,7 +2596,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=49]
+[sub_resource type="Animation" id=51]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -2451,7 +2624,7 @@ tracks/1/keys = {
 "values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="RectangleShape2D" id=50]
+[sub_resource type="RectangleShape2D" id=52]
 extents = Vector2( 42, 22 )
 
 [node name="Character" type="KinematicBody2D" groups=[
@@ -2465,18 +2638,12 @@ position = Vector2( 2.38419e-07, 0 )
 scale = Vector2( 1.875, 1 )
 polygon = PoolVector2Array( 0, -2, -2.13333, 8, -2.13333, 24, -2.13333, 32, 2.13333, 32, 2.13333, 24, 2.13333, 8 )
 
-[node name="EnvironmentRaycast" type="RayCast2D" parent="CharacterCollider"]
-position = Vector2( 0, 15 )
-rotation = 5.67232
-cast_to = Vector2( 0, 20 )
-collision_mask = 6
-
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-animation = "jump_getup"
+animation = "techair"
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -2508,28 +2675,31 @@ anims/ingrab = SubResource( 25 )
 anims/jab1 = SubResource( 26 )
 anims/jab2 = SubResource( 27 )
 anims/jump = SubResource( 28 )
-anims/jump_getup = SubResource( 51 )
-anims/landinglagnormal = SubResource( 29 )
-anims/nair = SubResource( 30 )
-anims/normal_getup = SubResource( 31 )
-anims/roll = SubResource( 32 )
-anims/roll_getup = SubResource( 33 )
-anims/run = SubResource( 34 )
-anims/shield = SubResource( 35 )
-anims/shieldBreakAirLoop = SubResource( 36 )
-anims/shieldBreakGroundLoop = SubResource( 37 )
-anims/shieldBreakLanding = SubResource( 38 )
-anims/shieldBreakStart = SubResource( 39 )
-anims/shielddrop = SubResource( 40 )
-anims/spotdodge = SubResource( 41 )
-anims/tumble = SubResource( 42 )
-anims/turnaround_fast = SubResource( 43 )
-anims/turnaround_slow = SubResource( 44 )
-anims/upair = SubResource( 45 )
-anims/upsmash = SubResource( 46 )
-anims/uptilt = SubResource( 47 )
-anims/uthrow = SubResource( 48 )
-anims/walk = SubResource( 49 )
+anims/jump_getup = SubResource( 29 )
+anims/landinglagnormal = SubResource( 30 )
+anims/nair = SubResource( 31 )
+anims/normal_getup = SubResource( 32 )
+anims/roll = SubResource( 33 )
+anims/roll_getup = SubResource( 34 )
+anims/run = SubResource( 35 )
+anims/shield = SubResource( 36 )
+anims/shieldBreakAirLoop = SubResource( 37 )
+anims/shieldBreakGroundLoop = SubResource( 38 )
+anims/shieldBreakLanding = SubResource( 39 )
+anims/shieldBreakStart = SubResource( 40 )
+anims/shielddrop = SubResource( 41 )
+anims/spotdodge = SubResource( 42 )
+anims/techair = SubResource( 55 )
+anims/techground = SubResource( 43 )
+anims/techroll = SubResource( 53 )
+anims/tumble = SubResource( 44 )
+anims/turnaround_fast = SubResource( 45 )
+anims/turnaround_slow = SubResource( 46 )
+anims/upair = SubResource( 47 )
+anims/upsmash = SubResource( 48 )
+anims/uptilt = SubResource( 49 )
+anims/uthrow = SubResource( 50 )
+anims/walk = SubResource( 51 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
 
@@ -2562,7 +2732,7 @@ collision_mask = 32
 
 [node name="CharacterEdgeGrabShape" type="CollisionShape2D" parent="CharacterEdgeGrabArea"]
 position = Vector2( 10, -22 )
-shape = SubResource( 50 )
+shape = SubResource( 52 )
 
 [node name="FrameTimers" type="Node" parent="."]
 [connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

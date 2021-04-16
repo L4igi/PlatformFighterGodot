@@ -63,7 +63,7 @@ func match_character_states(characterState):
 		GlobalVariables.CharacterState.TECHAIR:
 			match_no_collision()
 		GlobalVariables.CharacterState.TECHGROUND:
-			match_standard_collision()
+			match_no_collision()
 			
 func disable_collision():
 	character.set_collision_mask_bit(0,false)
@@ -91,7 +91,7 @@ func _on_CollisionArea_area_exited(area):
 		character.pushingCharacter = null
 
 func _on_character_state_change(character, currentState):
-	print("state changed to " +str(character.name) + " " + str(character.currentState))
+#	print("state changed to " +str(character.name) + " " + str(character.currentState))
 	if collisionAreaEntered != null: 
 		if !stateAlreadyChanged:
 			stateAlreadyChanged = true
@@ -153,7 +153,7 @@ func match_standard_collision():
 		GlobalVariables.CharacterState.TECHAIR:
 			disable_collision()
 		GlobalVariables.CharacterState.TECHGROUND:
-			enable_collision()
+			disable_collision()
 
 func match_no_collision():
 	match areaCollisionObject.currentState:

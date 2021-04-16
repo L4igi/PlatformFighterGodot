@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Stages/CenterStage.gd" type="Script" id=2]
 [ext_resource path="res://Stages/EdgeSnap.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Stages/StopAreas.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Stages/StageSlideArea.tscn" type="PackedScene" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -16,11 +15,11 @@ script = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 position = Vector2( 0, 16 )
-polygon = PoolVector2Array( -448, -48, 448, -48, 320, 240, -320, 240 )
+polygon = PoolVector2Array( -448, -48, 448, -48, 448, -48, 320, 152, -320, 152, -448, -48 )
 one_way_collision_margin = 0.0
 
 [node name="Polygon2D" type="Polygon2D" parent="CollisionPolygon2D"]
-polygon = PoolVector2Array( 448, -48, 320, 240, -320, 240, -448, -48 )
+polygon = PoolVector2Array( 448, -48, 448, -48, 448, -48, 320, 152, -320, 152, -448, -48, -448, -48, -448, -48 )
 
 [node name="EdgeSnapLeft" parent="." instance=ExtResource( 3 )]
 
@@ -30,14 +29,6 @@ polygon = PoolVector2Array( 448, -48, 320, 240, -320, 240, -448, -48 )
 
 [node name="CheckYPoint" type="Node2D" parent="."]
 position = Vector2( 0, -30 )
-
-[node name="SlideAreaLeft" parent="." instance=ExtResource( 5 )]
-position = Vector2( -400, 120 )
-rotation = -0.436332
-
-[node name="SlideAreaRight" parent="." instance=ExtResource( 5 )]
-position = Vector2( 400, 120 )
-rotation = 0.436332
 
 [node name="CollisionDetectionArea" type="Area2D" parent="."]
 position = Vector2( 0, -35 )

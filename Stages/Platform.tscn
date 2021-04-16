@@ -9,7 +9,7 @@
 extents = Vector2( 126, 8.00056 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 100, 6 )
+extents = Vector2( 100, 9 )
 
 [node name="Platform" type="KinematicBody2D" groups=[
 "Platform",

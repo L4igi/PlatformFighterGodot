@@ -33,7 +33,7 @@ func _on_CollisionDetectionArea_body_entered(body):
 func _on_CollisionDetectionArea_body_exited(body):
 	if body.is_in_group("Character"):
 		collidingBodies.erase(body)
-		body.onSolidGround = null
+#		body.onSolidGround = null
 		body.platformCollision = null
 		body.set_collision_mask_bit(1,true)
 		

@@ -63,6 +63,7 @@ func manage_buffered_input():
 func handle_input():
 	if Input.is_action_just_pressed(character.jump):
 		create_shortHop_timer()
+		print("JUMP FROM GROUND")
 	elif Input.is_action_pressed(character.shield):
 		if Input.is_action_just_pressed(character.attack):
 			character.change_state(GlobalVariables.CharacterState.GRAB)
@@ -116,7 +117,6 @@ func handle_input_disabled():
 func _physics_process(_delta):
 	if !stateDone:
 		if character.disableInput || inMovementLag:
-			check_in_air(_delta)
 			if !inLandingLag:
 				if character.disableInput:
 					handle_input_disabled()
@@ -129,10 +129,11 @@ func _physics_process(_delta):
 			if shieldDropTimer.get_time_left():
 				if perfectShieldFramesLeft > 0:
 					perfectShieldFramesLeft -= 1
-		else:
 			check_in_air(_delta)
+		else:
 			handle_input()
 			input_movement_physics(_delta)
+			check_in_air(_delta)
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
 			#checks if player walked off platform/stage
 		
@@ -372,9 +373,11 @@ func check_character_crouch():
 		for i in character.get_slide_count():
 			var collision = character.get_slide_collision(i)
 			if collision.get_collider().is_in_group("Platform"):
+				character.onSolidGround = collision.get_collider()
 				character.change_state(GlobalVariables.CharacterState.CROUCH)
 				return true
 			elif collision.get_collider().is_in_group("Ground"):
+				character.onSolidGround = collision.get_collider()
 				character.change_state(GlobalVariables.CharacterState.CROUCH)
 				return true
 	elif get_input_direction_y() >= 0.2:

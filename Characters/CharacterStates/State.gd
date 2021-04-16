@@ -27,6 +27,7 @@ var hitlagAttackedTimer = null
 var hitStunTimer = null
 #disableInputDI
 var disableInputDi = false
+var attackedInitLaunchAngle = 0
 
 # Writing _delta instead of delta here prevents the unused variable warning.
 func _physics_process(_delta):
@@ -103,7 +104,8 @@ func process_movement_physics(_delta):
 func process_movement_physics_air(_delta):
 	character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce * _delta)
 	calculate_vertical_velocity(_delta)
-	character.velocity = character.move_and_slide(character.velocity)
+	character.velocity = character.move_and_slide(character.velocity)     
+
 	
 func process_disable_input_direction_influence(_delta):
 	if !hitlagTimer.get_time_left():
@@ -169,7 +171,6 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	hitlagTimer = create_timer("on_hitlag_timeout", "HitLagTimer")
 	hitStunTimer = create_timer("on_hitstun_timeout", "HitStunTimer")
 	hitlagAttackedTimer = create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer")
-#	character.environmentRayCast.set_enabled(false)
 	self.change_state = change_state
 	self.animationPlayer = animationPlayer
 	self.character = character
@@ -204,6 +205,7 @@ func start_timer(timer, waitTime, oneShot = true):
 	timer.set_wait_time(waitTime)
 	timer.set_one_shot(oneShot)
 	timer.start()
+	print(timer.name)
 
 func calculate_vertical_velocity(_delta):
 	character.velocity.y += character.gravity * _delta
@@ -221,21 +223,6 @@ func gravity_on_off(status):
 		character.gravity = character.baseGravity
 	elif status == "off":
 		character.gravity = 0
-		
-func check_ground_platform_collision(platformCollisionDisabledTimerRunning = 0):
-	var checkCollisionVector = Vector2(0,1)
-	if character.environmentRayCast.get_collider():
-		checkCollisionVector = checkCollisionVector.rotated(2*PI-character.environmentRayCast.get_collider().get_rotation())
-	print(checkCollisionVector)
-	if character.velocity.y >= 0:
-		var collidingWith = character.move_and_collide(checkCollisionVector, true, true, true)
-		if collidingWith \
-		&& ((collidingWith.get_collider().is_in_group("Platform")\
-		&& platformCollisionDisabledTimerRunning == 0)\
-		|| collidingWith.get_collider().is_in_group("Ground")):
-			character.platformCollision = collidingWith.get_collider()
-			return character.platformCollision
-	return null
 	
 func mirror_areas():
 	match character.currentMoveDirection:
@@ -263,11 +250,7 @@ func play_attack_animation(animationToPlay, queue = false):
 		animationPlayer.play(animationToPlay)
 
 func check_in_air(_delta):
-	var checkCollisionVector = Vector2(0,1)
-	if character.onSolidGround:
-		checkCollisionVector = checkCollisionVector.rotated(2*PI-character.onSolidGround.get_rotation())
-	var collidingWith = character.move_and_collide(checkCollisionVector, true, true, true)
-	if !collidingWith:
+	if !character.get_slide_count():
 		if shortHopTimer.get_time_left():
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			character.change_state(GlobalVariables.CharacterState.AIR)
@@ -277,16 +260,35 @@ func check_in_air(_delta):
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		return true
 	return false
+	
+func check_ground_platform_collision(platformCollisionDisabledTimerRunning = 0):
+	if character.velocity.y >= 0 && character.get_slide_count():
+		var collision = character.get_slide_collision(0)
+		if ((collision.get_collider().is_in_group("Platform")\
+		&& platformCollisionDisabledTimerRunning == 0)\
+		|| collision.get_collider().is_in_group("Ground"))\
+		&& check_max_ground_radians(collision):
+			check_max_ground_radians(collision)
+			character.platformCollision = collision.get_collider()
+			return character.platformCollision
+	return null
+	
+func check_max_ground_radians(collision):
+	var collisionNoraml = collision.get_normal()
+	var collisionNormalRadians = atan2(collisionNoraml.y, collisionNoraml.x)
+	if collisionNormalRadians >= 0: 
+		return false 
+	return true
 
 func check_stage_slide_collide(doubleJump = false):
 	if character.stageSlideCollider: 
 		if (character.velocity.y <= 0 || doubleJump)\
 		&& character.global_position < character.stageSlideCollider.global_position: 
-			if get_input_direction_x() > 0: 
+			if get_input_direction_x() >= 0: 
 				return true
 		elif (character.velocity.y <= 0 || doubleJump)\
 		&& character.global_position > character.stageSlideCollider.global_position: 
-			if get_input_direction_x() < 0: 
+			if get_input_direction_x() <= 0: 
 				return true
 		else:
 			return false
@@ -403,6 +405,7 @@ func create_hitlagAttacked_timer(waitTime):
 	
 func on_hitlagAttacked_timeout():
 	gravity_on_off("on")
+	attackedInitLaunchAngle = atan2(character.initLaunchVelocity.y, character.initLaunchVelocity.x)
 	character.velocity = character.initLaunchVelocity
 	animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
@@ -461,6 +464,7 @@ func double_jump_handler():
 		reset_gravity()
 		character.velocity.y = -character.jumpSpeed
 		if check_stage_slide_collide(true):
-			character.velocity.x = 0
+#			character.velocity.x = 0
+			character.velocity.y *=2
 		else:
 			character.velocity.x = character.airMaxSpeed * xInput 

@@ -19,10 +19,10 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	animationPlayer.get_parent().set_animation("hurt")
 	animationPlayer.get_parent().set_frame(0)
 	character.jumpCount = 1
-	character.environmentRayCast.set_enabled(true)
 	character.canGetEdgeInvincibility = true
 	character.onSolidGround = null
-	character.disabledEdgeGrab = false
+	character.disabledEdgeGrab = true
+	character.edgeGrabShape.set_deferred("disabled", true)
 	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 
@@ -62,55 +62,57 @@ func _physics_process(_delta):
 					return
 				if character.airTime <= 300: 
 					character.airTime += 1
-#				print("degrees " +str(character.environmentRayCast.get_rotation()))
-				#BOUNCING CHARACTER
-				if handle_character_bounce():
-					pass
-				elif character.onSolidGround:
-					if !handle_tech():
-						play_animation("hurtTransition")
-						character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
 			elif !character.disableInput:
 				handle_input()
-				var solidGroundCollision = check_ground_platform_collision()
-				if solidGroundCollision:
-		#				if techTimer.timer_running():
-		#					techTimer.stop_timer()
-		#					print("TECHED solidGroundCollision!!!")
-					character.onSolidGround = solidGroundCollision
-				if handle_character_bounce():
-					pass
-				elif character.onSolidGround:
-					if !handle_tech():
-						play_animation("hurtTransition")
-						character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
 				input_movement_physics(_delta)
 				character.velocity = character.move_and_slide(character.velocity)
+			if handle_character_bounce():
+				pass
+			else:
+				check_hitStun_transition()
+
+
+func check_hitStun_transition():
+	if !hitStunTimer.get_time_left():
+		var solidGroundCollision = check_ground_platform_collision()
+		if solidGroundCollision:
+			character.onSolidGround = solidGroundCollision
+			if !handle_tech(Vector2(0,-1)):
+				play_animation("hurtTransition")
+				character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
+
 				
 func handle_character_bounce():
-	if character.environmentRayCast.get_collider():
-		character.stageBounceCollider = character.environmentRayCast.get_collider()
-		if abs(character.environmentRayCast.get_rotation()) <= bounceDegreeThreashold || character.stageBounceCollider.is_in_group("Ground"):
-			print("collision normal " +str(character.environmentRayCast.get_collision_normal()))
-			if handle_tech():
-				return false
-#			print("bounced "+ str(character.lastVelocity))
-			character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
-			character.velocity = character.velocity.bounce(character.environmentRayCast.get_collision_normal())*character.bounceReduction
-			character.change_environmentRayCast_direction(atan2(character.velocity.y, character.velocity.x))
-			character.initLaunchVelocity = character.velocity
-			print(character.airTime)
-			return true
+	if character.get_slide_count():
+		var collision = character.get_slide_collision(0)
+		var collisionNormal = collision.get_normal()
+		print(collisionNormal)
+		if (attackedInitLaunchAngle >= 0.5*PI-bounceDegreeThreashold && attackedInitLaunchAngle <= 0.5*PI+bounceDegreeThreashold)\
+		|| (collision.collider.is_in_group("Ground") && collisionNormal != Vector2(0,-1)):
+			if collision:
+				if character.lastBounceCollision:
+					if (collisionNormal.y/abs(collisionNormal.y)) == (character.lastBounceCollision.get_normal().y/abs(character.lastBounceCollision.get_normal().y)):
+						return false
+				character.lastBounceCollision = collision
+				if handle_tech(collisionNormal):
+					return false
+				character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
+				character.velocity = character.velocity.bounce(collisionNormal)*character.bounceReduction
+				character.initLaunchVelocity = character.velocity
+				print("Bouncing")
+				return true
 	return false
 	
-func handle_tech():
-	print("techtimer " +str(techTimer.get_time_left()) + " " + str(character.airTime))
+func handle_tech(collisionNormal):
 	if techTimer.get_time_left() && character.airTime > 1:
 		techTimer.stop()
-		print("TECHED in hitStun!!!")
+		print("TECHED in hitStun!!! " +str(collisionNormal))
 		character.velocity = Vector2.ZERO
 		#change to TechGround/Techair
-		character.change_state(GlobalVariables.CharacterState.GROUND)
+		if collisionNormal != Vector2(0,-1):
+			character.change_state(GlobalVariables.CharacterState.TECHAIR)
+		else:
+			character.change_state(GlobalVariables.CharacterState.TECHGROUND)
 		return true
 	return false
 

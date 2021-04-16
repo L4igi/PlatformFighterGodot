@@ -26,14 +26,13 @@ var droppedPlatform = false
 var walkThreashold = 0.15
 #jump
 var jumpCount = 0
-var availabelJumps = 2
+var availabelJumps = 10
 var airTime = 0
 var abovePlatGround = null
 #platform
 var platformCollision = null
 var atPlatformEdge = null
 var lowestCheckYPoint 
-onready var environmentRayCast = get_node("CharacterCollider/EnvironmentRaycast")
 #edge
 var snappedEdge = null
 var disableInput = false
@@ -78,6 +77,8 @@ var lastVelocity = Vector2.ZERO
 var bounceThreashold = 800
 var bounceReduction = 0.8
 var stageBounceCollider = null
+#tech 
+var techRollDistance = 100
 #shield
 onready var characterShield = get_node("Shield")
 var rollDistance = 150
@@ -158,6 +159,8 @@ var applyLandingLag = null
 var inLandingLag = false
 var queueFreeFall = false
 var bufferMoveAirTransition = false
+#last bounce collision platform 
+var lastBounceCollision = null
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -230,15 +233,17 @@ func disable_invincibility_edge_action():
 func roll_calculator(distance): 
 	if currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
 		distance = abs(distance) 
-#		if atPlatformEdge == GlobalVariables.MoveDirection.LEFT:
-#			velocity.x = 0
-#		else:
 		velocity.x = distance
 	else:
 		distance = abs(distance)* -1
-#		if atPlatformEdge == GlobalVariables.MoveDirection.RIGHT:
-#			velocity.x = 0
-#		else:
+		velocity.x = distance
+		
+func roll_calculator_tech(distance): 
+	if state.get_input_direction_x() >= 0:
+		distance = abs(distance) 
+		velocity.x = distance
+	else:
+		distance = abs(distance)* -1
 		velocity.x = distance
 		
 func finish_attack_animation(step):
@@ -263,6 +268,7 @@ func apply_attack_animation_steps(step = 0):
 	pass
 	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
+	lastBounceCollision = null
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
 		attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
@@ -486,7 +492,46 @@ func apply_throw_animation_step(step = 0):
 		2: 
 			disableInput = false
 			change_state(GlobalVariables.CharacterState.GROUND)
-			
+
+func apply_tech_animation_step_ground(step = 0):
+	match step: 
+		0: 
+			disableInput = true
+		1:
+			if onSolidGround && Input.is_action_pressed(shield):
+				change_state(GlobalVariables.CharacterState.SHIELD)
+			elif !state.bufferedInput:
+				applySideStepFrames = true
+				change_state(GlobalVariables.CharacterState.GROUND)
+			else:
+				state.enable_player_input()
+
+func apply_tech_roll_animation_step_ground(step = 0):
+	match step: 
+		0: 
+			disableInput = true
+			match animationPlayer.get_current_animation():
+				"techroll":
+					roll_calculator_tech(techRollDistance)
+		1:
+			if onSolidGround && Input.is_action_pressed(shield):
+				change_state(GlobalVariables.CharacterState.SHIELD)
+			elif !state.bufferedInput:
+				applySideStepFrames = true
+				change_state(GlobalVariables.CharacterState.GROUND)
+			else:
+				state.enable_player_input()
+				
+func apply_tech_animation_step_air(step = 0):
+	match step: 
+		0: 
+			disableInput = true
+		1:
+			state.bufferedInput = GlobalVariables.CharacterAnimations.JUMP
+			if !state.bufferedInput:
+				change_state(GlobalVariables.CharacterState.AIR)
+			else:
+				state.enable_player_input()
 
 func enable_disable_hurtboxes(enable = true):
 	for singleHurtbox in hurtBox.get_children():
@@ -604,26 +649,8 @@ func calculate_hitlag_di():
 #	if initLaunchVelocity.y >= 0:
 #		influenceDirection = -1
 	var newLaunchRadian = originalLaunchRadian + (verticalInfluence*influenceDirection) * hitlagDI.x
-	change_environmentRayCast_direction(newLaunchRadian)
 	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
-	
-func change_environmentRayCast_direction(radians):
-	if currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-		environmentRayCast.set_rotation(radians - PI/2)
-	elif currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-		environmentRayCast.set_rotation(PI/2 - radians)
-	#scale length of ray up to detect different collision angles at the right distance to object
-	if currentState == GlobalVariables.CharacterState.HITSTUNAIR:
-		var absRayCastRot = abs(environmentRayCast.get_rotation())
-		if (absRayCastRot >= 0 && absRayCastRot < PI/4)\
-		|| (absRayCastRot > 3*PI/4 && absRayCastRot < 5*PI/4)\
-		|| (absRayCastRot > 7*PI/4 && absRayCastRot <= 2*PI):
-			environmentRayCast.set_cast_to(environmentRayCast.get_cast_to().normalized()*20)
-		else:
-			environmentRayCast.set_cast_to(environmentRayCast.get_cast_to().normalized()*10)
-	else:
-		environmentRayCast.set_cast_to(environmentRayCast.get_cast_to().normalized()*50)
 		
 func character_attacked_handler(hitLagFrames):
 	bufferHitLagFrames = hitLagFrames

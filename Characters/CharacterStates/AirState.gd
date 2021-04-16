@@ -6,6 +6,7 @@ class_name AirState
 var platformCollisionDisabledTimer = null
 var platformCollisionDisableFrames = 30.0/60.0
 var normalLandingLag = 3.0/60.0
+var lastVelocity = Vector2.ZERO
 
 func _ready():
 	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
@@ -24,7 +25,6 @@ func _ready():
 
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
-	character.environmentRayCast.set_enabled(true)
 #	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 func manage_buffered_input():
@@ -76,11 +76,20 @@ func _physics_process(_delta):
 			character.onSolidGround = solidGroundCollision
 			character.applyLandingLag = normalLandingLag
 			character.change_state(GlobalVariables.CharacterState.GROUND)
+		lastVelocity = character.velocity
 
 func input_movement_physics(_delta):
 	# Horizontal movement code. First, get the player's input.
 	var xInput = get_input_direction_x()
 	var walk = character.airMaxSpeed * xInput
+#	if character.velocity.y <= 0 && character.get_slide_count():
+#		var collision = character.get_slide_collision(0)
+#		if collision.get_collider().is_in_group("Ground") && collision.get_normal() != Vector2(0,1):
+#			character.velocity.y += character.gravity/4 * _delta
+#			character.velocity.x = move_toward(character.velocity.x, character.velocity.x, character.airStopForce * _delta)
+#			character.velocity.y = lastVelocity.y
+#			character.velocity.y -= character.gravity/10 * _delta
+#			return
 	# Slow down the player if they're not trying to move.
 	if xInput == 0:
 		if character.pushingCharacter == null:
@@ -91,12 +100,13 @@ func input_movement_physics(_delta):
 			character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce * _delta)
 		else:
 			character.velocity.x += (walk * _delta) * 4
+			
 	character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
 	calculate_vertical_velocity(_delta)
-	character.change_environmentRayCast_direction(atan2(character.velocity.y, character.velocity.x))
 
 func create_platformCollisionDisabled_timer(waitTime):
 	start_timer(platformCollisionDisabledTimer, waitTime)
 	
 func on_platformCollisionDisabled_timeout():
 	pass
+	
