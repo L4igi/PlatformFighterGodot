@@ -16,7 +16,6 @@ func manage_tech_animation():
 	play_animation("techair")
 		
 func manage_buffered_input():
-	print("manage buffered input tech")
 	manage_buffered_input_air()
 		
 func handle_input():

@@ -161,6 +161,11 @@ var queueFreeFall = false
 var bufferMoveAirTransition = false
 #last bounce collision platform 
 var lastBounceCollision = null
+#airdodge
+var directionalAirDodgeInvicibilitFrames = 30.0/60.0
+var neutralAirDodgeInvicibilitFrames = 30.0/60.0
+var currentAirDodgeType = null
+var airDodgeVelocity = 800
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -350,12 +355,6 @@ func apply_throw(actionType):
 #		state.play_animation("hurt")
 #	state.create_hitlagAttacked_timer(hitLagFrames)
 #	inGrabByCharacter = null
-	
-func tech_handler_air(delta):
-	print("tech handler air")
-	
-func tech_handler_ground(delta):
-	print("tech handler ground")
 
 func apply_smash_attack_steps(step = 0):
 	match step:
@@ -404,6 +403,23 @@ func dodge_animation_step(step = 0):
 			if onSolidGround && Input.is_action_pressed(shield):
 				change_state(GlobalVariables.CharacterState.SHIELD)
 			elif !state.bufferedInput:
+				applySideStepFrames = true
+				change_state(GlobalVariables.CharacterState.GROUND)
+			else:
+				state.enable_player_input()
+				
+func airDodge_animation_step(step = 0):
+	match step: 
+		0:
+			disableInput = true
+		1:
+			state.create_invincibility_timer(neutralAirDodgeInvicibilitFrames)
+		2:
+			if !onSolidGround && !state.bufferedInput:
+				change_state(GlobalVariables.CharacterState.AIR)
+			if onSolidGround && Input.is_action_pressed(shield):
+				change_state(GlobalVariables.CharacterState.SHIELD)
+			elif onSolidGround && !state.bufferedInput:
 				applySideStepFrames = true
 				change_state(GlobalVariables.CharacterState.GROUND)
 			else:
@@ -527,7 +543,7 @@ func apply_tech_animation_step_air(step = 0):
 		0: 
 			disableInput = true
 		1:
-			state.bufferedInput = GlobalVariables.CharacterAnimations.JUMP
+#			state.bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			if !state.bufferedInput:
 				change_state(GlobalVariables.CharacterState.AIR)
 			else:
@@ -574,13 +590,13 @@ func change_state(new_state):
 	enable_disable_hurtboxes(true)
 #	check_character_tilt_walk(new_state)
 	if state != null:
+		state.stateDone = true
 		bufferedInput = state.bufferedInput
 		var checkedTransition = check_state_transition(changeToState, bufferedInput)
 		bufferedInput = checkedTransition[0]
 		changeToState = checkedTransition[1]
 		currentAttack = null
 		bufferedAnimation = state.bufferedAnimation
-		state.stateDone = true
 		state.queue_free()
 	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()

@@ -25,6 +25,8 @@ func _init():
 		GlobalVariables.CharacterState.GETUP: GetUpState,
 		GlobalVariables.CharacterState.TECHAIR: AirTechState, 
 		GlobalVariables.CharacterState.TECHGROUND: GroundTechState,
+		GlobalVariables.CharacterState.AIRDODGE: AirDodgeState,
+		GlobalVariables.CharacterState.HELPLESS: HelplessState,
 }
 
 func get_state(state_name):

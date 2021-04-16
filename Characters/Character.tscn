@@ -1,4 +1,4 @@
-[gd_scene load_steps=414 format=2]
+[gd_scene load_steps=420 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -358,6 +358,10 @@
 [ext_resource path="res://Characters/Mario/techair/3.png" type="Texture" id=356]
 [ext_resource path="res://Characters/Mario/techair/5.png" type="Texture" id=357]
 [ext_resource path="res://Characters/Mario/techair/1.png" type="Texture" id=358]
+[ext_resource path="res://Characters/Mario/AirDodge/0.png" type="Texture" id=359]
+[ext_resource path="res://Characters/Mario/AirDodge/2.png" type="Texture" id=360]
+[ext_resource path="res://Characters/Mario/AirDodge/3.png" type="Texture" id=361]
+[ext_resource path="res://Characters/Mario/AirDodge/1.png" type="Texture" id=362]
 
 [sub_resource type="StreamTexture" id=54]
 load_path = "res://.import/5.png-43fbad497e5c0940070c19a1cd231129.stex"
@@ -372,6 +376,11 @@ animations = [ {
 "frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
 "loop": true,
 "name": "techroll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 359 ), ExtResource( 362 ), ExtResource( 360 ), ExtResource( 361 ) ],
+"loop": true,
+"name": "airdodge",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
@@ -594,6 +603,86 @@ animations = [ {
 "name": "jab2",
 "speed": 5.0
 } ]
+
+[sub_resource type="Animation" id=57]
+resource_name = "airdodge_directional"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "airdodge" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.25, 0.566667, 0.866667 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=56]
+resource_name = "airdodge_neutral"
+length = 0.75
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "airdodge" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.166667, 0.366667, 0.583333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.0666667, 0.4, 0.75 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "airDodge_animation_step"
+}, {
+"args": [ 1 ],
+"method": "airDodge_animation_step"
+}, {
+"args": [ 2 ],
+"method": "airDodge_animation_step"
+}, {
+"args": [ 3 ],
+"method": "airDodge_animation_step"
+} ]
+}
 
 [sub_resource type="Animation" id=2]
 resource_name = "attack_getup"
@@ -2643,11 +2732,14 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 8, -2.13333, 24, -2.13333, 32, 2.13
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
-animation = "techair"
+animation = "airdodge"
+frame = 1
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
+anims/airdodge_directional = SubResource( 57 )
+anims/airdodge_neutral = SubResource( 56 )
 anims/attack_getup = SubResource( 2 )
 anims/backflip = SubResource( 3 )
 anims/bair = SubResource( 4 )
