@@ -24,7 +24,7 @@ func handle_input_disabled():
 func _physics_process(_delta):
 	if !stateDone:
 		handle_input_disabled()
-		check_stop_area_entered()
+		check_stop_area_entered(_delta)
 		process_movement_physics(_delta)
 	
 func manage_getup_animation(getUpType, direction):
@@ -38,18 +38,17 @@ func manage_getup_animation(getUpType, direction):
 			play_attack_animation("attack_getup")
 
 
-func check_stop_area_entered():
-	if character.stopAreaEntered: 
-		match character.atPlatformEdge:
-			GlobalVariables.MoveDirection.RIGHT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						pass
-					GlobalVariables.MoveDirection.RIGHT:
-						character.velocity.x = 0
-			GlobalVariables.MoveDirection.LEFT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						character.velocity.x = 0
-					GlobalVariables.MoveDirection.RIGHT:
-						pass
+func check_stop_area_entered(_delta):
+	match character.atPlatformEdge:
+		GlobalVariables.MoveDirection.RIGHT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					pass
+				GlobalVariables.MoveDirection.RIGHT:
+					character.velocity.x = 0
+		GlobalVariables.MoveDirection.LEFT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					character.velocity.x = 0
+				GlobalVariables.MoveDirection.RIGHT:
+					pass

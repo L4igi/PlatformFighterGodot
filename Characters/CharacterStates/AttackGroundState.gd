@@ -2,7 +2,6 @@ extends State
 
 class_name AttackGroundState
 #landinglag
-var inLandingLag = false
 var landingLagTimer = null
 
 
@@ -67,14 +66,14 @@ func _physics_process(_delta):
 		handle_input_disabled()
 		if character.disableInput:
 			process_movement_physics(_delta)
-			if !check_in_air(_delta) && character.chargingSmashAttack:
+			if !check_in_air() && character.chargingSmashAttack:
 				if (Input.is_action_just_released(character.attack)\
 				|| !Input.is_action_pressed(character.attack)):
 					character.chargingSmashAttack = false
 					character.smashAttack = null
 					character.apply_smash_attack_steps(2)
 			if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
-				check_stop_area_entered()
+				check_stop_area_entered(_delta)
 		else:
 			if character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()
@@ -184,20 +183,23 @@ func create_landingLag_timer(waitTime):
 	
 func on_landingLag_timeout():
 	inLandingLag = false
-	character.change_state(GlobalVariables.CharacterState.GROUND)
+	if !bufferedInput:
+		character.applySideStepFrames = true
+		character.change_state(GlobalVariables.CharacterState.GROUND)
+	enable_player_input()
 	
-func check_stop_area_entered():
-	if character.stopAreaEntered: 
-		match character.atPlatformEdge:
-			GlobalVariables.MoveDirection.RIGHT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						pass
-					GlobalVariables.MoveDirection.RIGHT:
-						character.velocity.x = 0
-			GlobalVariables.MoveDirection.LEFT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						character.velocity.x = 0
-					GlobalVariables.MoveDirection.RIGHT:
-						pass
+	
+func check_stop_area_entered(_delta):
+	match character.atPlatformEdge:
+		GlobalVariables.MoveDirection.RIGHT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					pass
+				GlobalVariables.MoveDirection.RIGHT:
+					character.velocity.x = 0
+		GlobalVariables.MoveDirection.LEFT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					character.velocity.x = 0
+				GlobalVariables.MoveDirection.RIGHT:
+					pass

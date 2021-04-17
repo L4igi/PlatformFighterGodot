@@ -23,7 +23,6 @@ var shiedDropFrames = 11.0
 #dropDownTimer
 var dropDownTimer = null
 #landinglag
-var inLandingLag = false
 var landingLagTimer = null
 #count last xInputs equal 0 
 var lastXInputZeroCount = 0
@@ -63,7 +62,6 @@ func manage_buffered_input():
 func handle_input():
 	if Input.is_action_just_pressed(character.jump):
 		create_shortHop_timer()
-		print("JUMP FROM GROUND")
 	elif Input.is_action_pressed(character.shield):
 		if Input.is_action_just_pressed(character.attack):
 			character.change_state(GlobalVariables.CharacterState.GRAB)
@@ -125,17 +123,17 @@ func _physics_process(_delta):
 			else:
 				buffer_input()
 			process_movement_physics(_delta)
-			check_stop_area_entered()
+			check_stop_area_entered(_delta)
 			if shieldDropTimer.get_time_left():
 				if perfectShieldFramesLeft > 0:
 					perfectShieldFramesLeft -= 1
-			check_in_air(_delta)
+			check_in_air()
 		else:
 			handle_input()
 			input_movement_physics(_delta)
-			check_stop_area_entered()
+			check_stop_area_entered(_delta)
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
-			check_in_air(_delta)
+			check_in_air()
 			#checks if player walked off platform/stage
 		
 func input_movement_physics(_delta):
@@ -336,7 +334,7 @@ func on_dropDown_timeout():
 	pass
 
 func create_landingLag_timer(waitTime):
-	character.gravity = character.baseGravity
+	reset_gravity()
 	inLandingLag = true
 	character.disableInput = true
 	character.disableInputDI = false
@@ -348,7 +346,8 @@ func on_landingLag_timeout():
 		create_sidestep_timer(sideStepFrames)
 		play_animation("idle")
 		check_character_crouch()
-	check_ground_animations()
+	else:
+		check_ground_animations()
 	enable_player_input()
 
 func on_smashAttack_timeout():
@@ -404,16 +403,13 @@ func on_shorthop_timeout():
 		turnAroundTimer.stop()
 		enable_player_input()
 		
-func check_stop_area_entered():
-	if character.stopAreaEntered: 
-		match character.atPlatformEdge:
-			GlobalVariables.MoveDirection.RIGHT:
-#				match character.currentMoveDirection:
-#					GlobalVariables.MoveDirection.RIGHT:
-				if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
-					character.velocity.x = 0
-			GlobalVariables.MoveDirection.LEFT:
-#				match character.currentMoveDirection:
-#					GlobalVariables.MoveDirection.LEFT:
-				if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
-					character.velocity.x = 0
+func check_stop_area_entered(_delta):
+	match character.atPlatformEdge:
+		GlobalVariables.MoveDirection.RIGHT:
+			if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
+				character.stopAreaVelocity.x = move_toward(character.stopAreaVelocity.x, 0, character.groundStopForce * _delta)
+				character.velocity.x = 0
+		GlobalVariables.MoveDirection.LEFT:
+			if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
+				character.stopAreaVelocity.x = move_toward(character.stopAreaVelocity.x, 0, character.groundStopForce * _delta)
+				character.velocity.x = 0

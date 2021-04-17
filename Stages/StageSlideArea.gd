@@ -15,7 +15,6 @@ func _ready():
 
 func _on_SlideArea_body_entered(body):
 	if body.is_in_group("Character"):
-		print("entered")
 		body.stageSlideCollider = centerStage
 
 

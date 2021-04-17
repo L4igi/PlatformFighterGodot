@@ -32,6 +32,7 @@ func handle_input():
 		double_jump_handler()
 	elif Input.is_action_just_pressed(character.down) && !character.onSolidGround && int(character.velocity.y) >= 0:
 		character.gravity = character.fastFallGravity
+		character.maxFallSpeed = character.maxFallSpeedFastFall
 	elif Input.is_action_just_pressed(character.shield):
 		character.change_state(GlobalVariables.CharacterState.AIRDODGE)
 	elif Input.is_action_just_pressed("StopGravity"):

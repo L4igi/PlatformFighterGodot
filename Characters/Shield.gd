@@ -19,7 +19,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	.setup(change_state, animationPlayer, character, bufferedAnimation)
 	character.jumpCount = 0
 	
-func _physics_process(delta):
+func _physics_process(_delta):
 	if enableShieldFrames > 0: 
 		enableShieldFrames -= 1
 	if shieldHealth <= 0 && !shieldBreak: 

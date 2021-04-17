@@ -38,3 +38,5 @@ scale = Vector2( 44.5, 0.5 )
 shape = SubResource( 1 )
 [connection signal="body_entered" from="CollisionDetectionArea" to="." method="_on_CollisionDetectionArea_body_entered"]
 [connection signal="body_exited" from="CollisionDetectionArea" to="." method="_on_CollisionDetectionArea_body_exited"]
+
+[editable path="StopAreas"]

@@ -32,7 +32,6 @@ scale = Vector2( 4, 0.25 )
 texture = ExtResource( 1 )
 
 [node name="StopAreas" parent="." instance=ExtResource( 3 )]
-visible = false
 
 [node name="CollisionDetectionArea" type="Area2D" parent="."]
 collision_layer = 0

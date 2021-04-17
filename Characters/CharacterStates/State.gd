@@ -28,6 +28,8 @@ var hitStunTimer = null
 #disableInputDI
 var disableInputDi = false
 var attackedInitLaunchAngle = 0
+#lag
+var inLandingLag = false
 
 # Writing _delta instead of delta here prevents the unused variable warning.
 func _physics_process(_delta):
@@ -207,7 +209,6 @@ func start_timer(timer, waitTime, oneShot = true):
 	timer.set_wait_time(waitTime/60.0)
 	timer.set_one_shot(oneShot)
 	timer.start()
-	print(timer.name)
 
 func calculate_vertical_velocity(_delta):
 	character.velocity.y += character.gravity * _delta
@@ -251,8 +252,11 @@ func play_attack_animation(animationToPlay, queue = false):
 	else:
 		animationPlayer.play(animationToPlay)
 
-func check_in_air(_delta):
+func check_in_air():
 	if !character.get_slide_count():
+		if character.velocity.x == 0: 
+			character.velocity.x = character.stopAreaVelocity.x
+			character.stopAreaVelocity.x = 0
 		if shortHopTimer.get_time_left():
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			character.change_state(GlobalVariables.CharacterState.AIR)
@@ -343,6 +347,10 @@ func process_jump():
 			character.velocity.x = character.airMaxSpeed
 	play_animation(animationToPlay)
 	character.disableInput = false
+	if character.velocity.x == 0: 
+		character.velocity.x = character.stopAreaVelocity.x
+		character.stopAreaVelocity.x = 0
+#	print(character.velocity.x)
 	character.change_state(GlobalVariables.CharacterState.AIR)
 		
 func enable_player_input():
@@ -440,22 +448,22 @@ func on_hitstun_timeout():
 func reset_gravity():
 	if character.gravity!=character.baseGravity:
 		character.gravity=character.baseGravity
+		character.maxFallSpeed = character.baseFallSpeed
 
-func check_stop_area_entered():
-	if character.stopAreaEntered: 
-		match character.atPlatformEdge:
-			GlobalVariables.MoveDirection.RIGHT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						character.velocity.x = 0
-					GlobalVariables.MoveDirection.RIGHT:
-						pass
-			GlobalVariables.MoveDirection.LEFT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						pass
-					GlobalVariables.MoveDirection.RIGHT:
-						character.velocity.x = 0
+func check_stop_area_entered(_delta):
+	match character.atPlatformEdge:
+		GlobalVariables.MoveDirection.RIGHT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					character.velocity.x = 0
+				GlobalVariables.MoveDirection.RIGHT:
+					pass
+		GlobalVariables.MoveDirection.LEFT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					pass
+				GlobalVariables.MoveDirection.RIGHT:
+					character.velocity.x = 0
 						
 
 func double_jump_handler():

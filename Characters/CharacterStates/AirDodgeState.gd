@@ -30,6 +30,8 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
 	if character.platformCollisionDisabledTimer.get_time_left():
 		character.call_deferred("set_collision_mask_bit",1,false)
+	else:
+		character.call_deferred("set_collision_mask_bit",1,true)
 	character.edgeGrabShape.set_deferred("disabled", true)
 	
 func manage_buffered_input():

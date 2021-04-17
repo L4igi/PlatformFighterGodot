@@ -16,16 +16,17 @@ func _on_StopAreaLeft_body_entered(body):
 
 
 func stop_character_velocity(body):
-	var stopCharacter = body
-	stopCharacter.stopAreaEntered = true
+	body.stopAreaVelocity = body.velocity * 0.75
 
 
 
 func _on_StopAreaRight_body_exited(body):
-	body.stopAreaEntered = false
-	body.atPlatformEdge = null
+	if body.is_in_group("Character"):
+		body.atPlatformEdge = null
+#		body.stopAreaVelocity = Vector2.ZERO
 
 
 func _on_StopAreaLeft_body_exited(body):
-	body.stopAreaEntered = false
-	body.atPlatformEdge = null
+	if body.is_in_group("Character"):
+		body.atPlatformEdge = null
+#		body.stopAreaVelocity = Vector2.ZERO

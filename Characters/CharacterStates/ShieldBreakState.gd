@@ -32,7 +32,7 @@ func _physics_process(_delta):
 			if character.velocity.y > 0: 
 				character.characterShield.shieldBreak_end()
 				shieldBreakTimer.stop()
-				check_in_air(_delta)
+				check_in_air()
 	
 func create_shieldbreak_timer(waitTime):
 	start_timer(shieldBreakTimer, waitTime)

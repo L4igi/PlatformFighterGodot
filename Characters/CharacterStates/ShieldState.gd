@@ -44,9 +44,9 @@ func handle_input_disabled():
 			
 func _physics_process(_delta):
 	if !stateDone:
-		check_stop_area_entered()
+		check_stop_area_entered(_delta)
 		if !character.onSolidGround:
-			check_in_air(_delta)
+			check_in_air()
 		if character.disableInput:
 			handle_input_disabled()
 		if !character.disableInput:
@@ -58,18 +58,17 @@ func _physics_process(_delta):
 				character.shieldDropped = true
 				character.change_state(GlobalVariables.CharacterState.GROUND)
 
-func check_stop_area_entered():
-	if character.stopAreaEntered: 
-		match character.atPlatformEdge:
-			GlobalVariables.MoveDirection.RIGHT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						pass
-					GlobalVariables.MoveDirection.RIGHT:
-						character.velocity.x = 0
-			GlobalVariables.MoveDirection.LEFT:
-				match character.currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						character.velocity.x = 0
-					GlobalVariables.MoveDirection.RIGHT:
-						pass
+func check_stop_area_entered(_delta):
+	match character.atPlatformEdge:
+		GlobalVariables.MoveDirection.RIGHT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					pass
+				GlobalVariables.MoveDirection.RIGHT:
+					character.velocity.x = 0
+		GlobalVariables.MoveDirection.LEFT:
+			match character.currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					character.velocity.x = 0
+				GlobalVariables.MoveDirection.RIGHT:
+					pass

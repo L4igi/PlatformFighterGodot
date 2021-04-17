@@ -7,6 +7,7 @@ var techCoolDownTimer = null
 var techWindowFrames = 11.0
 var techCooldownFrames = 40.0
 var teched = false
+var maxFallSpeedHitStun = 2000
 
 func _ready():
 	techTimer = create_timer("on_tech_timeout", "TechTimer")
@@ -15,7 +16,7 @@ func _ready():
 	
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
-	character.inLandingLag = false
+	inLandingLag = false
 	animationPlayer.get_parent().set_animation("hurt")
 	animationPlayer.get_parent().set_frame(0)
 	character.jumpCount = 1
@@ -36,13 +37,11 @@ func handle_input():
 		elif Input.is_action_just_pressed(character.shield)\
 		&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
 			create_tech_timer(techWindowFrames)
-			print ("tech")
 
 func handle_input_disabled():
 	if Input.is_action_just_pressed(character.shield)\
 	&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
 		create_tech_timer(techWindowFrames)
-		print ("tech")
 #		&& !techTimer.timer_running() && !techCoolDownTimer.timer_running():
 #			create_frame_timer(GlobalVariables.TimerType.TECHTIMER, techWindowFrames)
 #			print("tech")
@@ -86,7 +85,6 @@ func handle_character_bounce():
 	if character.get_slide_count():
 		var collision = character.get_slide_collision(0)
 		var collisionNormal = collision.get_normal()
-		print(collisionNormal)
 		if (attackedInitLaunchAngle >= 0.5*PI-bounceDegreeThreashold && attackedInitLaunchAngle <= 0.5*PI+bounceDegreeThreashold)\
 		|| (collision.collider.is_in_group("Ground") && collisionNormal != Vector2(0,-1)):
 			if collision:
@@ -99,14 +97,12 @@ func handle_character_bounce():
 				character.velocity = Vector2(character.lastVelocity.x,character.lastVelocity.y)
 				character.velocity = character.velocity.bounce(collisionNormal)*character.bounceReduction
 				character.initLaunchVelocity = character.velocity
-				print("Bouncing")
 				return true
 	return false
 	
 func handle_tech(collisionNormal):
 	if techTimer.get_time_left() && character.airTime > 1:
 		techTimer.stop()
-		print("TECHED in hitStun!!! " +str(collisionNormal))
 		character.velocity = Vector2.ZERO
 		#change to TechGround/Techair
 		if collisionNormal != Vector2(0,-1):
@@ -155,4 +151,9 @@ func create_techCooldown_timer(waitTime):
 	start_timer(techCoolDownTimer, waitTime)
 	
 func on_techCooldown_timeout():
-	print("timeout")
+	pass
+
+func calculate_vertical_velocity(_delta):
+	character.velocity.y += character.gravity * _delta
+	if character.velocity.y >= character.maxFallSpeedHitStun: 
+		character.velocity.y = character.maxFallSpeedHitStun

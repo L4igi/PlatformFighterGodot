@@ -15,7 +15,9 @@ var walkMaxSpeed = 300
 var runMaxSpeed = 600
 var airMaxSpeed = 500
 var airStopForce = 450
+var baseFallSpeed = 700
 var maxFallSpeed = 700
+var maxFallSpeedFastFall = 1000
 var groundStopForce = 1500
 var jumpSpeed = 800
 var shortHopSpeed = 600
@@ -155,7 +157,6 @@ var bufferHitLagFrames = 0
 var stopAreaEntered = false
 var invincibilityTimer = null
 var applyLandingLag = null
-var inLandingLag = false
 var queueFreeFall = false
 var bufferMoveAirTransition = false
 #last bounce collision platform 
@@ -168,6 +169,8 @@ var airDodgeVelocity = 800
 #drop platform timer 
 var platformCollisionDisabledTimer = null
 var platformCollisionDisableFrames = 30.0
+#stopAreaVelocity
+var stopAreaVelocity = Vector2.ZERO
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -210,7 +213,6 @@ func calc_hitstun_velocity(delta):
 	
 func snap_edge(collidingEdge):
 	if edgeRegrabTimer.get_time_left():
-		print(edgeRegrabTimer.get_time_left())
 		return
 	disableInput = true
 	onEdge = true
@@ -258,6 +260,8 @@ func roll_calculator_tech(distance):
 		velocity.x = distance
 		
 func finish_attack_animation(step):
+	if state.inLandingLag: 
+		return
 	match step:
 		0:
 			disabledEdgeGrab = false

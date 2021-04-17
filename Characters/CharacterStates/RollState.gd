@@ -24,6 +24,6 @@ func handle_input_disabled():
 func _physics_process(_delta):
 	if !stateDone:
 		handle_input_disabled()
-		check_stop_area_entered()
+		check_stop_area_entered(_delta)
 		character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP, true)
 		

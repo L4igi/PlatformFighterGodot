@@ -31,16 +31,15 @@ func handle_input_disabled():
 func _physics_process(_delta):
 	if !stateDone:
 		handle_input_disabled()
-		check_stop_area_entered()
+		check_stop_area_entered(_delta)
 		character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP, true)
 		
 
-func check_stop_area_entered():
-	if character.stopAreaEntered: 
-		match character.atPlatformEdge:
-			GlobalVariables.MoveDirection.RIGHT:
-				if character.velocity.x >= 0:
-					character.velocity.x = 0
-			GlobalVariables.MoveDirection.LEFT:
-				if character.velocity.x <= 0:
-					character.velocity.x = 0
+func check_stop_area_entered(_delta):
+	match character.atPlatformEdge:
+		GlobalVariables.MoveDirection.RIGHT:
+			if character.velocity.x >= 0:
+				character.velocity.x = 0
+		GlobalVariables.MoveDirection.LEFT:
+			if character.velocity.x <= 0:
+				character.velocity.x = 0
