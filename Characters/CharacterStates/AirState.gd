@@ -3,13 +3,10 @@ extends State
 class_name AirState
 
 #platform dropdown
-var platformCollisionDisabledTimer = null
-var platformCollisionDisableFrames = 30.0/60.0
-var normalLandingLag = 3.0/60.0
+var normalLandingLag = 3.0
 var lastVelocity = Vector2.ZERO
 
 func _ready():
-	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
 	gravity_on_off("on")
 	if !character.disabledEdgeGrab:
 		character.edgeGrabShape.set_deferred("disabled", false)
@@ -19,9 +16,6 @@ func _ready():
 		play_animation("freefall",true)
 	else:
 		play_animation("freefall")
-	if character.droppedPlatform: 
-		character.droppedPlatform = false
-		create_platformCollisionDisabled_timer(platformCollisionDisableFrames)
 
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
@@ -33,7 +27,6 @@ func manage_buffered_input():
 			
 func handle_input():
 	if Input.is_action_just_pressed(character.attack):
-		character.bufferPlatformCollisionDisabledFrames = platformCollisionDisabledTimer.get_time_left()
 		character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 	elif Input.is_action_just_pressed(character.jump):
 		double_jump_handler()
@@ -65,15 +58,15 @@ func _physics_process(_delta):
 			character.velocity = character.move_and_slide(character.velocity)
 			# Move based on the velocity and snap to the ground.
 				#Fastfall
-			if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
-				character.set_collision_mask_bit(1,false)
-			elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !platformCollisionDisabledTimer.get_time_left():
-				character.set_collision_mask_bit(1,true)
+		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
+			character.set_collision_mask_bit(1,false)
+		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():
+			character.set_collision_mask_bit(1,true) 
 		if get_input_direction_y() >= 0.5: 
 			character.edgeGrabShape.set_deferred("disabled", true)
 		elif get_input_direction_y() < 0.5 && !character.disabledEdgeGrab: 
 			character.edgeGrabShape.set_deferred("disabled", false)
-		var solidGroundCollision = check_ground_platform_collision(platformCollisionDisabledTimer.get_time_left())
+		var solidGroundCollision = check_ground_platform_collision(character.platformCollisionDisabledTimer.get_time_left())
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
 			character.applyLandingLag = normalLandingLag
@@ -105,10 +98,4 @@ func input_movement_physics(_delta):
 			
 	character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
 	calculate_vertical_velocity(_delta)
-
-func create_platformCollisionDisabled_timer(waitTime):
-	start_timer(platformCollisionDisabledTimer, waitTime)
-	
-func on_platformCollisionDisabled_timeout():
-	pass
 	

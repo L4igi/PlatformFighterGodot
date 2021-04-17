@@ -2,7 +2,7 @@ extends State
 
 class_name AirTechState
 
-var airTechInvincibilityFrames = 25.0/60.0
+var airTechInvincibilityFrames = 25.0
 
 func _ready():
 	create_invincibility_timer(airTechInvincibilityFrames)

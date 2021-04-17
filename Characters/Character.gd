@@ -15,7 +15,7 @@ var walkMaxSpeed = 300
 var runMaxSpeed = 600
 var airMaxSpeed = 500
 var airStopForce = 450
-var maxFallSpeed = 1800
+var maxFallSpeed = 700
 var groundStopForce = 1500
 var jumpSpeed = 800
 var shortHopSpeed = 600
@@ -101,13 +101,13 @@ onready var grabPoint = get_node("GrabPoint")
 #character stats
 var weight = 1
 var fastFallGravity = 4000
-onready var gravity = 2000
+onready var gravity = 1800
 onready var baseGravity = gravity
 #hitlag 
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 var hitlagDI = Vector2.ZERO
-var hitLagFrames = 60.0/60.0
+var hitLagFrames = 60.0
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -145,11 +145,10 @@ var state_factory
 onready var animatedSprite = get_node("AnimatedSprite")
 var applySideStepFrames = true
 var bufferedInputSmashAttack = false
-var bufferPlatformCollisionDisabledFrames = 0
 var edgeRegrabTimer = null
 var getUpType = null
 var characterTargetGetUpPosition = null
-var grabFrames = 60.0/60.0
+var grabFrames = 60.0
 var hitLagTimer
 var bufferHitLagFrames = 0
 #var bufferFTiltWalk = false
@@ -162,10 +161,13 @@ var bufferMoveAirTransition = false
 #last bounce collision platform 
 var lastBounceCollision = null
 #airdodge
-var directionalAirDodgeInvicibilitFrames = 30.0/60.0
-var neutralAirDodgeInvicibilitFrames = 30.0/60.0
+var directionalAirDodgeInvicibilitFrames = 30.0
+var neutralAirDodgeInvicibilitFrames = 30.0
 var currentAirDodgeType = null
 var airDodgeVelocity = 800
+#drop platform timer 
+var platformCollisionDisabledTimer = null
+var platformCollisionDisableFrames = 30.0
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -185,6 +187,7 @@ func _ready():
 	hurtBox = $InteractionAreas/Hurtbox
 	tween = $Tween
 	edgeRegrabTimer = create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer") 
+	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
 	animationPlayer.set_animation_process_mode(0)
 	GlobalVariables.charactersInGame.append(self)
 	state_factory = StateFactory.new()
@@ -289,7 +292,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		shortHitStun = false
 	else: 
 		shortHitStun = true
-	backUpHitStunTime = hitStun/60.0
+	backUpHitStunTime = hitStun
 	#todo: reset other timers and set paramteres to null
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
@@ -299,7 +302,7 @@ func is_attacked_handler_perfect_shield():
 	print("perfect shield")
 	
 func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackedByCharacter):
-	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))/60.0
+	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	characterShield.buffer_shield_damage(damage, shieldDamage)
 #	characterShield.apply_shield_damage(damage, shieldDamage)
 	#todo: calculate shield hit pushback
@@ -408,22 +411,22 @@ func dodge_animation_step(step = 0):
 			else:
 				state.enable_player_input()
 				
-func airDodge_animation_step(step = 0):
-	match step: 
-		0:
-			disableInput = true
-		1:
-			state.create_invincibility_timer(neutralAirDodgeInvicibilitFrames)
-		2:
-			if !onSolidGround && !state.bufferedInput:
-				change_state(GlobalVariables.CharacterState.AIR)
-			if onSolidGround && Input.is_action_pressed(shield):
-				change_state(GlobalVariables.CharacterState.SHIELD)
-			elif onSolidGround && !state.bufferedInput:
-				applySideStepFrames = true
-				change_state(GlobalVariables.CharacterState.GROUND)
-			else:
-				state.enable_player_input()
+#func airDodge_animation_step(step = 0):
+#	match step: 
+#		0:
+#			disableInput = true
+#		1:
+#			state.create_invincibility_timer(neutralAirDodgeInvicibilitFrames)
+#		2:
+#			if !onSolidGround && !state.bufferedInput:
+#				change_state(GlobalVariables.CharacterState.AIR)
+#			if onSolidGround && Input.is_action_pressed(shield):
+#				change_state(GlobalVariables.CharacterState.SHIELD)
+#			elif onSolidGround && !state.bufferedInput:
+#				applySideStepFrames = true
+#				change_state(GlobalVariables.CharacterState.GROUND)
+#			else:
+#				state.enable_player_input()
 			
 func getup_animation_step(step = 0):
 	match step: 
@@ -577,7 +580,8 @@ func check_state_transition(changeToState, bufferedInput):
 					changeToState = GlobalVariables.CharacterState.ATTACKAIR
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:
-					print("AIRDODGE")
+					print("AIRDODGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+					changeToState = GlobalVariables.CharacterState.AIRDODGE
 	#				bufferedInput = currentAttack
 	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
 	return [bufferedInput, changeToState]
@@ -630,6 +634,12 @@ func on_edgeRegrab_timeout():
 	disabledEdgeGrab = false
 	if currentState == GlobalVariables.CharacterState.AIR && state.get_input_direction_y() < 0.5:
 		edgeGrabShape.set_deferred("disabled", false)
+		
+func create_platformCollisionDisabled_timer(waitTime):
+	state.start_timer(platformCollisionDisabledTimer, waitTime)
+	
+func on_platformCollisionDisabled_timeout():
+	call_deferred("set_collision_mask_bit",1,true)
 
 func toggle_all_hitboxes(onOff):
 	match onOff: 

@@ -4,8 +4,8 @@ class_name HitStunAirState
 var bounceDegreeThreashold = 0.35
 var techTimer = null 
 var techCoolDownTimer = null
-var techWindowFrames = 11.0/60.0
-var techCooldownFrames = 40.0/60.0
+var techWindowFrames = 11.0
+var techCooldownFrames = 40.0
 var teched = false
 
 func _ready():

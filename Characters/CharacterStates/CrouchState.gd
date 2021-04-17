@@ -2,17 +2,13 @@ extends State
 
 class_name CrouchState
 var dropDownTimer = null
-var dropDownFrames = 2.0/60.0
-#platformcollisiontimer
-var platformCollisionTimer = null
-var platformCollisionFrames = 30.0/60.0
+var dropDownFrames = 2.0
 
 func _ready():
 	play_animation("crouch")
 	dropDownTimer = create_timer("on_dropDown_timeout", "DropDownTimer")
 	if character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
-	platformCollisionTimer = create_timer("on_platformCollisionTimer_timeout", "PlatformCollisionTimer")
 	
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
@@ -48,10 +44,7 @@ func create_dropDown_timer(waitTime):
 
 func on_dropDown_timeout():
 	if get_input_direction_y() >= 0.8:
-		create_platformCollision_timer(platformCollisionFrames)
+		character.create_platformCollisionDisabled_timer(character.platformCollisionDisableFrames)
 		character.jumpCount = 1
 		character.set_collision_mask_bit(1,false)
 		character.change_state(GlobalVariables.CharacterState.AIR)
-		
-func create_platformCollision_timer(waitTime):
-	start_timer(platformCollisionTimer, waitTime)

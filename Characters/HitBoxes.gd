@@ -127,8 +127,8 @@ func apply_hitlag(hitArea):
 			elif attackedCharacterState == GlobalVariables.CharacterState.GROUND\
 			&& attackedCharacter.state.shieldDropTimer.get_time_left() && attackedCharacter.perfectShieldFramesLeft > 0:
 				attackedCharacter.perfectShieldActivated = true
-				attackedCharacter.character_attacked_handler(attackedCharacter.hitLagFrames + (8.0/60.0))
-				character.state.create_hitlag_timer(character.hitLagFrames + (11.0/60.0))
+				attackedCharacter.character_attacked_handler(attackedCharacter.hitLagFrames + (8.0))
+				character.state.create_hitlag_timer(character.hitLagFrames + (11.0))
 			else:
 				attackedCharacter.character_attacked_handler(attackedCharacter.hitLagFrames)
 				character.state.create_hitlag_timer(character.hitLagFrames)

@@ -3,7 +3,7 @@ extends State
 class_name ShieldBreakState
 
 var shieldBreakTimer = null
-var shieldBreakFrames = 500.0/60.0
+var shieldBreakFrames = 500.0
 var shieldBreakVelocity = Vector2(0,-1000)
 
 func _ready():

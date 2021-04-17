@@ -8,11 +8,11 @@ var character = null
 var stateDone = false
 #smash Attack 
 var smashAttackTimer = null
-var smashAttackInputFrames = 5.0/60.0
+var smashAttackInputFrames = 5.0
 #shorthop 
 var shortHopTimer = null
 var shortHop = false
-var shortHopWaitTime = 3.0/60.0
+var shortHopWaitTime = 3.0
 var inMovementLag = false
 #buffer 
 var bufferedInput = null
@@ -202,7 +202,7 @@ func create_timer(timeout_function, timerName):
 	return timer
 	
 func start_timer(timer, waitTime, oneShot = true):
-	timer.set_wait_time(waitTime)
+	timer.set_wait_time(waitTime/60.0)
 	timer.set_one_shot(oneShot)
 	timer.start()
 	print(timer.name)

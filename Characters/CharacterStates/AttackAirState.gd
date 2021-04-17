@@ -1,15 +1,9 @@
 extends State
 
 class_name AttackAirState
-var platformCollisionDisabledTimer = null
-var platformCollisionDisableFrames = 30.0/60.0
 
 func _ready():
-	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
 	character.currentHitBox = 1
-	if character.bufferPlatformCollisionDisabledFrames:
-		create_platformCollisionDisabled_timer(character.bufferPlatformCollisionDisabledFrames)
-		character.bufferPlatformCollisionDisabledFrames = 0
 
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
@@ -102,11 +96,11 @@ func _physics_process(_delta):
 			process_movement_physics_air(_delta)
 		if character.airTime <= 300: 
 			character.airTime += 1
-		var solidGroundCollision = check_ground_platform_collision(platformCollisionDisabledTimer.get_time_left())
+		var solidGroundCollision = check_ground_platform_collision(character.platformCollisionDisabledTimer.get_time_left())
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
 			var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
-			character.applyLandingLag = currentAttackData["landingLag"] / 60.0
+			character.applyLandingLag = currentAttackData["landingLag"]
 			if character.currentAttack == GlobalVariables.CharacterAnimations.DAIR:
 				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 			else:
@@ -139,11 +133,5 @@ func _physics_process(_delta):
 				character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
 		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
 			character.set_collision_mask_bit(1,false)
-		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null:
-			character.set_collision_mask_bit(1,true)
-
-func create_platformCollisionDisabled_timer(waitTime):
-	start_timer(platformCollisionDisabledTimer, waitTime)
-	
-func on_platformCollisionDisabled_timeout():
-	pass
+		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():
+			character.set_collision_mask_bit(1,true) 

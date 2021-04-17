@@ -1,7 +1,7 @@
 extends State
 
 class_name GroundTechState
-var groundTechInvincibilityFrames = 25.0/60.0
+var groundTechInvincibilityFrames = 25.0
 
 func _ready():
 	create_invincibility_timer(groundTechInvincibilityFrames)

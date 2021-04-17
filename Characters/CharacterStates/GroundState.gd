@@ -5,21 +5,21 @@ class_name GroundState
 var xInput = 0
 var lastXInput = 0
 #stopMovement
-var stopMovementFrames = 4.0/60.0
+var stopMovementFrames = 4.0
 var stopMovementTimer = null
 #turnAround
-var slideTurnAroundFrames = 21.0/60.0
-var turnAroundFrames = 6.0/60.0
+var slideTurnAroundFrames = 21.0
+var turnAroundFrames = 6.0
 var turnAroundTimer = null
 #sideStep
 var sideStepTimer = null
-var sideStepFrames = 12.0/60.0
+var sideStepFrames = 12.0
 var countFrames = 0
 #shieldDropTimer 
 var perfectShieldFrames = 5
 var perfectShieldFramesLeft = 5
 var shieldDropTimer = null
-var shiedDropFrames = 11.0/60.0
+var shiedDropFrames = 11.0
 #dropDownTimer
 var dropDownTimer = null
 #landinglag

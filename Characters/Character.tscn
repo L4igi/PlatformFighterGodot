@@ -635,6 +635,7 @@ tracks/1/keys = {
 [sub_resource type="Animation" id=56]
 resource_name = "airdodge_neutral"
 length = 0.75
+loop = true
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -659,29 +660,6 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
-}
-tracks/2/type = "method"
-tracks/2/path = NodePath("..")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.0666667, 0.4, 0.75 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
-"values": [ {
-"args": [ 0 ],
-"method": "airDodge_animation_step"
-}, {
-"args": [ 1 ],
-"method": "airDodge_animation_step"
-}, {
-"args": [ 2 ],
-"method": "airDodge_animation_step"
-}, {
-"args": [ 3 ],
-"method": "airDodge_animation_step"
-} ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -2733,7 +2711,6 @@ polygon = PoolVector2Array( 0, -2, -2.13333, 8, -2.13333, 24, -2.13333, 32, 2.13
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
 animation = "airdodge"
-frame = 1
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]

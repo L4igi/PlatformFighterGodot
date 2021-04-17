@@ -4,16 +4,16 @@ class_name EdgeState
 var edgeInvincibilityDuration = 0
 #edgedrop timer
 var edgeDropTimer = null
-var edgeDropTimeLow = 120.0/60.0
-var edgeDropTimeHigh = 150.0/60.0
-var edgeRegrabFrames = 50.0/60.0
+var edgeDropTimeLow = 120.0
+var edgeDropTimeHigh = 150.0
+var edgeRegrabFrames = 50.0
 
 func _ready():
 	edgeDropTimer = create_timer("on_edgeDrop_timeout", "EdgeDropTimer")
 	var edgeDamagePercent = 120
 	if character.damagePercent < edgeDamagePercent: 
 		edgeDamagePercent = character.damagePercent
-	edgeInvincibilityDuration = ((character.airTime*0.2+64)-(edgeDamagePercent*44/120))/60.0
+	edgeInvincibilityDuration = ((character.airTime*0.2+64)-(edgeDamagePercent*44/120))
 	if character.damagePercent < 100: 
 		create_edgeDrop_timer(edgeDropTimeLow)
 	else: 
