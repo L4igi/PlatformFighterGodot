@@ -2701,9 +2701,9 @@ collision_mask = 0
 script = ExtResource( 1 )
 
 [node name="CharacterCollider" type="CollisionPolygon2D" parent="."]
-position = Vector2( 2.38419e-07, 0 )
+position = Vector2( 0, 10 )
 scale = Vector2( 1.875, 1 )
-polygon = PoolVector2Array( 0, -2, -2.13333, 8, -2.13333, 24, -2.13333, 32, 2.13333, 32, 2.13333, 24, 2.13333, 8 )
+polygon = PoolVector2Array( -2.13333, 22, 2.13333, 22, 2.13333, -6, 0, -18, -2.13333, -6 )
 
 [node name="Tween" type="Tween" parent="."]
 

@@ -13,8 +13,8 @@ var platformNormalVector = Vector2(0,-1)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	stopAreaRight.set_position(Vector2(122,-10))
-	stopAreaLeft.set_position(Vector2(-122,-10))
+	stopAreaRight.set_position(Vector2(115,-10))
+	stopAreaLeft.set_position(Vector2(-115,-10))
 	collisionEdgeDetectionLeft.set_position(Vector2(-122,0))
 	collisionEdgeDetectionLeft.set_scale(Vector2(1,0.8))
 	collisionEdgeDetectionRight.set_position(Vector2(122,0))

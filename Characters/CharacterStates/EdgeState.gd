@@ -37,6 +37,7 @@ func handle_input():
 		character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())
 		character.snappedEdge = null
 		character.onEdge = false
+#		character.velocity.x = -character.walkMaxSpeed/2
 		character.change_state(GlobalVariables.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.jump) || Input.is_action_just_pressed(character.up):
 		character.getUpType = GlobalVariables.CharacterAnimations.JUMPGETUP

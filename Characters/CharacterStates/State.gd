@@ -87,6 +87,8 @@ func manage_buffered_input_air():
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 		GlobalVariables.CharacterAnimations.FTILTL:
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		GlobalVariables.CharacterAnimations.SHIELD:
+			character.change_state(GlobalVariables.CharacterState.AIRDODGE)
 	bufferedInput = null
 	
 func handle_input():

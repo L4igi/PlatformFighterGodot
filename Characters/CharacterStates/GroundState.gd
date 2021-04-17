@@ -133,8 +133,9 @@ func _physics_process(_delta):
 		else:
 			handle_input()
 			input_movement_physics(_delta)
-			check_in_air(_delta)
+			check_stop_area_entered()
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
+			check_in_air(_delta)
 			#checks if player walked off platform/stage
 		
 func input_movement_physics(_delta):
@@ -402,3 +403,17 @@ func on_shorthop_timeout():
 		inMovementLag = false
 		turnAroundTimer.stop()
 		enable_player_input()
+		
+func check_stop_area_entered():
+	if character.stopAreaEntered: 
+		match character.atPlatformEdge:
+			GlobalVariables.MoveDirection.RIGHT:
+#				match character.currentMoveDirection:
+#					GlobalVariables.MoveDirection.RIGHT:
+				if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
+					character.velocity.x = 0
+			GlobalVariables.MoveDirection.LEFT:
+#				match character.currentMoveDirection:
+#					GlobalVariables.MoveDirection.LEFT:
+				if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
+					character.velocity.x = 0

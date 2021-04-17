@@ -209,6 +209,9 @@ func calc_hitstun_velocity(delta):
 		velocity.x = 0
 	
 func snap_edge(collidingEdge):
+	if edgeRegrabTimer.get_time_left():
+		print(edgeRegrabTimer.get_time_left())
+		return
 	disableInput = true
 	onEdge = true
 	velocity = Vector2.ZERO
@@ -580,7 +583,6 @@ func check_state_transition(changeToState, bufferedInput):
 					changeToState = GlobalVariables.CharacterState.ATTACKAIR
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:
-					print("AIRDODGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 					changeToState = GlobalVariables.CharacterState.AIRDODGE
 	#				bufferedInput = currentAttack
 	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
@@ -627,8 +629,7 @@ func create_timer(timeout_function, timerName):
 func create_edgeRegrab_timer(waitTime):
 	disabledEdgeGrab = true
 	edgeGrabShape.set_deferred("disabled", true)
-	edgeRegrabTimer.set_one_shot(true)
-	edgeRegrabTimer.start(waitTime)
+	state.start_timer(edgeRegrabTimer, waitTime)
 
 func on_edgeRegrab_timeout():
 	disabledEdgeGrab = false

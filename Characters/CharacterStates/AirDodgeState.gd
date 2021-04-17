@@ -33,7 +33,9 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.edgeGrabShape.set_deferred("disabled", true)
 	
 func manage_buffered_input():
-	manage_buffered_input_air()
+	bufferedInput = null
+	pass
+#	manage_buffered_input_air()
 		
 func handle_input():
 	pass
@@ -58,7 +60,6 @@ func _physics_process(_delta):
 #		print(round(airDodgeTimer.get_time_left()*60.0))
 		if !invincibilityTimerStarted: 
 			check_invincibilityTimer_start()
-		print(character.get_collision_mask_bit(1))
 		
 func check_invincibilityTimer_start():
 	var airDodgeFramesLeft = round(airDodgeTimer.get_time_left()*60.0)

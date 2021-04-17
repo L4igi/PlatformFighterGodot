@@ -66,6 +66,7 @@ func _physics_process(_delta):
 	if !stateDone:
 		handle_input_disabled()
 		if character.disableInput:
+			process_movement_physics(_delta)
 			if !check_in_air(_delta) && character.chargingSmashAttack:
 				if (Input.is_action_just_released(character.attack)\
 				|| !Input.is_action_pressed(character.attack)):
@@ -74,7 +75,6 @@ func _physics_process(_delta):
 					character.apply_smash_attack_steps(2)
 			if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
 				check_stop_area_entered()
-			process_movement_physics(_delta)
 		else:
 			if character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()

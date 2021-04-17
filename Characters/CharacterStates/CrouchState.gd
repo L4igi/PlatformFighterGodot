@@ -24,11 +24,15 @@ func handle_input():
 	elif Input.is_action_just_pressed(character.jump):
 		bufferedInput = null
 		create_shortHop_timer()
+	elif dropDownTimer.get_time_left() && Input.is_action_just_pressed(character.shield):
+		bufferedInput = GlobalVariables.CharacterAnimations.SHIELD
 
 func handle_input_disabled():
 	if !shortHopTimer.get_time_left():
 		buffer_input()
-
+		
+func manage_buffered_input():
+	manage_buffered_input_ground()
 	
 func _physics_process(delta):
 	if !stateDone:

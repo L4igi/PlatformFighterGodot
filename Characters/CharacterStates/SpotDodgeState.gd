@@ -9,6 +9,9 @@ func _ready():
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
 
+func manage_buffered_input():
+	manage_buffered_input_ground()
+
 func handle_input():
 	pass
 
