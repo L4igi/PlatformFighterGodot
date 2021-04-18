@@ -25,7 +25,19 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.disabledEdgeGrab = true
 	character.edgeGrabShape.set_deferred("disabled", true)
 	CharacterInteractionHandler.remove_ground_colliding_character(character)
+	character.airdodgeAvailable = true
 
+func switch_to_current_state_again():
+	hitStunTimer.stop()
+	create_hitlagAttacked_timer(character.bufferHitLagFrames)
+	inLandingLag = false
+	character.jumpCount = 1
+	character.canGetEdgeInvincibility = true
+	character.onSolidGround = null
+	character.disabledEdgeGrab = true
+	character.edgeGrabShape.set_deferred("disabled", true)
+	CharacterInteractionHandler.remove_ground_colliding_character(character)
+	character.airdodgeAvailable = true
 
 func handle_input():
 	if !hitStunTimer.get_time_left():
@@ -155,5 +167,5 @@ func on_techCooldown_timeout():
 
 func calculate_vertical_velocity(_delta):
 	character.velocity.y += character.gravity * _delta
-	if character.velocity.y >= character.maxFallSpeedHitStun: 
-		character.velocity.y = character.maxFallSpeedHitStun
+	if character.velocity.y >= maxFallSpeedHitStun: 
+		character.velocity.y = maxFallSpeedHitStun

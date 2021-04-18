@@ -55,6 +55,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.jumpCount = 0
 	lastXInputZeroCount = 0
 	play_animation("idle")
+	character.airdodgeAvailable = true
 
 func manage_buffered_input():
 	manage_buffered_input_ground()

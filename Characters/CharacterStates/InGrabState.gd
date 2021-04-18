@@ -19,6 +19,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0
+	character.airdodgeAvailable = true
 
 #func _physics_process(_delta):
 #	if abs(int(character.inGrabByCharacter.velocity.x)) != 0: 

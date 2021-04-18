@@ -42,6 +42,7 @@ func disable_all_hitboxes():
 			hitBoxShape.set_deferred('disabled',true)
 		
 func apply_attack(hbType):
+#	print("applying attack")
 	var currentHitBoxNumber = character.currentHitBox
 	var combinedAttackDataString = character.currentAttack
 	match hbType:

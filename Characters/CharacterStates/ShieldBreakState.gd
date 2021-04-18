@@ -19,6 +19,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
 	character.velocity = shieldBreakVelocity
 	character.jumpCount = 0
+	character.airdodgeAvailable = true
 	
 func _physics_process(_delta):
 	if !stateDone:

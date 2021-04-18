@@ -16,6 +16,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0
+	character.airdodgeAvailable = true
 	
 func handle_input():
 	if Input.is_action_just_pressed(character.attack):

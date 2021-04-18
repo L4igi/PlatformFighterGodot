@@ -9,6 +9,7 @@ func _ready():
 	
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+	character.airdodgeAvailable = true
 
 			
 func handle_input():

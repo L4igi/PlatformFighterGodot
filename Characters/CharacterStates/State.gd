@@ -90,7 +90,8 @@ func manage_buffered_input_air():
 		GlobalVariables.CharacterAnimations.FTILTL:
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 		GlobalVariables.CharacterAnimations.SHIELD:
-			character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+			if character.airdodgeAvailable:
+				character.change_state(GlobalVariables.CharacterState.AIRDODGE)
 	bufferedInput = null
 	
 func handle_input():
@@ -98,7 +99,6 @@ func handle_input():
 
 func handle_input_disabled():
 	pass
-	
 
 func process_movement_physics(_delta):
 	character.velocity.x = move_toward(character.velocity.x, 0, character.groundStopForce * _delta)
@@ -187,9 +187,14 @@ func reset_attributes():
 	character.pushingAction = false
 	character.perfectShieldActivated = false
 	character.bufferedSmashAttack = null
+	character.stopAreaVelocity.x = 0
 	character.toggle_all_hitboxes("off")
 	character.characterShield.disable_shield()
 	enable_player_input()
+	
+func switch_to_current_state_again():
+	print(GlobalVariables.CharacterState.keys()[character.currentState])
+	pass
 
 func _unhandled_input(event):
 	pass
@@ -256,7 +261,6 @@ func check_in_air():
 	if !character.get_slide_count():
 		if character.velocity.x == 0: 
 			character.velocity.x = character.stopAreaVelocity.x
-			character.stopAreaVelocity.x = 0
 		if shortHopTimer.get_time_left():
 			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
 			character.change_state(GlobalVariables.CharacterState.AIR)
@@ -349,8 +353,6 @@ func process_jump():
 	character.disableInput = false
 	if character.velocity.x == 0: 
 		character.velocity.x = character.stopAreaVelocity.x
-		character.stopAreaVelocity.x = 0
-#	print(character.velocity.x)
 	character.change_state(GlobalVariables.CharacterState.AIR)
 		
 func enable_player_input():
@@ -381,6 +383,7 @@ func on_invincibility_timeout():
 		direction = -1
 		
 func create_hitlag_timer(waitTime):
+#	character.toggle_all_hitboxes("off")
 	print(character.name +" creating hitlag timer " + str(waitTime))
 	animationPlayer.stop(false)
 	gravity_on_off("off")
@@ -391,6 +394,8 @@ func create_hitlag_timer(waitTime):
 	start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
+	print(character.name +" hitlag timeout ")
+	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	character.velocity = character.initLaunchVelocity
 	animationPlayer.play()
@@ -414,6 +419,7 @@ func create_hitlagAttacked_timer(waitTime):
 	start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
+	print(character.name +" hitlagAttacked timeout ")
 	gravity_on_off("on")
 	attackedInitLaunchAngle = atan2(character.initLaunchVelocity.y, character.initLaunchVelocity.x)
 	character.velocity = character.initLaunchVelocity
@@ -422,11 +428,13 @@ func on_hitlagAttacked_timeout():
 	
 	
 func create_hitStun_timer(waitTime):
+	print("hitstun waittime " +str(waitTime))
 	character.disableInput = true
 	character.disableInputDI = false
 	start_timer(hitStunTimer, waitTime)
 	
 func on_hitstun_timeout():
+	print("timeout")
 	character.disableInput = false
 	if character.shortHitStun: 
 		if character.onSolidGround:

@@ -18,6 +18,7 @@ func _ready():
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
 	character.airTime = 0
+	character.airdodgeAvailable = true
 
 func manage_buffered_input_air():
 	match bufferedInput: 

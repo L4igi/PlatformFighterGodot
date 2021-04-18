@@ -17,6 +17,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0
+	character.airdodgeAvailable = true
 
 func manage_buffered_input():
 	character.currentAttack = bufferedInput
@@ -26,6 +27,10 @@ func manage_buffered_input():
 			bufferedInput = null
 			process_jump()
 		GlobalVariables.CharacterAnimations.JAB1:
+			jab_handler()
+		GlobalVariables.CharacterAnimations.JAB2:
+			jab_handler()
+		GlobalVariables.CharacterAnimations.JAB3:
 			jab_handler()
 		GlobalVariables.CharacterAnimations.DSMASH:
 			character.smashAttack = bufferedInput
@@ -74,6 +79,25 @@ func _physics_process(_delta):
 					character.apply_smash_attack_steps(2)
 			if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
 				check_stop_area_entered(_delta)
+			if character.currentAttack == GlobalVariables.CharacterAnimations.JAB1\
+			|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB2\
+			|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB3:
+				if character.comboNextJab:
+					if Input.is_action_pressed(character.attack):
+						animationPlayer.stop()
+						match character.currentAttack:
+							GlobalVariables.CharacterAnimations.JAB1:
+#								if !hitlagTimer.get_time_left():
+#									character.jabCount = 0
+#									bufferedInput = GlobalVariables.CharacterAnimations.JAB1
+#								else:
+								bufferedInput = GlobalVariables.CharacterAnimations.JAB2
+							GlobalVariables.CharacterAnimations.JAB2:
+								bufferedInput = GlobalVariables.CharacterAnimations.JAB2
+							GlobalVariables.CharacterAnimations.JAB3:
+								bufferedInput = GlobalVariables.CharacterAnimations.JAB3
+						character.comboNextJab = false
+						manage_buffered_input()
 		else:
 			if character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()

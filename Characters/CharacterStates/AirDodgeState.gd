@@ -33,6 +33,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	else:
 		character.call_deferred("set_collision_mask_bit",1,true)
 	character.edgeGrabShape.set_deferred("disabled", true)
+	character.airdodgeAvailable = false
 	
 func manage_buffered_input():
 	bufferedInput = null

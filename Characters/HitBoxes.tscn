@@ -41,7 +41,6 @@ modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 position = Vector2( -4.8, -16.875 )
 shape = SubResource( 3 )
 disabled = true
-
 [connection signal="area_entered" from="HitBoxSweetArea" to="." method="_on_HitBoxSweetArea_area_entered"]
 [connection signal="area_entered" from="HitBoxNeutralArea" to="." method="_on_HitBoxNeutralArea_area_entered"]
 [connection signal="area_entered" from="HitBoxSourArea" to="." method="_on_HitBoxSourArea_area_entered"]

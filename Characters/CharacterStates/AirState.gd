@@ -34,7 +34,8 @@ func handle_input():
 		character.gravity = character.fastFallGravity
 		character.maxFallSpeed = character.maxFallSpeedFastFall
 	elif Input.is_action_just_pressed(character.shield):
-		character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+		if character.airdodgeAvailable:
+			character.change_state(GlobalVariables.CharacterState.AIRDODGE)
 	elif Input.is_action_just_pressed("StopGravity"):
 		if character.gravity == 0:
 			gravity_on_off("on")

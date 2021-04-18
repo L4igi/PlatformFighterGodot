@@ -10,6 +10,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
 	character.jumpCount = 0
 	manage_tech_animation()
+	character.airdodgeAvailable = true
 	
 func manage_buffered_input():
 	manage_buffered_input_ground()

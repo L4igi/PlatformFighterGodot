@@ -8,7 +8,7 @@ var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 850
 var baseAirSpeed = 600
-var damagePercent = 200.0
+var damagePercent = 0.0
 #walkforce is only used when no input is detected to slow the character down
 var disableInputInfluence = 1200
 var walkMaxSpeed = 300
@@ -109,7 +109,7 @@ onready var baseGravity = gravity
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 var hitlagDI = Vector2.ZERO
-var hitLagFrames = 60.0
+var hitLagFrames = 3.0
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -171,6 +171,10 @@ var platformCollisionDisabledTimer = null
 var platformCollisionDisableFrames = 30.0
 #stopAreaVelocity
 var stopAreaVelocity = Vector2.ZERO
+#airdodge
+var airdodgeAvailable = true
+#jab combo
+var comboNextJab = false
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -282,6 +286,13 @@ func finish_attack_animation(step):
 func apply_attack_animation_steps(step = 0):
 	pass
 	
+func jab_animation_step(step = 0):
+	match step: 
+		0: 
+			comboNextJab = true
+		1:
+			comboNextJab = false
+	
 func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
 	lastBounceCollision = null
 	damagePercent += damage
@@ -292,7 +303,7 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	#print(damagePercent)
 	velocity = Vector2.ZERO
 	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * attackedCalculatedVelocity
-	print("is attacked velocity " +str(Vector2(launchVectorX,launchVectorY)))
+#	print("is attacked velocity " +str(Vector2(launchVectorX,launchVectorY)))
 	#collisionAreaShape.set_deferred('disabled',true)
 	if launchVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
@@ -332,7 +343,7 @@ func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScal
 func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, knockBackScaling):
 	knockBackScaling = 1
 	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
+#	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
 	return calculatedKnockBack
 	
 func apply_throw(actionType):
@@ -587,13 +598,17 @@ func check_state_transition(changeToState, bufferedInput):
 					changeToState = GlobalVariables.CharacterState.ATTACKAIR
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:
-					changeToState = GlobalVariables.CharacterState.AIRDODGE
+					if airdodgeAvailable:
+						changeToState = GlobalVariables.CharacterState.AIRDODGE
 	#				bufferedInput = currentAttack
 	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
 	return [bufferedInput, changeToState]
 	
 
 func change_state(new_state):
+	if currentState == new_state:
+		state.switch_to_current_state_again()
+		return
 	var changeToState = new_state
 	var bufferedInput = null
 	var bufferedAnimation = null
@@ -605,13 +620,12 @@ func change_state(new_state):
 		var checkedTransition = check_state_transition(changeToState, bufferedInput)
 		bufferedInput = checkedTransition[0]
 		changeToState = checkedTransition[1]
-		currentAttack = null
+#		currentAttack = null
 		bufferedAnimation = state.bufferedAnimation
 		state.queue_free()
 	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.setup(funcref(self, "change_state"), animationPlayer, self, bufferedInput, bufferedAnimation)
-	toggle_all_hitboxes("off")
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
