@@ -55,23 +55,24 @@ func manage_buffered_input():
 			if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 				mirror_areas()
-			character.currentAttack = GlobalVariables.CharacterAnimations.FTILTL
+			character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 		GlobalVariables.CharacterAnimations.FTILTR:
 			play_attack_animation("ftilt")
 			if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
 				mirror_areas()
-			character.currentAttack = GlobalVariables.CharacterAnimations.FTILTR
+			character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 		_:
 			character.currentAttack = null
 	bufferedInput = null
 
 func _physics_process(_delta):
-	if !stateDone:
+	if !stateDone && !hitlagTimer.get_time_left():
 		handle_input_disabled()
 		if character.disableInput:
 			process_movement_physics(_delta)
 			if !check_in_air() && character.chargingSmashAttack:
+				check_stop_area_entered(_delta)
 				if (Input.is_action_just_released(character.attack)\
 				|| !Input.is_action_pressed(character.attack)):
 					character.chargingSmashAttack = false
@@ -113,10 +114,10 @@ func _physics_process(_delta):
 			elif character.currentMaxSpeed == character.baseWalkMaxSpeed: 
 				if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
 					play_attack_animation("ftilt")
-					character.currentAttack = GlobalVariables.CharacterAnimations.FTILTL
+					character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 				elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
 					play_attack_animation("ftilt")
-					character.currentAttack = GlobalVariables.CharacterAnimations.FTILTR
+					character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 			elif character.currentMaxSpeed == character.baseRunMaxSpeed: 
 				#dash attack
 				match character.currentMoveDirection:
@@ -132,21 +133,23 @@ func attack_handler_ground_smash_attacks():
 	match character.smashAttack: 
 		GlobalVariables.CharacterAnimations.UPSMASH:
 			animationToPlay = "upsmash"
+			character.currentAttack = GlobalVariables.CharacterAnimations.UPSMASH
 		GlobalVariables.CharacterAnimations.DSMASH:
 			animationToPlay = "dsmash"
+			character.currentAttack = GlobalVariables.CharacterAnimations.DSMASH
 		GlobalVariables.CharacterAnimations.FSMASHR:
 			if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
 				mirror_areas()
 			animationToPlay = "fsmash"
-			character.currentAttack = character.smashAttack
+			character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 		GlobalVariables.CharacterAnimations.FSMASHL:
 			if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 				mirror_areas()
 			animationToPlay = "fsmash"
+			character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 	play_attack_animation(animationToPlay)
-	character.currentAttack = character.smashAttack
 			
 			
 func jab_handler():

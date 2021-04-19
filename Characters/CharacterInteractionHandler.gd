@@ -143,8 +143,8 @@ func calc_push_force(character):
 				return [-0.5,GlobalVariables.MoveDirection.LEFT]
 			GlobalVariables.MoveDirection.RIGHT:
 				return [0.5,GlobalVariables.MoveDirection.RIGHT]
-	elif character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && !character.pushingAction: 
-		return [0.0, character.currentMoveDirection]
+#	elif character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && !character.pushingAction: 
+#		return [0.0, character.currentMoveDirection]
 	elif character.currentState == GlobalVariables.CharacterState.GROUND\
 	&& character.state.turnAroundTimer.get_time_left():
 		match character.currentMoveDirection:

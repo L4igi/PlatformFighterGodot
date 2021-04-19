@@ -11,6 +11,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.edgeGrabShape.set_deferred("disabled", true)
 
 func manage_buffered_input():
+	print("BUFFERING " +str(GlobalVariables.CharacterAnimations.keys()[bufferedInput]))
 	match bufferedInput:
 		GlobalVariables.CharacterAnimations.JUMP:
 			character.currentAttack = null

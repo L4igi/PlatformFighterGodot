@@ -48,7 +48,7 @@ var smashAttack = null
 var currentAttack = null
 var jabCount = 0
 var jabCombo = 1
-var dashAttackSpeed = 800
+var dashAttackSpeed = 600
 var chargingSmashAttack = false
 var bufferedSmashAttack
 var currentHitBox = 1
@@ -109,7 +109,7 @@ onready var baseGravity = gravity
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 var hitlagDI = Vector2.ZERO
-var hitLagFrames = 3.0
+var hitLagFrames = 60.0
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -594,7 +594,14 @@ func check_state_transition(changeToState, bufferedInput):
 		match currentState:
 			GlobalVariables.CharacterState.ATTACKGROUND:
 				if changeToState == GlobalVariables.CharacterState.AIR:
-					bufferedInput = currentAttack
+					if currentAttack == GlobalVariables.CharacterAnimations.FSMASH:
+						match currentMoveDirection:
+							GlobalVariables.MoveDirection.LEFT:
+								bufferedInput = GlobalVariables.CharacterAnimations.FSMASHL
+							GlobalVariables.MoveDirection.RIGHT:
+								bufferedInput = GlobalVariables.CharacterAnimations.FSMASHR
+					else:
+						bufferedInput = currentAttack
 					changeToState = GlobalVariables.CharacterState.ATTACKAIR
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:

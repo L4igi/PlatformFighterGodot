@@ -59,11 +59,27 @@ func apply_attack(hbType):
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
 	var knockBackScaling = currentAttackData["knockBackGrowth_" + String(currentHitBoxNumber)]/100
 	var launchVectorX = launchVector.x
-	#inverse x launch diretion depending on character position
-	if attackedCharacter.global_position.x < character.global_position.x:
-		launchVectorX *= -1
-	else:
-		launchVectorX = abs(launchVectorX)
+	##direction player if facing
+	if currentAttackData["facing_direction"] == 0:
+		match character.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				launchVectorX = launchVectorX
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorX *= -1
+	elif currentAttackData["facing_direction"] == 1\
+	&& attackedCharacter.global_position.x < character.global_position.x:
+		match character.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				launchVectorX = launchVectorX
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorX *= -1
+	#opposit direction player if facing
+	if currentAttackData["facing_direction"] == 2:
+		match character.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				launchVectorX = launchVectorX
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorX *= -1
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity_" + String(currentHitBoxNumber)]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight_" + String(currentHitBoxNumber)]
