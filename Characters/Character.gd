@@ -16,8 +16,8 @@ var runMaxSpeed = 600
 var airMaxSpeed = 500
 var airStopForce = 450
 var baseFallSpeed = 700
-var maxFallSpeed = 700
-var maxFallSpeedFastFall = 1000
+var maxFallSpeed = 850
+var maxFallSpeedFastFall = 1200
 var groundStopForce = 1500
 var jumpSpeed = 800
 var shortHopSpeed = 600
@@ -76,7 +76,7 @@ var getupRollDistance = 100
 var tumblingThreashold = 500
 var characterBouncing = false
 var lastVelocity = Vector2.ZERO
-var bounceThreashold = 800
+var bounceThreashold = 200
 var bounceReduction = 0.8
 var stageBounceCollider = null
 #tech 
@@ -103,13 +103,13 @@ onready var grabPoint = get_node("GrabPoint")
 #character stats
 var weight = 1
 var fastFallGravity = 4000
-onready var gravity = 1800
+onready var gravity = 2000
 onready var baseGravity = gravity
 #hitlag 
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 var hitlagDI = Vector2.ZERO
-var hitLagFrames = 60.0
+var hitLagFrames = 3.0
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -179,6 +179,7 @@ var comboNextJab = false
 func _ready():
 	self.set_collision_mask_bit(0,false)
 	self.set_collision_mask_bit(2,true)
+	animatedSprite.set_position(Vector2(0,0))
 	#self.set_collision_mask_bit(1,false)
 	var file = File.new()
 	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
@@ -300,18 +301,15 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 		attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
 	else:
 		attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
-	#print(damagePercent)
 	velocity = Vector2.ZERO
 	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * attackedCalculatedVelocity
-#	print("is attacked velocity " +str(Vector2(launchVectorX,launchVectorY)))
-	#collisionAreaShape.set_deferred('disabled',true)
-	if launchVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
+	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
+	if attackedCalculatedVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
 		shortHitStun = false
 	else: 
 		shortHitStun = true
 	backUpHitStunTime = hitStun
-	#todo: reset other timers and set paramteres to null
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
 		
@@ -337,14 +335,14 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
 	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-	#print("calculatedKnockBack " +str(calculatedKnockBack))
-	return calculatedKnockBack
+	print("calculatedKnockBack " +str(calculatedKnockBack))
+	return calculatedKnockBack*3.5
 	
 func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, knockBackScaling):
 	knockBackScaling = 1
 	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-#	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
-	return calculatedKnockBack
+	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
+	return calculatedKnockBack*3.5
 	
 func apply_throw(actionType):
 	var currentAttackData = (inGrabByCharacter.attackData[GlobalVariables.CharacterAnimations.keys()[actionType]])
@@ -368,6 +366,7 @@ func apply_throw(actionType):
 	var isProjectile = false
 	inGrabByCharacter = null
 	bufferHitLagFrames = hitLagFrames
+	print(bufferHitLagFrames)
 	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
 #	if shortHitStun:
@@ -630,7 +629,7 @@ func change_state(new_state):
 #		currentAttack = null
 		bufferedAnimation = state.bufferedAnimation
 		state.queue_free()
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.setup(funcref(self, "change_state"), animationPlayer, self, bufferedInput, bufferedAnimation)
 	currentState = changeToState
@@ -681,6 +680,13 @@ func toggle_all_hitboxes(onOff):
 						hitbox.set_deferred('disabled',true)
 			$InteractionAreas.set_position(Vector2(0,0))
 			$InteractionAreas.set_rotation(0)
+			
+func reset_hitboxes():
+	for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
+		for hitbox in areaHitbox.get_children():
+			if hitbox is CollisionShape2D:
+				hitbox.set_scale(Vector2(1,1))
+				hitbox.set_position(Vector2(0,0))
 
 func on_grab_release():
 	#todo grab release motion

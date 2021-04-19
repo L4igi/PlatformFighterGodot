@@ -71,8 +71,6 @@ func manage_buffered_input_air():
 		GlobalVariables.CharacterAnimations.JUMP:
 			double_jump_handler()
 			character.disableInput = false
-#		GlobalVariables.CharacterAnimations.GRAB:
-#			character.change_state(GlobalVariables.CharacterState.GRAB)
 		GlobalVariables.CharacterAnimations.FSMASHR:
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 		GlobalVariables.CharacterAnimations.FSMASHL:
@@ -188,8 +186,10 @@ func reset_attributes():
 	character.perfectShieldActivated = false
 	character.bufferedSmashAttack = null
 	character.stopAreaVelocity.x = 0
+	character.currentHitBox = 1
 	character.toggle_all_hitboxes("off")
 	character.characterShield.disable_shield()
+	character.reset_hitboxes()
 	enable_player_input()
 	
 func switch_to_current_state_again():
@@ -248,10 +248,12 @@ func play_animation(animationToPlay, queue = false):
 	else:
 		animationPlayer.play(animationToPlay)
 		
+		
 func play_attack_animation(animationToPlay, queue = false):
 	character.disableInput = true
 	animationPlayer.playback_speed = 1
 	character.animatedSprite.set_rotation_degrees(0.0)
+	character.animatedSprite.set_position(Vector2(0,0))
 	if queue: 
 		animationPlayer.queue(animationToPlay)
 	else:
@@ -384,7 +386,6 @@ func on_invincibility_timeout():
 		
 func create_hitlag_timer(waitTime):
 #	character.toggle_all_hitboxes("off")
-	print(character.name +" creating hitlag timer " + str(waitTime))
 	animationPlayer.stop(false)
 	gravity_on_off("off")
 	character.velocity = Vector2.ZERO
@@ -394,18 +395,16 @@ func create_hitlag_timer(waitTime):
 	start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
-	print(character.name +" hitlag timeout ")
 	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	character.velocity = character.initLaunchVelocity
 	animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
-#	elif currentState == CharacterState.GROUND && perfectShieldActivated:
-#		initLaunchVelocity = Vector2.ZERO
-#		enable_player_input()
+	if character.currentState == GlobalVariables.CharacterState.GROUND && character.perfectShieldActivated:
+		character.initLaunchVelocity = Vector2.ZERO
+		enable_player_input()
 
 func create_hitlagAttacked_timer(waitTime):
-	print(character.name +" creating hitlagAttacked timer " + str(waitTime))
 	reset_gravity()
 	gravity_on_off("off")
 	character.chargingSmashAttack = false
@@ -419,7 +418,7 @@ func create_hitlagAttacked_timer(waitTime):
 	start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
-	print(character.name +" hitlagAttacked timeout ")
+	print("current damage " +str(character.damagePercent))
 	gravity_on_off("on")
 	attackedInitLaunchAngle = atan2(character.initLaunchVelocity.y, character.initLaunchVelocity.x)
 	character.velocity = character.initLaunchVelocity
@@ -428,13 +427,11 @@ func on_hitlagAttacked_timeout():
 	
 	
 func create_hitStun_timer(waitTime):
-	print("hitstun waittime " +str(waitTime))
 	character.disableInput = true
 	character.disableInputDI = false
 	start_timer(hitStunTimer, waitTime)
 	
 func on_hitstun_timeout():
-	print("timeout")
 	character.disableInput = false
 	if character.shortHitStun: 
 		if character.onSolidGround:

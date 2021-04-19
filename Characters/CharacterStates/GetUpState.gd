@@ -36,6 +36,7 @@ func manage_getup_animation(getUpType, direction):
 			play_animation("normal_getup")
 		GlobalVariables.CharacterAnimations.ATTACKGETUP:
 			play_attack_animation("attack_getup")
+			character.currentAttack = GlobalVariables.CharacterAnimations.ATTACKGETUP
 
 
 func check_stop_area_entered(_delta):

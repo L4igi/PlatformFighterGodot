@@ -32,6 +32,10 @@ func manage_buffered_input():
 			jab_handler()
 		GlobalVariables.CharacterAnimations.JAB3:
 			jab_handler()
+		GlobalVariables.CharacterAnimations.GRAB:
+			character.currentAttack = null
+			bufferedInput = null
+			character.change_state(GlobalVariables.CharacterState.GRAB)
 		GlobalVariables.CharacterAnimations.DSMASH:
 			character.smashAttack = bufferedInput
 			attack_handler_ground_smash_attacks()
@@ -84,7 +88,9 @@ func _physics_process(_delta):
 			|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB2\
 			|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB3:
 				if character.comboNextJab:
-					if Input.is_action_pressed(character.attack):
+					if Input.is_action_pressed(character.attack)\
+					&& get_input_direction_x() == 0\
+					&& get_input_direction_y() == 0:
 						animationPlayer.stop()
 						match character.currentAttack:
 							GlobalVariables.CharacterAnimations.JAB1:

@@ -40,7 +40,7 @@ func handle_input():
 #		character.velocity.x = -character.walkMaxSpeed/2
 		character.change_state(GlobalVariables.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.jump) || Input.is_action_just_pressed(character.up):
-		character.getUpType = GlobalVariables.CharacterAnimations.JUMPGETUP
+		character.getUpType = GlobalVariables.CharacterAnimations.LEDGEJUMPGETUP
 		if character.global_position.x < character.snappedEdge.global_position.x:
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
 		elif character.global_position.x > character.snappedEdge.global_position.x:
@@ -62,7 +62,7 @@ func handle_input():
 			character.velocity.x = -character.walkMaxSpeed/2
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		else:
-			character.getUpType = GlobalVariables.CharacterAnimations.NORMALGETUP
+			character.getUpType = GlobalVariables.CharacterAnimations.LEDGENORMALGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 	elif Input.is_action_just_pressed(character.right):
@@ -74,27 +74,27 @@ func handle_input():
 			character.velocity.x = character.walkMaxSpeed/2
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		else: 
-			character.getUpType = GlobalVariables.CharacterAnimations.NORMALGETUP
+			character.getUpType = GlobalVariables.CharacterAnimations.LEDGENORMALGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 	elif Input.is_action_just_pressed(character.shield):
 		disable_invincibility_edge_action()
 		if character.global_position > character.snappedEdge.global_position:
-			character.getUpType = GlobalVariables.CharacterAnimations.ROLLGETUP
+			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEROLLGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2((character.get_character_size()).x*2,(character.get_character_size()).y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 		else: 
-			character.getUpType = GlobalVariables.CharacterAnimations.ROLLGETUP
+			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEROLLGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-(character.get_character_size()).x*2,(character.get_character_size()).y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 	elif Input.is_action_just_pressed(character.attack):
 		disable_invincibility_edge_action()
 		if character.global_position > character.snappedEdge.global_position:
-			character.getUpType = GlobalVariables.CharacterAnimations.ATTACKGETUP
+			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEATTACKGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 		else:
-			character.getUpType = GlobalVariables.CharacterAnimations.ATTACKGETUP
+			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEATTACKGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
 			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
 	if !character.edgeRegrabTimer.get_time_left() && character.snappedEdge == null: 

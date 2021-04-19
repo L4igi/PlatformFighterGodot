@@ -1,4 +1,4 @@
-[gd_scene load_steps=420 format=2]
+[gd_scene load_steps=421 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -663,7 +663,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=5]
-length = 0.7
+length = 0.566668
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -684,7 +684,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.183333, 0.25, 0.333333, 0.416667, 0.5, 0.566668, 0.616667, 0.683333 ),
+"times": PoolRealArray( 0, 0.1, 0.183333, 0.25, 0.333333, 0.383333, 0.416667, 0.466667, 0.516667, 0.55 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
@@ -696,7 +696,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.7 ),
+"times": PoolRealArray( 0, 0.566667 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [ 0 ],
@@ -705,6 +705,42 @@ tracks/2/keys = {
 "args": [ 1 ],
 "method": "getup_animation_step"
 } ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.383334, 0.416667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 6.5, 8 ), Vector2( 8, 5.33333 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.383334, 0.416667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.5, 1.5 ), Vector2( 1.5, 1.5 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.383333, 0.433333 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=6]
@@ -1745,6 +1781,7 @@ tracks/4/keys = {
 
 [sub_resource type="Animation" id=23]
 length = 0.4
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -2156,6 +2193,88 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=58]
+resource_name = "ledgeAttack_getup"
+length = 0.566668
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "attack_getup" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.183333, 0.25, 0.333333, 0.383333, 0.416667, 0.466667, 0.516667, 0.55 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.566667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "getup_animation_step"
+}, {
+"args": [ 1 ],
+"method": "getup_animation_step"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.383334, 0.416667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 6.5, 8 ), Vector2( 8, 5.33333 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.383334, 0.416667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.5, 1.5 ), Vector2( 1.5, 1.5 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.383333, 0.433333 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=34]
@@ -3117,20 +3236,21 @@ extents = Vector2( 42, 22 )
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
 ]]
+scale = Vector2( 1.5, 1.5 )
 collision_mask = 0
 script = ExtResource( 1 )
 
 [node name="CharacterCollider" type="CollisionPolygon2D" parent="."]
 position = Vector2( 0, 10 )
 scale = Vector2( 1.875, 1 )
-polygon = PoolVector2Array( -2.13333, 22, 2.13333, 22, 2.13333, -6, 0, -18, -2.13333, -6 )
+polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.13333, -6 )
 
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 2 )
-animation = "ftilt"
+animation = "fthrow"
+frame = 4
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
@@ -3166,6 +3286,7 @@ anims/jab2 = SubResource( 30 )
 anims/jump = SubResource( 31 )
 anims/jump_getup = SubResource( 32 )
 anims/landinglagnormal = SubResource( 33 )
+anims/ledgeAttack_getup = SubResource( 58 )
 anims/nair = SubResource( 34 )
 anims/normal_getup = SubResource( 35 )
 anims/roll = SubResource( 36 )
@@ -3191,14 +3312,16 @@ anims/uthrow = SubResource( 55 )
 anims/walk = SubResource( 56 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
+visible = true
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
 position = Vector2( 16.6667, 8.20513 )
 scale = Vector2( 0.6, 0.6 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 16.4103, 8.20513 )
-scale = Vector2( 1.2, 1.2 )
+position = Vector2( 8, 5.33333 )
+scale = Vector2( 1.5, 1.5 )
+disabled = false
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
 position = Vector2( 14.359, 4.10256 )

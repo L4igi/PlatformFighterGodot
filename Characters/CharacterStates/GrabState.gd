@@ -3,7 +3,6 @@ extends State
 class_name GrabState
 
 var grabTimer = null
-var grabFrames = 60.0
 
 func _ready():
 	grabTimer = create_timer("on_grabTimer_timeout", "GrabTimer")

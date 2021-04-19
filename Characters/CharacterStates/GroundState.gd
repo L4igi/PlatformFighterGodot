@@ -69,7 +69,7 @@ func handle_input():
 		else:
 			character.change_state(GlobalVariables.CharacterState.SHIELD)
 	elif Input.is_action_just_pressed(character.grab):
-		pass
+		character.change_state(GlobalVariables.CharacterState.GRAB)
 	if !character.bufferedSmashAttack:
 		if Input.is_action_just_pressed(character.right):
 			create_smashAttack_timer(smashAttackInputFrames)
@@ -281,6 +281,7 @@ func on_stop_movement_timeout():
 
 func create_turnAround_timer(waitTime):
 	inMovementLag = true
+	character.stopAreaVelocity.x = 0
 	stopMovementTimer.stop()
 	start_timer(turnAroundTimer, waitTime)
 	lastXInputZeroCount = 0
