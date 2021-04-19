@@ -117,11 +117,16 @@ func calculate_hitlag_frames(attackDamage, hitlagMultiplier):
 
 func calculate_launch_vector(launchAngle):
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
+	print("type of json angle " +str(launchAngle))
 	match launchAngle: 
-		0.0: 
+		deg2rad(0.0): 
 			print("Zero angle")
-		361.0:
-			print("sakurai angle")
+		deg2rad(361.0):
+			var scaling = 0.25*PI*clamp(attackedCharacter.damagePercent / 150, 0.0, 1.0)
+			launchVector = Vector2(cos(2*PI-scaling), sin(2*PI-scaling))
+			print("sakurai angle "+ str(launchVector))
+		_:
+			print("Normal angle nothing to see here " +str(launchAngle))
 	return launchVector
 
 func apply_grab():

@@ -11,7 +11,7 @@ func _ready():
 #	animationPlayer = $AnimatedSprite/AnimationPlayer
 	
 func set_base_stats():
-	weight = 2.0
+	weight = 1.5
 	baseWalkMaxSpeed = 300
 	walkMaxSpeed = 300
 	runMaxSpeed = 600

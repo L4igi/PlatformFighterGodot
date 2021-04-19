@@ -73,10 +73,10 @@ var launchSpeedDecay = 0.025
 var shortHitStun = false
 var groundHitStun = 3.0
 var getupRollDistance = 100
-var tumblingThreashold = 500
+var tumblingThreashold = 800
 var characterBouncing = false
 var lastVelocity = Vector2.ZERO
-var bounceThreashold = 200
+var bounceThreashold = 1000
 var bounceReduction = 0.8
 var stageBounceCollider = null
 #tech 
@@ -334,15 +334,17 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
-	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
+#	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
+	var calculatedKnockBack = attackBaseKnockBack*15+((damagePercent/2+(damagePercent*attackDamage)/8)*5*knockBackScaling)*(2/weight)
 	print("calculatedKnockBack " +str(calculatedKnockBack))
-	return calculatedKnockBack*3.5
+	return calculatedKnockBack
 	
 func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, knockBackScaling):
 	knockBackScaling = 1
-	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
+	var calculatedKnockBack = attackBaseKnockBack*15+((1/2+(1*attackDamage)/8)*5*knockBackScaling)*(2/weight)
+#	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
 	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
-	return calculatedKnockBack*3.5
+	return calculatedKnockBack
 	
 func apply_throw(actionType):
 	var currentAttackData = (inGrabByCharacter.attackData[GlobalVariables.CharacterAnimations.keys()[actionType]])

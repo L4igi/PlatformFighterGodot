@@ -243,6 +243,7 @@ func play_animation(animationToPlay, queue = false):
 #	print("play " +str(animationToPlay) +str(queue))
 	animationPlayer.playback_speed = 1
 	character.animatedSprite.set_rotation_degrees(0.0)
+	character.animatedSprite.set_position(Vector2(0,0))
 	if queue:
 		animationPlayer.queue(animationToPlay)
 	else:
@@ -400,9 +401,6 @@ func on_hitlag_timeout():
 	character.velocity = character.initLaunchVelocity
 	animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
-	if character.currentState == GlobalVariables.CharacterState.GROUND && character.perfectShieldActivated:
-		character.initLaunchVelocity = Vector2.ZERO
-		enable_player_input()
 
 func create_hitlagAttacked_timer(waitTime):
 	reset_gravity()
@@ -424,6 +422,11 @@ func on_hitlagAttacked_timeout():
 	character.velocity = character.initLaunchVelocity
 	animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
+	if character.currentState == GlobalVariables.CharacterState.GROUND && character.perfectShieldActivated:
+		character.initLaunchVelocity = Vector2.ZERO
+		character.perfectShieldActivated = false
+		play_animation("idle", true)
+		enable_player_input()
 	
 	
 func create_hitStun_timer(waitTime):

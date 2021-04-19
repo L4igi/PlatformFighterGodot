@@ -12,7 +12,7 @@ animations = [ {
 } ]
 
 [node name="Shield" type="Node2D"]
-visible = false
+scale = Vector2( 0.8, 0.8 )
 script = ExtResource( 2 )
 
 [node name="ShieldSprite" type="AnimatedSprite" parent="."]
