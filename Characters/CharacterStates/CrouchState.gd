@@ -20,17 +20,19 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	
 func handle_input():
 	if Input.is_action_just_pressed(character.attack):
-		bufferedInput = GlobalVariables.CharacterAnimations.DTILT
 		character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.jump):
 		bufferedInput = null
 		create_shortHop_timer()
 	elif dropDownTimer.get_time_left() && Input.is_action_just_pressed(character.shield):
-		bufferedInput = GlobalVariables.CharacterAnimations.SHIELD
+		character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+	elif !dropDownTimer.get_time_left() && Input.is_action_just_pressed(character.shield):
+		character.change_state(GlobalVariables.CharacterState.SHIELD)
 
 func handle_input_disabled():
-	if !shortHopTimer.get_time_left():
-		buffer_input()
+	if !shortHopTimer.get_time_left()\
+	&& bufferedInput == null: 
+		.buffer_input()
 		
 func manage_buffered_input():
 	manage_buffered_input_ground()

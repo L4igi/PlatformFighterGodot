@@ -3249,8 +3249,8 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "fthrow"
-frame = 4
+animation = "attack_getup"
+frame = 1
 speed_scale = 2.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]

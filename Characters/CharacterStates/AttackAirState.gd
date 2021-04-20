@@ -13,22 +13,31 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 func manage_buffered_input():
 	match bufferedInput:
 		GlobalVariables.CharacterAnimations.JUMP:
+			character.queueFreeFall = true
 			character.currentAttack = null
-			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
+			double_jump_handler()
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		GlobalVariables.CharacterAnimations.JAB1:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			disableInputDi = true
 			play_attack_animation("nair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.NAIR
 		GlobalVariables.CharacterAnimations.DSMASH:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			disableInputDi = true
 			play_attack_animation("dair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
 		GlobalVariables.CharacterAnimations.UPSMASH:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			disableInputDi = true
 			play_attack_animation("upair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 		GlobalVariables.CharacterAnimations.FSMASHL:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
 				disableInputDi = true
 				play_attack_animation("fair")
@@ -38,6 +47,8 @@ func manage_buffered_input():
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.FSMASHR:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
 				disableInputDi = true
 				play_attack_animation("fair")
@@ -47,14 +58,20 @@ func manage_buffered_input():
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.UPTILT:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			disableInputDi = true
 			play_attack_animation("upair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
 		GlobalVariables.CharacterAnimations.DTILT:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			disableInputDi = true
 			play_attack_animation("dair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
 		GlobalVariables.CharacterAnimations.FTILTL:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
 				disableInputDi = true
 				play_attack_animation("fair")
@@ -64,6 +81,8 @@ func manage_buffered_input():
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.FTILTR:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
 				disableInputDi = true
 				play_attack_animation("fair")
@@ -73,6 +92,8 @@ func manage_buffered_input():
 				play_attack_animation("bair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
 		GlobalVariables.CharacterAnimations.DASHATTACK:
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			disableInputDi = true
 			play_attack_animation("fair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
@@ -84,7 +105,10 @@ func handle_input():
 	pass
 
 func handle_input_disabled():
-	buffer_input()
+	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
+	if animationFramesLeft <= character.bufferInputWindow\
+	&& bufferedInput == null: 
+		.buffer_input()
 	
 	
 func _physics_process(_delta):

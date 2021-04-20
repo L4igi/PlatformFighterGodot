@@ -19,7 +19,7 @@ var baseFallSpeed = 700
 var maxFallSpeed = 850
 var maxFallSpeedFastFall = 1200
 var groundStopForce = 1500
-var jumpSpeed = 800
+var jumpSpeed = 900
 var shortHopSpeed = 600
 var fallingSpeed = 1.0
 var currentMaxSpeed = baseWalkMaxSpeed
@@ -149,6 +149,7 @@ var applySideStepFrames = true
 var bufferedInputSmashAttack = false
 var edgeRegrabTimer = null
 var getUpType = null
+var rollType = null
 var characterTargetGetUpPosition = null
 var grabFrames = 60.0
 var hitLagTimer
@@ -175,6 +176,12 @@ var stopAreaVelocity = Vector2.ZERO
 var airdodgeAvailable = true
 #jab combo
 var comboNextJab = false
+#shorthopAttack 
+var shortHopAttack = false
+#state already changed 
+var stateChangedThisFrame = false
+#turn around smash 
+var turnAroundSmashAttack = false
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -201,6 +208,9 @@ func _ready():
 	state_factory = StateFactory.new()
 	if !onSolidGround:
 		change_state(GlobalVariables.CharacterState.AIR)
+		
+func _physics_process(delta):
+	stateChangedThisFrame = false
 	
 func calc_hitstun_velocity(delta):
 	if velocity.x < 0: 
@@ -270,7 +280,7 @@ func finish_attack_animation(step):
 	match step:
 		0:
 			disabledEdgeGrab = false
-			if !state.bufferedInput:
+			if state.enable_player_input():
 				match currentState:
 					GlobalVariables.CharacterState.ATTACKGROUND:
 						applySideStepFrames = true
@@ -281,8 +291,6 @@ func finish_attack_animation(step):
 					GlobalVariables.CharacterState.ATTACKAIR:
 						change_state(GlobalVariables.CharacterState.AIR)
 						smashAttack = null
-			else:
-				state.enable_player_input()
 
 func apply_attack_animation_steps(step = 0):
 	pass
@@ -424,11 +432,9 @@ func dodge_animation_step(step = 0):
 		2:
 			if onSolidGround && Input.is_action_pressed(shield):
 				change_state(GlobalVariables.CharacterState.SHIELD)
-			elif !state.bufferedInput:
+			elif state.enable_player_input():
 				applySideStepFrames = true
 				change_state(GlobalVariables.CharacterState.GROUND)
-			else:
-				state.enable_player_input()
 				
 #func airDodge_animation_step(step = 0):
 #	match step: 
@@ -461,18 +467,15 @@ func getup_animation_step(step = 0):
 				"jump_getup":
 					state.create_invincibility_timer(jumpGetupInvincibilityFrames)
 		1:
-			if !state.bufferedInput:
+			if state.enable_player_input():
 				applySideStepFrames = true
 				velocity = Vector2.ZERO
 				change_state(GlobalVariables.CharacterState.GROUND)
-			else:
-				velocity = Vector2.ZERO
-				state.enable_player_input()
 
 func jump_getup_animation_step(step = 0):
 	match step:
 		0:
-			if !state.bufferedInput:
+			if state.enable_player_input():
 				queueFreeFall = true
 				match currentMoveDirection:
 					GlobalVariables.MoveDirection.LEFT:
@@ -487,7 +490,6 @@ func jump_getup_animation_step(step = 0):
 					GlobalVariables.MoveDirection.RIGHT:
 						velocity = Vector2(150, -1000)
 				queueFreeFall = true
-				state.enable_player_input()
 
 			
 func apply_grab_animation_step(step = 0):
@@ -538,11 +540,9 @@ func apply_tech_animation_step_ground(step = 0):
 		1:
 			if onSolidGround && Input.is_action_pressed(shield):
 				change_state(GlobalVariables.CharacterState.SHIELD)
-			elif !state.bufferedInput:
+			elif state.enable_player_input():
 				applySideStepFrames = true
 				change_state(GlobalVariables.CharacterState.GROUND)
-			else:
-				state.enable_player_input()
 
 func apply_tech_roll_animation_step_ground(step = 0):
 	match step: 
@@ -554,11 +554,9 @@ func apply_tech_roll_animation_step_ground(step = 0):
 		1:
 			if onSolidGround && Input.is_action_pressed(shield):
 				change_state(GlobalVariables.CharacterState.SHIELD)
-			elif !state.bufferedInput:
+			elif state.enable_player_input():
 				applySideStepFrames = true
 				change_state(GlobalVariables.CharacterState.GROUND)
-			else:
-				state.enable_player_input()
 				
 func apply_tech_animation_step_air(step = 0):
 	match step: 
@@ -566,10 +564,8 @@ func apply_tech_animation_step_air(step = 0):
 			disableInput = true
 		1:
 #			state.bufferedInput = GlobalVariables.CharacterAnimations.JUMP
-			if !state.bufferedInput:
+			if state.enable_player_input():
 				change_state(GlobalVariables.CharacterState.AIR)
-			else:
-				state.enable_player_input()
 
 func enable_disable_hurtboxes(enable = true):
 	for singleHurtbox in hurtBox.get_children():
@@ -590,7 +586,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 			
 			
 func check_state_transition(changeToState, bufferedInput):
-	if bufferMoveAirTransition:
+	if bufferMoveAirTransition && !shortHopAttack:
 		bufferMoveAirTransition = false
 		match currentState:
 			GlobalVariables.CharacterState.ATTACKGROUND:
@@ -603,6 +599,7 @@ func check_state_transition(changeToState, bufferedInput):
 								bufferedInput = GlobalVariables.CharacterAnimations.FSMASHR
 					else:
 						bufferedInput = currentAttack
+						print("BUFFEREDINOUT " +str(GlobalVariables.CharacterAnimations.keys()[bufferedInput]))
 					changeToState = GlobalVariables.CharacterState.ATTACKAIR
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:
@@ -617,6 +614,10 @@ func change_state(new_state):
 	if currentState == new_state:
 		state.switch_to_current_state_again()
 		return
+	if stateChangedThisFrame:
+		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" State already changed this frame ")
+		return
+	stateChangedThisFrame = true
 	var changeToState = new_state
 	var bufferedInput = null
 	var bufferedAnimation = null
@@ -631,8 +632,16 @@ func change_state(new_state):
 #		currentAttack = null
 		bufferedAnimation = state.bufferedAnimation
 		state.queue_free()
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+#		if state.is_queued_for_deletion():
+#			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
+#		else:
+#			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
+	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
+	state.name = GlobalVariables.CharacterState.keys()[new_state]
+#	if state.get_parent():
+#		print("currentstate " +str(currentState) + " new state " +str(new_state))
+#		print("state " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
 	state.setup(funcref(self, "change_state"), animationPlayer, self, bufferedInput, bufferedAnimation)
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)

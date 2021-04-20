@@ -16,7 +16,8 @@ func handle_input():
 	pass
 
 func handle_input_disabled():
-	buffer_input()
+	if !bufferedInput:
+		buffer_input()
 
 func _physics_process(delta):
 	if !stateDone:

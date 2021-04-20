@@ -22,11 +22,13 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 #	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 func manage_buffered_input():
-	manage_buffered_input_air()
+	manage_buffered_input_ground()
 
 			
 func handle_input():
 	if Input.is_action_just_pressed(character.attack):
+		if Input.is_action_pressed(character.jump):
+			double_jump_attack_handler()
 		character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 	elif Input.is_action_just_pressed(character.jump):
 		double_jump_handler()
@@ -44,7 +46,8 @@ func handle_input():
 			character.velocity.y = 0
 
 func handle_input_disabled():
-	buffer_input()
+	if !bufferedInput:
+		.buffer_input()
 	
 
 func _physics_process(_delta):

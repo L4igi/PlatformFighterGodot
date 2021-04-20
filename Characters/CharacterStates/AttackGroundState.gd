@@ -22,50 +22,88 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 func manage_buffered_input():
 	character.currentAttack = bufferedInput
 	match bufferedInput:
+		GlobalVariables.CharacterAnimations.SHORTHOPATTACK:
+			process_shorthop_attack()
 		GlobalVariables.CharacterAnimations.JUMP:
-			character.currentAttack = null
-			bufferedInput = null
-			process_jump()
+			if Input.is_action_pressed(character.attack):
+				process_shorthop_attack()
+			else:
+				character.currentAttack = null
+				bufferedInput = null
+				process_jump()
 		GlobalVariables.CharacterAnimations.JAB1:
-			jab_handler()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				jab_handler()
 		GlobalVariables.CharacterAnimations.JAB2:
-			jab_handler()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				jab_handler()
 		GlobalVariables.CharacterAnimations.JAB3:
-			jab_handler()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				jab_handler()
 		GlobalVariables.CharacterAnimations.GRAB:
 			character.currentAttack = null
 			bufferedInput = null
 			character.change_state(GlobalVariables.CharacterState.GRAB)
 		GlobalVariables.CharacterAnimations.DSMASH:
-			character.smashAttack = bufferedInput
-			attack_handler_ground_smash_attacks()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				character.smashAttack = bufferedInput
+				attack_handler_ground_smash_attacks()
 		GlobalVariables.CharacterAnimations.UPSMASH:
-			character.smashAttack = bufferedInput
-			attack_handler_ground_smash_attacks()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				character.smashAttack = bufferedInput
+				attack_handler_ground_smash_attacks()
 		GlobalVariables.CharacterAnimations.FSMASHL:
-			character.smashAttack = bufferedInput
-			attack_handler_ground_smash_attacks()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				character.smashAttack = bufferedInput
+				attack_handler_ground_smash_attacks()
 		GlobalVariables.CharacterAnimations.FSMASHR:
-			character.smashAttack = bufferedInput
-			attack_handler_ground_smash_attacks()
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				character.smashAttack = bufferedInput
+				attack_handler_ground_smash_attacks()
 		GlobalVariables.CharacterAnimations.UPTILT:
-			play_attack_animation("uptilt")
-			character.currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				play_attack_animation("uptilt")
+				character.currentAttack = GlobalVariables.CharacterAnimations.UPTILT
 		GlobalVariables.CharacterAnimations.DTILT:
-			play_attack_animation("dtilt")
-			character.currentAttack = GlobalVariables.CharacterAnimations.DTILT
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				play_attack_animation("dtilt")
+				character.currentAttack = GlobalVariables.CharacterAnimations.DTILT
 		GlobalVariables.CharacterAnimations.FTILTL:
-			play_attack_animation("ftilt")
-			if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
-				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-				mirror_areas()
-			character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				play_attack_animation("ftilt")
+				if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
+					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+					mirror_areas()
+				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 		GlobalVariables.CharacterAnimations.FTILTR:
-			play_attack_animation("ftilt")
-			if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
-				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-				mirror_areas()
-			character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+			if Input.is_action_pressed(character.jump):
+				process_shorthop_attack()
+			else:
+				play_attack_animation("ftilt")
+				if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
+					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+					mirror_areas()
+				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 		_:
 			character.currentAttack = null
 	bufferedInput = null
@@ -92,19 +130,8 @@ func _physics_process(_delta):
 					&& get_input_direction_x() == 0\
 					&& get_input_direction_y() == 0:
 						animationPlayer.stop()
-						match character.currentAttack:
-							GlobalVariables.CharacterAnimations.JAB1:
-#								if !hitlagTimer.get_time_left():
-#									character.jabCount = 0
-#									bufferedInput = GlobalVariables.CharacterAnimations.JAB1
-#								else:
-								bufferedInput = GlobalVariables.CharacterAnimations.JAB2
-							GlobalVariables.CharacterAnimations.JAB2:
-								bufferedInput = GlobalVariables.CharacterAnimations.JAB2
-							GlobalVariables.CharacterAnimations.JAB3:
-								bufferedInput = GlobalVariables.CharacterAnimations.JAB3
+						jab_handler()
 						character.comboNextJab = false
-						manage_buffered_input()
 		else:
 			if character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()
@@ -135,6 +162,15 @@ func _physics_process(_delta):
 				character.currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 			
 func attack_handler_ground_smash_attacks():
+	if character.turnAroundSmashAttack:
+		match character.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				character.velocity.x = 600
+			GlobalVariables.MoveDirection.LEFT:
+				character.velocity.x = -600
+	else:
+		character.velocity = Vector2.ZERO
+	character.turnAroundSmashAttack = false
 	var animationToPlay = null
 	match character.smashAttack: 
 		GlobalVariables.CharacterAnimations.UPSMASH:
@@ -177,8 +213,11 @@ func handle_input():
 	pass
 	
 func handle_input_disabled():
-	if !shortHopTimer.get_time_left():
-		buffer_input()
+	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
+	if animationFramesLeft <= character.bufferInputWindow\
+	&& !shortHopTimer.get_time_left()\
+	&& bufferedInput == null: 
+		.buffer_input()
 		
 func check_character_crouch():
 	if get_input_direction_y() >= 0.5 && !inMovementLag:

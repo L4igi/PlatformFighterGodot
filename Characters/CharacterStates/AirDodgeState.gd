@@ -36,15 +36,21 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.airdodgeAvailable = false
 	
 func manage_buffered_input():
-	bufferedInput = null
-	pass
-#	manage_buffered_input_air()
+	if character.onSolidGround:
+		manage_buffered_input_ground()
+	else:
+		manage_buffered_input_air()
 		
 func handle_input():
 	pass
 
 func handle_input_disabled():
-	buffer_input()
+	if !bufferedInput:
+		buffer_input()
+	
+func buffer_input():
+	if bufferedInput == null: 
+		.buffer_input()
 	
 func _physics_process(_delta):
 	if !stateDone:
@@ -57,9 +63,14 @@ func _physics_process(_delta):
 #		character.velocity = character.move_and_slide(character.velocity)  
 		var solidGroundCollision = check_ground_platform_collision(character.platformCollisionDisabledTimer.get_time_left())
 		if solidGroundCollision:
+			bufferedInput = null
+			airDodgeTimer.stop()
+			invincibilityTimer.stop()
+			on_invincibility_timeout()
 			character.onSolidGround = solidGroundCollision
 			character.applyLandingLag = airDodgeLandingLag
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			if enable_player_input():
+				character.change_state(GlobalVariables.CharacterState.GROUND)
 #		print(round(airDodgeTimer.get_time_left()*60.0))
 		if !invincibilityTimerStarted: 
 			check_invincibilityTimer_start()
@@ -110,15 +121,14 @@ func create_airDodge_timer(waitTime):
 	start_timer(airDodgeTimer, waitTime)
 	
 func on_airDodgeTimer_timeout():
-	if !character.onSolidGround && !bufferedInput:
-		character.change_state(GlobalVariables.CharacterState.AIR)
-	if character.onSolidGround && Input.is_action_pressed(character.shield):
-		character.change_state(GlobalVariables.CharacterState.SHIELD)
-	elif character.onSolidGround && !bufferedInput:
-		character.applySideStepFrames = true
-		character.change_state(GlobalVariables.CharacterState.GROUND)
-	else:
-		enable_player_input()
+	if enable_player_input():
+		if !character.onSolidGround:
+			character.change_state(GlobalVariables.CharacterState.AIR)
+		if character.onSolidGround && Input.is_action_pressed(character.shield):
+			character.change_state(GlobalVariables.CharacterState.SHIELD)
+		elif character.onSolidGround:
+			character.applySideStepFrames = true
+			character.change_state(GlobalVariables.CharacterState.GROUND)
 	
 func on_invincibility_timeout():
 	character.enable_disable_hurtboxes(true)

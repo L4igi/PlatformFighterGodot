@@ -38,6 +38,7 @@ func handle_input():
 		character.snappedEdge = null
 		character.onEdge = false
 #		character.velocity.x = -character.walkMaxSpeed/2
+		character.disableInput = false
 		character.change_state(GlobalVariables.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.jump) || Input.is_action_just_pressed(character.up):
 		character.getUpType = GlobalVariables.CharacterAnimations.LEDGEJUMPGETUP
@@ -60,6 +61,7 @@ func handle_input():
 			character.snappedEdge = null
 			character.onEdge = false
 			character.velocity.x = -character.walkMaxSpeed/2
+			character.disableInput = false
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		else:
 			character.getUpType = GlobalVariables.CharacterAnimations.LEDGENORMALGETUP
@@ -72,6 +74,7 @@ func handle_input():
 			character.snappedEdge = null
 			character.onEdge = false
 			character.velocity.x = character.walkMaxSpeed/2
+			character.disableInput = false
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		else: 
 			character.getUpType = GlobalVariables.CharacterAnimations.LEDGENORMALGETUP
@@ -115,6 +118,7 @@ func on_edgeDrop_timeout():
 	character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())
 	character.snappedEdge = null
 	character.onEdge = false
+	character.disableInput = false
 	disable_invincibility_edge_action()
 	match character.currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT: 
