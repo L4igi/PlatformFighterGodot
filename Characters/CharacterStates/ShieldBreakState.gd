@@ -21,8 +21,22 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.jumpCount = 0
 	character.airdodgeAvailable = true
 	
+func manage_buffered_input():
+	if character.onSolidGround:
+		manage_buffered_input_ground()
+	else: 
+		manage_buffered_input_air()
+
+func handle_input():
+	pass
+
+func handle_input_disabled():
+	if !bufferedInput:
+		.buffer_input()
+	
 func _physics_process(_delta):
 	if !stateDone:
+		handle_input_disabled()
 		process_movement_physics_air(_delta)
 		if character.enableShieldBreakGroundCheck && !character.onSolidGround:
 				var solidGroundCollision = check_ground_platform_collision()
@@ -40,7 +54,8 @@ func create_shieldbreak_timer(waitTime):
 	
 func on_shieldBreak_timeout():
 	character.characterShield.shieldBreak_end()
-	if character.onSolidGround: 
-		character.change_state(GlobalVariables.CharacterState.GROUND)
-	else:
-		character.change_state(GlobalVariables.CharacterState.AIR)
+	if enable_player_input():
+		if character.onSolidGround: 
+			character.change_state(GlobalVariables.CharacterState.GROUND)
+		else:
+			character.change_state(GlobalVariables.CharacterState.AIR)

@@ -203,6 +203,7 @@ func attack_handler_ground_smash_attacks():
 			
 			
 func jab_handler():
+	character.comboNextJab = false
 	match character.jabCount:
 		0:
 			character.currentAttack = GlobalVariables.CharacterAnimations.JAB1

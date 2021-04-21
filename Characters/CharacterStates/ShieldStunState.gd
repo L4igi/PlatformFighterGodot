@@ -15,8 +15,19 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.characterShield.enable_shield()
 	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
+#func manage_buffered_input():
+#	manage_buffered_input_ground()
+#
+#func handle_input():
+#	pass
+#
+#func handle_input_disabled():
+#	if !bufferedInput:
+#		.buffer_input()
+
 func _physics_process(_delta):
 	if !stateDone:
+#		handle_input_disabled()
 		process_movement_physics(_delta)
 	
 func create_shieldStun_timer(waitTime):

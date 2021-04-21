@@ -70,6 +70,10 @@ func handle_input_disabled():
 	
 func _physics_process(_delta):
 	if !stateDone:
+		if character.velocity.y <= 0.0: 
+			character.set_collision_mask_bit(1,false)
+		elif character.velocity.y > 0.0: 
+			character.set_collision_mask_bit(1,true)
 		if character.velocity.y != 0:
 			character.lastVelocity = character.velocity
 		if character.disableInput:
