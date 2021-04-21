@@ -307,7 +307,7 @@ func jab_animation_step(step = 0):
 		1:
 			comboNextJab = false
 	
-func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
+func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObjectGlobalPosition):
 	lastBounceCollision = null
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
@@ -350,7 +350,7 @@ func is_attacked_handler_perfect_shield():
 	#todo: add perfect shield animation and particle effects
 	print("perfect shield")
 	
-func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackedByCharacter):
+func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackingObjectGlobalPosition):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	characterShield.buffer_shield_damage(damage, shieldDamage)
 #	characterShield.apply_shield_damage(damage, shieldDamage)
@@ -358,9 +358,9 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 	var pushBack = 0
 	velocity = Vector2.ZERO
 	var pushDirection = 1
-	if attackedByCharacter.global_position.x <= self.global_position.x:
+	if attackingObjectGlobalPosition.x <= self.global_position.x:
 		pushDirection = 1
-	elif attackedByCharacter.global_position.x >= self.global_position.x:
+	elif attackingObjectGlobalPosition.x >= self.global_position.x:
 		pushDirection = -1
 	initLaunchVelocity = pushDirection * Vector2(400, 0)
 	#((damage * parameters.shield.mult * projectileMult * perfectshieldMult * groundedMult * aerialMult) + parameters.shield.constant) * 0.09 * perfectshieldMult2;
