@@ -8,6 +8,8 @@ var countCharactersInGame = 2
 
 var charactersInGame = []
 
+var centerStage = null
+
 enum TimerType{HITSTUN, SHORTHOP, DROPDOWN, INVINCIBILITY, GRAB, SMASHATTACK, SHIELDSTUN, SHIELDDROP, HITLAG, TURNAROUND, STOPMOVEMENT, SIDESTEP, LANDINGLAG, EDGEGRAB, HITLAGATTACKED, PLATFORMCOLLISION, EDGEDROPTIMER, SHIELDBREAKTIMER, TECHTIMER, TECHCOOLDOWNTIMER}
 
 var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmash", "dtilt", "fair", "fsmash", "ftilt", "jab1", "jab2", "nair", "upair", "upsmash", "uptilt"]

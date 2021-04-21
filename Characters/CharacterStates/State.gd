@@ -25,6 +25,7 @@ var hitlagTimer = null
 var hitlagAttackedTimer = null
 #hitStun 
 var hitStunTimer = null
+var hitStunTimerDone = true
 #disableInputDI
 var disableInputDi = false
 var attackedInitLaunchAngle = 0
@@ -452,6 +453,7 @@ func create_hitlagAttacked_timer(waitTime):
 	character.chargingSmashAttack = false
 	character.smashAttack = null
 	hitStunTimer.stop()
+	hitStunTimerDone = true
 	animationPlayer.stop(false)
 	character.velocity = Vector2.ZERO
 	character.disableInput = true
@@ -474,11 +476,13 @@ func on_hitlagAttacked_timeout():
 	
 	
 func create_hitStun_timer(waitTime):
+	hitStunTimerDone = false
 	character.disableInput = true
 	character.disableInputDI = false
 	start_timer(hitStunTimer, waitTime)
 	
 func on_hitstun_timeout():
+	hitStunTimerDone = true
 	character.disableInput = false
 	if character.shortHitStun: 
 		if character.onSolidGround:
@@ -486,16 +490,17 @@ func on_hitstun_timeout():
 			character.change_state(GlobalVariables.CharacterState.GROUND)
 		else:
 			hitStunTimer.stop()
+			hitStunTimerDone = true
 			character.change_state(GlobalVariables.CharacterState.AIR)
 	else: 
-		if character.onSolidGround && bufferedInput:
-			character.applyLandingLag = character.normalLandingLag
-			character.change_state(GlobalVariables.CharacterState.GROUND)
-		elif !character.onSolidGround && bufferedInput:
-			hitStunTimer.stop()
-			character.change_state(GlobalVariables.CharacterState.AIR)
-		elif !character.onSolidGround: 
-			play_animation("tumble")
+#		if character.onSolidGround && bufferedInput:
+#			character.applyLandingLag = character.normalLandingLag
+#			character.change_state(GlobalVariables.CharacterState.GROUND)
+#		elif !character.onSolidGround && bufferedInput:
+#			hitStunTimer.stop()
+#			character.change_state(GlobalVariables.CharacterState.AIR)
+#		elif !character.onSolidGround: 
+		play_animation("tumble")
 	
 func reset_gravity():
 	if character.gravity!=character.baseGravity:

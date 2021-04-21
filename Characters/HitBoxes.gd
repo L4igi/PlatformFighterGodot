@@ -78,9 +78,9 @@ func apply_attack(hbType):
 	if currentAttackData["facing_direction"] == 2:
 		match character.currentMoveDirection:
 			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorInversion = false
-			GlobalVariables.MoveDirection.LEFT:
 				launchVectorInversion = true
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorInversion = false
 	#always send attacked character in the direction it is in comparison to attacker
 	elif currentAttackData["facing_direction"] == 3:
 		if attackedCharacter.global_position.x <= character.global_position.x:
@@ -110,11 +110,14 @@ func calculate_hitlag_frames(attackDamage, hitlagMultiplier):
 	|| attackedCharacter.perfectShieldActivated:
 		characterHitlag = floor(characterHitlag * 0.67)
 		attackedCharacterHitlag = floor(characterHitlag * 0.67)
-	character.state.hitlagTimer.set_wait_time(characterHitlag/60.0)
-	attackedCharacter.state.hitlagAttackedTimer.set_wait_time(attackedCharacterHitlag/60.0)
-	character.state.hitlagTimer.start()
-	attackedCharacter.state.hitlagAttackedTimer.start()
-	print("calculated hitlag frames "+ str(characterHitlag))
+	character.state.start_timer(character.state.hitlagTimer, characterHitlag)
+	attackedCharacter.state.start_timer(attackedCharacter.state.hitlagAttackedTimer, attackedCharacterHitlag)
+#	character.state.hitlagTimer.set_wait_time(characterHitlag/60.0)
+#	attackedCharacter.state.hitlagAttackedTimer.set_wait_time(attackedCharacterHitlag/60.0)
+#	character.state.hitlagTimer.start()
+#	attackedCharacter.state.hitlagAttackedTimer.start()
+	print("calculated hitlag frames character "+ str(characterHitlag))
+	print("calculated hitlag frames attackedcharacter "+ str(attackedCharacterHitlag))
 
 func apply_grab():
 	if character.currentMoveDirection == attackedCharacter.currentMoveDirection:

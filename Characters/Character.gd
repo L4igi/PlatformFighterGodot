@@ -73,10 +73,10 @@ var launchSpeedDecay = 0.025
 var shortHitStun = false
 var groundHitStun = 3.0
 var getupRollDistance = 100
-var tumblingThreashold = 800
+var tumblingThreashold = 400
 var characterBouncing = false
 var lastVelocity = Vector2.ZERO
-var bounceThreashold = 1000
+var bounceThreashold = 400
 var bounceReduction = 0.8
 var stageBounceCollider = null
 #tech 
@@ -109,7 +109,7 @@ onready var baseGravity = gravity
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
 var hitlagDI = Vector2.ZERO
-var hitLagFrames = 3.0
+var hitLagFrames = 2.0
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -330,18 +330,19 @@ func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, lau
 		
 func calculate_launch_vector(launchAngle, knockBack):
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
-	print("type of json angle " +str(launchAngle))
+#	print("type of json angle " +str(launchAngle))
 	match launchAngle: 
 		deg2rad(0.0): 
 			pass
 #			print("Zero angle")
 		deg2rad(361.0):
-			var scaling = 0.25*PI*clamp(knockBack / 2500, 0.0, 1.0)
+			var scaling = 0.25*PI*clamp(knockBack / 1500, 0.0, 1.0)
 			launchVector = Vector2(cos(2*PI-scaling), sin(2*PI-scaling))
-			print("sakurai angle "+ str(launchVector))
-			print("sakurai angle scaling "+str(scaling))
+#			print("sakurai angle "+ str(launchVector))
+#			print("sakurai angle scaling "+str(scaling))
 		_:
-			print("Normal angle nothing to see here " +str(launchAngle))
+			pass
+#			print("Normal angle nothing to see here " +str(launchAngle))
 	return launchVector
 		
 func is_attacked_handler_perfect_shield():
@@ -365,16 +366,16 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
-#	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-	var calculatedKnockBack = attackBaseKnockBack*7+((damagePercent/2+(damagePercent*attackDamage)/4)*5*knockBackScaling)*(2/weight)
-	print("calculatedKnockBack " +str(calculatedKnockBack))
-	return calculatedKnockBack
+	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
+#	var calculatedKnockBack = attackBaseKnockBack*7+((damagePercent/2+(damagePercent*attackDamage)/4)*5*knockBackScaling)*(2/weight)
+#	print("calculatedKnockBack " +str(calculatedKnockBack))
+	return calculatedKnockBack * 5
 	
 func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, knockBackScaling):
 	knockBackScaling = 1
 	var calculatedKnockBack = attackBaseKnockBack*7+((1/2+(1*attackDamage)/4)*5*knockBackScaling)*(2/weight)
 #	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
+#	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
 	return calculatedKnockBack
 	
 func apply_throw(actionType):
@@ -399,7 +400,7 @@ func apply_throw(actionType):
 	var isProjectile = false
 	inGrabByCharacter = null
 	bufferHitLagFrames = hitLagFrames
-	print(bufferHitLagFrames)
+	print("buffered hitlag frames throw " +str(bufferHitLagFrames))
 	var launchVectorInversion = false
 	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)

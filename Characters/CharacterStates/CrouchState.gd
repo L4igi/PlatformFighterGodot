@@ -7,7 +7,7 @@ var dropDownFrames = 2.0
 func _ready():
 	play_animation("crouch")
 	dropDownTimer = create_timer("on_dropDown_timeout", "DropDownTimer")
-	if character.onSolidGround.is_in_group("Platform"):
+	if character.onSolidGround && character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
 	
 func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):

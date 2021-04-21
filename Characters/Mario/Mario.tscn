@@ -345,6 +345,18 @@ tracks/11/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/12/type = "value"
+tracks/12/path = NodePath(".:position")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PoolRealArray( 0, 0.283334, 0.416667, 0.533334, 0.600001, 0.683335, 0.816668, 0.916668 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 4 ), Vector2( -2.38419e-07, 12 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( -2.38419e-07, 2 ), Vector2( -2.38419e-07, 0 ) ]
+}
 
 [sub_resource type="Animation" id=4]
 length = 0.633335
@@ -429,6 +441,18 @@ tracks/5/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/6/type = "value"
+tracks/6/path = NodePath(".:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0.1, 0.416667, 0.566668 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -2.38419e-07, 4 ), Vector2( -4.76837e-07, 6 ), Vector2( 2, 6 ) ]
+}
 
 [sub_resource type="Animation" id=5]
 length = 0.666667
@@ -480,7 +504,7 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.05, 0.0833333, 0.133333, 0.233333, 0.333333, 0.6 ),
+"times": PoolRealArray( 0, 0.05, 0.0833333, 0.133333, 0.233333, 0.333333, 0.433333 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
@@ -593,6 +617,18 @@ tracks/10/keys = {
 "update": 1,
 "values": [ false, true ]
 }
+tracks/11/type = "value"
+tracks/11/path = NodePath(".:position")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PoolRealArray( 0, 0.0500001, 0.1, 0.133334, 0.233334, 0.350001, 0.450001 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -6, -2 ), Vector2( -6, 0 ), Vector2( 14, 0 ), Vector2( 16, -0.406 ), Vector2( -6, -0.812 ), Vector2( -16, -0.812 ), Vector2( 2, 0 ) ]
+}
 
 [sub_resource type="Animation" id=7]
 length = 1.01667
@@ -670,6 +706,18 @@ tracks/5/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath(".:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.1, 0.400001, 0.500001 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -8, -16 ), Vector2( -14, -10.406 ), Vector2( 4, -10.812 ), Vector2( 18, 2 ) ]
 }
 
 [sub_resource type="Animation" id=8]
@@ -931,6 +979,54 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:disabled")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.0333333, 0.0666667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/HitBoxSourArea/Sour:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.0333333, 0.0666667 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0.0333334 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 16.009, 0 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("HitBoxes/HitBoxSourArea/Sour:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0.0333334 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 2.05128, 2.38419e-07 ) ]
 }
 
 [sub_resource type="Animation" id=12]
@@ -1409,9 +1505,8 @@ scale = Vector2( 2, 2 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-position = Vector2( 15, 0 )
-animation = "airdodge"
-frame = 0
+animation = "walk"
+frame = 6
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -1433,18 +1528,19 @@ anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
+[node name="HitBoxes" parent="AnimatedSprite" index="1"]
+visible = false
+
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
-position = Vector2( -16.41, 8.19001 )
-scale = Vector2( 0.8, 0.8 )
-disabled = false
+position = Vector2( 6.15385, -21.3333 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 16.4103, 6.118 )
+position = Vector2( 6.15385, -12.3077 )
+scale = Vector2( 1.2, 1.2 )
+disabled = true
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
-position = Vector2( -2.525, 6.118 )
-scale = Vector2( 1.3, 1.3 )
-disabled = false
+position = Vector2( 6.15385, -4.10256 )
 
 [node name="InteractionAreas" parent="." index="3"]
 position = Vector2( -4, 4 )

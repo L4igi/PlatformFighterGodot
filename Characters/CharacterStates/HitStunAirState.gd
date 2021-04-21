@@ -11,6 +11,7 @@ var hitStunMaxFallSpeed = 3000
 var hitStunStopForce = 1000
 var hitStunGravity = 1000
 var hitStunIncreaseValue = 50
+var hitlagDone = false
 
 func _ready():
 	techTimer = create_timer("on_tech_timeout", "TechTimer")
@@ -34,6 +35,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 
 func switch_to_current_state_again():
 	hitStunTimer.stop()
+	hitStunTimerDone = true
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 	inLandingLag = false
 	character.jumpCount = 1
@@ -45,9 +47,10 @@ func switch_to_current_state_again():
 	character.airdodgeAvailable = true
 	hitStunStopForce = 1000
 	hitStunGravity = 1000
+	hitlagDone = false
 
 func handle_input():
-	if !hitStunTimer.get_time_left():
+	if hitStunTimerDone:
 		if Input.is_action_just_pressed(character.attack):
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 #			attack_handler_air(delta)
@@ -71,10 +74,10 @@ func _physics_process(_delta):
 			character.lastVelocity = character.velocity
 		if character.disableInput:
 			process_movement_physics_air(_delta)
-		if hitlagAttackedTimer.get_time_left():
+		if !hitlagDone:
 			character.hitlagDI = Vector2(get_input_direction_x(), get_input_direction_y())
-		elif !hitlagAttackedTimer.get_time_left():
-			if character.disableInput && hitStunTimer.get_time_left():
+		elif hitlagDone:
+			if character.disableInput && !hitStunTimerDone:
 				handle_input_disabled()
 				if character.shortHitStun: 
 					return
@@ -92,6 +95,7 @@ func _physics_process(_delta):
 func process_movement_physics_air(_delta):
 #	print(character.velocity)
 	character.velocity.y += character.gravity * _delta
+	character.velocity.x = move_toward(character.velocity.x, 0.0, 1000*_delta)
 	character.velocity = character.move_and_slide(character.velocity)    
 
 #func process_movement_physics_air(_delta):
@@ -120,7 +124,7 @@ func process_movement_physics_air(_delta):
 #		.calculate_vertical_velocity(_delta)
 
 func check_hitStun_transition():
-	if !hitStunTimer.get_time_left():
+	if hitStunTimerDone:
 		var solidGroundCollision = check_ground_platform_collision()
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
@@ -168,6 +172,7 @@ func on_hitlagAttacked_timeout():
 		play_animation("hurt_short")
 	else:
 		play_animation("hurt")
+	hitlagDone = true
 		
 func input_movement_physics(_delta):
 	# Horizontal movement code. First, get the player's input.

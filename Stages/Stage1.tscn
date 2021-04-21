@@ -20,13 +20,13 @@ position = Vector2( 4, 112 )
 script = ExtResource( 7 )
 
 [node name="PlatformLeft" parent="." instance=ExtResource( 2 )]
-position = Vector2( 352, 322.079 )
+position = Vector2( 276, 304 )
 
 [node name="PlatformTop" parent="." instance=ExtResource( 2 )]
-position = Vector2( 608, 194.079 )
+position = Vector2( 608, 160 )
 
 [node name="PlatformRight" parent="." instance=ExtResource( 2 )]
-position = Vector2( 864, 322.079 )
+position = Vector2( 932, 297 )
 
 [node name="CenterStage" parent="." instance=ExtResource( 1 )]
 position = Vector2( 608, 480 )

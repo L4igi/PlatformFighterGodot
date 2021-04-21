@@ -9,6 +9,7 @@
 [node name="CenterStage" type="KinematicBody2D" groups=[
 "Ground",
 ]]
+scale = Vector2( 1.3, 1 )
 collision_layer = 4
 collision_mask = 0
 script = ExtResource( 2 )
