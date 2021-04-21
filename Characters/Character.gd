@@ -8,7 +8,7 @@ var baseRunMaxSpeed = 600
 var baseStopForce = 1500
 var baseJumpSpeed = 850
 var baseAirSpeed = 600
-var damagePercent = 0.0
+export var damagePercent = 0.0
 #walkforce is only used when no input is detected to slow the character down
 var disableInputInfluence = 1200
 var walkMaxSpeed = 300
@@ -182,6 +182,10 @@ var shortHopAttack = false
 var stateChangedThisFrame = false
 #turn around smash 
 var turnAroundSmashAttack = false
+#smashAttackMultiplier
+var smashAttackMultiplier = 1.0
+#hitstun values 
+
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -302,7 +306,7 @@ func jab_animation_step(step = 0):
 		1:
 			comboNextJab = false
 	
-func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
+func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackedByCharacter):
 	lastBounceCollision = null
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
@@ -310,7 +314,10 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	else:
 		attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
 	velocity = Vector2.ZERO
-	initLaunchVelocity = Vector2(launchVectorX,launchVectorY) * attackedCalculatedVelocity
+	var launchVector = calculate_launch_vector(launchAngle, attackedCalculatedVelocity)
+	if launchVectorInversion:
+		launchVector.x = launchVector.x*-1
+	initLaunchVelocity = launchVector
 	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
 	if attackedCalculatedVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
@@ -320,6 +327,22 @@ func is_attacked_handler(damage, hitStun, launchVectorX, launchVectorY, launchVe
 	backUpHitStunTime = hitStun
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
+		
+func calculate_launch_vector(launchAngle, knockBack):
+	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
+	print("type of json angle " +str(launchAngle))
+	match launchAngle: 
+		deg2rad(0.0): 
+			pass
+#			print("Zero angle")
+		deg2rad(361.0):
+			var scaling = 0.25*PI*clamp(knockBack / 2500, 0.0, 1.0)
+			launchVector = Vector2(cos(2*PI-scaling), sin(2*PI-scaling))
+			print("sakurai angle "+ str(launchVector))
+			print("sakurai angle scaling "+str(scaling))
+		_:
+			print("Normal angle nothing to see here " +str(launchAngle))
+	return launchVector
 		
 func is_attacked_handler_perfect_shield():
 	#todo: add perfect shield animation and particle effects
@@ -343,13 +366,13 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
 #	print("CALCULATING")
 #	var calculatedKnockBack = (((((damagePercent/2+(damagePercent*attackDamage)/4)*200/(weight*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
-	var calculatedKnockBack = attackBaseKnockBack*15+((damagePercent/2+(damagePercent*attackDamage)/8)*5*knockBackScaling)*(2/weight)
+	var calculatedKnockBack = attackBaseKnockBack*7+((damagePercent/2+(damagePercent*attackDamage)/4)*5*knockBackScaling)*(2/weight)
 	print("calculatedKnockBack " +str(calculatedKnockBack))
 	return calculatedKnockBack
 	
 func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, knockBackScaling):
 	knockBackScaling = 1
-	var calculatedKnockBack = attackBaseKnockBack*15+((1/2+(1*attackDamage)/8)*5*knockBackScaling)*(2/weight)
+	var calculatedKnockBack = attackBaseKnockBack*7+((1/2+(1*attackDamage)/4)*5*knockBackScaling)*(2/weight)
 #	var calculatedKnockBack = (((((attackDamage/2+(attackDamage*attackDamage)/4)*200/(1*100/2+100)*1.4)+18)*knockBackScaling)+(attackBaseKnockBack))*1
 	print("calculatedKnockBackWeightBased " +str(calculatedKnockBack))
 	return calculatedKnockBack
@@ -377,8 +400,9 @@ func apply_throw(actionType):
 	inGrabByCharacter = null
 	bufferHitLagFrames = hitLagFrames
 	print(bufferHitLagFrames)
+	var launchVectorInversion = false
 	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
-	is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
+	is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
 #	if shortHitStun:
 #		state.play_animation("hurt_short")
 #	elif !shortHitStun:
@@ -605,6 +629,10 @@ func check_state_transition(changeToState, bufferedInput):
 				if changeToState == GlobalVariables.CharacterState.AIR:
 					if airdodgeAvailable:
 						changeToState = GlobalVariables.CharacterState.AIRDODGE
+			GlobalVariables.CharacterState.GROUND:
+				if state.shortHopTimer.get_time_left():
+					queueFreeFall = false
+					state.process_jump()
 	#				bufferedInput = currentAttack
 	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
 	return [bufferedInput, changeToState]

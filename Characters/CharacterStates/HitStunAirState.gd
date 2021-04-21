@@ -7,7 +7,10 @@ var techCoolDownTimer = null
 var techWindowFrames = 11.0
 var techCooldownFrames = 40.0
 var teched = false
-var maxFallSpeedHitStun = 2000
+var hitStunMaxFallSpeed = 3000
+var hitStunStopForce = 1000
+var hitStunGravity = 1000
+var hitStunIncreaseValue = 50
 
 func _ready():
 	techTimer = create_timer("on_tech_timeout", "TechTimer")
@@ -26,6 +29,8 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.edgeGrabShape.set_deferred("disabled", true)
 	CharacterInteractionHandler.remove_ground_colliding_character(character)
 	character.airdodgeAvailable = true
+	hitStunStopForce = 1000
+	hitStunGravity = 1000
 
 func switch_to_current_state_again():
 	hitStunTimer.stop()
@@ -38,6 +43,8 @@ func switch_to_current_state_again():
 	character.edgeGrabShape.set_deferred("disabled", true)
 	CharacterInteractionHandler.remove_ground_colliding_character(character)
 	character.airdodgeAvailable = true
+	hitStunStopForce = 1000
+	hitStunGravity = 1000
 
 func handle_input():
 	if !hitStunTimer.get_time_left():
@@ -76,12 +83,41 @@ func _physics_process(_delta):
 			elif !character.disableInput:
 				handle_input()
 				input_movement_physics(_delta)
-				character.velocity = character.move_and_slide(character.velocity)
 			if handle_character_bounce():
 				pass
 			else:
 				check_hitStun_transition()
 
+
+func process_movement_physics_air(_delta):
+#	print(character.velocity)
+	character.velocity.y += character.gravity * _delta
+	character.velocity = character.move_and_slide(character.velocity)    
+
+#func process_movement_physics_air(_delta):
+#	if hitStunTimer.get_time_left()\
+#	|| abs(character.velocity.y) > character.maxFallSpeed\
+#	|| abs(character.velocity.x) > character.airMaxSpeed:
+##		character.velocity.x = move_toward(character.velocity.x, 0.0, hitStunStopForce*_delta)
+##		hitStunStopForce+=hitStunIncreaseValue
+##		character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
+#		calculate_vertical_velocity(_delta)
+#		character.velocity = character.move_and_slide(character.velocity)    
+#	else:
+#		.process_movement_physics_air(_delta)
+#
+#func calculate_vertical_velocity(_delta):
+#	if hitStunTimer.get_time_left()\
+#	|| abs(character.velocity.y) > character.maxFallSpeed\
+#	|| abs(character.velocity.x) > character.airMaxSpeed:
+#		pass
+##		character.velocity.y = move_toward(character.velocity.y, 0.0, 5000*_delta)
+##		character.velocity.y += hitStunGravity * _delta
+##		hitStunGravity+=hitStunIncreaseValue
+##		if character.velocity.y >= hitStunMaxFallSpeed: 
+##			character.velocity.y = hitStunMaxFallSpeed
+#	else:
+#		.calculate_vertical_velocity(_delta)
 
 func check_hitStun_transition():
 	if !hitStunTimer.get_time_left():
@@ -137,18 +173,27 @@ func input_movement_physics(_delta):
 	# Horizontal movement code. First, get the player's input.
 	var xInput = get_input_direction_x()
 	var walk = character.airMaxSpeed * xInput
+	var previousVelocity = character.velocity
 	# Slow down the player if they're not trying to move.
 	if xInput == 0:
 		if character.pushingCharacter == null:
-			character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce * _delta)
+			if character.velocity.x > character.airMaxSpeed:
+				character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce*8 * _delta)
+			else:
+				character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce * _delta)
 	else:
 		#make sure that player moves up ground slope if jumping or recovering
 		if character.state.check_stage_slide_collide():
 			character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce * _delta)
 		else:
 			character.velocity.x += (walk * _delta) * 4
-	character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
+			if abs(previousVelocity.x) > character.airMaxSpeed:
+				character.velocity.x = clamp(character.velocity.x, -previousVelocity.x, previousVelocity.x)
+			else:
+				character.velocity.x = clamp(character.velocity.x, -character.airMaxSpeed, character.airMaxSpeed)
 	calculate_vertical_velocity(_delta)
+	character.velocity = character.move_and_slide(character.velocity)
+#	print(character.velocity)
 	
 	
 func create_tech_timer(waitTime):
@@ -165,7 +210,3 @@ func create_techCooldown_timer(waitTime):
 func on_techCooldown_timeout():
 	pass
 
-func calculate_vertical_velocity(_delta):
-	character.velocity.y += character.gravity * _delta
-	if character.velocity.y >= maxFallSpeedHitStun: 
-		character.velocity.y = maxFallSpeedHitStun

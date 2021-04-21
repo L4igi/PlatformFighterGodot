@@ -53,39 +53,40 @@ func apply_attack(hbType):
 			combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[combinedAttackDataString] + "_sweet"
 	var currentAttackData = character.attackData[combinedAttackDataString]
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
+	#calculate damage if charged smash attack
+	attackDamage *= character.smashAttackMultiplier
 	var hitStun = currentAttackData["hitStun_" + String(currentHitBoxNumber)]
 	var launchAngle = deg2rad(currentAttackData["launchAngle_" + String(currentHitBoxNumber)])
-	var launchVector = calculate_launch_vector(launchAngle)
+	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
 	var knockBackScaling = currentAttackData["knockBackGrowth_" + String(currentHitBoxNumber)]/100
-	var launchVectorX = launchVector.x
+	var launchVectorInversion = false
 	##direction player if facing
 	if currentAttackData["facing_direction"] == 0:
 		match character.currentMoveDirection:
 			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorX = launchVectorX
+				launchVectorInversion = false
 			GlobalVariables.MoveDirection.LEFT:
-				launchVectorX *= -1
+				launchVectorInversion = true
 	elif currentAttackData["facing_direction"] == 1\
 	&& attackedCharacter.global_position.x < character.global_position.x:
 		match character.currentMoveDirection:
 			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorX = launchVectorX
+				launchVectorInversion = false
 			GlobalVariables.MoveDirection.LEFT:
-				launchVectorX *= -1
+				launchVectorInversion = true
 	#opposit direction player if facing
 	if currentAttackData["facing_direction"] == 2:
 		match character.currentMoveDirection:
 			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorX = launchVectorX
+				launchVectorInversion = false
 			GlobalVariables.MoveDirection.LEFT:
-				launchVectorX *= -1
+				launchVectorInversion = true
 	#always send attacked character in the direction it is in comparison to attacker
 	elif currentAttackData["facing_direction"] == 3:
 		if attackedCharacter.global_position.x <= character.global_position.x:
-			launchVectorX *= -1
+			launchVectorInversion = true
 		else:
-			launchVectorX = launchVectorX
-	var launchVectorY = launchVector.y
+			launchVectorInversion = false
 	var launchVelocity = currentAttackData["launchVelocity_" + String(currentHitBoxNumber)]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight_" + String(currentHitBoxNumber)]
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier_" + String(currentHitBoxNumber)]
@@ -100,7 +101,7 @@ func apply_attack(hbType):
 	elif attackedCharacter.perfectShieldActivated:
 		attackedCharacter.is_attacked_handler_perfect_shield()
 	else:
-		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchVectorX, launchVectorY, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, character)
+		attackedCharacter.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, character)
 
 func calculate_hitlag_frames(attackDamage, hitlagMultiplier):
 	var characterHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (character.state.hitlagTimer.get_time_left()*60))
@@ -114,20 +115,6 @@ func calculate_hitlag_frames(attackDamage, hitlagMultiplier):
 	character.state.hitlagTimer.start()
 	attackedCharacter.state.hitlagAttackedTimer.start()
 	print("calculated hitlag frames "+ str(characterHitlag))
-
-func calculate_launch_vector(launchAngle):
-	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
-	print("type of json angle " +str(launchAngle))
-	match launchAngle: 
-		deg2rad(0.0): 
-			print("Zero angle")
-		deg2rad(361.0):
-			var scaling = 0.25*PI*clamp(attackedCharacter.damagePercent / 150, 0.0, 1.0)
-			launchVector = Vector2(cos(2*PI-scaling), sin(2*PI-scaling))
-			print("sakurai angle "+ str(launchVector))
-		_:
-			print("Normal angle nothing to see here " +str(launchAngle))
-	return launchVector
 
 func apply_grab():
 	if character.currentMoveDirection == attackedCharacter.currentMoveDirection:

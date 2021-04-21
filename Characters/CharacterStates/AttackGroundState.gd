@@ -3,10 +3,14 @@ extends State
 class_name AttackGroundState
 #landinglag
 var landingLagTimer = null
+var smashAttackMultiplierTimer = null
+var smashAttackMultiplierFrames = 60.0
+var smashAttackHoldFrames = 180.0
 
 
 func _ready():
 	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
+	smashAttackMultiplierTimer = create_timer("on_smashAttackMultiplier_timeout", "SmashAttackMultiplierTimer")
 	character.currentHitBox = 1
 	if character.applyLandingLag:
 		switch_from_air_to_ground(character.applyLandingLag)
@@ -18,6 +22,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0
 	character.airdodgeAvailable = true
+	character.smashAttackMultiplier = 1.0
 
 func manage_buffered_input():
 	character.currentAttack = bufferedInput
@@ -31,6 +36,7 @@ func manage_buffered_input():
 				character.currentAttack = null
 				bufferedInput = null
 				process_jump()
+				character.change_state(GlobalVariables.CharacterState.AIR)
 		GlobalVariables.CharacterAnimations.JAB1:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
@@ -78,32 +84,32 @@ func manage_buffered_input():
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
-				play_attack_animation("uptilt")
 				character.currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+				play_attack_animation("uptilt")
 		GlobalVariables.CharacterAnimations.DTILT:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
-				play_attack_animation("dtilt")
 				character.currentAttack = GlobalVariables.CharacterAnimations.DTILT
+				play_attack_animation("dtilt")
 		GlobalVariables.CharacterAnimations.FTILTL:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
-				play_attack_animation("ftilt")
 				if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 					mirror_areas()
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+				play_attack_animation("ftilt")
 		GlobalVariables.CharacterAnimations.FTILTR:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
-				play_attack_animation("ftilt")
 				if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
 					mirror_areas()
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+				play_attack_animation("ftilt")
 		_:
 			character.currentAttack = null
 	bufferedInput = null
@@ -117,6 +123,7 @@ func _physics_process(_delta):
 				check_stop_area_entered(_delta)
 				if (Input.is_action_just_released(character.attack)\
 				|| !Input.is_action_pressed(character.attack)):
+					calculate_smash_multiplier()
 					character.chargingSmashAttack = false
 					character.smashAttack = null
 					character.apply_smash_attack_steps(2)
@@ -139,18 +146,18 @@ func _physics_process(_delta):
 			&& get_input_direction_y() == 0:
 				jab_handler()
 			elif get_input_direction_y() < 0:
-				play_attack_animation("uptilt")
 				character.currentAttack = GlobalVariables.CharacterAnimations.UPTILT
+				play_attack_animation("uptilt")
 			elif get_input_direction_y() > 0:
-				play_attack_animation("dtilt")
 				character.currentAttack = GlobalVariables.CharacterAnimations.DTILT
+				play_attack_animation("dtilt")
 			elif character.currentMaxSpeed == character.baseWalkMaxSpeed: 
 				if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-					play_attack_animation("ftilt")
 					character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+					play_attack_animation("ftilt")
 				elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-					play_attack_animation("ftilt")
 					character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+					play_attack_animation("ftilt")
 			elif character.currentMaxSpeed == character.baseRunMaxSpeed: 
 				#dash attack
 				match character.currentMoveDirection:
@@ -158,10 +165,11 @@ func _physics_process(_delta):
 						character.velocity.x = -character.dashAttackSpeed
 					GlobalVariables.MoveDirection.RIGHT:
 						character.velocity.x = character.dashAttackSpeed
-				play_attack_animation("dash_attack")
 				character.currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
+				play_attack_animation("dash_attack")
 			
 func attack_handler_ground_smash_attacks():
+	create_smashAttackMultiplier_timer(smashAttackHoldFrames)
 	if character.turnAroundSmashAttack:
 		match character.currentMoveDirection:
 			GlobalVariables.MoveDirection.RIGHT:
@@ -197,14 +205,14 @@ func attack_handler_ground_smash_attacks():
 func jab_handler():
 	match character.jabCount:
 		0:
-			play_attack_animation("jab1")
 			character.currentAttack = GlobalVariables.CharacterAnimations.JAB1
+			play_attack_animation("jab1")
 		1:
-			play_attack_animation("jab2")
 			character.currentAttack = GlobalVariables.CharacterAnimations.JAB2
+			play_attack_animation("jab2")
 		2:
-			play_attack_animation("jab3")
 			character.currentAttack = GlobalVariables.CharacterAnimations.JAB3
+			play_attack_animation("jab3")
 	character.jabCount += 1
 	if character.jabCount > character.jabCombo: 
 		character.jabCount = 0
@@ -275,3 +283,16 @@ func check_stop_area_entered(_delta):
 					character.velocity.x = 0
 				GlobalVariables.MoveDirection.RIGHT:
 					pass
+
+func create_smashAttackMultiplier_timer(waitTime):
+	start_timer(smashAttackMultiplierTimer, waitTime)
+	
+func calculate_smash_multiplier():
+	var framesLeft = smashAttackHoldFrames - smashAttackMultiplierTimer.get_time_left()*60.0
+	character.smashAttackMultiplier = clamp(1.0+0.4/60.0*framesLeft, 1.0, 1.4) 
+
+func on_smashAttackMultiplier_timeout():
+	character.smashAttackMultiplier = 1.4
+	character.chargingSmashAttack = false
+	character.smashAttack = null
+	character.apply_smash_attack_steps(2)

@@ -53,6 +53,7 @@ func manage_buffered_input_ground():
 				process_shorthop_attack()
 			else:
 				process_jump()
+				character.change_state(GlobalVariables.CharacterState.AIR)
 		GlobalVariables.CharacterAnimations.GRAB:
 			character.change_state(GlobalVariables.CharacterState.GRAB)
 		GlobalVariables.CharacterAnimations.FSMASHR:
@@ -280,15 +281,10 @@ func check_in_air():
 	if !character.get_slide_count():
 		if character.velocity.x == 0: 
 			character.velocity.x = character.stopAreaVelocity.x
-		if shortHopTimer.get_time_left():
-			character.disableInput = false
-			bufferedInput = GlobalVariables.CharacterAnimations.JUMP
-			character.change_state(GlobalVariables.CharacterState.AIR)
-		else:
-			character.disableInput = false
-			character.bufferMoveAirTransition = true
-			character.jumpCount = 1
-			character.change_state(GlobalVariables.CharacterState.AIR)
+		character.disableInput = false
+		character.bufferMoveAirTransition = true
+		character.jumpCount = 1
+		character.change_state(GlobalVariables.CharacterState.AIR)
 		return true
 	return false
 	
@@ -342,6 +338,7 @@ func on_shorthop_timeout():
 #	print(self.name + " shorthop timeout")
 	if !bufferedInput:
 		process_jump()
+		character.change_state(GlobalVariables.CharacterState.AIR)
 	shortHop = false
 		
 func process_jump():
@@ -374,7 +371,6 @@ func process_jump():
 	character.disableInput = false
 	if character.velocity.x == 0: 
 		character.velocity.x = character.stopAreaVelocity.x
-	character.change_state(GlobalVariables.CharacterState.AIR)
 	
 func process_shorthop_attack():
 	bufferedInput = null

@@ -76,13 +76,13 @@ func handle_input():
 		return
 	if !character.bufferedSmashAttack:
 		if Input.is_action_just_pressed(character.right):
-			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-				character.turnAroundSmashAttack = true
+#			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+#				character.turnAroundSmashAttack = true
 			create_smashAttack_timer(smashAttackInputFrames)
 			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
 		elif Input.is_action_just_pressed(character.left):
-			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-				character.turnAroundSmashAttack = true
+#			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+#				character.turnAroundSmashAttack = true
 			create_smashAttack_timer(smashAttackInputFrames)
 			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHL
 		elif Input.is_action_just_pressed(character.up):

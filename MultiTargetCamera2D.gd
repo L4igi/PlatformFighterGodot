@@ -3,8 +3,8 @@ extends Camera2D
 export var move_speed = 0.05  # camera position lerp speed
 export var zoom_speed = 0.025  # camera zoom lerp speed
 export var min_zoom = 0.33  # camera won't zoom closer than this
-export var max_zoom = 1.25  # camera won't zoom farther than this
-export var margin = Vector2(400, 200)  # include some buffer area around targets
+export var max_zoom = 2.25  # camera won't zoom farther than this
+export var margin = Vector2(4000, 2000)  # include some buffer area around targets
 
 var targets = []  # Array of targets to be tracked.
 
