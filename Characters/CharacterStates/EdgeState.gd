@@ -22,8 +22,8 @@ func _ready():
 		character.canGetEdgeInvincibility = false
 		create_invincibility_timer(edgeInvincibilityDuration)
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.airTime = 0
 
 func _physics_process(delta):

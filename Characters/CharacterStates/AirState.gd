@@ -17,8 +17,8 @@ func _ready():
 	else:
 		play_animation("freefall")
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 #	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 func manage_buffered_input():

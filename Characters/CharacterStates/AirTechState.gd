@@ -7,8 +7,8 @@ var airTechInvincibilityFrames = 25.0
 func _ready():
 	create_invincibility_timer(airTechInvincibilityFrames)
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.jumpCount = 1
 	manage_tech_animation()
 	

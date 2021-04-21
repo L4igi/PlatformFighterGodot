@@ -6,8 +6,8 @@ func _ready():
 	play_animation("spotdodge")
 #	create_invincibility_timer()
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 
 func manage_buffered_input():
 	manage_buffered_input_ground()

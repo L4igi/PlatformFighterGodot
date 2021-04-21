@@ -6,7 +6,8 @@ var landingLagTimer = null
 var smashAttackMultiplierTimer = null
 var smashAttackMultiplierFrames = 60.0
 var smashAttackHoldFrames = 180.0
-
+var shiftDegrees = 10.0
+var rotateSmashAttackDegrees = 0.0
 
 func _ready():
 	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
@@ -16,8 +17,8 @@ func _ready():
 		switch_from_air_to_ground(character.applyLandingLag)
 		character.applyLandingLag = null
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0
@@ -100,6 +101,7 @@ func manage_buffered_input():
 					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 					mirror_areas()
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+				shift_attack_angle()
 				play_attack_animation("ftilt")
 		GlobalVariables.CharacterAnimations.FTILTR:
 			if Input.is_action_pressed(character.jump):
@@ -109,6 +111,7 @@ func manage_buffered_input():
 					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
 					mirror_areas()
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+				shift_attack_angle()
 				play_attack_animation("ftilt")
 		_:
 			character.currentAttack = null
@@ -121,11 +124,13 @@ func _physics_process(_delta):
 			process_movement_physics(_delta)
 			if !check_in_air() && character.chargingSmashAttack:
 				check_stop_area_entered(_delta)
+				shift_attack_angle()
 				if (Input.is_action_just_released(character.attack)\
 				|| !Input.is_action_pressed(character.attack)):
 					calculate_smash_multiplier()
 					character.chargingSmashAttack = false
 					character.smashAttack = null
+					character.animatedSprite.set_rotation_degrees(rotateSmashAttackDegrees)
 					character.apply_smash_attack_steps(2)
 			if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
 				check_stop_area_entered(_delta)
@@ -154,9 +159,11 @@ func _physics_process(_delta):
 			elif character.currentMaxSpeed == character.baseWalkMaxSpeed: 
 				if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
 					character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+					shift_attack_angle()
 					play_attack_animation("ftilt")
 				elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
 					character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
+					shift_attack_angle()
 					play_attack_animation("ftilt")
 			elif character.currentMaxSpeed == character.baseRunMaxSpeed: 
 				#dash attack
@@ -296,4 +303,17 @@ func on_smashAttackMultiplier_timeout():
 	character.smashAttackMultiplier = 1.4
 	character.chargingSmashAttack = false
 	character.smashAttack = null
+	character.animatedSprite.set_rotation_degrees(rotateSmashAttackDegrees)
 	character.apply_smash_attack_steps(2)
+
+func shift_attack_angle():
+	if character.currentAttack == GlobalVariables.CharacterAnimations.FSMASH\
+	|| character.currentAttack == GlobalVariables.CharacterAnimations.FTILT:
+		var direction = Vector2(get_input_direction_x(),get_input_direction_y())
+		var angle = rad2deg(direction.angle())
+		if angle <= -15.0: 
+			angle = -15.0
+		elif angle >= 15.0:
+			angle = 15.0
+		else: angle = 0.0
+		rotateSmashAttackDegrees = angle

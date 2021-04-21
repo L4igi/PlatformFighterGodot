@@ -2,8 +2,8 @@ extends State
 
 class_name RollState
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.jumpCount = 0
 	manage_roll_animation(character.rollType)
 

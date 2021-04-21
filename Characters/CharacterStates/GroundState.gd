@@ -39,14 +39,14 @@ func _ready():
 		character.applySideStepFrames = false
 		create_sidestep_timer(sideStepFrames)
 		
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
+func setup(change_state, animationPlayer, character):
 	stopMovementTimer = create_timer("on_stop_movement_timeout", "StopMovementTimer")
 	turnAroundTimer = create_timer("on_turnAroundTimer_timeout", "TurnAroundTimer")
 	sideStepTimer = create_timer("on_sideStep_timeout", "SideStepTimer")
 	dropDownTimer = create_timer("on_dropDown_timeout", "DropDownTimer")
 	shieldDropTimer = create_timer("on_shielddrop_timeout", "ShieldDropTimer")
 	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+	.setup(change_state, animationPlayer, character)
 	character.canGetEdgeInvincibility = true
 	character.disabledEdgeGrab = false
 	reset_gravity()

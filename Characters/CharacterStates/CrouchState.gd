@@ -10,8 +10,8 @@ func _ready():
 	if character.onSolidGround && character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
 	
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.velocity.x = 0
 	character.airTime = 0
 	character.disabledEdgeGrab = false

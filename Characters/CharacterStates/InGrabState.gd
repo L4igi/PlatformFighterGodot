@@ -12,8 +12,8 @@ func _ready():
 	gravity_on_off("off")
 	play_animation("ingrab")
 	
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.disableInput = false
 	character.initLaunchVelocity = Vector2.ZERO
 	character.airTime = 0

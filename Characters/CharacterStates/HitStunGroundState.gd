@@ -5,8 +5,8 @@ class_name HitStunGroundState
 #func _ready():
 #	create_hitStun_timer(character.backUpHitStunTime)
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0

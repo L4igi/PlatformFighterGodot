@@ -5,8 +5,8 @@ class_name AttackAirState
 func _ready():
 	character.currentHitBox = 1
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	character.disabledEdgeGrab = true
 	character.edgeGrabShape.set_deferred("disabled", true)
 

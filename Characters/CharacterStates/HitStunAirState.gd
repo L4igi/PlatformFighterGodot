@@ -18,8 +18,8 @@ func _ready():
 	techCoolDownTimer = create_timer("on_techCooldown_timeout", "TechCooldownTimer")
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 	
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	inLandingLag = false
 	animationPlayer.get_parent().set_animation("hurt")
 	animationPlayer.get_parent().set_frame(0)

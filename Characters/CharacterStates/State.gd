@@ -184,7 +184,7 @@ func buffer_input():
 func _ready():
 	pass
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
+func setup(change_state, animationPlayer, character):
 	smashAttackTimer = create_timer("on_smashAttack_timeout", "SmashAttackTimer")
 	shortHopTimer = create_timer("on_shorthop_timeout", "ShortHopTimer")
 	invincibilityTimer = create_timer("on_invincibility_timeout", "InvincibilityTimer")
@@ -195,7 +195,7 @@ func setup(change_state, animationPlayer, character, bufferedInput = null, buffe
 	self.animationPlayer = animationPlayer
 	self.character = character
 	self.bufferedInput = null
-	self.bufferedAnimation = null
+	self.bufferedAnimation = character.bufferedAnimation
 	reset_attributes()
 
 func reset_attributes():
@@ -208,7 +208,10 @@ func reset_attributes():
 	character.toggle_all_hitboxes("off")
 	character.characterShield.disable_shield()
 	character.reset_hitboxes()
-#	enable_player_input()
+	if bufferedAnimation:
+		character.jabCount = 0
+		animationPlayer.play()
+		bufferedAnimation = null
 	
 func switch_to_current_state_again():
 	print("switching to current state again " +str(GlobalVariables.CharacterState.keys()[character.currentState]))

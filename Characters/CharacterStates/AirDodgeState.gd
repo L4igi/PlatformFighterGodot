@@ -26,8 +26,8 @@ func _ready():
 	get_airDodge_angle()
 	play_animation("airdodge_neutral")
 
-func setup(change_state, animationPlayer, character, bufferedInput = null, bufferedAnimation= null):
-	.setup(change_state, animationPlayer, character, bufferedInput, bufferedAnimation)
+func setup(change_state, animationPlayer, character):
+	.setup(change_state, animationPlayer, character)
 	if character.platformCollisionDisabledTimer.get_time_left():
 		character.call_deferred("set_collision_mask_bit",1,false)
 	else:

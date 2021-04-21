@@ -25,7 +25,7 @@ var fallingSpeed = 1.0
 var currentMaxSpeed = baseWalkMaxSpeed
 var pushingAction = false
 var droppedPlatform = false
-var walkThreashold = 0.15
+var walkThreashold = 0.35
 #jump
 var jumpCount = 0
 var availabelJumps = 10
@@ -184,7 +184,8 @@ var stateChangedThisFrame = false
 var turnAroundSmashAttack = false
 #smashAttackMultiplier
 var smashAttackMultiplier = 1.0
-#hitstun values 
+#buffered animation 
+var bufferedAnimation = null
 
 
 func _ready():
@@ -440,7 +441,7 @@ func shieldbreak_animation_step(step = 0):
 		1:
 			state.play_animation("shieldBreakAirLoop")
 		2:
-			$AnimatedSprite.set_rotation_degrees(0.0)
+			characterSprite.set_rotation_degrees(0.0)
 			state.play_animation("shieldBreakLanding")
 		3:
 			state.play_animation("shieldBreakGroundLoop")
@@ -610,22 +611,12 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 		finish_attack_animation(0)
 			
 			
-func check_state_transition(changeToState, bufferedInput):
+func check_state_transition(changeToState):
 	if bufferMoveAirTransition && !shortHopAttack:
 		bufferMoveAirTransition = false
 		match currentState:
 			GlobalVariables.CharacterState.ATTACKGROUND:
-				if changeToState == GlobalVariables.CharacterState.AIR:
-					if currentAttack == GlobalVariables.CharacterAnimations.FSMASH:
-						match currentMoveDirection:
-							GlobalVariables.MoveDirection.LEFT:
-								bufferedInput = GlobalVariables.CharacterAnimations.FSMASHL
-							GlobalVariables.MoveDirection.RIGHT:
-								bufferedInput = GlobalVariables.CharacterAnimations.FSMASHR
-					else:
-						bufferedInput = currentAttack
-						print("BUFFEREDINOUT " +str(GlobalVariables.CharacterAnimations.keys()[bufferedInput]))
-					changeToState = GlobalVariables.CharacterState.ATTACKAIR
+				changeToState = GlobalVariables.CharacterState.ATTACKAIR
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:
 					if airdodgeAvailable:
@@ -634,9 +625,8 @@ func check_state_transition(changeToState, bufferedInput):
 				if state.shortHopTimer.get_time_left():
 					queueFreeFall = false
 					state.process_jump()
-	#				bufferedInput = currentAttack
 	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
-	return [bufferedInput, changeToState]
+	return changeToState
 	
 
 func change_state(new_state):
@@ -648,17 +638,11 @@ func change_state(new_state):
 		return
 	stateChangedThisFrame = true
 	var changeToState = new_state
-	var bufferedInput = null
-	var bufferedAnimation = null
 	enable_disable_hurtboxes(true)
 #	check_character_tilt_walk(new_state)
 	if state != null:
 		state.stateDone = true
-		bufferedInput = state.bufferedInput
-		var checkedTransition = check_state_transition(changeToState, bufferedInput)
-		bufferedInput = checkedTransition[0]
-		changeToState = checkedTransition[1]
-#		currentAttack = null
+		changeToState = check_state_transition(changeToState)
 		bufferedAnimation = state.bufferedAnimation
 		state.queue_free()
 #		if state.is_queued_for_deletion():
@@ -671,7 +655,7 @@ func change_state(new_state):
 #	if state.get_parent():
 #		print("currentstate " +str(currentState) + " new state " +str(new_state))
 #		print("state " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
-	state.setup(funcref(self, "change_state"), animationPlayer, self, bufferedInput, bufferedAnimation)
+	state.setup(funcref(self, "change_state"), animationPlayer, self)
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
