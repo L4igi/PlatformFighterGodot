@@ -52,4 +52,5 @@ shape = SubResource( 3 )
 position = Vector2( 608, 288 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
 [connection signal="body_entered" from="BlastZones" to="BlastZones" method="_on_TeleportToStart_body_entered"]

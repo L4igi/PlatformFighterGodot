@@ -649,7 +649,7 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():
@@ -659,13 +659,6 @@ func change_state(new_state):
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
-	
-#func check_character_tilt_walk(new_state):
-#	if currentState == GlobalVariables.CharacterState.ATTACKGROUND\
-#	&& currentAttack == GlobalVariables.CharacterAnimations.FTILTL\
-#	|| currentAttack == GlobalVariables.CharacterAnimations.FTILTR:
-#		if new_state == GlobalVariables.CharacterState.GROUND:
-#			bufferFTiltWalk = true
 
 func create_timer(timeout_function, timerName):
 	var timer = Timer.new()    
@@ -761,3 +754,6 @@ func change_max_speed(xInput):
 		else:
 			currentMaxSpeed = baseWalkMaxSpeed
 			state.play_animation("walk")
+
+func attack_clashed():
+	pass

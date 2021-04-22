@@ -20,6 +20,8 @@ enum MoveDirection {LEFT, RIGHT}
 
 enum AirDodgeType{NORMAL, DIRECTIONAL}
 
+enum AttackType {GROUNDED, AERIAL, SPECIALGROUNDED, SPECIALAERIAL}
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",
@@ -32,12 +34,12 @@ var controlsP1 = {
 }
 
 var controlsP2 = {
-	"up": "Up2",
+	"up": "Up1",
 	"down" : "Down2",
 	"left" : "Left2",
 	"right" : "Right2",
-	"jump" : "Jump2",
-	"attack" : "Attack2",
+	"jump" : "Jump1",
+	"attack" : "Attack1",
 	"shield" : "Shield2",
 	"grab" : "Grab2"
 }
@@ -66,3 +68,45 @@ func _process(_delta):
 		if Input.is_action_just_released("AdvanceFrame"):
 			gameRunning = 0
 
+func match_attack_type(attack):
+	var attackType = null
+	match attack:
+		GlobalVariables.CharacterAnimations.JAB1:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.JAB2:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.JAB2:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.FTILT:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.UPTILT:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.DTILT:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.DASHATTACK:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.FSMASH:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.UPSMASH:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.DSMASH:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.NAIR:
+			attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.FAIR:
+			attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.DAIR:
+			attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.UPAIR:
+			attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.BAIR:
+			attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.BTHROW:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.DTHROW:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.UTHROW:
+			attackType = AttackType.GROUNDED
+		GlobalVariables.CharacterAnimations.BTHROW:
+			attackType = AttackType.GROUNDED
+	return attackType
