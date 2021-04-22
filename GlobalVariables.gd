@@ -34,12 +34,12 @@ var controlsP1 = {
 }
 
 var controlsP2 = {
-	"up": "Up1",
+	"up": "Up2",
 	"down" : "Down2",
 	"left" : "Left2",
 	"right" : "Right2",
-	"jump" : "Jump1",
-	"attack" : "Attack1",
+	"jump" : "Jump2",
+	"attack" : "Attack2",
 	"shield" : "Shield2",
 	"grab" : "Grab2"
 }

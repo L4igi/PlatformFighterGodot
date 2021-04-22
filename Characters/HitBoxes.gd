@@ -9,6 +9,7 @@ var attackedObject = null
 var attackDataEnum = null
 
 var hitBoxesConnected = []
+var hitBoxesConnectedCopy = []
 
 var hitBoxesClashed = []
 
@@ -27,47 +28,40 @@ func _process(delta):
 		print("hitboxclashed " +str(hitBoxesClashed))
 		print("hitboxconnected " +str(hitBoxesConnected))
 	if !hitBoxesClashed.empty():
-		disable_all_hitboxes()
-		var highestHitboxPriority = 0
-		var highestHitBox = null
-		for hitbox in hitBoxesClashed: 
-			match hitbox:
-				HitBoxType.SOUR:
-					if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
-						highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"]
-						highestHitBox = HitBoxType.SOUR
-				HitBoxType.NEUTRAL:
-					if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
-						highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"]
-						highestHitBox = HitBoxType.NEUTRAL
-				HitBoxType.SWEET:
-					if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
-						highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"]
-						highestHitBox = HitBoxType.SWEET
-		apply_attack(highestHitBox, InteractionType.CLASHED)
+		process_connected_hitboxes(hitBoxesClashed, InteractionType.CLASHED)
+		hitBoxesConnectedCopy = hitBoxesConnected.duplicate(true)
 		hitBoxesClashed.clear()
 		hitBoxesConnected.clear()
 	elif !hitBoxesConnected.empty():
-		disable_all_hitboxes()
 		if attackingObject.currentState != GlobalVariables.CharacterState.GRAB:
-			var highestHitboxPriority = 0
-			var highestHitBox = null
-			for hitbox in hitBoxesConnected: 
-				match hitbox:
-					HitBoxType.SOUR:
-						if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
-							highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"]
-							highestHitBox = HitBoxType.SOUR
-					HitBoxType.NEUTRAL:
-						if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
-							highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"]
-							highestHitBox = HitBoxType.NEUTRAL
-					HitBoxType.SWEET:
-						if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
-							highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"]
-							highestHitBox = HitBoxType.SWEET
-			apply_attack(highestHitBox, InteractionType.CONNECTED)
+			process_connected_hitboxes(hitBoxesConnected, InteractionType.CONNECTED)
 		hitBoxesConnected.clear()
+		
+func process_connected_hitboxes(hitBoxes, interactionType):
+	disable_all_hitboxes()
+	var highestHitboxPriority = 0
+	var highestHitBox = null
+	for hitbox in hitBoxes: 
+		match hitbox:
+			HitBoxType.SOUR:
+				if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
+					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"]
+					highestHitBox = HitBoxType.SOUR
+			HitBoxType.NEUTRAL:
+				if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
+					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"]
+					highestHitBox = HitBoxType.NEUTRAL
+			HitBoxType.SWEET:
+				if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
+					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"]
+					highestHitBox = HitBoxType.SWEET
+	hitBoxes.clear()
+	match interactionType:
+		InteractionType.CONNECTED:
+			apply_attack(highestHitBox, InteractionType.CONNECTED)
+		InteractionType.CLASHED:
+			apply_attack(highestHitBox, InteractionType.CLASHED)
+	return highestHitBox
 
 func disable_all_hitboxes():
 	for hitboxArea in self.get_children():
@@ -94,6 +88,8 @@ func apply_attack(hbType, interactionType):
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
 	var knockBackScaling = currentAttackData["knockBackGrowth_" + String(currentHitBoxNumber)]/100
 	var launchVectorInversion = false
+	var reboundingHitbox = currentAttackData["rebounding_" + String(currentHitBoxNumber)]
+	var transcendentHitBox = currentAttackData["transcendent_" + String(currentHitBoxNumber)]
 	##direction player if facing
 	if currentAttackData["facing_direction"] == 0:
 		match attackingObject.currentMoveDirection:
@@ -168,9 +164,11 @@ func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInvers
 		if attackingObjectAttackType == GlobalVariables.AttackType.GROUNDED\
 		&& attackedObjectAttackType == GlobalVariables.AttackType.GROUNDED:
 			#if one attack damage is > 9% other attack damage, it is outprioritized, this attack hits
-			var paramArray = [attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position]
-			var funcRef = funcref(attackedObject, "is_attacked_handler")
-			HitBoxManager.add_colliding_hitbox(funcRef, paramArray, attackingObject, attackDamage, hitlagMultiplier)
+			var isAttackedHandlerParamArray = [attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position]
+			var isAttackedHandlerFuncRef = funcref(attackedObject, "is_attacked_handler")
+			var proccessConnectedHitboxesParamArray = [hitBoxesConnectedCopy, InteractionType.CONNECTED]
+			var proccessConnectedHitboxesFunRef = funcref(self, "process_connected_hitboxes")
+			HitBoxManager.add_colliding_hitbox(isAttackedHandlerFuncRef, isAttackedHandlerParamArray, attackingObject, attackDamage, hitlagMultiplier)
 			
 func calculate_hitlag_frames_clashed(attackDamage, hitlagMultiplier):
 	var attackingObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))

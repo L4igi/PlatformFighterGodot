@@ -49,15 +49,3 @@ func calculate_hitlag_frames_clashed_attackedObject(attackDamage, hitlagMultipli
 	var attackedObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackedObject.state.hitlagTimer.get_time_left()*60))
 	attackedObject.state.hitlagTimer.stop()
 	attackedObject.character_attacked_handler(attackedObjectHitlag)
-#	attackedObject.state.start_timer(attackedObject.state.hitlagAttackedTimer, attackedObjectHitlag)
-	
-#func calculate_hitlag_frames_clashed(attackDamage, hitlagMultiplier):
-#	var attackingObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))
-#	var attackedObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackedObject.state.hitlagAttackedTimer.get_time_left()*60))
-#	if attackedObject.is_in_group("Character"):
-#		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
-#		|| attackedObject.perfectShieldActivated:
-#			attackingObjectHitlag = floor(attackingObjectHitlag * 0.67)
-#			attackedObjectHitlag = floor(attackedObjectHitlag * 0.67)
-#		attackingObject.state.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
-#	attackedObject.state.start_timer(attackedObject.state.hitlagAttackedTimer, attackedObjectHitlag)
