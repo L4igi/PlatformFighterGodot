@@ -10,6 +10,11 @@ var attackDataEnum = null
 
 var hitBoxesConnected = []
 
+var hitBoxesClashed = []
+
+#connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
+enum InteractionType {CONNECTED, CLASHED}
+
 enum HitBoxType {SOUR, NEUTRAL, SWEET}
 
 func _ready():
@@ -18,7 +23,27 @@ func _ready():
 		attackDataEnum = GlobalVariables.CharacterAnimations
 
 func _process(delta):
-	if !hitBoxesConnected.empty():
+	if !hitBoxesClashed.empty():
+		disable_all_hitboxes()
+		var highestHitboxPriority = 0
+		var highestHitBox = null
+		for hitbox in hitBoxesClashed: 
+			match hitbox:
+				HitBoxType.SOUR:
+					if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
+						highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"]
+						highestHitBox = HitBoxType.SOUR
+				HitBoxType.NEUTRAL:
+					if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
+						highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"]
+						highestHitBox = HitBoxType.NEUTRAL
+				HitBoxType.SWEET:
+					if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
+						highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"]
+						highestHitBox = HitBoxType.SWEET
+		apply_attack(highestHitBox)
+		hitBoxesClashed.clear()
+	elif !hitBoxesConnected.empty():
 		disable_all_hitboxes()
 		if attackingObject.currentState != GlobalVariables.CharacterState.GRAB:
 			var highestHitboxPriority = 0
@@ -149,17 +174,36 @@ func _on_HitBoxSourArea_area_entered(area):
 func check_hitbox_areas(area, hitboxType):
 	if area.is_in_group("Hitbox"): 
 		if attackingObject != area.get_parent().attackingObject: 
+			if hitBoxesClashed.empty():
+				apply_hitlag(area, InteractionType.CLASHED)
+			if !hitBoxesClashed.has(hitboxType):
+				hitBoxesClashed.append(hitboxType)
 			print("hit Hitbox " +str(area.get_parent().attackingObject.name))
-	if area.is_in_group("Hurtbox")\
+	elif area.is_in_group("Hurtbox")\
 	&& area.get_parent().get_parent() != attackingObject:
 		if hitBoxesConnected.empty():
-			apply_hitlag(area)
+			apply_hitlag(area, InteractionType.CONNECTED)
 		if !hitBoxesConnected.has(hitboxType):
 			hitBoxesConnected.append(hitboxType)
 			
-func apply_hitlag(hitArea):
-	attackedObject = hitArea.get_parent().get_parent()
-	attackedObjectState = attackedObject.currentState
+func apply_hitlag(hitArea, interactionType):
+		match interactionType:
+			InteractionType.CONNECTED:
+				attackedObject = hitArea.get_parent().get_parent()
+				attackedObjectState = attackedObject.currentState
+				if attackedObject.is_in_group("Character"):
+					apply_hurtbox_character_character_hitlag()
+			InteractionType.CLASHED:
+				attackedObject = hitArea.get_parent().get_parent().get_parent()
+				attackedObjectState = attackedObject.currentState
+				if attackedObject.is_in_group("Character"):
+					apply_hitbox_character_character_hitlag()
+
+func apply_hitbox_character_character_hitlag():
+	attackedObject.character_attacked_handler(attackedObject.hitLagFrames)
+	attackingObject.character_attacked_handler(attackingObject.hitLagFrames)
+
+func apply_hurtbox_character_character_hitlag():
 	if attackedObject != self.get_parent().get_parent():
 		if attackingObject.currentState == GlobalVariables.CharacterState.GRAB:
 			if attackedObject.currentState == GlobalVariables.CharacterState.GROUND\
@@ -178,7 +222,6 @@ func apply_hitlag(hitArea):
 				apply_grab()
 		else:
 			attackingObject.initLaunchVelocity = attackingObject.velocity
-			attackedObject = hitArea.get_parent().get_parent()
 			if attackedObjectState == GlobalVariables.CharacterState.SHIELD:
 				attackedObject.character_attacked_shield_handler(attackedObject.hitLagFrames)
 				attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames)
@@ -190,8 +233,3 @@ func apply_hitlag(hitArea):
 			else:
 				attackedObject.character_attacked_handler(attackedObject.hitLagFrames)
 				attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames)
-		#manage grab if character hit other character hitbox
-
-func apply_character_character_hitlag():
-	pass
-				
