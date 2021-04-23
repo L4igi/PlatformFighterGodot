@@ -41,7 +41,7 @@ var controlsP2 = {
 	"jump" : "Jump2",
 	"attack" : "Attack2",
 	"shield" : "Shield2",
-	"grab" : "Attack2"
+	"grab" : "Grab2"
 }
 
 var gameRunning = 0

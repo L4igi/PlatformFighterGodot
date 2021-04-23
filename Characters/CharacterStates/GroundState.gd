@@ -142,10 +142,11 @@ func _physics_process(_delta):
 				if perfectShieldFramesLeft > 0:
 					perfectShieldFramesLeft -= 1
 			check_in_air()
-			if character.disableInput:
-				handle_input_disabled()
-			elif inMovementLag:
-				handle_input()
+			if !character.perfectShieldActivated:
+				if character.disableInput:
+					handle_input_disabled()
+				elif inMovementLag:
+					handle_input()
 		else:
 			input_movement_physics(_delta)
 			check_stop_area_entered(_delta)

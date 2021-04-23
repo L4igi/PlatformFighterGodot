@@ -1,9 +1,10 @@
 extends State
 
 class_name HitStunGroundState
+var hitStunGroundFrames = 25
 #
-#func _ready():
-#	create_hitStun_timer(character.backUpHitStunTime)
+func _ready():
+	create_hitStun_timer(hitStunGroundFrames)
 
 func setup(change_state, animationPlayer, character):
 	.setup(change_state, animationPlayer, character)
@@ -43,6 +44,4 @@ func _physics_process(_delta):
 		if !character.disableInput:
 			handle_input()
 			check_in_air()
-		else:
-			print("aaaaaaaaaaaaaaaaaaaaaaaaaa")
 		process_movement_physics(_delta)

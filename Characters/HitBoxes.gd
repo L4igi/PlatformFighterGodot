@@ -24,9 +24,9 @@ func _ready():
 		attackDataEnum = GlobalVariables.CharacterAnimations
 
 func _process(delta):
-	if !hitBoxesClashed.empty()||!hitBoxesConnected.empty():
-		print("hitboxclashed " +str(hitBoxesClashed))
-		print("hitboxconnected " +str(hitBoxesConnected))
+#	if !hitBoxesClashed.empty()||!hitBoxesConnected.empty():
+#		print("hitboxclashed " +str(hitBoxesClashed))
+#		print("hitboxconnected " +str(hitBoxesConnected))
 	if !hitBoxesClashed.empty():
 		process_connected_hitboxes(hitBoxesClashed, InteractionType.CLASHED)
 		hitBoxesClashed.clear()
@@ -132,7 +132,6 @@ func apply_attack(hbType, interactionType):
 
 func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier):
 	if attackedObject.is_in_group("Character"):
-		print("attackobject current state " +str(GlobalVariables.CharacterState.keys()[attackedObject.currentState]))
 		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD:
 			attackedObject.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile, attackingObject.global_position)
 		elif attackedObject.perfectShieldActivated:
@@ -176,7 +175,7 @@ func calculate_hitlag_frames_clashed(attackDamage, hitlagMultiplier):
 
 func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier):
 	var attackingObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))
-	var attackedObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackedObject.state.hitlagAttackedTimer.get_time_left()*60))
+	var attackedObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackedObject.state.hitlagTimer.get_time_left()*60))
 	if attackedObject.is_in_group("Character"):
 		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
 		|| attackedObject.perfectShieldActivated:

@@ -55,6 +55,7 @@ func handle_input():
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
 #			attack_handler_air(delta)
 		elif Input.is_action_just_pressed(character.jump):
+			double_jump_handler()
 			character.change_state(GlobalVariables.CharacterState.AIR)
 		elif Input.is_action_just_pressed(character.shield)\
 		&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():

@@ -286,14 +286,15 @@ func play_attack_animation(animationToPlay, queue = false):
 		animationPlayer.play(animationToPlay)
 
 func check_in_air():
-	if !character.get_slide_count():
-		if character.velocity.x == 0: 
-			character.velocity.x = character.stopAreaVelocity.x
-		character.disableInput = false
-		character.bufferMoveAirTransition = true
-		character.jumpCount = 1
-		character.change_state(GlobalVariables.CharacterState.AIR)
-		return true
+	if character.gravity != 0:
+		if !character.get_slide_count():
+			if character.velocity.x == 0: 
+				character.velocity.x = character.stopAreaVelocity.x
+			character.disableInput = false
+			character.bufferMoveAirTransition = true
+			character.jumpCount = 1
+			character.change_state(GlobalVariables.CharacterState.AIR)
+			return true
 	return false
 	
 func check_ground_platform_collision(platformCollisionDisabledTimerRunning = 0):
@@ -438,6 +439,7 @@ func on_invincibility_timeout():
 		direction = -1
 		
 func create_hitlag_timer(waitTime):
+	print("HITLAGEDDDDD")
 #	character.toggle_all_hitboxes("off")
 	animationPlayer.stop(false)
 	gravity_on_off("off")
@@ -458,6 +460,7 @@ func on_hitlag_timeout():
 	character.disableInputDI = character.backUpDisableInputDI
 
 func create_hitlagAttacked_timer(waitTime):
+	hitlagTimer.stop()
 	reset_gravity()
 	gravity_on_off("off")
 	character.chargingSmashAttack = false
@@ -503,14 +506,8 @@ func on_hitstun_timeout():
 			hitStunTimerDone = true
 			character.change_state(GlobalVariables.CharacterState.AIR)
 	else: 
-#		if character.onSolidGround && bufferedInput:
-#			character.applyLandingLag = character.normalLandingLag
-#			character.change_state(GlobalVariables.CharacterState.GROUND)
-#		elif !character.onSolidGround && bufferedInput:
-#			hitStunTimer.stop()
-#			character.change_state(GlobalVariables.CharacterState.AIR)
-#		elif !character.onSolidGround: 
-		play_animation("tumble")
+		if character.currentState == GlobalVariables.CharacterState.HITSTUNAIR:
+			play_animation("tumble")
 	
 func reset_gravity():
 	if character.gravity!=character.baseGravity:
@@ -537,6 +534,7 @@ func double_jump_handler():
 	if character.jumpCount < character.availabelJumps:
 		character.jumpCount += 1
 		var xInput = get_input_direction_x()
+		animationPlayer.stop()
 		play_animation("doublejump")
 		reset_gravity()
 		character.velocity.y = -character.jumpSpeed

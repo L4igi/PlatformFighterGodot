@@ -1505,9 +1505,10 @@ scale = Vector2( 2, 2 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-position = Vector2( 0, 8 )
-animation = "dair"
-frame = 8
+position = Vector2( 0, 10 )
+rotation = -1.96
+animation = "roll_getup"
+frame = 0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0

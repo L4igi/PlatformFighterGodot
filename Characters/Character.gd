@@ -670,7 +670,7 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():
@@ -750,11 +750,9 @@ func calculate_hitlag_di():
 		
 #called whenever character is attacked
 func character_attacked_handler(hitLagFrames):
-	print("CHARACTERATTACKEDHANDLER")
 	bufferHitLagFrames = hitLagFrames
 	#handle superarmour 
 	if superarmour_handler():
-		print("here")
 		state.create_hitlag_timer(bufferHitLagFrames)
 	elif !perfectShieldActivated:
 		change_state(GlobalVariables.CharacterState.HITSTUNAIR)
