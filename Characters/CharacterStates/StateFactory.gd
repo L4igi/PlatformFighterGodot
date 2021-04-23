@@ -28,6 +28,8 @@ func _init():
 		GlobalVariables.CharacterState.AIRDODGE: AirDodgeState,
 		GlobalVariables.CharacterState.HELPLESS: HelplessState,
 		GlobalVariables.CharacterState.REBOUND: ReboundState,
+		GlobalVariables.CharacterState.SPECIALAIR: SpecialAir, 
+		GlobalVariables.CharacterState.SPECIALGROUND: SpecialGround
 }
 
 func get_state(state_name):

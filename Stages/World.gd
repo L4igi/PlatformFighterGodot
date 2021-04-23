@@ -43,3 +43,4 @@ func setup_controls_characters(character, globalControls):
 	character.attack = globalControls.get("attack")
 	character.shield = globalControls.get("shield")
 	character.grab = globalControls.get("grab")
+	character.special = globalControls.get("special")

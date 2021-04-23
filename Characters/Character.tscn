@@ -1,4 +1,4 @@
-[gd_scene load_steps=429 format=2]
+[gd_scene load_steps=485 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -369,6 +369,62 @@
 [ext_resource path="res://Characters/Mario/rebound/6.png" type="Texture" id=367]
 [ext_resource path="res://Characters/Mario/rebound/1.png" type="Texture" id=368]
 [ext_resource path="res://Characters/Mario/rebound/0.png" type="Texture" id=369]
+[ext_resource path="res://Characters/Mario/downspecial/7.png" type="Texture" id=370]
+[ext_resource path="res://Characters/Mario/downspecial/1.png" type="Texture" id=371]
+[ext_resource path="res://Characters/Mario/downspecial/11.png" type="Texture" id=372]
+[ext_resource path="res://Characters/Mario/downspecial/8.png" type="Texture" id=373]
+[ext_resource path="res://Characters/Mario/downspecial/10.png" type="Texture" id=374]
+[ext_resource path="res://Characters/Mario/downspecial/12.png" type="Texture" id=375]
+[ext_resource path="res://Characters/Mario/downspecial/5.png" type="Texture" id=376]
+[ext_resource path="res://Characters/Mario/downspecial/9.png" type="Texture" id=377]
+[ext_resource path="res://Characters/Mario/downspecial/3.png" type="Texture" id=378]
+[ext_resource path="res://Characters/Mario/downspecial/16.png" type="Texture" id=379]
+[ext_resource path="res://Characters/Mario/downspecial/15.png" type="Texture" id=380]
+[ext_resource path="res://Characters/Mario/downspecial/6.png" type="Texture" id=381]
+[ext_resource path="res://Characters/Mario/downspecial/4.png" type="Texture" id=382]
+[ext_resource path="res://Characters/Mario/downspecial/0.png" type="Texture" id=383]
+[ext_resource path="res://Characters/Mario/downspecial/13.png" type="Texture" id=384]
+[ext_resource path="res://Characters/Mario/downspecial/14.png" type="Texture" id=385]
+[ext_resource path="res://Characters/Mario/downspecial/2.png" type="Texture" id=386]
+[ext_resource path="res://Characters/Mario/nspecial/3.png" type="Texture" id=387]
+[ext_resource path="res://Characters/Mario/nspecial/6.png" type="Texture" id=388]
+[ext_resource path="res://Characters/Mario/nspecial/8.png" type="Texture" id=389]
+[ext_resource path="res://Characters/Mario/nspecial/9.png" type="Texture" id=390]
+[ext_resource path="res://Characters/Mario/nspecial/0.png" type="Texture" id=391]
+[ext_resource path="res://Characters/Mario/nspecial/2.png" type="Texture" id=392]
+[ext_resource path="res://Characters/Mario/nspecial/7.png" type="Texture" id=393]
+[ext_resource path="res://Characters/Mario/nspecial/4.png" type="Texture" id=394]
+[ext_resource path="res://Characters/Mario/nspecial/5.png" type="Texture" id=395]
+[ext_resource path="res://Characters/Mario/nspecial/1.png" type="Texture" id=396]
+[ext_resource path="res://Characters/Mario/sidespecial/7.png" type="Texture" id=397]
+[ext_resource path="res://Characters/Mario/sidespecial/1.png" type="Texture" id=398]
+[ext_resource path="res://Characters/Mario/sidespecial/12.png" type="Texture" id=399]
+[ext_resource path="res://Characters/Mario/sidespecial/3.png" type="Texture" id=400]
+[ext_resource path="res://Characters/Mario/sidespecial/2.png" type="Texture" id=401]
+[ext_resource path="res://Characters/Mario/sidespecial/4.png" type="Texture" id=402]
+[ext_resource path="res://Characters/Mario/sidespecial/11.png" type="Texture" id=403]
+[ext_resource path="res://Characters/Mario/sidespecial/5.png" type="Texture" id=404]
+[ext_resource path="res://Characters/Mario/sidespecial/8.png" type="Texture" id=405]
+[ext_resource path="res://Characters/Mario/sidespecial/9.png" type="Texture" id=406]
+[ext_resource path="res://Characters/Mario/sidespecial/13.png" type="Texture" id=407]
+[ext_resource path="res://Characters/Mario/sidespecial/0.png" type="Texture" id=408]
+[ext_resource path="res://Characters/Mario/sidespecial/14.png" type="Texture" id=409]
+[ext_resource path="res://Characters/Mario/sidespecial/10.png" type="Texture" id=410]
+[ext_resource path="res://Characters/Mario/sidespecial/6.png" type="Texture" id=411]
+[ext_resource path="res://Characters/Mario/upspecial/5.png" type="Texture" id=412]
+[ext_resource path="res://Characters/Mario/upspecial/1.png" type="Texture" id=413]
+[ext_resource path="res://Characters/Mario/upspecial/12.png" type="Texture" id=414]
+[ext_resource path="res://Characters/Mario/upspecial/8.png" type="Texture" id=415]
+[ext_resource path="res://Characters/Mario/upspecial/3.png" type="Texture" id=416]
+[ext_resource path="res://Characters/Mario/upspecial/9.png" type="Texture" id=417]
+[ext_resource path="res://Characters/Mario/upspecial/6.png" type="Texture" id=418]
+[ext_resource path="res://Characters/Mario/upspecial/0.png" type="Texture" id=419]
+[ext_resource path="res://Characters/Mario/upspecial/7.png" type="Texture" id=420]
+[ext_resource path="res://Characters/Mario/upspecial/13.png" type="Texture" id=421]
+[ext_resource path="res://Characters/Mario/upspecial/2.png" type="Texture" id=422]
+[ext_resource path="res://Characters/Mario/upspecial/4.png" type="Texture" id=423]
+[ext_resource path="res://Characters/Mario/upspecial/10.png" type="Texture" id=424]
+[ext_resource path="res://Characters/Mario/upspecial/11.png" type="Texture" id=425]
 
 [sub_resource type="StreamTexture" id=1]
 load_path = "res://.import/5.png-43fbad497e5c0940070c19a1cd231129.stex"
@@ -610,9 +666,29 @@ animations = [ {
 "name": "grab",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 383 ), ExtResource( 371 ), ExtResource( 386 ), ExtResource( 378 ), ExtResource( 382 ), ExtResource( 376 ), ExtResource( 381 ), ExtResource( 370 ), ExtResource( 373 ), ExtResource( 377 ), ExtResource( 374 ), ExtResource( 372 ), ExtResource( 375 ), ExtResource( 384 ), ExtResource( 385 ), ExtResource( 380 ), ExtResource( 379 ) ],
+"loop": true,
+"name": "downspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 408 ), ExtResource( 398 ), ExtResource( 401 ), ExtResource( 400 ), ExtResource( 402 ), ExtResource( 404 ), ExtResource( 411 ), ExtResource( 397 ), ExtResource( 405 ), ExtResource( 406 ), ExtResource( 410 ), ExtResource( 403 ), ExtResource( 399 ), ExtResource( 407 ), ExtResource( 409 ) ],
+"loop": true,
+"name": "sidespecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 391 ), ExtResource( 396 ), ExtResource( 392 ), ExtResource( 387 ), ExtResource( 394 ), ExtResource( 395 ), ExtResource( 388 ), ExtResource( 393 ), ExtResource( 389 ), ExtResource( 390 ) ],
+"loop": true,
+"name": "nspecial",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 369 ), ExtResource( 368 ), ExtResource( 365 ), ExtResource( 363 ), ExtResource( 364 ), ExtResource( 366 ), ExtResource( 367 ) ],
 "loop": true,
 "name": "rebound",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 419 ), ExtResource( 413 ), ExtResource( 422 ), ExtResource( 416 ), ExtResource( 423 ), ExtResource( 412 ), ExtResource( 418 ), ExtResource( 420 ), ExtResource( 415 ), ExtResource( 417 ), ExtResource( 424 ), ExtResource( 425 ), ExtResource( 414 ), ExtResource( 421 ) ],
+"loop": true,
+"name": "upspecial",
 "speed": 5.0
 } ]
 
@@ -3492,7 +3568,7 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "jab1"
+animation = "nspecial"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"

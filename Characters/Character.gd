@@ -142,6 +142,7 @@ var jump = ""
 var attack = ""
 var shield = ""
 var grab = ""
+var special = ""
 
 var state_factory 
 onready var animatedSprite = get_node("AnimatedSprite")
@@ -219,9 +220,6 @@ func _ready():
 	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
 	animationPlayer.set_animation_process_mode(0)
 	GlobalVariables.charactersInGame.append(self)
-	state_factory = StateFactory.new()
-	if !onSolidGround:
-		change_state(GlobalVariables.CharacterState.AIR)
 		
 func set_attack_data_file():
 	var file = File.new()
@@ -314,6 +312,9 @@ func finish_attack_animation(step):
 						smashAttack = null
 
 func apply_attack_animation_steps(step = 0):
+	pass
+	
+func apply_special_animation_steps(step = 0):
 	pass
 	
 func jab_animation_step(step = 0):
@@ -792,5 +793,14 @@ func change_max_speed(xInput):
 			currentMaxSpeed = baseWalkMaxSpeed
 			state.play_animation("walk")
 
-func attack_clashed():
-	pass
+#this function has to be implemented for each character
+#it determins if on special attack use character changes to specialground or specialair
+func change_to_special_state():
+	if Input.is_action_just_pressed(up):
+		pass
+	elif Input.is_action_just_pressed(down):
+		pass
+	elif Input.is_action_just_pressed(left):
+		pass
+	elif Input.is_action_just_pressed(right):
+		pass

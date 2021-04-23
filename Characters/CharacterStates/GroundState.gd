@@ -76,13 +76,9 @@ func handle_input():
 		return
 	if !character.bufferedSmashAttack:
 		if Input.is_action_just_pressed(character.right):
-#			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-#				character.turnAroundSmashAttack = true
 			create_smashAttack_timer(smashAttackInputFrames)
 			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
 		elif Input.is_action_just_pressed(character.left):
-#			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-#				character.turnAroundSmashAttack = true
 			create_smashAttack_timer(smashAttackInputFrames)
 			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHL
 		elif Input.is_action_just_pressed(character.up):
@@ -94,6 +90,8 @@ func handle_input():
 		if Input.is_action_just_pressed(character.attack):
 			character.smashAttack = character.bufferedSmashAttack
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+		if Input.is_action_just_pressed(character.special):
+			character.change_to_special_state()
 	elif character.bufferedSmashAttack && smashAttackTimer.get_time_left():
 		if Input.is_action_just_pressed(character.attack):
 			if Input.is_action_pressed(character.right):
@@ -114,6 +112,8 @@ func handle_input():
 				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	if Input.is_action_just_pressed(character.attack):
 		character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(character.special):
+		character.change_to_special_state()
 		
 func handle_input_disabled():
 	if !bufferedInput:
