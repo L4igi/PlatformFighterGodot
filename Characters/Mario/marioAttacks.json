@@ -11,12 +11,13 @@
 		"hitlag_multiplier_1": 1,
 		"shield_damage_1": 3.1,
     "rebounding_1": 0,
-    "transcendent_1": 0,
+    "transcendent_1": 1,
 		"priority": 2,
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
 	"JAB1_sweet": {
     "damage_1": 2.5,
@@ -32,10 +33,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"JAB1_sour": {
     "damage_1": 2.5,
@@ -51,10 +49,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"JAB2_neutral": {
 		"damage_1": 4,
@@ -73,7 +68,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "JAB2_sweet": {
     "damage_1": 4,
@@ -89,10 +85,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "JAB2_sour": {
     "damage_1": 4,
@@ -108,10 +101,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"FTILT_neutral": {
 		"damage_1": 4,
@@ -130,7 +120,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
 	"FTILT_sweet": {
     "damage_1": 4,
@@ -146,10 +137,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "FTILT_sour": {
     "damage_1": 4,
@@ -165,10 +153,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"UPTILT_neutral": {
 		"damage_1": 5.5,
@@ -187,7 +172,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "UPTILT_sweet": {
     "damage_1": 5.5,
@@ -203,10 +189,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "UPTILT_sour": {
     "damage_1": 5.5,
@@ -222,10 +205,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"DTILT_neutral": {
 		"damage_1": 5,
@@ -244,7 +224,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "DTILT_sweet": {
     "damage_1": 5,
@@ -260,10 +241,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "DTILT_sour": {
     "damage_1": 7,
@@ -279,10 +257,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"NAIR_neutral": {
 		"damage_1": 1,
@@ -314,7 +289,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 1
 	},
 	"NAIR_sweet": {
     "damage_1": 1,
@@ -343,10 +319,7 @@
     "transcendent_2": 0,
 		"priority": 1,
 		"landingLag": 4,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"NAIR_sour": {
     "damage_1": 1,
@@ -375,10 +348,7 @@
     "transcendent_2": 0,
 		"priority": 0,
 		"landingLag": 4,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"UPAIR_neutral": {
 		"damage_1": 7,
@@ -398,7 +368,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 1
 	},
 	"UPAIR_sweet": {
     "damage_1": 7,
@@ -415,10 +386,7 @@
     "transcendent_1": 0,
 		"priority": 1,
 		"landingLag": 4,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"UPAIR_sour": {
     "damage_1": 7,
@@ -435,10 +403,7 @@
     "transcendent_1": 0,
 		"priority": 0,
 		"landingLag": 4,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"DAIR_neutral": {
 		"damage_1": 5,
@@ -458,7 +423,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "DAIR_sweet": {
     "damage_1": 5,
@@ -475,10 +441,7 @@
     "transcendent_1": 0,
 		"landingLag": 60,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "DAIR_sour": {
     "damage_1": 5,
@@ -495,10 +458,7 @@
     "transcendent_1": 0,
 		"landingLag": 60,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"FAIR_neutral": {
 		"damage_1": 14,
@@ -518,7 +478,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 1
 	},
   "FAIR_sweet": {
     "damage_1": 14,
@@ -535,10 +496,7 @@
     "transcendent_1": 0,
 		"landingLag": 4,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "FAIR_sour": {
     "damage_1": 14,
@@ -555,10 +513,7 @@
     "transcendent_1": 0,
 		"landingLag": 4,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"BAIR_neutral": {
 		"damage_1": 10.5,
@@ -590,7 +545,8 @@
 		"facing_direction": 2,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 1
 	},
   "BAIR_sweet": {
     "damage_1": 10.5,
@@ -619,10 +575,7 @@
     "transcendent_2": 0,
     "landingLag": 4,
 		"priority": 1,
-		"facing_direction": 2,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 2
 	},
   "BAIR_sour": {
     "damage_1": 10.5,
@@ -651,10 +604,7 @@
     "transcendent_2": 0,
     "landingLag": 4,
 		"priority": 0,
-		"facing_direction": 2,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 2
 	},
 	"DASHATTACK_neutral": {
 		"damage_1": 8,
@@ -685,7 +635,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "DASHATTACK_sweet": {
     "damage_1": 8,
@@ -713,10 +664,7 @@
     "rebounding_2": 0,
     "transcendent_2": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "DASHATTACK_sour": {
     "damage_1": 8,
@@ -744,10 +692,7 @@
     "rebounding_2": 0,
     "transcendent_2": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "FSMASH_neutral": {
 		"damage_1": 17,
@@ -766,7 +711,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "FSMASH_sweet": {
     "damage_1": 17,
@@ -782,10 +728,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "FSMASH_sour": {
     "damage_1": 14,
@@ -801,10 +744,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 2,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 2
 	},
 	"UPSMASH_neutral": {
 		"damage_1": 14,
@@ -822,8 +762,9 @@
 		"priority": 2,
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
-		"knockbackArmour": 500.0,
-		"multiHitArmour": 0.0
+		"knockbackArmour": 0.0,
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "UPSMASH_sweet": {
     "damage_1": 14,
@@ -839,10 +780,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "UPSMASH_sour": {
     "damage_1": 14,
@@ -858,10 +796,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "DSMASH_neutral": {
 		"damage_1": 10,
@@ -880,7 +815,8 @@
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
 		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
 	},
   "DSMASH_sweet": {
     "damage_1": 10,
@@ -896,10 +832,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 1,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
   "DSMASH_sour": {
     "damage_1": 10,
@@ -915,10 +848,7 @@
     "rebounding_1": 0,
     "transcendent_1": 0,
 		"priority": 0,
-		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
-		"knockbackArmour": 0.0,
-		"multiHitArmour": 0.0
+		"facing_direction": 0
 	},
 	"GRABJAB": {
 		"damage": 3.25

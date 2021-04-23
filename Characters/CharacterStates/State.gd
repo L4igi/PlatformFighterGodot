@@ -208,8 +208,8 @@ func reset_attributes():
 	character.toggle_all_hitboxes("off")
 	character.characterShield.disable_shield()
 	character.reset_hitboxes()
+	character.jabCount = 0
 	if bufferedAnimation:
-		character.jabCount = 0
 		animationPlayer.play()
 		bufferedAnimation = null
 	character.damagePercentArmour = 0.0
@@ -413,7 +413,6 @@ func enable_player_input():
 		manage_buffered_input()
 		return false
 	elif bufferedAnimation:
-		character.jabCount = 0
 		animationPlayer.play()
 		bufferedAnimation = false
 		return false
@@ -439,7 +438,6 @@ func on_invincibility_timeout():
 		direction = -1
 		
 func create_hitlag_timer(waitTime):
-	print("HITLAGEDDDDD")
 #	character.toggle_all_hitboxes("off")
 	animationPlayer.stop(false)
 	gravity_on_off("off")
@@ -565,3 +563,11 @@ func initialize_superarmour():
 		character.knockbackArmour = currentAttackData["knockbackArmour"]
 		character.multiHitArmour = currentAttackData["multiHitArmour"]
 		print(character.damagePercentArmour)
+		
+func manage_disabled_inputDI():
+	if character.currentAttack:
+		var combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
+		var currentAttackData = character.attackData[combinedAttackDataString]
+		if currentAttackData["disableInputDI"] == 0: 
+			return false
+	return true

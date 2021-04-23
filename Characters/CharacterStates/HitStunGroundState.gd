@@ -43,5 +43,6 @@ func _physics_process(_delta):
 	if !stateDone:
 		if !character.disableInput:
 			handle_input()
-			check_in_air()
+			if character.pushingCharacter:
+				check_in_air()
 		process_movement_physics(_delta)

@@ -64,6 +64,8 @@ func match_character_states(characterState):
 			match_no_collision()
 		GlobalVariables.CharacterState.TECHGROUND:
 			match_no_collision()
+		GlobalVariables.CharacterState.REBOUND:
+			match_standard_collision()
 			
 func disable_collision():
 	character.set_collision_mask_bit(0,false)
@@ -154,7 +156,9 @@ func match_standard_collision():
 			disable_collision()
 		GlobalVariables.CharacterState.TECHGROUND:
 			disable_collision()
-
+		GlobalVariables.CharacterState.REBOUND:
+			enable_collision()
+			
 func match_no_collision():
 	match areaCollisionObject.currentState:
 		GlobalVariables.CharacterState.GROUND:
@@ -198,4 +202,6 @@ func match_no_collision():
 		GlobalVariables.CharacterState.TECHAIR:
 			disable_collision()
 		GlobalVariables.CharacterState.TECHGROUND:
+			disable_collision()
+		GlobalVariables.CharacterState.REBOUND:
 			disable_collision()

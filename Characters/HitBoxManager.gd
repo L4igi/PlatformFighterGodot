@@ -108,13 +108,15 @@ func manage_character_collisionboxes_and_hitbox_interactions_both_collision(atta
 		var attackingObject1HitlagFrames = calc_hitlag_attacked(attackingObject1ArrayPos)
 		set_hitlag_attacked_frames(attackingObject2, attackingObject1HitlagFrames)
 		collidedHitBoxes[attackingObject1ArrayPos][6].call_funcv(collidedHitBoxes[attackingObject1ArrayPos][7])
+	elif collidedHitBoxes[attackingObject1ArrayPos][5] == 0\
+	&& collidedHitBoxes[attackingObject2ArrayPos][5] == 1:
+		var object1HitlagFrames = calc_hitlag_attacker(attackingObject1ArrayPos)
+		set_hitlag_frames(attackingObject1, object1HitlagFrames)
 	elif collidedHitBoxes[attackingObject1ArrayPos][5] == 1\
 	&& collidedHitBoxes[attackingObject2ArrayPos][5] == 0:
 		var attackingObject1HitlagFrames = calc_hitlag_attacked(attackingObject1ArrayPos)
 		set_hitlag_attacked_frames(attackingObject2, attackingObject1HitlagFrames)
 		collidedHitBoxes[attackingObject1ArrayPos][6].call_funcv(collidedHitBoxes[attackingObject1ArrayPos][7])
-		var object1HitlagFrames = calc_hitlag_attacker(attackingObject1ArrayPos)
-		set_hitlag_frames(attackingObject1, object1HitlagFrames)
 	#check if both are non rebound
 	elif collidedHitBoxes[attackingObject1ArrayPos][4] == 1:
 		attackingObject1.toggle_all_hitboxes("off")

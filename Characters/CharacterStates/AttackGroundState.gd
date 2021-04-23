@@ -128,6 +128,7 @@ func manage_buffered_input():
 		_:
 			character.currentAttack = null
 	initialize_superarmour()
+	disableInputDi = manage_disabled_inputDI()
 	bufferedInput = null
 
 func _physics_process(_delta):
@@ -188,6 +189,7 @@ func _physics_process(_delta):
 				character.currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 				play_attack_animation("dash_attack")
 			initialize_superarmour()
+			manage_disabled_inputDI()
 			
 func attack_handler_ground_smash_attacks():
 	create_smashAttackMultiplier_timer(smashAttackHoldFrames)
