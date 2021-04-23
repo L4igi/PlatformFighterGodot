@@ -186,6 +186,8 @@ var turnAroundSmashAttack = false
 var smashAttackMultiplier = 1.0
 #buffered animation 
 var bufferedAnimation = null
+#rebound 
+var bufferReboundFrames = 0.0
 
 
 func _ready():
@@ -213,6 +215,13 @@ func _ready():
 	state_factory = StateFactory.new()
 	if !onSolidGround:
 		change_state(GlobalVariables.CharacterState.AIR)
+		
+func set_attack_data_file():
+	var file = File.new()
+	file.open("res://Characters/debugAttacks.json", file.READ)
+	var attacks = JSON.parse(file.get_as_text())
+	file.close()
+	attackData = attacks.get_result()
 		
 func _physics_process(delta):
 	stateChangedThisFrame = false

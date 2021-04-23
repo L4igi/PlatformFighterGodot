@@ -29,7 +29,6 @@ func _process(delta):
 		print("hitboxconnected " +str(hitBoxesConnected))
 	if !hitBoxesClashed.empty():
 		process_connected_hitboxes(hitBoxesClashed, InteractionType.CLASHED)
-		hitBoxesConnectedCopy = hitBoxesConnected.duplicate(true)
 		hitBoxesClashed.clear()
 		hitBoxesConnected.clear()
 	elif !hitBoxesConnected.empty():
@@ -56,6 +55,7 @@ func process_connected_hitboxes(hitBoxes, interactionType):
 					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"]
 					highestHitBox = HitBoxType.SWEET
 	hitBoxes.clear()
+	hitBoxesConnectedCopy = hitBoxesConnected.duplicate(true)
 	match interactionType:
 		InteractionType.CONNECTED:
 			apply_attack(highestHitBox, InteractionType.CONNECTED)
@@ -128,7 +128,7 @@ func apply_attack(hbType, interactionType):
 		InteractionType.CONNECTED:
 			apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier)
 		InteractionType.CLASHED:
-			apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier)
+			apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox)
 
 func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier):
 	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier)
@@ -142,7 +142,7 @@ func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInve
 	else:
 		attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
 	
-func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier):
+func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox):
 	if attackedObject.is_in_group("Character"):
 		var attackingObjectAttackType = GlobalVariables.match_attack_type(attackingObject.currentAttack)
 		var attackedObjectAttackType = GlobalVariables.match_attack_type(attackedObject.currentAttack)
@@ -166,9 +166,7 @@ func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInvers
 			#if one attack damage is > 9% other attack damage, it is outprioritized, this attack hits
 			var isAttackedHandlerParamArray = [attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position]
 			var isAttackedHandlerFuncRef = funcref(attackedObject, "is_attacked_handler")
-			var proccessConnectedHitboxesParamArray = [hitBoxesConnectedCopy, InteractionType.CONNECTED]
-			var proccessConnectedHitboxesFunRef = funcref(self, "process_connected_hitboxes")
-			HitBoxManager.add_colliding_hitbox(isAttackedHandlerFuncRef, isAttackedHandlerParamArray, attackingObject, attackDamage, hitlagMultiplier)
+			HitBoxManager.add_colliding_hitbox(attackingObject, attackDamage, hitlagMultiplier, hitBoxesConnectedCopy, reboundingHitbox, transcendentHitBox, isAttackedHandlerFuncRef, isAttackedHandlerParamArray)
 			
 func calculate_hitlag_frames_clashed(attackDamage, hitlagMultiplier):
 	var attackingObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))
@@ -218,10 +216,9 @@ func check_hitbox_areas(area, hitboxType):
 			if !hitBoxesClashed.has(hitboxType):
 				hitBoxesClashed.append(hitboxType)
 #			print("hit Hitbox " +str(area.get_parent().attackingObject.name))
-	elif area.is_in_group("Hurtbox")\
-	&& area.get_parent().get_parent() != attackingObject\
-	&& hitBoxesClashed.empty():
-		if hitBoxesConnected.empty():
+	if area.is_in_group("Hurtbox")\
+	&& area.get_parent().get_parent() != attackingObject:
+		if hitBoxesClashed.empty() && hitBoxesConnected.empty():
 			apply_hitlag(area, InteractionType.CONNECTED)
 		if !hitBoxesConnected.has(hitboxType):
 			hitBoxesConnected.append(hitboxType)

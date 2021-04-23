@@ -14,7 +14,7 @@ enum TimerType{HITSTUN, SHORTHOP, DROPDOWN, INVINCIBILITY, GRAB, SMASHATTACK, SH
 
 var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmash", "dtilt", "fair", "fsmash", "ftilt", "jab1", "jab2", "nair", "upair", "upsmash", "uptilt"]
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND}
 
 enum MoveDirection {LEFT, RIGHT}
 
@@ -39,7 +39,7 @@ var controlsP2 = {
 	"left" : "Left2",
 	"right" : "Right2",
 	"jump" : "Jump2",
-	"attack" : "Attack2",
+	"attack" : "Attack1",
 	"shield" : "Shield2",
 	"grab" : "Grab2"
 }

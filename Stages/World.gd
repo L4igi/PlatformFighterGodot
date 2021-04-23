@@ -31,6 +31,7 @@ func spawn_characters():
 	characterList.append(char2)
 	char2.get_node("AnimatedSprite").set_self_modulate(Color(0,1,0,1))
 	setup_controls_characters(char2, GlobalVariables.controlsP2)
+	char2.set_attack_data_file()
 	
 func setup_controls_characters(character, globalControls):
 	character.up = globalControls.get("up")
