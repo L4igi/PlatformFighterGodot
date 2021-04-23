@@ -9,6 +9,11 @@ func setup(change_state, animationPlayer, character):
 	.setup(change_state, animationPlayer, character)
 	character.disabledEdgeGrab = true
 	character.edgeGrabShape.set_deferred("disabled", true)
+	
+func switch_to_current_state_again():
+	character.damagePercentArmour = 0.0
+	character.knockbackArmour = 0.0
+	character.multiHitArmour = 0.0
 
 func manage_buffered_input():
 	match bufferedInput:
@@ -99,6 +104,7 @@ func manage_buffered_input():
 			character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
 		_:
 			character.currentAttack = null
+	initialize_superarmour()
 	bufferedInput = null
 	
 func handle_input():
@@ -155,6 +161,7 @@ func _physics_process(_delta):
 				disableInputDi = true
 				play_attack_animation("dair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
+			initialize_superarmour()
 		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
 			character.set_collision_mask_bit(1,false)
 		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():

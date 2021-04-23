@@ -212,6 +212,9 @@ func reset_attributes():
 		character.jabCount = 0
 		animationPlayer.play()
 		bufferedAnimation = null
+	character.damagePercentArmour = 0.0
+	character.knockbackArmour = 0.0
+	character.multiHitArmour = 0.0
 	
 func switch_to_current_state_again():
 	print("switching to current state again " +str(GlobalVariables.CharacterState.keys()[character.currentState]))
@@ -447,7 +450,10 @@ func on_hitlag_timeout():
 	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	character.velocity = character.initLaunchVelocity
-	animationPlayer.play()
+	if character.superArmourOn:
+		character.superArmourOn = false
+	else:
+		animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
 
 func create_hitlagAttacked_timer(waitTime):
@@ -551,3 +557,12 @@ func double_jump_attack_handler():
 			character.velocity.y *=2
 		else:
 			character.velocity.x = character.airMaxSpeed * xInput 
+
+func initialize_superarmour():
+	if character.currentAttack:
+		var combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
+		var currentAttackData = character.attackData[combinedAttackDataString]
+		character.damagePercentArmour = currentAttackData["damagePercentArmour"]
+		character.knockbackArmour = currentAttackData["knockbackArmour"]
+		character.multiHitArmour = currentAttackData["multiHitArmour"]
+		print(character.damagePercentArmour)

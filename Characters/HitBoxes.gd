@@ -182,7 +182,8 @@ func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier):
 			attackingObjectHitlag = floor(attackingObjectHitlag * 0.67)
 			attackedObjectHitlag = floor(attackedObjectHitlag * 0.67)
 		attackingObject.state.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
-	attackedObject.state.start_timer(attackedObject.state.hitlagAttackedTimer, attackedObjectHitlag)
+	attackedObject.character_attacked_handler(attackedObjectHitlag)
+#	attackedObject.state.start_timer(attackedObject.state.hitlagAttackedTimer, attackedObjectHitlag)
 #	print("calculated hitlag frames character "+ str(characterHitlag))
 #	print("calculated hitlag frames attackedcharacter "+ str(attackedCharacterHitlag))
 
@@ -263,8 +264,8 @@ func apply_hurtbox_character_character_hitlag():
 			elif attackedObject.currentState == GlobalVariables.CharacterState.GROUND\
 			&& attackedObject.state.shieldDropTimer.get_time_left() && attackedObject.perfectShieldFramesLeft > 0:
 				attackedObject.perfectShieldActivated = true
-				attackedObject.character_attacked_handler(attackedObject.hitLagFrames + (8.0))
+				attackedObject.state.create_hitlag_timer(attackedObject.hitLagFrames + (8.0))
 				attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames + (11.0))
 			else:
-				attackedObject.character_attacked_handler(attackedObject.hitLagFrames)
+				attackedObject.state.create_hitlag_timer(attackedObject.hitLagFrames)
 				attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames)

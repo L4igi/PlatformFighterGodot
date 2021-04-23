@@ -5,7 +5,8 @@ class_name AttackGroundState
 var landingLagTimer = null
 var smashAttackMultiplierTimer = null
 var smashAttackMultiplierFrames = 60.0
-var smashAttackHoldFrames = 180.0
+var smashAttackHoldFrames = 1800.0
+#var smashAttackHoldFrames = 180.0
 var shiftDegrees = 10.0
 var rotateSmashAttackDegrees = 0.0
 
@@ -25,8 +26,12 @@ func setup(change_state, animationPlayer, character):
 	character.airdodgeAvailable = true
 	character.smashAttackMultiplier = 1.0
 
+func switch_to_current_state_again():
+	character.damagePercentArmour = 0.0
+	character.knockbackArmour = 0.0
+	character.multiHitArmour = 0.0
+
 func manage_buffered_input():
-	character.currentAttack = bufferedInput
 	match bufferedInput:
 		GlobalVariables.CharacterAnimations.SHORTHOPATTACK:
 			process_shorthop_attack()
@@ -43,16 +48,19 @@ func manage_buffered_input():
 				process_shorthop_attack()
 			else:
 				jab_handler()
+				character.currentAttack = GlobalVariables.CharacterAnimations.JAB1
 		GlobalVariables.CharacterAnimations.JAB2:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
 				jab_handler()
+				character.currentAttack = GlobalVariables.CharacterAnimations.JAB2
 		GlobalVariables.CharacterAnimations.JAB3:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
 				jab_handler()
+				character.currentAttack = GlobalVariables.CharacterAnimations.JAB3
 		GlobalVariables.CharacterAnimations.GRAB:
 			character.currentAttack = null
 			bufferedInput = null
@@ -63,24 +71,28 @@ func manage_buffered_input():
 			else:
 				character.smashAttack = bufferedInput
 				attack_handler_ground_smash_attacks()
+				character.currentAttack = GlobalVariables.CharacterAnimations.DSMASH
 		GlobalVariables.CharacterAnimations.UPSMASH:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
 				character.smashAttack = bufferedInput
 				attack_handler_ground_smash_attacks()
+				character.currentAttack = GlobalVariables.CharacterAnimations.UPSMASH
 		GlobalVariables.CharacterAnimations.FSMASHL:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
 				character.smashAttack = bufferedInput
 				attack_handler_ground_smash_attacks()
+				character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 		GlobalVariables.CharacterAnimations.FSMASHR:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
 				character.smashAttack = bufferedInput
 				attack_handler_ground_smash_attacks()
+				character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 		GlobalVariables.CharacterAnimations.UPTILT:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
@@ -115,6 +127,7 @@ func manage_buffered_input():
 				play_attack_animation("ftilt")
 		_:
 			character.currentAttack = null
+	initialize_superarmour()
 	bufferedInput = null
 
 func _physics_process(_delta):
@@ -174,6 +187,7 @@ func _physics_process(_delta):
 						character.velocity.x = character.dashAttackSpeed
 				character.currentAttack = GlobalVariables.CharacterAnimations.DASHATTACK
 				play_attack_animation("dash_attack")
+			initialize_superarmour()
 			
 func attack_handler_ground_smash_attacks():
 	create_smashAttackMultiplier_timer(smashAttackHoldFrames)

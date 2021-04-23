@@ -24,6 +24,7 @@ var airDodgeLandingLag = 20.0
 func _ready():
 	airDodgeTimer = create_timer("on_airDodgeTimer_timeout", "AirDodgeTimer")
 	get_airDodge_angle()
+	reset_gravity()
 	play_animation("airdodge_neutral")
 
 func setup(change_state, animationPlayer, character):

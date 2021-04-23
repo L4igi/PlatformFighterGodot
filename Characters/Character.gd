@@ -188,6 +188,11 @@ var smashAttackMultiplier = 1.0
 var bufferedAnimation = null
 #rebound 
 var bufferReboundFrames = 0.0
+#superarmour 
+var superArmourOn = false
+var damagePercentArmour = 0.0
+var knockbackArmour = 0.0
+var multiHitArmour = 0
 
 
 func _ready():
@@ -736,9 +741,14 @@ func calculate_hitlag_di():
 	velocity = Vector2(cos(newLaunchRadian), sin(newLaunchRadian)) * attackedCalculatedVelocity
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
 		
+#called whenever character is attacked
 func character_attacked_handler(hitLagFrames):
 	bufferHitLagFrames = hitLagFrames
-	if !perfectShieldActivated:
+	#handle superarmour 
+	if damagePercentArmour > 0.0:
+		superArmourOn = true
+		state.create_hitlag_timer(bufferHitLagFrames)
+	elif !perfectShieldActivated:
 		change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	else:
 		state.create_hitlagAttacked_timer(bufferHitLagFrames)
