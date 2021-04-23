@@ -92,7 +92,7 @@ func manage_buffered_input():
 			else:
 				character.smashAttack = bufferedInput
 				attack_handler_ground_smash_attacks()
-				character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
+				
 		GlobalVariables.CharacterAnimations.UPTILT:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()

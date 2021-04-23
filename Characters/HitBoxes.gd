@@ -131,8 +131,8 @@ func apply_attack(hbType, interactionType):
 			apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox)
 
 func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier):
-	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier)
 	if attackedObject.is_in_group("Character"):
+		print("attackobject current state " +str(GlobalVariables.CharacterState.keys()[attackedObject.currentState]))
 		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD:
 			attackedObject.is_attacked_in_shield_handler(attackDamage, shieldStunMultiplier, shieldDamage, isProjectile, attackingObject.global_position)
 		elif attackedObject.perfectShieldActivated:
@@ -141,7 +141,8 @@ func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInve
 			attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
 	else:
 		attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
-	
+	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier)
+
 func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox):
 	if attackedObject.is_in_group("Character"):
 		var attackingObjectAttackType = GlobalVariables.match_attack_type(attackingObject.currentAttack)
@@ -259,7 +260,7 @@ func apply_hurtbox_character_character_hitlag():
 		else:
 			attackingObject.initLaunchVelocity = attackingObject.velocity
 			if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD:
-				attackedObject.character_attacked_shield_handler(attackedObject.hitLagFrames)
+				attackedObject.state.create_hitlag_timer(attackedObject.hitLagFrames)
 				attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames)
 			elif attackedObject.currentState == GlobalVariables.CharacterState.GROUND\
 			&& attackedObject.state.shieldDropTimer.get_time_left() && attackedObject.perfectShieldFramesLeft > 0:

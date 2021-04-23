@@ -215,6 +215,7 @@ func reset_attributes():
 	character.damagePercentArmour = 0.0
 	character.knockbackArmour = 0.0
 	character.multiHitArmour = 0.0
+	character.hitsTaken = 0
 	
 func switch_to_current_state_again():
 	print("switching to current state again " +str(GlobalVariables.CharacterState.keys()[character.currentState]))

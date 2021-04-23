@@ -821,8 +821,8 @@
     "transcendent_1": 0,
 		"priority": 2,
 		"facing_direction": 0,
-		"damagePercentArmour": 100.0,
-		"knockbackArmour": 0.0,
+		"damagePercentArmour": 0.0,
+		"knockbackArmour": 500.0,
 		"multiHitArmour": 0.0
 	},
   "UPSMASH_sweet": {

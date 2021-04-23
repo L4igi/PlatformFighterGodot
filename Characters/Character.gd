@@ -193,6 +193,8 @@ var superArmourOn = false
 var damagePercentArmour = 0.0
 var knockbackArmour = 0.0
 var multiHitArmour = 0
+var lastReceivedDamage = 0
+var hitsTaken = 0
 
 
 func _ready():
@@ -322,7 +324,10 @@ func jab_animation_step(step = 0):
 			comboNextJab = false
 	
 func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObjectGlobalPosition):
+	print("IS ATTACKED HANDLER")
 	lastBounceCollision = null
+	lastReceivedDamage = damage
+	hitsTaken += 1
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
 		attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
@@ -377,6 +382,8 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 	elif attackingObjectGlobalPosition.x >= self.global_position.x:
 		pushDirection = -1
 	initLaunchVelocity = pushDirection * Vector2(400, 0)
+	bufferHitLagFrames = hitLagFrames
+	change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	#((damage * parameters.shield.mult * projectileMult * perfectshieldMult * groundedMult * aerialMult) + parameters.shield.constant) * 0.09 * perfectshieldMult2;
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
@@ -743,19 +750,32 @@ func calculate_hitlag_di():
 		
 #called whenever character is attacked
 func character_attacked_handler(hitLagFrames):
+	print("CHARACTERATTACKEDHANDLER")
 	bufferHitLagFrames = hitLagFrames
 	#handle superarmour 
-	if damagePercentArmour > 0.0:
-		superArmourOn = true
+	if superarmour_handler():
+		print("here")
 		state.create_hitlag_timer(bufferHitLagFrames)
 	elif !perfectShieldActivated:
 		change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	else:
 		state.create_hitlagAttacked_timer(bufferHitLagFrames)
 		
-func character_attacked_shield_handler(hitLagFrames):
-	bufferHitLagFrames = hitLagFrames
-	change_state(GlobalVariables.CharacterState.SHIELDSTUN)
+func superarmour_handler():
+	if damagePercentArmour > 0.0:
+		damagePercentArmour -= lastReceivedDamage
+		if damagePercent > 0.0:
+			superArmourOn = true
+			return true
+	elif knockbackArmour > attackedCalculatedVelocity:
+		superArmourOn = true 
+		return true
+	elif multiHitArmour > hitsTaken:
+		superArmourOn = true
+		return true
+	superArmourOn = false
+	return false
+		
 	
 func change_max_speed(xInput):
 	if !state.inMovementLag:
