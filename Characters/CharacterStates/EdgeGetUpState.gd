@@ -64,14 +64,14 @@ func manage_edge_getup_animation(getUpType, targetPosition, direction):
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !bufferedInput:
 		.buffer_input()
 
 func _physics_process(_delta):
 	if !stateDone:
 		if character.disableInput:
-			handle_input_disabled()
+			handle_input_disabled(_delta)
 		else:
 			handle_input()
 		character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP, true)

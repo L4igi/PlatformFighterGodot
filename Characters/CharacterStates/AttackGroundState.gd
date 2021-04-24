@@ -134,20 +134,24 @@ func manage_buffered_input():
 		_:
 			character.currentAttack = null
 	initialize_superarmour()
-	disableInputDi = manage_disabled_inputDI()
+	character.disableInputDI = manage_disabled_inputDI()
 	bufferedInput = null
 
 func _physics_process(_delta):
 	if !stateDone && !hitlagTimer.get_time_left():
-		handle_input_disabled()
+		handle_input_disabled(_delta)
 		if character.disableInput:
 			process_movement_physics(_delta)
 			if check_in_air():
 				if character.moveGroundAirTransition.has(character.currentAttack):
-					character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
-					return 
-				else:
+					character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
 					character.change_state(GlobalVariables.CharacterState.AIR)
+					return
+				else:
+					character.disableInput = false
+					character.bufferMoveAirTransition = true
+					character.change_state(GlobalVariables.CharacterState.AIR)
+					return
 			if character.airGroundMoveTransition:
 				manage_air_ground_move_transition()
 			else:
@@ -259,7 +263,7 @@ func jab_handler():
 func handle_input():
 	pass
 	
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if animationFramesLeft <= character.bufferInputWindow\
 	&& !shortHopTimer.get_time_left()\

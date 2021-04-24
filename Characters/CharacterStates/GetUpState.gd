@@ -18,13 +18,13 @@ func manage_buffered_input():
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if!bufferedInput:
 		buffer_input()
 	
 func _physics_process(_delta):
 	if !stateDone:
-		handle_input_disabled()
+		handle_input_disabled(_delta)
 		check_stop_area_entered(_delta)
 		process_movement_physics(_delta)
 	

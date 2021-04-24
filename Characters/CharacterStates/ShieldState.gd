@@ -39,7 +39,7 @@ func handle_input():
 		character.characterShield.disable_shield()
 		character.change_state(GlobalVariables.CharacterState.SPOTDODGE)
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !shortHopTimer.get_time_left():
 		buffer_input()
 			
@@ -48,9 +48,11 @@ func _physics_process(_delta):
 		check_stop_area_entered(_delta)
 		if !character.onSolidGround:
 			if check_in_air():
+				character.disableInput = false
+				character.bufferMoveAirTransition = true
 				character.change_state(GlobalVariables.CharacterState.AIR)
 		if character.disableInput:
-			handle_input_disabled()
+			handle_input_disabled(_delta)
 		if !character.disableInput:
 			process_movement_physics(_delta)
 		if !hitlagAttackedTimer.get_time_left():

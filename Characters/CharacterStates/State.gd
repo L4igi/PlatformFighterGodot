@@ -27,10 +27,12 @@ var hitlagAttackedTimer = null
 var hitStunTimer = null
 var hitStunTimerDone = true
 #disableInputDI
-var disableInputDi = false
 var attackedInitLaunchAngle = 0
 #lag
 var inLandingLag = false
+#rehit timer (after multihit moves hit how many frames till next hit can occur)
+var rehitTimer = null
+var hitBoxesActive = false
 
 # Writing _delta instead of delta here prevents the unused variable warning.
 func _physics_process(_delta):
@@ -113,7 +115,7 @@ func manage_buffered_input_air():
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	pass
 
 func process_movement_physics(_delta):
@@ -191,6 +193,7 @@ func setup(change_state, animationPlayer, character):
 	hitlagTimer = create_timer("on_hitlag_timeout", "HitLagTimer")
 	hitStunTimer = create_timer("on_hitstun_timeout", "HitStunTimer")
 	hitlagAttackedTimer = create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer")
+	rehitTimer = create_timer("on_rehit_timeout", "RehitTimer")
 	self.change_state = change_state
 	self.animationPlayer = animationPlayer
 	self.character = character
@@ -290,10 +293,7 @@ func check_in_air():
 		if !character.get_slide_count():
 			if character.velocity.x == 0: 
 				character.velocity.x = character.stopAreaVelocity.x
-			character.disableInput = false
-			character.bufferMoveAirTransition = true
 			character.jumpCount = 1
-#			character.change_state(GlobalVariables.CharacterState.AIR)
 			return true
 	return false
 	
@@ -571,3 +571,10 @@ func manage_disabled_inputDI():
 		if currentAttackData["disableInputDI"] == 0: 
 			return false
 	return true
+
+func create_rehit_timer(waitTime):
+	start_timer(rehitTimer, waitTime)
+	
+func on_rehit_timeout():
+	if hitBoxesActive:
+		character.toggle_all_hitboxes("on")

@@ -29,7 +29,7 @@ func handle_input():
 	elif !dropDownTimer.get_time_left() && Input.is_action_just_pressed(character.shield):
 		character.change_state(GlobalVariables.CharacterState.SHIELD)
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !shortHopTimer.get_time_left()\
 	&& bufferedInput == null: 
 		.buffer_input()
@@ -37,14 +37,14 @@ func handle_input_disabled():
 func manage_buffered_input():
 	manage_buffered_input_ground()
 	
-func _physics_process(delta):
+func _physics_process(_delta):
 	if !stateDone:
 		if !character.disableInput:
 			handle_input()
 			if get_input_direction_y() <= 0.3:
 				character.change_state(GlobalVariables.CharacterState.GROUND)
 		else:
-			handle_input_disabled()
+			handle_input_disabled(_delta)
 	
 func create_dropDown_timer(waitTime):
 	start_timer(dropDownTimer, waitTime)

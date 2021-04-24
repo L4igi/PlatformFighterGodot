@@ -30,13 +30,13 @@ func manage_buffered_input():
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !bufferedInput:
 		.buffer_input()
 	
 func _physics_process(_delta):
 	if !stateDone:
-		handle_input_disabled()
+		handle_input_disabled(_delta)
 		process_movement_physics_air(_delta)
 		if character.enableShieldBreakGroundCheck && !character.onSolidGround:
 				var solidGroundCollision = check_ground_platform_collision()
@@ -48,6 +48,8 @@ func _physics_process(_delta):
 				character.characterShield.shieldBreak_end()
 				shieldBreakTimer.stop()
 				if check_in_air():
+					character.disableInput = false
+					character.bufferMoveAirTransition = true
 					character.change_state(GlobalVariables.CharacterState.AIR)
 	
 func create_shieldbreak_timer(waitTime):

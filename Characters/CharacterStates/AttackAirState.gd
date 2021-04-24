@@ -95,13 +95,13 @@ func manage_buffered_input():
 		_:
 			character.currentAttack = null
 	initialize_superarmour()
-	disableInputDi = manage_disabled_inputDI()
+	character.disableInputDI = manage_disabled_inputDI()
 	bufferedInput = null
 	
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if animationFramesLeft <= character.bufferInputWindow\
 	&& bufferedInput == null: 
@@ -110,8 +110,8 @@ func handle_input_disabled():
 	
 func _physics_process(_delta):
 	if !stateDone:
-		handle_input_disabled()
-		if disableInputDi:
+		handle_input_disabled(_delta)
+		if character.disableInputDI:
 			process_disable_input_direction_influence(_delta)
 		else:
 			process_movement_physics_air(_delta)
@@ -123,9 +123,8 @@ func _physics_process(_delta):
 			var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
 			character.applyLandingLag = currentAttackData["landingLag"]
 			if character.moveAirGroundTransition.has(character.currentAttack):
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
-			else:
-				character.change_state(GlobalVariables.CharacterState.GROUND)
+				character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
+			character.change_state(GlobalVariables.CharacterState.GROUND)
 			return
 			#toggle_all_hitboxes("off")
 		if character.groundAirMoveTransition:
@@ -150,7 +149,7 @@ func _physics_process(_delta):
 				play_attack_animation("dair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
 			initialize_superarmour()
-			disableInputDi = manage_disabled_inputDI()
+			character.disableInputDI = manage_disabled_inputDI()
 		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
 			character.set_collision_mask_bit(1,false)
 		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():

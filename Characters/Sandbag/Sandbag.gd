@@ -41,7 +41,7 @@ func manage_dair(step):
 		0:
 			velocity = Vector2.ZERO
 			state.gravity_on_off("off")
-			disableInputDI = false
+			character.disableInputDI = false
 		1:
 			state.gravity_on_off("on")
 			animationPlayer.stop(false)

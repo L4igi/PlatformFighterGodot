@@ -15,6 +15,7 @@ func _ready():
 		if character.bufferInvincibilityFrames > 0:
 			create_invincibility_timer(character.bufferInvincibilityFrames)
 			character.bufferInvincibilityFrames = 0
+#	character.check_special_animation_steps()
 				
 				
 func setup(change_state, animationPlayer, character):
@@ -22,15 +23,20 @@ func setup(change_state, animationPlayer, character):
 
 func _physics_process(_delta):
 	if !stateDone && !hitlagTimer.get_time_left():
-		handle_input_disabled()
+		handle_input_disabled(_delta)
 		if character.disableInput:
 			process_movement_physics(_delta)
 			if check_in_air():
 				if character.moveGroundAirTransition.has(character.currentAttack):
-					character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
-					return 
-				else:
+#					character.check_special_animation_steps()
+					character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
 					character.change_state(GlobalVariables.CharacterState.AIR)
+					return
+				else:
+					character.disableInput = false
+					character.bufferMoveAirTransition = true
+					character.change_state(GlobalVariables.CharacterState.AIR)
+					return
 			if character.airGroundMoveTransition:
 				manage_air_ground_move_transition()
 		else:
@@ -59,6 +65,8 @@ func _physics_process(_delta):
 			elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
 				play_attack_animation("sidespecial")
 				character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
+			character.initialize_special_animation_steps()
+			character.disableInputDI = manage_disabled_inputDI()
 #			initialize_superarmour()
 #			manage_disabled_inputDI()
 
@@ -78,3 +86,5 @@ func on_landingLag_timeout():
 		character.applySideStepFrames = true
 		character.change_state(GlobalVariables.CharacterState.GROUND)
 	enable_player_input()
+
+	

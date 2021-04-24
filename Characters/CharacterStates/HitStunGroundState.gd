@@ -36,7 +36,7 @@ func handle_input():
 		character.velocity.x = 400
 		character.change_state(GlobalVariables.CharacterState.GETUP)
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	pass
 
 func _physics_process(_delta):
@@ -45,5 +45,7 @@ func _physics_process(_delta):
 			handle_input()
 			if character.pushingCharacter:
 				if check_in_air():
+					character.disableInput = false
+					character.bufferMoveAirTransition = true
 					character.change_state(GlobalVariables.CharacterState.AIR)
 		process_movement_physics(_delta)

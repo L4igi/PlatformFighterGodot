@@ -47,7 +47,7 @@ func handle_input():
 			gravity_on_off("off")
 			character.velocity.y = 0
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !bufferedInput:
 		.buffer_input()
 	
@@ -57,7 +57,7 @@ func _physics_process(_delta):
 		if character.airTime <= 300: 
 			character.airTime += 1
 		if character.disableInput: 
-			handle_input_disabled()
+			handle_input_disabled(_delta)
 			process_movement_physics(_delta)
 		elif !character.disableInput:
 			handle_input()

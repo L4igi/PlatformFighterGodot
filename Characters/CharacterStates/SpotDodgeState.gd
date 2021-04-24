@@ -15,11 +15,11 @@ func manage_buffered_input():
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !bufferedInput:
 		buffer_input()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if !stateDone:
 		if character.disableInput:
-			handle_input_disabled()
+			handle_input_disabled(_delta)

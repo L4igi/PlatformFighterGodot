@@ -202,6 +202,15 @@ var groundAirMoveTransition = false
 var airGroundMoveTransition = false
 #buffer Invincibilty frames to next state 
 var bufferInvincibilityFrames = 0
+#upspecial 
+var upSpecialSpeed = Vector2(0,1200)
+var upSpecialAnimationStep = 0
+var downSpecialAnimationStep = 0
+var sideSpecialAnimationStep = 0
+var neutralSpecialAnimationStep = 0
+var enableSpecialInput = false
+#rehit 
+var attackRehit = true
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -315,6 +324,18 @@ func finish_attack_animation(step):
 						change_state(GlobalVariables.CharacterState.AIR)
 						smashAttack = null
 
+func finish_special_animation(step):
+	if onSolidGround:
+		applySideStepFrames = true
+		smashAttack = null
+		if !state.check_character_crouch():
+			change_state(GlobalVariables.CharacterState.GROUND)
+		disableInput = false
+	else:
+		disableInput = false
+		change_state(GlobalVariables.CharacterState.AIR)
+		smashAttack = null
+		
 func apply_attack_animation_steps(step = 0):
 	pass
 	
@@ -329,7 +350,6 @@ func jab_animation_step(step = 0):
 			comboNextJab = false
 	
 func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObjectGlobalPosition):
-	print("IS ATTACKED HANDLER")
 	lastBounceCollision = null
 	lastReceivedDamage = damage
 	hitsTaken += 1
@@ -343,7 +363,7 @@ func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, lau
 	if launchVectorInversion:
 		launchVector.x = launchVector.x*-1
 	initLaunchVelocity = launchVector
-	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
+#	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
 	if attackedCalculatedVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
 		shortHitStun = false
@@ -635,54 +655,8 @@ func set_current_hitbox(hitBoxNumber):
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if GlobalVariables.attackAnimationList.has(anim_name):
 		finish_attack_animation(0)
-			
-			
-func check_state_transition(changeToState):
-	if bufferMoveAirTransition && !shortHopAttack:
-		bufferMoveAirTransition = false
-		match currentState:
-			GlobalVariables.CharacterState.ATTACKGROUND:
-				changeToState = GlobalVariables.CharacterState.ATTACKAIR
-			GlobalVariables.CharacterState.SHIELD:
-				if changeToState == GlobalVariables.CharacterState.AIR:
-					if airdodgeAvailable:
-						changeToState = GlobalVariables.CharacterState.AIRDODGE
-			GlobalVariables.CharacterState.GROUND:
-				if state.shortHopTimer.get_time_left():
-					queueFreeFall = false
-					state.process_jump()
-		return changeToState
-	match currentState:
-		GlobalVariables.CharacterState.ATTACKAIR:
-			if moveAirGroundTransition.has(currentAttack):
-				if moveAirGroundTransition.get(currentAttack): 
-					airGroundMoveTransition = true
-					changeToState = GlobalVariables.CharacterState.ATTACKGROUND
-			else: 
-				airGroundMoveTransition = false
-		GlobalVariables.CharacterState.ATTACKGROUND:
-			if moveGroundAirTransition.has(currentAttack):
-				if moveGroundAirTransition.get(currentAttack): 
-					groundAirMoveTransition = true
-					changeToState = GlobalVariables.CharacterState.ATTACKAIR
-				else: 
-					groundAirMoveTransition = false
-		GlobalVariables.CharacterState.SPECIALAIR:
-			if moveAirGroundTransition.has(currentAttack):
-				if moveAirGroundTransition.get(currentAttack): 
-					airGroundMoveTransition = true
-					changeToState = GlobalVariables.CharacterState.SPECIALGROUND
-			else: 
-				airGroundMoveTransition = false
-		GlobalVariables.CharacterState.SPECIALGROUND:
-			if moveGroundAirTransition.has(currentAttack):
-				if moveGroundAirTransition.get(currentAttack): 
-					groundAirMoveTransition = true
-					changeToState = GlobalVariables.CharacterState.SPECIALAIR
-				else: 
-					groundAirMoveTransition = false
-	return changeToState
-	
+	if GlobalVariables.specialAnimationList.has(anim_name):
+		finish_special_animation(0)
 
 func change_state(new_state):
 	if currentState == new_state:
@@ -704,7 +678,7 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():
@@ -714,6 +688,53 @@ func change_state(new_state):
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
+	
+func check_state_transition(changeToState):
+	if bufferMoveAirTransition && !shortHopAttack:
+		bufferMoveAirTransition = false
+		match currentState:
+			GlobalVariables.CharacterState.ATTACKGROUND:
+				changeToState = GlobalVariables.CharacterState.ATTACKAIR
+			GlobalVariables.CharacterState.SHIELD:
+				if changeToState == GlobalVariables.CharacterState.AIR:
+					if airdodgeAvailable:
+						changeToState = GlobalVariables.CharacterState.AIRDODGE
+			GlobalVariables.CharacterState.GROUND:
+				if state.shortHopTimer.get_time_left():
+					queueFreeFall = false
+					state.process_jump()
+		return changeToState
+	if changeToState == GlobalVariables.CharacterState.GROUND\
+	|| changeToState == GlobalVariables.CharacterState.AIR:
+		match currentState:
+			GlobalVariables.CharacterState.ATTACKAIR:
+				if moveAirGroundTransition.has(currentAttack):
+					if moveAirGroundTransition.get(currentAttack): 
+						airGroundMoveTransition = true
+						changeToState = GlobalVariables.CharacterState.ATTACKGROUND
+						return changeToState
+			GlobalVariables.CharacterState.ATTACKGROUND:
+				if moveGroundAirTransition.has(currentAttack):
+					if moveGroundAirTransition.get(currentAttack): 
+						groundAirMoveTransition = true
+						changeToState = GlobalVariables.CharacterState.ATTACKAIR
+						return changeToState
+			GlobalVariables.CharacterState.SPECIALAIR:
+				if moveAirGroundTransition.has(currentAttack):
+					if moveAirGroundTransition.get(currentAttack): 
+						airGroundMoveTransition = true
+						changeToState = GlobalVariables.CharacterState.SPECIALGROUND
+						return changeToState
+			GlobalVariables.CharacterState.SPECIALGROUND:
+				if moveGroundAirTransition.has(currentAttack):
+					if moveGroundAirTransition.get(currentAttack): 
+						groundAirMoveTransition = true
+						changeToState = GlobalVariables.CharacterState.SPECIALAIR
+						return changeToState
+	bufferInvincibilityFrames = 0.0
+	groundAirMoveTransition = false
+	airGroundMoveTransition = false
+	return changeToState
 
 func create_timer(timeout_function, timerName):
 	var timer = Timer.new()    
@@ -838,3 +859,12 @@ func change_to_special_state():
 	elif Input.is_action_just_pressed(right):
 		pass
 
+func check_special_animation_steps():
+	pass
+
+func set_hitboxes_active(active = 0):
+	match active:
+		0: 
+			state.hitBoxesActive = true
+		1:
+			state.hitBoxesActive = false

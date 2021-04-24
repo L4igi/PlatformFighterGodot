@@ -115,7 +115,7 @@ func handle_input():
 	elif Input.is_action_just_pressed(character.special):
 		character.change_to_special_state()
 		
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !bufferedInput:
 		buffer_input()
 	if !inLandingLag:
@@ -142,10 +142,12 @@ func _physics_process(_delta):
 				if perfectShieldFramesLeft > 0:
 					perfectShieldFramesLeft -= 1
 			if check_in_air():
+				character.disableInput = false
+				character.bufferMoveAirTransition = true
 				character.change_state(GlobalVariables.CharacterState.AIR)
 			if !character.perfectShieldActivated:
 				if character.disableInput:
-					handle_input_disabled()
+					handle_input_disabled(_delta)
 				elif inMovementLag:
 					handle_input()
 		else:
@@ -153,6 +155,8 @@ func _physics_process(_delta):
 			check_stop_area_entered(_delta)
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
 			if check_in_air():
+				character.disableInput = false
+				character.bufferMoveAirTransition = true
 				character.change_state(GlobalVariables.CharacterState.AIR)
 			handle_input()
 			#checks if player walked off platform/stage

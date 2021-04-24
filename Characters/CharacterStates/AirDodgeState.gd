@@ -45,7 +45,7 @@ func manage_buffered_input():
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if !bufferedInput:
 		buffer_input()
 	
@@ -55,9 +55,9 @@ func buffer_input():
 	
 func _physics_process(_delta):
 	if !stateDone:
-		if disableInputDi:
+		if character.disableInputDI:
 			process_disable_input_direction_influence(_delta)
-		handle_input_disabled()
+		handle_input_disabled(_delta)
 		process_movement_physics_air(_delta)
 #		character.velocity.x = move_toward(character.velocity.x, 0, character.airStopForce * _delta)
 #		calculate_vertical_velocity(_delta)
@@ -137,7 +137,7 @@ func on_invincibility_timeout():
 	if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT: 
 		direction = -1
 	character.edgeGrabShape.set_deferred("disabled", false)
-	disableInputDi = true
+	character.disableInputDI = true
 	
 func process_disable_input_direction_influence(_delta):
 	var xInput = get_input_direction_x()

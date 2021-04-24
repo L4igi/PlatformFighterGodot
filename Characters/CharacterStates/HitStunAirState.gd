@@ -61,7 +61,7 @@ func handle_input():
 		&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
 			create_tech_timer(techWindowFrames)
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	if Input.is_action_just_pressed(character.shield)\
 	&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
 		create_tech_timer(techWindowFrames)
@@ -83,7 +83,7 @@ func _physics_process(_delta):
 			character.hitlagDI = Vector2(get_input_direction_x(), get_input_direction_y())
 		elif hitlagDone:
 			if character.disableInput && !hitStunTimerDone:
-				handle_input_disabled()
+				handle_input_disabled(_delta)
 				if character.shortHitStun: 
 					return
 				if character.airTime <= 300: 

@@ -21,7 +21,7 @@ func manage_buffered_input():
 func handle_input():
 	pass
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
 	if animationFramesLeft <= character.bufferInputWindow\
 	&& bufferedInput == null: 
@@ -29,7 +29,7 @@ func handle_input_disabled():
 	
 func _physics_process(_delta):
 	if !stateDone:
-		handle_input_disabled()
+		handle_input_disabled(_delta)
 		character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP, true)
 		
 

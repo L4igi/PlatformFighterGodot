@@ -44,6 +44,8 @@ func _input(event):
 func _physics_process(_delta):
 	if !stateDone:
 		if check_in_air():
+			character.disableInput = false
+			character.bufferMoveAirTransition = true
 			character.change_state(GlobalVariables.CharacterState.AIR)
 			if character.grabbedCharacter != null:
 				character.grabbedCharacter.on_grab_release()

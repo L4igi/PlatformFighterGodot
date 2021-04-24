@@ -103,7 +103,7 @@ func handle_input():
 	if !character.edgeRegrabTimer.get_time_left() && character.snappedEdge == null: 
 		character.create_edgeRegrab_timer(edgeRegrabFrames)
 
-func handle_input_disabled():
+func handle_input_disabled(_delta):
 	pass
 
 func disable_invincibility_edge_action():
