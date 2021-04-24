@@ -30,11 +30,9 @@ var walkThreashold = 0.35
 var jumpCount = 0
 var availabelJumps = 10
 var airTime = 0
-var abovePlatGround = null
 #platform
 var platformCollision = null
 var atPlatformEdge = null
-var lowestCheckYPoint 
 #edge
 var snappedEdge = null
 var disableInput = false
@@ -157,7 +155,6 @@ var hitLagTimer
 var bufferHitLagFrames = 0
 #var bufferFTiltWalk = false
 var stopAreaEntered = false
-var invincibilityTimer = null
 var applyLandingLag = null
 var queueFreeFall = false
 var bufferMoveAirTransition = false
@@ -201,6 +198,10 @@ var hitsTaken = 0
 #value of dictionary checks if move continous on ground(1) or applies landing lag while finishing animation(0)
 var moveAirGroundTransition = {}
 var moveGroundAirTransition = {}
+var groundAirMoveTransition = false
+var airGroundMoveTransition = false
+#buffer Invincibilty frames to next state 
+var bufferInvincibilityFrames = 0
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -214,7 +215,6 @@ func _ready():
 	attackData = attacks.get_result()
 	#assign nodes easy vars
 	edgeGrabShape = $CharacterEdgeGrabArea/CharacterEdgeGrabShape
-	lowestCheckYPoint = $LowestCheckYPoint
 	collisionAreaShape = $InteractionAreas/CollisionArea/CollisionArea
 	characterSprite = $AnimatedSprite
 	animationPlayer = $AnimatedSprite/AnimationPlayer
@@ -278,7 +278,7 @@ func get_character_size():
 	return characterSprite.frames.get_frame("idle",0).get_size()
 	
 func disable_invincibility_edge_action():
-	invincibilityTimer.stop_timer()
+	state.invincibilityTimer.stop_timer()
 	enable_disable_hurtboxes(true)
 			
 func roll_calculator(distance): 
@@ -651,7 +651,36 @@ func check_state_transition(changeToState):
 				if state.shortHopTimer.get_time_left():
 					queueFreeFall = false
 					state.process_jump()
-	#				changeToState = GlobalVariables.CharacterState.ATTACKAIR
+		return changeToState
+	match currentState:
+		GlobalVariables.CharacterState.ATTACKAIR:
+			if moveAirGroundTransition.has(currentAttack):
+				if moveAirGroundTransition.get(currentAttack): 
+					airGroundMoveTransition = true
+					changeToState = GlobalVariables.CharacterState.ATTACKGROUND
+			else: 
+				airGroundMoveTransition = false
+		GlobalVariables.CharacterState.ATTACKGROUND:
+			if moveGroundAirTransition.has(currentAttack):
+				if moveGroundAirTransition.get(currentAttack): 
+					groundAirMoveTransition = true
+					changeToState = GlobalVariables.CharacterState.ATTACKAIR
+				else: 
+					groundAirMoveTransition = false
+		GlobalVariables.CharacterState.SPECIALAIR:
+			if moveAirGroundTransition.has(currentAttack):
+				if moveAirGroundTransition.get(currentAttack): 
+					airGroundMoveTransition = true
+					changeToState = GlobalVariables.CharacterState.SPECIALGROUND
+			else: 
+				airGroundMoveTransition = false
+		GlobalVariables.CharacterState.SPECIALGROUND:
+			if moveGroundAirTransition.has(currentAttack):
+				if moveGroundAirTransition.get(currentAttack): 
+					groundAirMoveTransition = true
+					changeToState = GlobalVariables.CharacterState.SPECIALAIR
+				else: 
+					groundAirMoveTransition = false
 	return changeToState
 	
 
@@ -808,3 +837,4 @@ func change_to_special_state():
 		pass
 	elif Input.is_action_just_pressed(right):
 		pass
+

@@ -9,20 +9,19 @@ var smashAttackHoldFrames = 1800.0
 #var smashAttackHoldFrames = 180.0
 var shiftDegrees = 10.0
 var rotateSmashAttackDegrees = 0.0
-var airGroundMoveTransition = false
 
 func _ready():
 	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
 	smashAttackMultiplierTimer = create_timer("on_smashAttackMultiplier_timeout", "SmashAttackMultiplierTimer")
 	character.currentHitBox = 1
-	if character.moveAirGroundTransition.has(character.currentAttack):
-		if character.moveAirGroundTransition.get(character.currentAttack): 
-			airGroundMoveTransition = true
-		else: 
-			airGroundMoveTransition = false
-			if character.applyLandingLag:
-				create_landingLag_timer(character.applyLandingLag)
-				character.applyLandingLag = null
+	if !character.airGroundMoveTransition: 
+		if character.applyLandingLag:
+			create_landingLag_timer(character.applyLandingLag)
+			character.applyLandingLag = null
+	else:
+		if character.bufferInvincibilityFrames > 0:
+			create_invincibility_timer(character.bufferInvincibilityFrames)
+			character.bufferInvincibilityFrames = 0
 
 
 func setup(change_state, animationPlayer, character):
@@ -149,7 +148,7 @@ func _physics_process(_delta):
 					return 
 				else:
 					character.change_state(GlobalVariables.CharacterState.AIR)
-			if airGroundMoveTransition:
+			if character.airGroundMoveTransition:
 				manage_air_ground_move_transition()
 			else:
 				if character.chargingSmashAttack:

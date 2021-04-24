@@ -3,19 +3,18 @@ extends State
 class_name SpecialGround
 
 var landingLagTimer = null
-var airGroundMoveTransition = false
 
 func _ready():
 	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
 	character.currentHitBox = 1
-	if character.moveAirGroundTransition.has(character.currentAttack):
-		if character.moveAirGroundTransition.get(character.currentAttack): 
-			airGroundMoveTransition = true
-		else: 
-			airGroundMoveTransition = false
-			if character.applyLandingLag:
-				create_landingLag_timer(character.applyLandingLag)
-				character.applyLandingLag = null
+	if !character.airGroundMoveTransition: 
+		if character.applyLandingLag:
+			create_landingLag_timer(character.applyLandingLag)
+			character.applyLandingLag = null
+	else:
+		if character.bufferInvincibilityFrames > 0:
+			create_invincibility_timer(character.bufferInvincibilityFrames)
+			character.bufferInvincibilityFrames = 0
 				
 				
 func setup(change_state, animationPlayer, character):
@@ -28,11 +27,11 @@ func _physics_process(_delta):
 			process_movement_physics(_delta)
 			if check_in_air():
 				if character.moveGroundAirTransition.has(character.currentAttack):
-					character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+					character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
 					return 
 				else:
 					character.change_state(GlobalVariables.CharacterState.AIR)
-			if airGroundMoveTransition:
+			if character.airGroundMoveTransition:
 				manage_air_ground_move_transition()
 		else:
 			if (abs(get_input_direction_x()) == 0 || character.jabCount > 0) \
@@ -62,11 +61,6 @@ func _physics_process(_delta):
 				character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
 #			initialize_superarmour()
 #			manage_disabled_inputDI()
-	
-	
-func mario():
-	print("in parent mario")
-	
 
 func manage_air_ground_move_transition():
 	character.disableInput = true

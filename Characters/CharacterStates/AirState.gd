@@ -38,6 +38,8 @@ func handle_input():
 	elif Input.is_action_just_pressed(character.shield):
 		if character.airdodgeAvailable:
 			character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+	elif Input.is_action_just_pressed(character.special):
+		character.change_to_special_state()
 	elif Input.is_action_just_pressed("StopGravity"):
 		if character.gravity == 0:
 			gravity_on_off("on")

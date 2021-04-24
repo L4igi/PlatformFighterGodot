@@ -130,7 +130,7 @@ func match_standard_collision():
 		GlobalVariables.CharacterState.SPECIALGROUND:
 			enable_collision()
 		GlobalVariables.CharacterState.SPECIALAIR:
-			enable_collision()
+			disable_collision()
 		GlobalVariables.CharacterState.SHIELD:
 			enable_collision()
 		GlobalVariables.CharacterState.ROLL:

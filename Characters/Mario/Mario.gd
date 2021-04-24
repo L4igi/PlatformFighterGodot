@@ -2,7 +2,12 @@ extends Character
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	#air to ground transitions
 	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DAIR] = 0
+	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
+	moveAirGroundTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
+	#ground to air transitions 
+	moveGroundAirTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
 	moveGroundAirTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
 	
 	set_base_stats()
@@ -59,6 +64,7 @@ func manage_dash_attack(step):
 func manage_up_special(step):
 	match step:
 		0: 
+			
 			#frame 3 start invincibility timer 
 			pass
 		1:
