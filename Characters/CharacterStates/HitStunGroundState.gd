@@ -44,5 +44,6 @@ func _physics_process(_delta):
 		if !character.disableInput:
 			handle_input()
 			if character.pushingCharacter:
-				check_in_air()
+				if check_in_air():
+					character.change_state(GlobalVariables.CharacterState.AIR)
 		process_movement_physics(_delta)

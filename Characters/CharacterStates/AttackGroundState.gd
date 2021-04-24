@@ -9,14 +9,21 @@ var smashAttackHoldFrames = 1800.0
 #var smashAttackHoldFrames = 180.0
 var shiftDegrees = 10.0
 var rotateSmashAttackDegrees = 0.0
+var airGroundMoveTransition = false
 
 func _ready():
 	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
 	smashAttackMultiplierTimer = create_timer("on_smashAttackMultiplier_timeout", "SmashAttackMultiplierTimer")
 	character.currentHitBox = 1
-	if character.applyLandingLag:
-		switch_from_air_to_ground(character.applyLandingLag)
-		character.applyLandingLag = null
+	if character.moveAirGroundTransition.has(character.currentAttack):
+		if character.moveAirGroundTransition.get(character.currentAttack): 
+			airGroundMoveTransition = true
+		else: 
+			airGroundMoveTransition = false
+			if character.applyLandingLag:
+				create_landingLag_timer(character.applyLandingLag)
+				character.applyLandingLag = null
+
 
 func setup(change_state, animationPlayer, character):
 	.setup(change_state, animationPlayer, character)
@@ -136,28 +143,37 @@ func _physics_process(_delta):
 		handle_input_disabled()
 		if character.disableInput:
 			process_movement_physics(_delta)
-			if !check_in_air() && character.chargingSmashAttack:
-				check_stop_area_entered(_delta)
-				shift_attack_angle()
-				if (Input.is_action_just_released(character.attack)\
-				|| !Input.is_action_pressed(character.attack)):
-					calculate_smash_multiplier()
-					character.chargingSmashAttack = false
-					character.smashAttack = null
-					character.animatedSprite.set_rotation_degrees(rotateSmashAttackDegrees)
-					character.apply_smash_attack_steps(2)
-			if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
-				check_stop_area_entered(_delta)
-			if character.currentAttack == GlobalVariables.CharacterAnimations.JAB1\
-			|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB2\
-			|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB3:
-				if character.comboNextJab:
-					if Input.is_action_pressed(character.attack)\
-					&& get_input_direction_x() == 0\
-					&& get_input_direction_y() == 0:
-						animationPlayer.stop()
-						jab_handler()
-						character.comboNextJab = false
+			if check_in_air():
+				if character.moveGroundAirTransition.has(character.currentAttack):
+					character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+					return 
+				else:
+					character.change_state(GlobalVariables.CharacterState.AIR)
+			if airGroundMoveTransition:
+				manage_air_ground_move_transition()
+			else:
+				if character.chargingSmashAttack:
+					check_stop_area_entered(_delta)
+					shift_attack_angle()
+					if (Input.is_action_just_released(character.attack)\
+					|| !Input.is_action_pressed(character.attack)):
+						calculate_smash_multiplier()
+						character.chargingSmashAttack = false
+						character.smashAttack = null
+						character.animatedSprite.set_rotation_degrees(rotateSmashAttackDegrees)
+						character.apply_smash_attack_steps(2)
+				if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
+					check_stop_area_entered(_delta)
+				if character.currentAttack == GlobalVariables.CharacterAnimations.JAB1\
+				|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB2\
+				|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB3:
+					if character.comboNextJab:
+						if Input.is_action_pressed(character.attack)\
+						&& get_input_direction_x() == 0\
+						&& get_input_direction_y() == 0:
+							animationPlayer.stop()
+							jab_handler()
+							character.comboNextJab = false
 		else:
 			if character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()
@@ -266,17 +282,7 @@ func check_character_crouch():
 		return true
 	return false
 
-func switch_from_air_to_ground(landingLag):
-	create_landingLag_timer(landingLag)
-	match character.currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
-			if get_input_direction_x() > 0:
-				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-				mirror_areas()
-		GlobalVariables.MoveDirection.RIGHT:
-			if get_input_direction_x() < 0:
-				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-				mirror_areas()
+	
 					
 func create_landingLag_timer(waitTime):
 	character.gravity = character.baseGravity
@@ -333,3 +339,6 @@ func shift_attack_angle():
 			angle = 15.0
 		else: angle = 0.0
 		rotateSmashAttackDegrees = angle
+
+func manage_air_ground_move_transition():
+	character.disableInput = true

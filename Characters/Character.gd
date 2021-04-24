@@ -196,7 +196,11 @@ var knockbackArmour = 0.0
 var multiHitArmour = 0
 var lastReceivedDamage = 0
 var hitsTaken = 0
-
+#dictionary to keep moves that transition from attackair to attackground and vice versa in check
+#dictionary to keep moves that transition from specialair to specialground and vice versa in check
+#value of dictionary checks if move continous on ground(1) or applies landing lag while finishing animation(0)
+var moveAirGroundTransition = {}
+var moveGroundAirTransition = {}
 
 func _ready():
 	self.set_collision_mask_bit(0,false)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=485 format=2]
+[gd_scene load_steps=489 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -1149,6 +1149,35 @@ tracks/4/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ 93.2, 63.6, 93.2, 63.6, -4.2 ]
+}
+
+[sub_resource type="Animation" id=61]
+resource_name = "downspecial"
+length = 1.25
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "downspecial" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.0333333, 0.0833333, 0.166667, 0.2, 0.233333, 0.266667, 0.3, 0.333333, 0.383333, 0.416667, 0.45, 0.483333, 0.533333, 0.566667, 0.583333, 0.6, 0.616667, 0.633333, 0.65, 0.666667, 0.916667 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 4, 5, 4, 3, 7, 8, 9, 10, 11, 12, 13, 16 ]
 }
 
 [sub_resource type="Animation" id=13]
@@ -2500,6 +2529,35 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
+[sub_resource type="Animation" id=62]
+resource_name = "neutralspecial"
+length = 0.816667
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "nspecial" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.166667, 0.2, 0.233333, 0.283333, 0.383333, 0.483333, 0.733333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+}
+
 [sub_resource type="Animation" id=36]
 length = 0.5
 step = 0.0166667
@@ -2963,6 +3021,34 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=63]
+resource_name = "sidespecial"
+step = 0.0277778
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "sidespecial" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.0277778, 0.0555556, 0.0833333, 0.111111, 0.138889, 0.166667, 0.194444, 0.222222, 0.416667, 0.5, 0.583333, 0.666667, 0.722222, 0.805556 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 7, 6, 5, 4, 3, 2, 1, 14, 13, 12, 11, 10, 9, 0, 8 ]
 }
 
 [sub_resource type="Animation" id=47]
@@ -3447,6 +3533,52 @@ tracks/11/keys = {
 "values": [ false, true ]
 }
 
+[sub_resource type="Animation" id=60]
+resource_name = "upspecial"
+length = 0.633333
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "upspecial" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.0333333, 0.0666667, 0.1, 0.283333, 0.316667, 0.35, 0.383333, 0.416667, 0.45, 0.483333, 0.516667, 0.55, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.05, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_special_animation_steps"
+}, {
+"args": [ 1 ],
+"method": "apply_special_animation_steps"
+} ]
+}
+
 [sub_resource type="Animation" id=56]
 length = 0.65
 tracks/0/type = "value"
@@ -3555,7 +3687,7 @@ extents = Vector2( 42, 22 )
 [node name="Character" type="KinematicBody2D" groups=[
 "Character",
 ]]
-scale = Vector2( 1.5, 1.5 )
+scale = Vector2( 2, 2 )
 collision_mask = 0
 script = ExtResource( 1 )
 
@@ -3569,6 +3701,7 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "nspecial"
+frame = 9
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -3582,6 +3715,7 @@ anims/crouch = SubResource( 9 )
 anims/dair = SubResource( 10 )
 anims/dash_attack = SubResource( 11 )
 anims/doublejump = SubResource( 12 )
+anims/downspecial = SubResource( 61 )
 anims/dsmash = SubResource( 13 )
 anims/dthrow = SubResource( 14 )
 anims/dtilt = SubResource( 15 )
@@ -3605,6 +3739,7 @@ anims/jump_getup = SubResource( 32 )
 anims/landinglagnormal = SubResource( 33 )
 anims/ledgeAttack_getup = SubResource( 34 )
 anims/nair = SubResource( 35 )
+anims/neutralspecial = SubResource( 62 )
 anims/normal_getup = SubResource( 36 )
 anims/rebound = SubResource( 37 )
 anims/roll = SubResource( 38 )
@@ -3616,6 +3751,7 @@ anims/shieldBreakGroundLoop = SubResource( 43 )
 anims/shieldBreakLanding = SubResource( 44 )
 anims/shieldBreakStart = SubResource( 45 )
 anims/shielddrop = SubResource( 46 )
+anims/sidespecial = SubResource( 63 )
 anims/spotdodge = SubResource( 47 )
 anims/techair = SubResource( 48 )
 anims/techground = SubResource( 49 )
@@ -3625,6 +3761,7 @@ anims/turnaround_fast = SubResource( 52 )
 anims/turnaround_slow = SubResource( 53 )
 anims/upair = SubResource( 54 )
 anims/upsmash = SubResource( 55 )
+anims/upspecial = SubResource( 60 )
 anims/uptilt = SubResource( 56 )
 anims/uthrow = SubResource( 57 )
 anims/walk = SubResource( 58 )

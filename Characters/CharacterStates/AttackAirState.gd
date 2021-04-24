@@ -118,7 +118,7 @@ func _physics_process(_delta):
 			character.onSolidGround = solidGroundCollision
 			var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
 			character.applyLandingLag = currentAttackData["landingLag"]
-			if character.currentAttack == GlobalVariables.CharacterAnimations.DAIR:
+			if character.moveAirGroundTransition.has(character.currentAttack):
 				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 			else:
 				character.change_state(GlobalVariables.CharacterState.GROUND)

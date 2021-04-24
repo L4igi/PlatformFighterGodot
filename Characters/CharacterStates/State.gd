@@ -293,7 +293,7 @@ func check_in_air():
 			character.disableInput = false
 			character.bufferMoveAirTransition = true
 			character.jumpCount = 1
-			character.change_state(GlobalVariables.CharacterState.AIR)
+#			character.change_state(GlobalVariables.CharacterState.AIR)
 			return true
 	return false
 	

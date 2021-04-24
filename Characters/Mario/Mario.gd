@@ -1,10 +1,9 @@
 extends Character
 
-var specialCaseAttacks = [GlobalVariables.CharacterAnimations.DAIR]
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#assign inputs to players
+	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DAIR] = 0
+	moveGroundAirTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
 	
 	set_base_stats()
 	#set state factory according to character
@@ -60,8 +59,10 @@ func manage_dash_attack(step):
 func manage_up_special(step):
 	match step:
 		0: 
+			#frame 3 start invincibility timer 
 			pass
 		1:
+			#frame 6 start upwards momentum 
 			pass
 		2:
 			pass

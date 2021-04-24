@@ -28,7 +28,8 @@ func setup(change_state, animationPlayer, character):
 func _physics_process(_delta):
 	if !stateDone:
 		process_movement_physics(_delta)
-		check_in_air()
+		if check_in_air():
+			character.change_state(GlobalVariables.CharacterState.AIR)
 
 func create_rebound_timer(waitTime):
 	start_timer(reboundTimer, waitTime)

@@ -47,7 +47,8 @@ func _physics_process(_delta):
 	if !stateDone:
 		check_stop_area_entered(_delta)
 		if !character.onSolidGround:
-			check_in_air()
+			if check_in_air():
+				character.change_state(GlobalVariables.CharacterState.AIR)
 		if character.disableInput:
 			handle_input_disabled()
 		if !character.disableInput:

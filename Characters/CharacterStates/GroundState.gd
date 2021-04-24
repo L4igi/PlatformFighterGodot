@@ -141,7 +141,8 @@ func _physics_process(_delta):
 			if shieldDropTimer.get_time_left():
 				if perfectShieldFramesLeft > 0:
 					perfectShieldFramesLeft -= 1
-			check_in_air()
+			if check_in_air():
+				character.change_state(GlobalVariables.CharacterState.AIR)
 			if !character.perfectShieldActivated:
 				if character.disableInput:
 					handle_input_disabled()
@@ -151,7 +152,8 @@ func _physics_process(_delta):
 			input_movement_physics(_delta)
 			check_stop_area_entered(_delta)
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
-			check_in_air()
+			if check_in_air():
+				character.change_state(GlobalVariables.CharacterState.AIR)
 			handle_input()
 			#checks if player walked off platform/stage
 		
