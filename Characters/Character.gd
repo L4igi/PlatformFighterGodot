@@ -216,6 +216,12 @@ var attackRehit = true
 var reversedInputs = false
 #character controls 
 var characterControls = null
+var reverseTimer = null
+var reverseFrames = 25.0
+#counter 
+var counterInvincibilityFrames = 15.0
+var bufferedCounterDamage = 0.0
+var counterDamageMultiplier = 1.2
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -236,6 +242,7 @@ func _ready():
 	tween = $Tween
 	edgeRegrabTimer = create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer") 
 	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
+	reverseTimer = create_timer("on_reverse_timeout", "ReverseTimer")
 	animationPlayer.set_animation_process_mode(0)
 	attackDataEnum = GlobalVariables.CharacterAnimations
 	GlobalVariables.charactersInGame.append(self)
@@ -877,53 +884,105 @@ func set_hitboxes_active(active = 0):
 		1:
 			state.hitBoxesActive = false
 			
+#call these two functions in reverse order if effect is applied by attack
 func apply_special_hitbox_effect_attacked(effectArray, attackingObject, attackingDamage, interactionType):
-	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+#	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
 	for effect in effectArray:
 		match effect: 
 			GlobalVariables.SpecialHitboxType.REVERSE:
-					handle_effect_turnaround()
+				handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.REFLECT:
-					handle_effect_reflect()
+				handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.ABSORB:
-					handle_effect_absorb()
+				handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.COUNTER:
-					handle_effect_counter()
+				handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage)
 					
 func apply_special_hitbox_effect_attacking(effectArray, attackedObject, attackingDamage, interactionType):
-	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+#	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
 	for effect in effectArray:
 		match effect: 
 			GlobalVariables.SpecialHitboxType.REVERSE:
-				pass
+				handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.REFLECT:
-				pass
+				handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.ABSORB:
-				pass
+				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.COUNTER:
-				pass
+				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
 				
-func handle_effect_turnaround():
-	reverse_inputs()
-	velocity.x *= -1
-	match currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
-			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-			state.mirror_areas()
-		GlobalVariables.MoveDirection.RIGHT:
-			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-			state.mirror_areas()
+func handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			pass
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			reverse_inputs()
+			create_reverse_timer(reverseFrames)
+			velocity.x *= -1
+			match currentMoveDirection:
+				GlobalVariables.MoveDirection.LEFT:
+					currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+					state.mirror_areas()
+				GlobalVariables.MoveDirection.RIGHT:
+					currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+					state.mirror_areas()
+			
+func handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			pass
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
 	
-func handle_effect_reflect():
-	pass
+func handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			pass
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
 	
-func handle_effect_absorb():
-	pass
+func handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			pass
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
 	
-func handle_effect_counter():
-	pass
+func handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			pass
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
+	
+func handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			pass
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
+	
+func handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			toggle_all_hitboxes("off")
+			state.create_hitlag_timer(200.0)
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
+	
+func handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage):
+	match interactionType:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			toggle_all_hitboxes("off")
+			bufferedCounterDamage = attackingDamage
+			change_state(GlobalVariables.CharacterState.COUNTER)
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			pass
+	
 
 func reverse_inputs():
+	if reverseTimer.get_time_left():
+		return
 	if left == characterControls.get("left")\
 	&& right == characterControls.get("right"):
 		left = characterControls.get("right")
@@ -931,3 +990,9 @@ func reverse_inputs():
 	else:
 		right = characterControls.get("right")
 		left = characterControls.get("left")
+
+func create_reverse_timer(waitTime):
+	state.start_timer(reverseTimer, waitTime)
+
+func on_reverse_timeout():
+	reverse_inputs()

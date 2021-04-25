@@ -36,7 +36,7 @@ func _process(delta):
 				process_connected_hitboxes(hitBoxesConnected, GlobalVariables.HitBoxInteractionType.CONNECTED)
 			hitBoxesConnected.clear()
 		if !specialHitboxesConnected.empty() || !specialHitboxesClashed.empty():
-			process_specialhitbox_hitboxes(specialHitboxesConnected, specialHitboxesClashed)
+			process_specialhitbox_hitboxes()
 			specialHitboxesConnected.clear()
 			specialHitboxesClashed.clear()
 		
@@ -52,7 +52,7 @@ func process_connected_hitboxes(hitBoxes, interactionType):
 			apply_attack(highestHitBox, GlobalVariables.HitBoxInteractionType.CLASHED)
 	return highestHitBox
 	
-func process_specialhitbox_hitboxes(hitBoxesConnected, hitBoxesClashed):
+func process_specialhitbox_hitboxes():
 	var specialHitBoxEffects = []
 	for effect in attackingObject.attackData[attackingObject.attackDataEnum.keys()[attackingObject.currentAttack] + "_special"].get("effects_1").values():
 		specialHitBoxEffects.append(GlobalVariables.SpecialHitboxType.keys().find(effect))
@@ -60,9 +60,7 @@ func process_specialhitbox_hitboxes(hitBoxesConnected, hitBoxesClashed):
 	for hitbox in specialHitboxAttackedObject:
 		specialHitboxTypesAttackedObject.append(attackedObject.get_node("AnimatedSprite/HitBoxes").get_hitbox_by_area(hitbox))
 	var specialHighestHitboxAttackedObject = get_hightest_priority_hitbox(attackedObject, specialHitboxTypesAttackedObject)
-#	attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, hitBoxesConnected.size(), hitBoxesClashed.size())
-#	attackingObject.apply_special_hitbox_effect_attacking(specialHitBoxEffects, hitBoxesConnected.size(), hitBoxesClashed.size())
-	apply_specialhitbox_attack(specialHitBoxEffects, hitBoxesConnected, specialHighestHitboxAttackedObject)
+	apply_specialhitbox_attacked(specialHitBoxEffects, specialHighestHitboxAttackedObject)
 	
 func get_hightest_priority_hitbox(object, hitboxes):
 	var highestHitboxPriority = 0
@@ -90,7 +88,7 @@ func disable_all_hitboxes():
 			if !hitBoxShape.is_in_group("SpecialHitBox"):
 				hitBoxShape.set_deferred('disabled',true)
 				
-func apply_specialhitbox_attack(specialHitBoxEffects, hitBoxesConnected, specialHighestHitboxAttackedObject):
+func apply_specialhitbox_attacked(specialHitBoxEffects, specialHighestHitboxAttackedObject = null):
 	var damage = 0.0
 	var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
 	if specialHighestHitboxAttackedObject:
@@ -103,7 +101,15 @@ func apply_specialhitbox_attack(specialHitBoxEffects, hitBoxesConnected, special
 	specialHitboxesConnected.clear()
 	specialHitboxesClashed.clear()
 	specialHitboxAttackedObject.clear()
-	pass
+	
+func apply_specialhitbox_attacking(specialHitBoxEffects):
+	var damage = 0.0
+	var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+	attackingObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, damage, interactionTypeToUse)
+	attackedObject.apply_special_hitbox_effect_attacking(specialHitBoxEffects, attackedObject, damage, interactionTypeToUse)
+	specialHitboxesConnected.clear()
+	specialHitboxesClashed.clear()
+	specialHitboxAttackedObject.clear()
 	
 func get_attackData_match_highest_hitbox_json_data(object, hbType):
 	var combinedAttackDataString = object.currentAttack
@@ -122,6 +128,8 @@ func apply_attack(hbType, interactionType):
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
 	#calculate damage if charged smash attack
 	if attackingObject.is_in_group("Character"):
+		if attackingObject.currentAttack == GlobalVariables.CharacterAnimations.COUNTER:
+			attackDamage = clamp(attackingObject.bufferedCounterDamage, attackDamage, 100)
 		attackDamage *= attackingObject.smashAttackMultiplier
 	var hitStun = currentAttackData["hitStun_" + String(currentHitBoxNumber)]
 	var launchAngle = deg2rad(currentAttackData["launchAngle_" + String(currentHitBoxNumber)])
@@ -172,6 +180,7 @@ func apply_attack(hbType, interactionType):
 			apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier)
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox)
+	apply_specialhitbox_attacking(specialHitBoxEffects)
 
 func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier):
 	if attackedObject.is_in_group("Character"):

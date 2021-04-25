@@ -40,6 +40,11 @@ _global_script_classes=[ {
 "path": "res://Characters/Character.gd"
 }, {
 "base": "State",
+"class": "CounterState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/CounterState.gd"
+}, {
+"base": "State",
 "class": "CrouchState",
 "language": "GDScript",
 "path": "res://Characters/CharacterStates/CrouchState.gd"
@@ -166,6 +171,7 @@ _global_script_class_icons={
 "AttackAirState": "",
 "AttackGroundState": "",
 "Character": "",
+"CounterState": "",
 "CrouchState": "",
 "EdgeGetUpState": "",
 "EdgeState": "",

@@ -29,7 +29,8 @@ func _init():
 		GlobalVariables.CharacterState.HELPLESS: HelplessState,
 		GlobalVariables.CharacterState.REBOUND: ReboundState,
 		GlobalVariables.CharacterState.SPECIALAIR: SpecialAirMario, 
-		GlobalVariables.CharacterState.SPECIALGROUND: SpecialGroundMario
+		GlobalVariables.CharacterState.SPECIALGROUND: SpecialGroundMario,
+		GlobalVariables.CharacterState.COUNTER: CounterState
 }
 
 func get_state(state_name):

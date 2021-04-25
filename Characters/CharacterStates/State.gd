@@ -272,6 +272,7 @@ func play_animation(animationToPlay, queue = false):
 	animationPlayer.playback_speed = 1
 	character.animatedSprite.set_rotation_degrees(0.0)
 	character.animatedSprite.set_position(Vector2(0,0))
+	character.animatedSprite.set_modulate(Color(1,1,1,1))
 	if queue:
 		animationPlayer.queue(animationToPlay)
 	else:
@@ -283,6 +284,7 @@ func play_attack_animation(animationToPlay, queue = false):
 	animationPlayer.playback_speed = 1
 	character.animatedSprite.set_rotation_degrees(0.0)
 	character.animatedSprite.set_position(Vector2(0,0))
+	character.animatedSprite.set_modulate(Color(1,1,1,1))
 	if queue: 
 		animationPlayer.queue(animationToPlay)
 	else:
