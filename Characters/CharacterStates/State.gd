@@ -81,6 +81,16 @@ func manage_buffered_input_ground():
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 		GlobalVariables.CharacterAnimations.FTILTL:
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+		GlobalVariables.CharacterAnimations.UPSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.NSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
 	
 func manage_buffered_input_air():
 	match bufferedInput: 
@@ -112,6 +122,16 @@ func manage_buffered_input_air():
 		GlobalVariables.CharacterAnimations.SHIELD:
 			if character.airdodgeAvailable:
 				character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+		GlobalVariables.CharacterAnimations.UPSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.NSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
 	bufferedInput = null
 	
 func handle_input():
@@ -152,6 +172,17 @@ func buffer_input():
 			create_shortHop_timer()
 	elif Input.is_action_just_pressed(character.grab):
 		bufferedInput = GlobalVariables.CharacterAnimations.GRAB
+	elif Input.is_action_just_pressed(character.special):
+		if Input.is_action_pressed(character.right):
+			bufferedInput = GlobalVariables.CharacterAnimations.SIDESPECIAL
+		elif Input.is_action_pressed(character.left):
+			bufferedInput = GlobalVariables.CharacterAnimations.SIDESPECIAL
+		elif Input.is_action_pressed(character.up):
+			bufferedInput = GlobalVariables.CharacterAnimations.UPSPECIAL
+		elif Input.is_action_pressed(character.down):
+			bufferedInput = GlobalVariables.CharacterAnimations.DOWNSPECIAL
+		else:
+			bufferedInput = GlobalVariables.CharacterAnimations.NSPECIAL
 	elif Input.is_action_just_pressed(character.right):
 		create_smashAttack_timer(smashAttackInputFrames)
 		character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR

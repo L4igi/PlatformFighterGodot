@@ -6,7 +6,7 @@ var upspecialInvincibilityFrames = 3.0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#air to ground transitions
-	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DAIR] = 0
+	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DAIR] = 1
 	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
 	#ground to air transitions 
 	moveGroundAirTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
@@ -85,6 +85,8 @@ func manage_down_special(step = 0):
 		1:
 			disableInputDI = false
 			enableSpecialInput = false
+			edgeGrabShape.set_deferred("disabled", false)
+			set_collision_mask_bit(1,true) 
 		2:
 			pass
 		

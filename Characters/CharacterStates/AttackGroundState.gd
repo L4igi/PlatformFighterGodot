@@ -131,6 +131,16 @@ func manage_buffered_input():
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 				shift_attack_angle()
 				play_attack_animation("ftilt")
+		GlobalVariables.CharacterAnimations.UPSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		GlobalVariables.CharacterAnimations.NSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
 		_:
 			character.currentAttack = null
 	initialize_superarmour()

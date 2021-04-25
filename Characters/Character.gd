@@ -696,7 +696,7 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():
@@ -708,7 +708,7 @@ func change_state(new_state):
 	add_child(state)
 	
 func check_state_transition(changeToState):
-	if bufferMoveAirTransition && !shortHopAttack:
+	if bufferMoveAirTransition && !shortHopAttack && !pushingCharacter:
 		bufferMoveAirTransition = false
 		match currentState:
 			GlobalVariables.CharacterState.ATTACKGROUND:

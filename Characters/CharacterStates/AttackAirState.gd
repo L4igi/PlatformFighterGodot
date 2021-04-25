@@ -92,6 +92,16 @@ func manage_buffered_input():
 				double_jump_attack_handler()
 			play_attack_animation("fair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
+		GlobalVariables.CharacterAnimations.UPSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
+		GlobalVariables.CharacterAnimations.NSPECIAL:
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
 		_:
 			character.currentAttack = null
 	initialize_superarmour()
