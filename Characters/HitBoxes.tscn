@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Characters/HitBoxes.gd" type="Script" id=1]
 
@@ -9,6 +9,8 @@ radius = 9.6
 radius = 13.4963
 
 [sub_resource type="CircleShape2D" id=3]
+
+[sub_resource type="CircleShape2D" id=4]
 
 [node name="HitBoxes" type="Node2D"]
 visible = false
@@ -26,7 +28,9 @@ position = Vector2( 24, -11.25 )
 shape = SubResource( 1 )
 disabled = true
 
-[node name="HitBoxNeutralArea" type="Area2D" parent="."]
+[node name="HitBoxNeutralArea" type="Area2D" parent="." groups=[
+"Hitbox",
+]]
 
 [node name="Neutral" type="CollisionShape2D" parent="HitBoxNeutralArea"]
 modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
@@ -34,13 +38,24 @@ position = Vector2( 19.2, 5.68434e-14 )
 shape = SubResource( 2 )
 disabled = true
 
-[node name="HitBoxSourArea" type="Area2D" parent="."]
+[node name="HitBoxSourArea" type="Area2D" parent="." groups=[
+"Hitbox",
+]]
 
 [node name="Sour" type="CollisionShape2D" parent="HitBoxSourArea"]
 modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 position = Vector2( -4.8, -16.875 )
 shape = SubResource( 3 )
 disabled = true
+
+[node name="HitBoxSpecial" type="Area2D" parent="."]
+
+[node name="Special" type="CollisionShape2D" parent="HitBoxSpecial" groups=[
+"SpecialHitBox",
+]]
+shape = SubResource( 4 )
+disabled = true
+
 [connection signal="area_entered" from="HitBoxSweetArea" to="." method="_on_HitBoxSweetArea_area_entered"]
 [connection signal="area_entered" from="HitBoxNeutralArea" to="." method="_on_HitBoxNeutralArea_area_entered"]
 [connection signal="area_entered" from="HitBoxSourArea" to="." method="_on_HitBoxSourArea_area_entered"]

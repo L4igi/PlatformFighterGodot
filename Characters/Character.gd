@@ -129,6 +129,7 @@ var animationPlayer
 var hurtBox
 
 var attackData = null
+var attackDataEnum = null
 var state = null
 
 #inputs
@@ -211,6 +212,10 @@ var neutralSpecialAnimationStep = 0
 var enableSpecialInput = false
 #rehit 
 var attackRehit = true
+#reversed inputs 
+var reversedInputs = false
+#character controls 
+var characterControls = null
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -232,6 +237,7 @@ func _ready():
 	edgeRegrabTimer = create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer") 
 	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
 	animationPlayer.set_animation_process_mode(0)
+	attackDataEnum = GlobalVariables.CharacterAnimations
 	GlobalVariables.charactersInGame.append(self)
 		
 func set_attack_data_file():
@@ -765,7 +771,9 @@ func toggle_all_hitboxes(onOff):
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
-						hitbox.set_deferred('disabled',false)
+						#todo: maybe change this to handle special hitboxes differently
+						if !hitbox.is_in_group("SpecialHitBox"):
+							hitbox.set_deferred('disabled',false)
 		"off":
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
@@ -868,3 +876,58 @@ func set_hitboxes_active(active = 0):
 			state.hitBoxesActive = true
 		1:
 			state.hitBoxesActive = false
+			
+func apply_special_hitbox_effect_attacked(effectArray, attackingObject, attackingDamage, interactionType):
+	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+	for effect in effectArray:
+		match effect: 
+			GlobalVariables.SpecialHitboxType.REVERSE:
+					handle_effect_turnaround()
+			GlobalVariables.SpecialHitboxType.REFLECT:
+					handle_effect_reflect()
+			GlobalVariables.SpecialHitboxType.ABSORB:
+					handle_effect_absorb()
+			GlobalVariables.SpecialHitboxType.COUNTER:
+					handle_effect_counter()
+					
+func apply_special_hitbox_effect_attacking(effectArray, attackedObject, attackingDamage, interactionType):
+	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+	for effect in effectArray:
+		match effect: 
+			GlobalVariables.SpecialHitboxType.REVERSE:
+				pass
+			GlobalVariables.SpecialHitboxType.REFLECT:
+				pass
+			GlobalVariables.SpecialHitboxType.ABSORB:
+				pass
+			GlobalVariables.SpecialHitboxType.COUNTER:
+				pass
+				
+func handle_effect_turnaround():
+	reverse_inputs()
+	velocity.x *= -1
+	match currentMoveDirection:
+		GlobalVariables.MoveDirection.LEFT:
+			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+			state.mirror_areas()
+		GlobalVariables.MoveDirection.RIGHT:
+			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+			state.mirror_areas()
+	
+func handle_effect_reflect():
+	pass
+	
+func handle_effect_absorb():
+	pass
+	
+func handle_effect_counter():
+	pass
+
+func reverse_inputs():
+	if left == characterControls.get("left")\
+	&& right == characterControls.get("right"):
+		left = characterControls.get("right")
+		right = characterControls.get("left")
+	else:
+		right = characterControls.get("right")
+		left = characterControls.get("left")

@@ -24,6 +24,11 @@ enum AirDodgeType{NORMAL, DIRECTIONAL}
 
 enum AttackType {GROUNDED, AERIAL, SPECIALGROUNDED, SPECIALAERIAL}
 
+enum SpecialHitboxType {REFLECT, REVERSE, ABSORB, COUNTER, NEUTRAL}
+
+#connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
+enum HitBoxInteractionType {CONNECTED, CLASHED}
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",

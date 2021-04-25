@@ -436,9 +436,9 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
+"frames": [ ExtResource( 213 ) ],
 "loop": true,
-"name": "grab",
+"name": "shield",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
@@ -446,9 +446,9 @@ animations = [ {
 "name": "jump",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 213 ) ],
+"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
 "loop": true,
-"name": "shield",
+"name": "grab",
 "speed": 5.0
 }, {
 "frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
@@ -1360,7 +1360,7 @@ tracks/14/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=64]
+[sub_resource type="Animation" id=14]
 resource_name = "downspecial (copy)"
 length = 1.25
 step = 0.0166667
@@ -1529,7 +1529,7 @@ tracks/12/keys = {
 "values": [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 length = 0.733333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1694,7 +1694,7 @@ tracks/12/keys = {
 "values": [ Vector2( -6, 0 ), Vector2( 0, -8 ), Vector2( 0, -4 ), Vector2( 0, -2 ) ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 1.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1753,7 +1753,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 4 ), Vector2( 0, 12 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( 0, 2 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=17]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -1805,7 +1805,7 @@ tracks/3/keys = {
 "values": [ 27.0, 0.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=18]
 length = 0.0333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1833,7 +1833,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=19]
 length = 1.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1884,7 +1884,7 @@ tracks/3/keys = {
 "values": [ -45.0, -63.0, 0.0, 18.0, 54.0, 54.0, 27.0, 0.0, 0.0 ]
 }
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id=20]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -1912,7 +1912,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="Animation" id=21]
 length = 0.916667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2053,7 +2053,7 @@ tracks/10/keys = {
 "values": [ Vector2( -2.212, 5.927 ), Vector2( -0.291, 5.927 ), Vector2( -0.291, 5.927 ) ]
 }
 
-[sub_resource type="Animation" id=21]
+[sub_resource type="Animation" id=22]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2100,7 +2100,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id=23]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -2236,7 +2236,7 @@ tracks/10/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=23]
+[sub_resource type="Animation" id=24]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -2305,7 +2305,7 @@ tracks/4/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=24]
+[sub_resource type="Animation" id=25]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -2350,7 +2350,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=26]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2406,7 +2406,7 @@ tracks/3/keys = {
 "values": [ Vector2( -4, 4 ), Vector2( 0, 8.10256 ), Vector2( 0, 10 ) ]
 }
 
-[sub_resource type="Animation" id=26]
+[sub_resource type="Animation" id=27]
 length = 0.583333
 step = 0.0166667
 tracks/0/type = "value"
@@ -2446,7 +2446,7 @@ tracks/2/keys = {
 "values": [ Vector2( -4, 2 ), Vector2( 2, 8 ), Vector2( 2, 10 ) ]
 }
 
-[sub_resource type="Animation" id=27]
+[sub_resource type="Animation" id=28]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2473,7 +2473,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=28]
+[sub_resource type="Animation" id=29]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -2525,7 +2525,7 @@ tracks/3/keys = {
 "values": [ Vector2( 2, 14 ), Vector2( 0, 14 ), Vector2( 2, 14 ) ]
 }
 
-[sub_resource type="Animation" id=29]
+[sub_resource type="Animation" id=30]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -2553,7 +2553,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=30]
+[sub_resource type="Animation" id=31]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2594,7 +2594,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=31]
+[sub_resource type="Animation" id=32]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2621,7 +2621,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=32]
+[sub_resource type="Animation" id=33]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2672,7 +2672,7 @@ tracks/3/keys = {
 "values": [ -21.2, -8.5, 0.0 ]
 }
 
-[sub_resource type="Animation" id=33]
+[sub_resource type="Animation" id=34]
 length = 0.75
 step = 0.0166667
 tracks/0/type = "value"
@@ -2729,7 +2729,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 6 ), Vector2( 0, 2 ), Vector2( 0, 6 ), Vector2( 0, 2 ) ]
 }
 
-[sub_resource type="Animation" id=34]
+[sub_resource type="Animation" id=35]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2757,7 +2757,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=35]
+[sub_resource type="Animation" id=36]
 length = 0.566668
 step = 0.0166667
 tracks/0/type = "value"
@@ -2850,7 +2850,7 @@ tracks/6/keys = {
 "values": [ Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( 6, -2 ), Vector2( 4, 0 ), Vector2( -14, 2.38419e-07 ), Vector2( 20, 4.76837e-07 ), Vector2( 14, 4.76837e-07 ), Vector2( 0, 7.15256e-07 ) ]
 }
 
-[sub_resource type="Animation" id=36]
+[sub_resource type="Animation" id=37]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2877,8 +2877,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=37]
-resource_name = "neutralspecial"
+[sub_resource type="Animation" id=38]
 length = 0.816667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2906,7 +2905,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 }
 
-[sub_resource type="Animation" id=38]
+[sub_resource type="Animation" id=39]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -2963,7 +2962,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 5.05263 ), Vector2( 0, 3.36842 ), Vector2( 0, 1.68421 ) ]
 }
 
-[sub_resource type="Animation" id=39]
+[sub_resource type="Animation" id=40]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -3003,7 +3002,7 @@ tracks/2/keys = {
 "values": [ Vector2( -15, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=40]
+[sub_resource type="Animation" id=41]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3063,7 +3062,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 6 ), Vector2( 0, 4.31579 ), Vector2( 0, 2 ) ]
 }
 
-[sub_resource type="Animation" id=41]
+[sub_resource type="Animation" id=42]
 length = 1.3
 step = 0.0166667
 tracks/0/type = "value"
@@ -3120,7 +3119,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 10 ), Vector2( 0, 4 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=42]
+[sub_resource type="Animation" id=43]
 length = 1.2
 loop = true
 tracks/0/type = "value"
@@ -3148,7 +3147,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="Animation" id=43]
+[sub_resource type="Animation" id=44]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3175,7 +3174,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=44]
+[sub_resource type="Animation" id=45]
 length = 0.5
 loop = true
 step = 0.0166667
@@ -3216,7 +3215,7 @@ tracks/2/keys = {
 "values": [ 0.0, -360.0 ]
 }
 
-[sub_resource type="Animation" id=45]
+[sub_resource type="Animation" id=46]
 loop = true
 step = 0.0166667
 tracks/0/type = "value"
@@ -3244,7 +3243,7 @@ tracks/1/keys = {
 "values": [ 9, 10, 11, 12, 13 ]
 }
 
-[sub_resource type="Animation" id=46]
+[sub_resource type="Animation" id=47]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3297,7 +3296,7 @@ tracks/3/keys = {
 "values": [ Vector2( -2, 20 ), Vector2( -4, 18 ), Vector2( 4, 2 ) ]
 }
 
-[sub_resource type="Animation" id=47]
+[sub_resource type="Animation" id=48]
 length = 0.266667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3342,7 +3341,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=48]
+[sub_resource type="Animation" id=49]
 length = 0.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -3370,9 +3369,8 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=49]
-resource_name = "sidespecial"
-step = 0.0277778
+[sub_resource type="Animation" id=50]
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -3397,8 +3395,128 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 7, 6, 5, 4, 3, 2, 1, 14, 13, 12, 11, 10, 9, 0, 8 ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.116667, 0.2, 0.233333, 0.433333, 0.6, 0.733333, 0.816667 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -6, 0 ), Vector2( 2, -6 ), Vector2( -2, -6 ), Vector2( -14, -2 ), Vector2( -4, -2 ), Vector2( 2, -2 ), Vector2( -2, -2 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/HitBoxSpecial/Special:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.116667, 0.2, 0.350001 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 12.4, -1.19209e-07 ), Vector2( -5.99995, 4 ), Vector2( -0.999939, 3.66665 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("HitBoxes/HitBoxSpecial/Special:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0.116667 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 20, 20 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("HitBoxes/HitBoxSpecial/Special:disabled")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.116667, 0.35 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0.2 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 14, 0 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0.2 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1.5, 1.5 ) ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:disabled")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0.2, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:position")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0.2 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:scale")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0.2 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1.5, 1.5 ) ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:disabled")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PoolRealArray( 0.2, 0.25 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
-[sub_resource type="Animation" id=50]
+[sub_resource type="Animation" id=51]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -3446,7 +3564,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=51]
+[sub_resource type="Animation" id=52]
 length = 0.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -3503,7 +3621,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, -6 ), Vector2( -4, -4 ) ]
 }
 
-[sub_resource type="Animation" id=52]
+[sub_resource type="Animation" id=53]
 length = 0.75
 step = 0.0166667
 tracks/0/type = "value"
@@ -3560,7 +3678,7 @@ tracks/3/keys = {
 "values": [ Vector2( 4, 5.05263 ), Vector2( 4, 4 ), Vector2( 0, 8 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=53]
+[sub_resource type="Animation" id=54]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3616,7 +3734,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 4 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=54]
+[sub_resource type="Animation" id=55]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3631,7 +3749,7 @@ tracks/0/keys = {
 "values": [ "backflip" ]
 }
 
-[sub_resource type="Animation" id=55]
+[sub_resource type="Animation" id=56]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3659,7 +3777,7 @@ tracks/1/keys = {
 "values": [  ]
 }
 
-[sub_resource type="Animation" id=56]
+[sub_resource type="Animation" id=57]
 length = 0.35
 step = 0.0166667
 tracks/0/type = "value"
@@ -3687,7 +3805,7 @@ tracks/1/keys = {
 "values": [ 8 ]
 }
 
-[sub_resource type="Animation" id=57]
+[sub_resource type="Animation" id=58]
 length = 0.383333
 step = 0.0166667
 tracks/0/type = "value"
@@ -3727,7 +3845,7 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 
-[sub_resource type="Animation" id=58]
+[sub_resource type="Animation" id=59]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3880,8 +3998,7 @@ tracks/11/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=59]
-resource_name = "upspecial"
+[sub_resource type="Animation" id=60]
 length = 0.633333
 step = 0.0166667
 tracks/0/type = "value"
@@ -4021,7 +4138,7 @@ tracks/9/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=60]
+[sub_resource type="Animation" id=61]
 length = 0.65
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -4048,7 +4165,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=61]
+[sub_resource type="Animation" id=62]
 length = 0.6
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -4095,7 +4212,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=62]
+[sub_resource type="Animation" id=63]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -4123,7 +4240,7 @@ tracks/1/keys = {
 "values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="RectangleShape2D" id=63]
+[sub_resource type="RectangleShape2D" id=64]
 extents = Vector2( 42, 22 )
 
 [node name="Character" type="KinematicBody2D" groups=[
@@ -4141,10 +4258,10 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 0, -2 )
+position = Vector2( -4.00005, -5.33332 )
 frames = SubResource( 2 )
-animation = "downspecial"
-frame = 13
+animation = "jab1"
+frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -4159,73 +4276,84 @@ anims/dair = SubResource( 10 )
 anims/dash_attack = SubResource( 11 )
 anims/doublejump = SubResource( 12 )
 anims/downspecial = SubResource( 13 )
-"anims/downspecial (copy)" = SubResource( 64 )
-anims/dsmash = SubResource( 14 )
-anims/dthrow = SubResource( 15 )
-anims/dtilt = SubResource( 16 )
-anims/edgeSnap = SubResource( 17 )
-anims/fair = SubResource( 18 )
-anims/freefall = SubResource( 19 )
-anims/fsmash = SubResource( 20 )
-anims/fthrow = SubResource( 21 )
-anims/ftilt = SubResource( 22 )
-anims/grab = SubResource( 23 )
-anims/grabjab = SubResource( 24 )
-anims/hurt = SubResource( 25 )
-anims/hurtTransition = SubResource( 26 )
-anims/hurt_short = SubResource( 27 )
-anims/idle = SubResource( 28 )
-anims/ingrab = SubResource( 29 )
-anims/jab1 = SubResource( 30 )
-anims/jab2 = SubResource( 31 )
-anims/jump = SubResource( 32 )
-anims/jump_getup = SubResource( 33 )
-anims/landinglagnormal = SubResource( 34 )
-anims/ledgeAttack_getup = SubResource( 35 )
-anims/nair = SubResource( 36 )
-anims/neutralspecial = SubResource( 37 )
-anims/normal_getup = SubResource( 38 )
-anims/rebound = SubResource( 39 )
-anims/roll = SubResource( 40 )
-anims/roll_getup = SubResource( 41 )
-anims/run = SubResource( 42 )
-anims/shield = SubResource( 43 )
-anims/shieldBreakAirLoop = SubResource( 44 )
-anims/shieldBreakGroundLoop = SubResource( 45 )
-anims/shieldBreakLanding = SubResource( 46 )
-anims/shieldBreakStart = SubResource( 47 )
-anims/shielddrop = SubResource( 48 )
-anims/sidespecial = SubResource( 49 )
-anims/spotdodge = SubResource( 50 )
-anims/techair = SubResource( 51 )
-anims/techground = SubResource( 52 )
-anims/techroll = SubResource( 53 )
-anims/tumble = SubResource( 54 )
-anims/turnaround_fast = SubResource( 55 )
-anims/turnaround_slow = SubResource( 56 )
-anims/upair = SubResource( 57 )
-anims/upsmash = SubResource( 58 )
-anims/upspecial = SubResource( 59 )
-anims/uptilt = SubResource( 60 )
-anims/uthrow = SubResource( 61 )
-anims/walk = SubResource( 62 )
+"anims/downspecial (copy)" = SubResource( 14 )
+anims/dsmash = SubResource( 15 )
+anims/dthrow = SubResource( 16 )
+anims/dtilt = SubResource( 17 )
+anims/edgeSnap = SubResource( 18 )
+anims/fair = SubResource( 19 )
+anims/freefall = SubResource( 20 )
+anims/fsmash = SubResource( 21 )
+anims/fthrow = SubResource( 22 )
+anims/ftilt = SubResource( 23 )
+anims/grab = SubResource( 24 )
+anims/grabjab = SubResource( 25 )
+anims/hurt = SubResource( 26 )
+anims/hurtTransition = SubResource( 27 )
+anims/hurt_short = SubResource( 28 )
+anims/idle = SubResource( 29 )
+anims/ingrab = SubResource( 30 )
+anims/jab1 = SubResource( 31 )
+anims/jab2 = SubResource( 32 )
+anims/jump = SubResource( 33 )
+anims/jump_getup = SubResource( 34 )
+anims/landinglagnormal = SubResource( 35 )
+anims/ledgeAttack_getup = SubResource( 36 )
+anims/nair = SubResource( 37 )
+anims/neutralspecial = SubResource( 38 )
+anims/normal_getup = SubResource( 39 )
+anims/rebound = SubResource( 40 )
+anims/roll = SubResource( 41 )
+anims/roll_getup = SubResource( 42 )
+anims/run = SubResource( 43 )
+anims/shield = SubResource( 44 )
+anims/shieldBreakAirLoop = SubResource( 45 )
+anims/shieldBreakGroundLoop = SubResource( 46 )
+anims/shieldBreakLanding = SubResource( 47 )
+anims/shieldBreakStart = SubResource( 48 )
+anims/shielddrop = SubResource( 49 )
+anims/sidespecial = SubResource( 50 )
+anims/spotdodge = SubResource( 51 )
+anims/techair = SubResource( 52 )
+anims/techground = SubResource( 53 )
+anims/techroll = SubResource( 54 )
+anims/tumble = SubResource( 55 )
+anims/turnaround_fast = SubResource( 56 )
+anims/turnaround_slow = SubResource( 57 )
+anims/upair = SubResource( 58 )
+anims/upsmash = SubResource( 59 )
+anims/upspecial = SubResource( 60 )
+anims/uptilt = SubResource( 61 )
+anims/uthrow = SubResource( 62 )
+anims/walk = SubResource( 63 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
 visible = true
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
-position = Vector2( 0, 12 )
-scale = Vector2( 1.8, 1.2 )
+position = Vector2( 0, 0 )
+scale = Vector2( 1.5, 1.5 )
 disabled = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( 0, -8 )
-scale = Vector2( 2, 1 )
-disabled = false
+position = Vector2( 14, 0 )
+scale = Vector2( 1.5, 1.5 )
+
+[node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
+visible = false
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
 position = Vector2( 0, -13 )
 scale = Vector2( 3.5, 1.6 )
+
+[node name="HitBoxSpecial" parent="AnimatedSprite/HitBoxes" index="3"]
+visible = false
+
+[node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0" groups=[
+"SpecialHitBox",
+]]
+position = Vector2( -3.77772, 3.85184 )
+scale = Vector2( 2.5, 2.5 )
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 visible = false
@@ -4255,11 +4383,12 @@ collision_mask = 32
 
 [node name="CharacterEdgeGrabShape" type="CollisionShape2D" parent="CharacterEdgeGrabArea"]
 position = Vector2( 10, -22 )
-shape = SubResource( 63 )
+shape = SubResource( 64 )
 
 [node name="FrameTimers" type="Node" parent="."]
 
 [connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="area_entered" from="AnimatedSprite/HitBoxes/HitBoxSpecial" to="AnimatedSprite/HitBoxes" method="_on_HitBoxSpecial_area_entered"]
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

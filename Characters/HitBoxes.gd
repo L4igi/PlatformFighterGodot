@@ -6,79 +6,119 @@ onready var sweetSpot = $HitBoxSweetArea/Sweet
 onready var neutralSpot = $HitBoxNeutralArea/Neutral
 onready var sourSpot = $HitBoxSourArea/Sour
 var attackedObject = null
-var attackDataEnum = null
 
 var hitBoxesConnected = []
 var hitBoxesConnectedCopy = []
 
 var hitBoxesClashed = []
 
-#connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
-enum InteractionType {CONNECTED, CLASHED}
+var specialHitboxesConnected = []
+var specialHitboxesClashed = []
+# get hitboxes of attackingObject for counter calculations
+var specialHitboxAttackedObject = []
 
-enum HitBoxType {SOUR, NEUTRAL, SWEET}
+enum HitBoxType {SOUR, NEUTRAL, SWEET, SPECIAL}
 
 func _ready():
 	attackingObject = get_parent().get_parent()
-	if attackingObject.is_in_group("Character"):
-		attackDataEnum = GlobalVariables.CharacterAnimations
 
 func _process(delta):
 #	if !hitBoxesClashed.empty()||!hitBoxesConnected.empty():
 #		print("hitboxclashed " +str(hitBoxesClashed))
 #		print("hitboxconnected " +str(hitBoxesConnected))
 	if !hitBoxesClashed.empty():
-		process_connected_hitboxes(hitBoxesClashed, InteractionType.CLASHED)
+		process_connected_hitboxes(hitBoxesClashed, GlobalVariables.HitBoxInteractionType.CLASHED)
 		hitBoxesClashed.clear()
 		hitBoxesConnected.clear()
-	elif !hitBoxesConnected.empty():
-		if attackingObject.currentState != GlobalVariables.CharacterState.GRAB:
-			process_connected_hitboxes(hitBoxesConnected, InteractionType.CONNECTED)
-		hitBoxesConnected.clear()
+	else:
+		if !hitBoxesConnected.empty():
+			if attackingObject.currentState != GlobalVariables.CharacterState.GRAB:
+				process_connected_hitboxes(hitBoxesConnected, GlobalVariables.HitBoxInteractionType.CONNECTED)
+			hitBoxesConnected.clear()
+		if !specialHitboxesConnected.empty() || !specialHitboxesClashed.empty():
+			process_specialhitbox_hitboxes(specialHitboxesConnected, specialHitboxesClashed)
+			specialHitboxesConnected.clear()
+			specialHitboxesClashed.clear()
 		
 func process_connected_hitboxes(hitBoxes, interactionType):
 	disable_all_hitboxes()
-	var highestHitboxPriority = 0
-	var highestHitBox = null
-	for hitbox in hitBoxes: 
-		match hitbox:
-			HitBoxType.SOUR:
-				if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
-					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sour"]["priority"]
-					highestHitBox = HitBoxType.SOUR
-			HitBoxType.NEUTRAL:
-				if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
-					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_neutral"]["priority"]
-					highestHitBox = HitBoxType.NEUTRAL
-			HitBoxType.SWEET:
-				if attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
-					highestHitboxPriority = attackingObject.attackData[attackDataEnum.keys()[attackingObject.currentAttack] + "_sweet"]["priority"]
-					highestHitBox = HitBoxType.SWEET
+	var highestHitBox = get_hightest_priority_hitbox(attackingObject, hitBoxes)
 	hitBoxes.clear()
 	hitBoxesConnectedCopy = hitBoxesConnected.duplicate(true)
 	match interactionType:
-		InteractionType.CONNECTED:
-			apply_attack(highestHitBox, InteractionType.CONNECTED)
-		InteractionType.CLASHED:
-			apply_attack(highestHitBox, InteractionType.CLASHED)
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			apply_attack(highestHitBox, GlobalVariables.HitBoxInteractionType.CONNECTED)
+		GlobalVariables.HitBoxInteractionType.CLASHED:
+			apply_attack(highestHitBox, GlobalVariables.HitBoxInteractionType.CLASHED)
+	return highestHitBox
+	
+func process_specialhitbox_hitboxes(hitBoxesConnected, hitBoxesClashed):
+	var specialHitBoxEffects = []
+	for effect in attackingObject.attackData[attackingObject.attackDataEnum.keys()[attackingObject.currentAttack] + "_special"].get("effects_1").values():
+		specialHitBoxEffects.append(GlobalVariables.SpecialHitboxType.keys().find(effect))
+	var specialHitboxTypesAttackedObject = []
+	for hitbox in specialHitboxAttackedObject:
+		specialHitboxTypesAttackedObject.append(attackedObject.get_node("AnimatedSprite/HitBoxes").get_hitbox_by_area(hitbox))
+	var specialHighestHitboxAttackedObject = get_hightest_priority_hitbox(attackedObject, specialHitboxTypesAttackedObject)
+#	attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, hitBoxesConnected.size(), hitBoxesClashed.size())
+#	attackingObject.apply_special_hitbox_effect_attacking(specialHitBoxEffects, hitBoxesConnected.size(), hitBoxesClashed.size())
+	apply_specialhitbox_attack(specialHitBoxEffects, hitBoxesConnected, specialHighestHitboxAttackedObject)
+	
+func get_hightest_priority_hitbox(object, hitboxes):
+	var highestHitboxPriority = 0
+	var highestHitBox = null
+	for hitbox in hitboxes: 
+		match hitbox:
+			HitBoxType.SOUR:
+				if object.attackData[object.attackDataEnum.keys()[object.currentAttack] + "_sour"]["priority"] >= highestHitboxPriority:
+					highestHitboxPriority = object.attackData[object.attackDataEnum.keys()[object.currentAttack] + "_sour"]["priority"]
+					highestHitBox = HitBoxType.SOUR
+			HitBoxType.NEUTRAL:
+				if object.attackData[object.attackDataEnum.keys()[object.currentAttack] + "_neutral"]["priority"] >= highestHitboxPriority:
+					highestHitboxPriority = object.attackData[object.attackDataEnum.keys()[object.currentAttack] + "_neutral"]["priority"]
+					highestHitBox = HitBoxType.NEUTRAL
+			HitBoxType.SWEET:
+				if object.attackData[object.attackDataEnum.keys()[object.currentAttack] + "_sweet"]["priority"] >= highestHitboxPriority:
+					highestHitboxPriority = object.attackData[object.attackDataEnum.keys()[object.currentAttack] + "_sweet"]["priority"]
+					highestHitBox = HitBoxType.SWEET
 	return highestHitBox
 
 func disable_all_hitboxes():
 	for hitboxArea in self.get_children():
 		for hitBoxShape in hitboxArea.get_children():
-			hitBoxShape.set_deferred('disabled',true)
+			#exclude special hitbox from being disbaled if attack hits
+			if !hitBoxShape.is_in_group("SpecialHitBox"):
+				hitBoxShape.set_deferred('disabled',true)
+				
+func apply_specialhitbox_attack(specialHitBoxEffects, hitBoxesConnected, specialHighestHitboxAttackedObject):
+	var damage = 0.0
+	var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+	if specialHighestHitboxAttackedObject:
+		var currentHitBoxNumber = attackedObject.currentHitBox
+		var currentAttackData = get_attackData_match_highest_hitbox_json_data(attackedObject, specialHighestHitboxAttackedObject)
+		damage = currentAttackData["damage_" + String(currentHitBoxNumber)]
+		interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CLASHED
+	attackingObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackedObject, damage, interactionTypeToUse)
+	attackedObject.apply_special_hitbox_effect_attacking(specialHitBoxEffects, attackingObject, damage, interactionTypeToUse)
+	specialHitboxesConnected.clear()
+	specialHitboxesClashed.clear()
+	specialHitboxAttackedObject.clear()
+	pass
+	
+func get_attackData_match_highest_hitbox_json_data(object, hbType):
+	var combinedAttackDataString = object.currentAttack
+	match hbType:
+		HitBoxType.SOUR:
+			combinedAttackDataString = object.attackDataEnum.keys()[combinedAttackDataString] + "_sour"
+		HitBoxType.NEUTRAL:
+			combinedAttackDataString = object.attackDataEnum.keys()[combinedAttackDataString] + "_neutral"
+		HitBoxType.SWEET:
+			combinedAttackDataString = object.attackDataEnum.keys()[combinedAttackDataString] + "_sweet"
+	return object.attackData[combinedAttackDataString]
 		
 func apply_attack(hbType, interactionType):
 	var currentHitBoxNumber = attackingObject.currentHitBox
-	var combinedAttackDataString = attackingObject.currentAttack
-	match hbType:
-		HitBoxType.SOUR:
-			combinedAttackDataString = attackDataEnum.keys()[combinedAttackDataString] + "_sour"
-		HitBoxType.NEUTRAL:
-			combinedAttackDataString = attackDataEnum.keys()[combinedAttackDataString] + "_neutral"
-		HitBoxType.SWEET:
-			combinedAttackDataString = attackDataEnum.keys()[combinedAttackDataString] + "_sweet"
-	var currentAttackData = attackingObject.attackData[combinedAttackDataString]
+	var currentAttackData = get_attackData_match_highest_hitbox_json_data(attackingObject, hbType)
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
 	#calculate damage if charged smash attack
 	if attackingObject.is_in_group("Character"):
@@ -124,10 +164,13 @@ func apply_attack(hbType, interactionType):
 	#todo check if is projectile
 	var isProjectile = false
 	var hitlagMultiplier = currentAttackData["hitlag_multiplier_" + String(currentHitBoxNumber)]
+	var specialHitBoxEffects = []
+	for effect in currentAttackData.get("effects_" +String(currentHitBoxNumber)).values():
+		specialHitBoxEffects.append(GlobalVariables.SpecialHitboxType.keys().find(effect))
 	match interactionType:
-		InteractionType.CONNECTED:
+		GlobalVariables.HitBoxInteractionType.CONNECTED:
 			apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier)
-		InteractionType.CLASHED:
+		GlobalVariables.HitBoxInteractionType.CLASHED:
 			apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox)
 
 func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier):
@@ -207,30 +250,47 @@ func _on_HitBoxNeutralArea_area_entered(area):
 
 func _on_HitBoxSourArea_area_entered(area):
 	check_hitbox_areas(area, HitBoxType.SOUR)
+	
+func _on_HitBoxSpecial_area_entered(area):
+	check_special_hitbox_area(area, HitBoxType.SPECIAL)
 			
 func check_hitbox_areas(area, hitboxType):
 	attackingObjectState = attackingObject.currentState
 	if area.is_in_group("Hitbox"): 
-		if attackingObject != area.get_parent().attackingObject: 
+		if attackingObject != area.get_parent().get_parent().get_parent(): 
 			if hitBoxesClashed.empty():
-				apply_hitlag(area, InteractionType.CLASHED)
+				apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CLASHED)
 			if !hitBoxesClashed.has(hitboxType):
 				hitBoxesClashed.append(hitboxType)
 #			print("hit Hitbox " +str(area.get_parent().attackingObject.name))
 	if area.is_in_group("Hurtbox")\
 	&& area.get_parent().get_parent() != attackingObject:
 		if hitBoxesClashed.empty() && hitBoxesConnected.empty():
-			apply_hitlag(area, InteractionType.CONNECTED)
+			apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CONNECTED)
 		if !hitBoxesConnected.has(hitboxType):
 			hitBoxesConnected.append(hitboxType)
 			
+func check_special_hitbox_area(area, hitboxType):
+	if area.is_in_group("Hitbox"): 
+		if attackingObject != area.get_parent().get_parent().get_parent(): 
+			attackedObject = area.get_parent().get_parent().get_parent()
+			if !specialHitboxesClashed.has(hitboxType):
+				specialHitboxesClashed.append(hitboxType)
+			if !specialHitboxAttackedObject.has(area):
+				specialHitboxAttackedObject.append(area)
+	if area.is_in_group("Hurtbox")\
+	&& area.get_parent().get_parent() != attackingObject:
+		attackedObject = area.get_parent().get_parent()
+		if !specialHitboxesConnected.has(hitboxType):
+			specialHitboxesConnected.append(hitboxType)
+			
 func apply_hitlag(hitArea, interactionType):
 		match interactionType:
-			InteractionType.CONNECTED:
+			GlobalVariables.HitBoxInteractionType.CONNECTED:
 				attackedObject = hitArea.get_parent().get_parent()
 				if attackedObject.is_in_group("Character"):
 					apply_hurtbox_character_character_hitlag()
-			InteractionType.CLASHED:
+			GlobalVariables.HitBoxInteractionType.CLASHED:
 				attackedObject = hitArea.get_parent().get_parent().get_parent()
 				if attackedObject.is_in_group("Character"):
 					apply_hitbox_character_character_hitlag()
@@ -269,3 +329,15 @@ func apply_hurtbox_character_character_hitlag():
 			else:
 				attackedObject.state.create_hitlag_timer(attackedObject.hitLagFrames)
 				attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames)
+
+func get_hitbox_by_area(area):
+	var sweetSpotArea = sweetSpot.get_parent()
+	var sourSpotArea = sourSpot.get_parent()
+	var neutralSpotArea = neutralSpot.get_parent()
+	match area:
+		sweetSpotArea:
+			return HitBoxType.SWEET
+		sourSpotArea:
+			return HitBoxType.SOUR
+		neutralSpotArea:
+			return HitBoxType.NEUTRAL
