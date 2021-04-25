@@ -106,6 +106,8 @@ onready var baseGravity = gravity
 #hitlag 
 var backUpHitStunTime = 0
 var backUpDisableInputDI = false
+var backUpDisableInput = false
+var backupStopAnimation = false
 var hitlagDI = Vector2.ZERO
 var hitLagFrames = 2.0
 #invincibility lengths
@@ -222,6 +224,9 @@ var reverseFrames = 25.0
 var counterInvincibilityFrames = 15.0
 var bufferedCounterDamage = 0.0
 var counterDamageMultiplier = 1.2
+var counteredHitlagFrames = 50.0
+#landinglag
+var normalLandingLag = 3.0
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -829,6 +834,13 @@ func character_attacked_handler(hitLagFrames):
 	else:
 		state.create_hitlagAttacked_timer(bufferHitLagFrames)
 		
+func character_attacked_handler_no_knockback(hitLagFrames):
+	bufferHitLagFrames = hitLagFrames
+	#current animation is not finished on hitlag timeout
+	if !disableInput:
+		state.bufferEnableInput = true
+	state.create_hitlag_timer(bufferHitLagFrames)
+		
 func superarmour_handler():
 	if damagePercentArmour > 0.0:
 		damagePercentArmour -= lastReceivedDamage
@@ -916,16 +928,20 @@ func handle_effect_reverse_attacking(interactionType, attackedObject, attackingD
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			pass
 		GlobalVariables.HitBoxInteractionType.CONNECTED:
-			reverse_inputs()
-			create_reverse_timer(reverseFrames)
-			velocity.x *= -1
-			match currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
-					currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-					state.mirror_areas()
-				GlobalVariables.MoveDirection.RIGHT:
-					currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-					state.mirror_areas()
+			print(GlobalVariables.CharacterState.keys()[currentState])
+			if currentState != GlobalVariables.CharacterState.SHIELD\
+			&& currentState != GlobalVariables.CharacterState.SHIELDSTUN\
+			&& !perfectShieldActivated:
+				reverse_inputs()
+				create_reverse_timer(reverseFrames)
+				velocity.x *= -1
+				match currentMoveDirection:
+					GlobalVariables.MoveDirection.LEFT:
+						currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+						state.mirror_areas()
+					GlobalVariables.MoveDirection.RIGHT:
+						currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+						state.mirror_areas()
 			
 func handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage):
 	match interactionType:
@@ -966,7 +982,7 @@ func handle_effect_counter_attacking(interactionType, attackedObject, attackingD
 	match interactionType:
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			toggle_all_hitboxes("off")
-			state.create_hitlag_timer(200.0)
+			state.create_hitlag_timer(counteredHitlagFrames)
 		GlobalVariables.HitBoxInteractionType.CONNECTED:
 			pass
 	

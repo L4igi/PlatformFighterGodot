@@ -777,7 +777,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=10]
-length = 3.33334
+length = 0.300001
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -825,7 +825,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0.0333333, 0.0666667 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ false, false ]
+"values": [ false, true ]
 }
 tracks/4/type = "method"
 tracks/4/path = NodePath("..")
@@ -1504,9 +1504,9 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-position = Vector2( 1.99995, -6 )
-animation = "sidespecial"
-frame = 14
+position = Vector2( -12.5, 0 )
+animation = "nair"
+frame = 2
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -1528,23 +1528,26 @@ anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
+[node name="HitBoxes" parent="AnimatedSprite" index="1"]
+visible = false
+
+[node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
+position = Vector2( -0.894736, 12.5263 )
+scale = Vector2( 0.671054, 0.671054 )
+
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-disabled = false
+position = Vector2( -3.36842, -3.57895 )
+scale = Vector2( 1.10526, 1.55263 )
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = true
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
-position = Vector2( 2.05128, 2.38419e-07 )
-scale = Vector2( 1, 1 )
-
-[node name="HitBoxSpecial" parent="AnimatedSprite/HitBoxes" index="3"]
-visible = true
+position = Vector2( 0, 10.7368 )
+scale = Vector2( 1e-05, 1e-05 )
 
 [node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0"]
 position = Vector2( -5.99995, 4 )
-scale = Vector2( 3, 3 )
-disabled = false
 
 [node name="InteractionAreas" parent="." index="3"]
 position = Vector2( -4, 4 )
@@ -1555,6 +1558,9 @@ visible = false
 [node name="CollisionArea" parent="InteractionAreas" index="1"]
 visible = false
 position = Vector2( 0, -4 )
+
+[node name="CharacterEdgeGrabArea" parent="." index="6"]
+visible = true
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

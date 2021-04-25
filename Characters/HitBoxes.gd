@@ -131,6 +131,7 @@ func apply_attack(hbType, interactionType):
 		if attackingObject.currentAttack == GlobalVariables.CharacterAnimations.COUNTER:
 			attackDamage = clamp(attackingObject.bufferedCounterDamage, attackDamage, 100)
 		attackDamage *= attackingObject.smashAttackMultiplier
+	attackDamage = stepify(attackDamage, 0.1)
 	var hitStun = currentAttackData["hitStun_" + String(currentHitBoxNumber)]
 	var launchAngle = deg2rad(currentAttackData["launchAngle_" + String(currentHitBoxNumber)])
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
@@ -192,7 +193,7 @@ func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInve
 			attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
 	else:
 		attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
-	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier)
+	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier, launchVelocity, weightLaunchVelocity)
 
 func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox):
 	if attackedObject.is_in_group("Character"):
@@ -225,7 +226,7 @@ func calculate_hitlag_frames_clashed(attackDamage, hitlagMultiplier):
 	if attackedObject.is_in_group("Character"):
 		attackingObject.state.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
 
-func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier):
+func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier, launchVelocity, weightLaunchVelocity):
 	var attackingObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))
 	var attackedObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackedObject.state.hitlagTimer.get_time_left()*60))
 	if attackedObject.is_in_group("Character"):
@@ -234,10 +235,14 @@ func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier):
 			attackingObjectHitlag = floor(attackingObjectHitlag * 0.67)
 			attackedObjectHitlag = floor(attackedObjectHitlag * 0.67)
 		attackingObject.state.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
-	attackedObject.character_attacked_handler(attackedObjectHitlag)
+	if launchVelocity == 0 && weightLaunchVelocity == 0:
+		attackedObject.character_attacked_handler_no_knockback(attackedObjectHitlag)
+	else:
+		attackedObject.character_attacked_handler(attackedObjectHitlag)
+	print(launchVelocity)
 #	attackedObject.state.start_timer(attackedObject.state.hitlagAttackedTimer, attackedObjectHitlag)
 #	print("calculated hitlag frames character "+ str(characterHitlag))
-#	print("calculated hitlag frames attackedcharacter "+ str(attackedCharacterHitlag))
+#	print("calculated hitlag frames attackedcharacter "+ str(attackedObjectHitlag))
 
 func apply_grab():
 	if attackingObject.currentMoveDirection == attackedObject.currentMoveDirection:

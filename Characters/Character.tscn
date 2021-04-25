@@ -3531,6 +3531,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=50]
+length = 0.866668
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -4421,8 +4422,8 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( -6.00001, 7.51022e-06 )
 frames = SubResource( 2 )
-animation = "sidespecial"
-frame = 3
+animation = "jab1"
+frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -4548,7 +4549,6 @@ shape = SubResource( 64 )
 [node name="FrameTimers" type="Node" parent="."]
 
 [connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
-[connection signal="area_entered" from="AnimatedSprite/HitBoxes/HitBoxSpecial" to="AnimatedSprite/HitBoxes" method="_on_HitBoxSpecial_area_entered"]
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

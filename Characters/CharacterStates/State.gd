@@ -33,6 +33,8 @@ var inLandingLag = false
 #rehit timer (after multihit moves hit how many frames till next hit can occur)
 var rehitTimer = null
 var hitBoxesActive = false
+#buffer enable input 
+var bufferEnableInput = false
 
 # Writing _delta instead of delta here prevents the unused variable warning.
 func _physics_process(_delta):
@@ -219,6 +221,8 @@ func reset_attributes():
 	character.knockbackArmour = 0.0
 	character.multiHitArmour = 0.0
 	character.hitsTaken = 0
+	character.backUpDisableInputDI = false
+	character.backUpDisableInput = false
 	
 func switch_to_current_state_again():
 	print("switching to current state again " +str(GlobalVariables.CharacterState.keys()[character.currentState]))
@@ -440,24 +444,28 @@ func on_invincibility_timeout():
 		direction = -1
 		
 func create_hitlag_timer(waitTime):
-#	character.toggle_all_hitboxes("off")
-	animationPlayer.stop(false)
-	gravity_on_off("off")
-	character.velocity = Vector2.ZERO
-	character.disableInput = true
-	character.backUpDisableInputDI = character.disableInputDI
-	character.disableInputDI = false
+	if !hitlagTimer.get_time_left():
+	#	character.toggle_all_hitboxes("off")
+		animationPlayer.stop(false)
+		gravity_on_off("off")
+		character.velocity = Vector2.ZERO
+		character.backUpDisableInput = character.disableInput
+		character.disableInput = true
+		character.backUpDisableInputDI = character.disableInputDI
+		character.disableInputDI = false
 	start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
 	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	character.velocity = character.initLaunchVelocity
-	if character.superArmourOn:
+	if character.superArmourOn\
+	|| character.smashAttack:
 		character.superArmourOn = false
 	else:
 		animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
+	character.disableInput = character.backUpDisableInput
 
 func create_hitlagAttacked_timer(waitTime):
 	hitlagTimer.stop()

@@ -36,6 +36,10 @@ func process_down_special_inputs(_delta):
 				character.velocity.y -= 700
 			else:
 				character.velocity.y -= 350
+		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
+			character.set_collision_mask_bit(1,false)
+		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():
+			character.set_collision_mask_bit(1,true) 
 
 func on_hitlag_timeout():
 	if character.currentAttack == GlobalVariables.CharacterAnimations.DOWNSPECIAL:

@@ -3,7 +3,6 @@ extends State
 class_name AirState
 
 #platform dropdown
-var normalLandingLag = 3.0
 var lastVelocity = Vector2.ZERO
 
 func _ready():
@@ -76,7 +75,7 @@ func _physics_process(_delta):
 		var solidGroundCollision = check_ground_platform_collision(character.platformCollisionDisabledTimer.get_time_left())
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
-			character.applyLandingLag = normalLandingLag
+			character.applyLandingLag = character.normalLandingLag
 			character.change_state(GlobalVariables.CharacterState.GROUND)
 		lastVelocity = character.velocity
 
