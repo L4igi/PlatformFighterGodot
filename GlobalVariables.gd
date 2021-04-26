@@ -22,14 +22,14 @@ enum MoveDirection {LEFT, RIGHT}
 
 enum AirDodgeType{NORMAL, DIRECTIONAL}
 
-enum AttackType {GROUNDED, AERIAL, SPECIALGROUNDED, SPECIALAERIAL}
+enum AttackType {GROUNDED, AERIAL, PROJECTILE}
 
 enum SpecialHitboxType {REFLECT, REVERSE, ABSORB, COUNTER, NEUTRAL}
 
 #connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
 enum HitBoxInteractionType {CONNECTED, CLASHED}
 
-enum ProjectileState {SHOOT, IMPACT, CONTROL}
+enum ProjectileState {SHOOT, IMPACT, CONTROL, DESTROYED}
 
 enum ProjectileAnimations {SHOOT, IMPACT}
 
@@ -81,7 +81,7 @@ func _process(_delta):
 		if Input.is_action_just_released("AdvanceFrame"):
 			gameRunning = 0
 
-func match_attack_type(attack):
+func match_attack_type_character(attack):
 	var attackType = null
 	match attack:
 		GlobalVariables.CharacterAnimations.JAB1:

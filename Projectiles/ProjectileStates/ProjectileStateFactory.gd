@@ -6,7 +6,8 @@ func _init():
 	states = {
 		GlobalVariables.ProjectileState.CONTROL: ProjectileControlState, 
 		GlobalVariables.ProjectileState.SHOOT: ProjectileShootState, 
-		GlobalVariables.ProjectileState.IMPACT: ProjectileImpactState 
+		GlobalVariables.ProjectileState.IMPACT: ProjectileImpactState, 
+		GlobalVariables.ProjectileState.DESTROYED: ProjectileDestroyedState 
 }
 
 func get_state(state_name):

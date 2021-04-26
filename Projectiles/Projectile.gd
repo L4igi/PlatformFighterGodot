@@ -10,7 +10,7 @@ var grabAble = false
 var damage = 0.0
 var velocity = Vector2.ZERO
 var bounce = false
-var gravity = 1000.0
+var deleteOnImpact = false
 #state changer 
 var state_factory = null
 var state = null
@@ -24,6 +24,7 @@ var attackDataEnum
 #buffers 
 var bufferedAnimation = null
 #attributes 
+var gravity = 1000.0
 var baseGravity = 1000
 var initLaunchVelocity = 0.0
 var airStopForce = 100
@@ -36,6 +37,10 @@ var backUpDisableInput = false
 var hitLagFrames = 2.0
 #collisions 
 var platformCollision = null
+#parent 
+var parent = null
+#hitboxes and hurtboxes 
+onready var projectilecollider = get_node("ProjectileCollider")
 
 func _ready():
 	self.set_collision_mask_bit(1,true)
@@ -49,6 +54,20 @@ func _ready():
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
 	change_state(GlobalVariables.ProjectileState.SHOOT)
+	set_base_stats()
+	
+func _physics_process(delta):
+	stateChangedThisFrame = false
+	
+func set_base_stats():
+	pass
+
+func setup_parent(parent):
+	pass
+	
+func change_parent():
+	pass
+	
 
 func change_state(new_state):
 	if currentState == new_state:
@@ -132,3 +151,28 @@ func check_max_ground_radians(collision):
 	if collisionNormalRadians >= 0: 
 		return false 
 	return true
+
+func on_impact():
+	pass
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	match anim_name:
+		"impact":
+			if deleteOnImpact: 
+				self.queue_free()
+
+func toggle_all_hitboxes(onOff):
+	match onOff: 
+		"on":
+			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
+				for hitbox in areaHitbox.get_children():
+					if hitbox is CollisionShape2D:
+						#todo: maybe change this to handle special hitboxes differently
+						if !hitbox.is_in_group("SpecialHitBox"):
+							hitbox.set_deferred('disabled',false)
+		"off":
+			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
+				for hitbox in areaHitbox.get_children():
+					if hitbox is CollisionShape2D:
+						hitbox.set_deferred('disabled',true)

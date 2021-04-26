@@ -1,6 +1,6 @@
 extends ProjectileState
 
-class_name ProjectileImpactState
+class_name ProjectileDestroyedState
 
 func _ready():
 	animationPlayer.play("impact")

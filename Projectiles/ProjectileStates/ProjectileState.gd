@@ -10,6 +10,8 @@ var hitlagTimer = null
 var hitlagAttackedTimer = null
 #buffer animations 
 var bufferedAnimation = null
+#state done 
+var stateDone = false
 
 func _ready():
 	hitlagTimer = create_timer("on_hitlag_timeout", "HitLagTimer")
@@ -41,16 +43,17 @@ func create_hitlag_timer(waitTime):
 	#	character.toggle_all_hitboxes("off")
 		animationPlayer.stop(false)
 		gravity_on_off("off")
+		projectile.initLaunchVelocity = projectile.velocity
 		projectile.velocity = Vector2.ZERO
 		projectile.backUpDisableInput = projectile.disableInput
 		projectile.disableInput = true
 	start_timer(hitlagTimer, waitTime)
 	
 func on_hitlag_timeout():
-	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	projectile.velocity = projectile.initLaunchVelocity
 	animationPlayer.play()
+	projectile.on_impact()
 
 func create_hitlagAttacked_timer(waitTime):
 	hitlagTimer.stop()

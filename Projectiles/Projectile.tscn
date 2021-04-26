@@ -115,7 +115,9 @@ tracks/3/keys = {
 "values": [ false ]
 }
 
-[node name="Projectile" type="KinematicBody2D"]
+[node name="Projectile" type="KinematicBody2D" groups=[
+"Projectile",
+]]
 collision_layer = 128
 collision_mask = 0
 script = ExtResource( 15 )
@@ -143,5 +145,7 @@ visible = false
 
 [node name="HitBoxSpecial" parent="AnimatedSprite/HitBoxes" index="3"]
 visible = false
+
+[connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 
 [editable path="AnimatedSprite/HitBoxes"]

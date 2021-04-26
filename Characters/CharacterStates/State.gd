@@ -488,6 +488,7 @@ func create_hitlag_timer(waitTime):
 	#	character.toggle_all_hitboxes("off")
 		animationPlayer.stop(false)
 		gravity_on_off("off")
+		character.initLaunchVelocity = character.velocity
 		character.velocity = Vector2.ZERO
 		character.backUpDisableInput = character.disableInput
 		character.disableInput = true
