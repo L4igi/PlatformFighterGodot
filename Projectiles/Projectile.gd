@@ -10,7 +10,7 @@ var grabAble = false
 var damage = 0.0
 var velocity = Vector2.ZERO
 var bounce = false
-var gravity = 0.0
+var gravity = 1000.0
 #state changer 
 var state_factory = null
 var state = null
@@ -19,17 +19,32 @@ var stateChangedThisFrame = false
 onready var animatedSprite = get_node("AnimatedSprite")
 onready var animationPlayer = get_node("AnimatedSprite/AnimationPlayer")
 #json data
-var projectileData = null
+var attackData = null
 var attackDataEnum
 #buffers 
 var bufferedAnimation = null
+#attributes 
+var baseGravity = 1000
+var initLaunchVelocity = 0.0
+var airStopForce = 100
+var airMaxSpeed = 100
+var maxFallSpeed = 100
+#inputs 
+var disableInput = true
+var backUpDisableInput = false
+#hitlag
+var hitLagFrames = 2.0
+#collisions 
+var platformCollision = null
 
 func _ready():
+	self.set_collision_mask_bit(1,true)
+	self.set_collision_mask_bit(2,true)
 	var file = File.new()
-	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
+	file.open("res://Projectiles/FireBall//FireBallAttacks.json", file.READ)
 	var jsondata = JSON.parse(file.get_as_text())
 	file.close()
-	projectileData = jsondata.get_result()
+	attackData = jsondata.get_result()
 	attackDataEnum = GlobalVariables.ProjectileAnimations
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
@@ -63,4 +78,57 @@ func change_state(new_state):
 	state.setup(funcref(self, "change_state"),animationPlayer, self)
 	currentState = changeToState
 	add_child(state)
+	
+	
+func process_projectile_physics(_delta):
+#	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
+	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
+	calculate_vertical_velocity(_delta)
+	velocity = move_and_slide(velocity)     
 
+func calculate_vertical_velocity(_delta):
+	velocity.y += gravity * _delta
+	if velocity.y >= maxFallSpeed: 
+		velocity.y = maxFallSpeed
+
+func apply_special_hitbox_effect_attacked(effectArray, attackingObject, attackingDamage, interactionType):
+	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+#	for effect in effectArray:
+#		match effect: 
+#			GlobalVariables.SpecialHitboxType.REVERSE:
+#				handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage)
+#			GlobalVariables.SpecialHitboxType.REFLECT:
+#				handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage)
+#			GlobalVariables.SpecialHitboxType.ABSORB:
+#				handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage)
+#			GlobalVariables.SpecialHitboxType.COUNTER:
+#				handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage)
+func apply_special_hitbox_effect_attacking(effectArray, attackedObject, attackingDamage, interactionType):
+	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+#	for effect in effectArray:
+#		match effect: 
+#			GlobalVariables.SpecialHitboxType.REVERSE:
+#				handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage)
+#			GlobalVariables.SpecialHitboxType.REFLECT:
+#				handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage)
+#			GlobalVariables.SpecialHitboxType.ABSORB:
+#				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
+#			GlobalVariables.SpecialHitboxType.COUNTER:
+#				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
+
+func check_ground_platform_collision():
+	if velocity.y >= 0 && get_slide_count():
+		var collision = get_slide_collision(0)
+		if (collision.get_collider().is_in_group("Platform")\
+		|| collision.get_collider().is_in_group("Ground"))\
+		&& check_max_ground_radians(collision):
+			platformCollision = collision.get_collider()
+			return platformCollision
+	return null
+	
+func check_max_ground_radians(collision):
+	var collisionNoraml = collision.get_normal()
+	var collisionNormalRadians = atan2(collisionNoraml.y, collisionNoraml.x)
+	if collisionNormalRadians >= 0: 
+		return false 
+	return true

@@ -351,7 +351,6 @@ func check_ground_platform_collision(platformCollisionDisabledTimerRunning = 0):
 		&& platformCollisionDisabledTimerRunning == 0)\
 		|| collision.get_collider().is_in_group("Ground"))\
 		&& check_max_ground_radians(collision):
-			check_max_ground_radians(collision)
 			character.platformCollision = collision.get_collider()
 			return character.platformCollision
 	return null

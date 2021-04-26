@@ -6,4 +6,4 @@
 [node name="FireBall" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
 
-[editable path="HitBoxes"]
+[editable path="AnimatedSprite/HitBoxes"]

@@ -465,6 +465,7 @@ Special2={
 2d_physics/layer_5="CollisionBody"
 2d_physics/layer_6="Edge"
 2d_physics/layer_7="EdgeSnap"
+2d_physics/layer_8="Projectile"
 
 [rendering]
 
