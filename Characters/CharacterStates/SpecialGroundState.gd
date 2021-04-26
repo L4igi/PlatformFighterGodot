@@ -18,11 +18,45 @@ func _ready():
 #	character.check_special_animation_steps()
 				
 				
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
+	bufferedInput = character.moveTransitionBufferedInput
+	
+func manage_transition_buffered_input():
+	match transitionBufferedInput:
+		GlobalVariables.CharacterAnimations.UPSPECIAL:
+			character.currentAttack = GlobalVariables.CharacterAnimations.UPSPECIAL
+			play_attack_animation("upspecial")
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.currentAttack = GlobalVariables.CharacterAnimations.DOWNSPECIAL
+			play_attack_animation("downspecial")
+		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
+			play_attack_animation("sidespecial")
+		GlobalVariables.CharacterAnimations.NSPECIAL:
+			character.currentAttack = GlobalVariables.CharacterAnimations.NSPECIAL
+			play_attack_animation("neutralspecial")
+	transitionBufferedInput = null
+	character.initialize_special_animation_steps()
+	character.disableInputDI = manage_disabled_inputDI()
+	
+func manage_buffered_input():
+	.manage_buffered_input_ground()
+	initialize_superarmour()
+	character.disableInputDI = manage_disabled_inputDI()
+	bufferedInput = null
+	
+func handle_input_disabled(_delta):
+	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
+	if animationFramesLeft <= character.bufferInputWindow\
+	&& bufferedInput == null: 
+		.buffer_input()
 
 func _physics_process(_delta):
 	if !stateDone && !hitlagTimer.get_time_left():
+		if transitionBufferedInput: 
+			manage_transition_buffered_input()
+			return
 		handle_input_disabled(_delta)
 		if character.disableInput:
 			process_movement_physics(_delta)

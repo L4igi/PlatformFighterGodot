@@ -6,8 +6,8 @@ var hitStunGroundFrames = 25
 func _ready():
 	create_hitStun_timer(hitStunGroundFrames)
 
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.airTime = 0
 	character.disabledEdgeGrab = false
 	character.jumpCount = 0

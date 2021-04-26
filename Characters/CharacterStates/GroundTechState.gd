@@ -6,8 +6,8 @@ var groundTechInvincibilityFrames = 25.0
 func _ready():
 	create_invincibility_timer(groundTechInvincibilityFrames)
 
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.jumpCount = 0
 	manage_tech_animation()
 	character.airdodgeAvailable = true

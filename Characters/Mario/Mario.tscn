@@ -1504,9 +1504,9 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-position = Vector2( -12.5, 0 )
-animation = "nair"
-frame = 2
+animation = "idle"
+frame = 0
+speed_scale = 2.0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
@@ -1528,39 +1528,23 @@ anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
-[node name="HitBoxes" parent="AnimatedSprite" index="1"]
-visible = false
-
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
-position = Vector2( -0.894736, 12.5263 )
-scale = Vector2( 0.671054, 0.671054 )
+disabled = true
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-position = Vector2( -3.36842, -3.57895 )
-scale = Vector2( 1.10526, 1.55263 )
+disabled = true
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = true
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
-position = Vector2( 0, 10.7368 )
-scale = Vector2( 1e-05, 1e-05 )
+position = Vector2( 2.05128, 2.38419e-07 )
+scale = Vector2( 1, 1 )
+disabled = true
 
 [node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0"]
-position = Vector2( -5.99995, 4 )
-
-[node name="InteractionAreas" parent="." index="3"]
-position = Vector2( -4, 4 )
-
-[node name="Hurtbox" parent="InteractionAreas" index="0"]
-visible = false
-
-[node name="CollisionArea" parent="InteractionAreas" index="1"]
-visible = false
-position = Vector2( 0, -4 )
-
-[node name="CharacterEdgeGrabArea" parent="." index="6"]
-visible = true
+position = Vector2( -0.999939, 3.66665 )
+disabled = true
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

@@ -15,8 +15,8 @@ func _ready():
 	character.getUpType = null
 	character.canGetEdgeInvincibility = true
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.airTime = 0
 	character.airdodgeAvailable = true
 

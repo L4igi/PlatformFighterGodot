@@ -18,8 +18,8 @@ func _ready():
 	techCoolDownTimer = create_timer("on_techCooldown_timeout", "TechCooldownTimer")
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	inLandingLag = false
 	animationPlayer.get_parent().set_animation("hurt")
 	animationPlayer.get_parent().set_frame(0)
@@ -33,7 +33,7 @@ func setup(change_state, animationPlayer, character):
 	hitStunStopForce = 1000
 	hitStunGravity = 1000
 
-func switch_to_current_state_again():
+func switch_to_current_state_again(transitionBufferedInput):
 	hitStunTimer.stop()
 	hitStunTimerDone = true
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
@@ -48,12 +48,18 @@ func switch_to_current_state_again():
 	hitStunStopForce = 1000
 	hitStunGravity = 1000
 	hitlagDone = false
+	.switch_to_current_state_again(transitionBufferedInput)
 
 func handle_input():
 	if hitStunTimerDone:
 		if Input.is_action_just_pressed(character.attack):
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
 			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
-#			attack_handler_air(delta)
+		elif Input.is_action_just_pressed(character.special):
+			if Input.is_action_pressed(character.jump):
+				double_jump_attack_handler()
+			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
 		elif Input.is_action_just_pressed(character.jump):
 			double_jump_handler()
 			character.change_state(GlobalVariables.CharacterState.AIR)

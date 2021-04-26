@@ -16,8 +16,8 @@ func _ready():
 	else:
 		play_animation("freefall")
 
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 #	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
 func manage_buffered_input():
@@ -29,6 +29,10 @@ func handle_input():
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()
 		character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+	elif Input.is_action_just_pressed(character.special):
+		if Input.is_action_pressed(character.jump):
+			double_jump_attack_handler()
+		character.change_state(GlobalVariables.CharacterState.SPECIALAIR) 
 	elif Input.is_action_just_pressed(character.jump):
 		double_jump_handler()
 	elif Input.is_action_just_pressed(character.down) && !character.onSolidGround && int(character.velocity.y) >= 0:

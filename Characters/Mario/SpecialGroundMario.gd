@@ -15,6 +15,7 @@ func handle_input_disabled(_delta):
 			process_down_special_inputs(_delta)
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
 			pass
+	.handle_input_disabled(_delta)
 #	print("special input ground disbaled input mario")
 
 

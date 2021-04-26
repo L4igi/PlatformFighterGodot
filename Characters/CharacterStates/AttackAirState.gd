@@ -9,23 +9,20 @@ func _ready():
 			create_invincibility_timer(character.bufferInvincibilityFrames)
 			character.bufferInvincibilityFrames = 0
 
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.disabledEdgeGrab = true
 	character.edgeGrabShape.set_deferred("disabled", true)
+	bufferedInput = character.moveTransitionBufferedInput
 	
-func switch_to_current_state_again():
+func switch_to_current_state_again(transitionBufferedInput):
 	character.damagePercentArmour = 0.0
 	character.knockbackArmour = 0.0
 	character.multiHitArmour = 0.0
-
-func manage_buffered_input():
-	match bufferedInput:
-		GlobalVariables.CharacterAnimations.JUMP:
-			character.queueFreeFall = true
-			character.currentAttack = null
-			double_jump_handler()
-			character.change_state(GlobalVariables.CharacterState.AIR)
+	.switch_to_current_state_again(transitionBufferedInput)
+	
+func manage_transition_buffered_input():
+	match transitionBufferedInput:
 		GlobalVariables.CharacterAnimations.JAB1:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
@@ -92,18 +89,10 @@ func manage_buffered_input():
 				double_jump_attack_handler()
 			play_attack_animation("fair")
 			character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
-		GlobalVariables.CharacterAnimations.NSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR)
-		_:
-			character.currentAttack = null
+	transitionBufferedInput = null
+			
+func manage_buffered_input():
+	.manage_buffered_input_air()
 	initialize_superarmour()
 	character.disableInputDI = manage_disabled_inputDI()
 	bufferedInput = null
@@ -120,6 +109,9 @@ func handle_input_disabled(_delta):
 	
 func _physics_process(_delta):
 	if !stateDone:
+		if transitionBufferedInput:
+			manage_transition_buffered_input()
+			return
 		handle_input_disabled(_delta)
 		if character.disableInputDI:
 			process_disable_input_direction_influence(_delta)

@@ -46,7 +46,7 @@ var smashAttack = null
 var currentAttack = null
 var jabCount = 0
 var jabCombo = 1
-var dashAttackSpeed = 600
+var dashAttackSpeed = 1000
 var chargingSmashAttack = false
 var bufferedSmashAttack
 var currentHitBox = 1
@@ -63,7 +63,7 @@ var bufferXInput = 0
 #crouch 
 var crouchMovement = false
 #bufferInput
-var bufferInputWindow = 10
+var bufferInputWindow = 500
 #hitstun 
 var attackedCalculatedVelocity = 0
 var initLaunchVelocity = Vector2.ZERO
@@ -203,6 +203,7 @@ var moveAirGroundTransition = {}
 var moveGroundAirTransition = {}
 var groundAirMoveTransition = false
 var airGroundMoveTransition = false
+var moveTransitionBufferedInput = null
 #buffer Invincibilty frames to next state 
 var bufferInvincibilityFrames = 0
 #upspecial 
@@ -227,6 +228,7 @@ var counterDamageMultiplier = 1.2
 var counteredHitlagFrames = 50.0
 #landinglag
 var normalLandingLag = 3.0
+
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -335,6 +337,7 @@ func finish_attack_animation(step):
 					GlobalVariables.CharacterState.ATTACKGROUND:
 						applySideStepFrames = true
 						smashAttack = null
+						applyLandingLag = null
 						if !state.check_character_crouch():
 							change_state(GlobalVariables.CharacterState.GROUND)
 						disableInput = false
@@ -343,16 +346,17 @@ func finish_attack_animation(step):
 						smashAttack = null
 
 func finish_special_animation(step):
-	if onSolidGround:
-		applySideStepFrames = true
-		smashAttack = null
-		if !state.check_character_crouch():
-			change_state(GlobalVariables.CharacterState.GROUND)
-		disableInput = false
-	else:
-		disableInput = false
-		change_state(GlobalVariables.CharacterState.AIR)
-		smashAttack = null
+	if state.enable_player_input():
+		if onSolidGround:
+			applySideStepFrames = true
+			smashAttack = null
+			if !state.check_character_crouch():
+				change_state(GlobalVariables.CharacterState.GROUND)
+			disableInput = false
+		else:
+			disableInput = false
+			change_state(GlobalVariables.CharacterState.AIR)
+			smashAttack = null
 		
 func apply_attack_animation_steps(step = 0):
 	pass
@@ -676,14 +680,15 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if GlobalVariables.specialAnimationList.has(anim_name):
 		finish_special_animation(0)
 
-func change_state(new_state):
+func change_state(new_state, transitionBufferedInput = null):
 	if currentState == new_state:
-		state.switch_to_current_state_again()
+		state.switch_to_current_state_again(transitionBufferedInput)
 		return
 	if stateChangedThisFrame:
 		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" State already changed this frame ")
 		return
 	stateChangedThisFrame = true
+	moveTransitionBufferedInput = null
 	var changeToState = new_state
 	enable_disable_hurtboxes(true)
 #	check_character_tilt_walk(new_state)
@@ -696,13 +701,13 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]))
+	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():
 #		print("currentstate " +str(currentState) + " new state " +str(new_state))
 #		print("state " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
-	state.setup(funcref(self, "change_state"), animationPlayer, self)
+	state.setup(funcref(self, "change_state"),transitionBufferedInput, animationPlayer, self)
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
@@ -729,24 +734,28 @@ func check_state_transition(changeToState):
 				if moveAirGroundTransition.has(currentAttack):
 					if moveAirGroundTransition.get(currentAttack): 
 						airGroundMoveTransition = true
+						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = GlobalVariables.CharacterState.ATTACKGROUND
 						return changeToState
 			GlobalVariables.CharacterState.ATTACKGROUND:
 				if moveGroundAirTransition.has(currentAttack):
 					if moveGroundAirTransition.get(currentAttack): 
 						groundAirMoveTransition = true
+						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = GlobalVariables.CharacterState.ATTACKAIR
 						return changeToState
 			GlobalVariables.CharacterState.SPECIALAIR:
 				if moveAirGroundTransition.has(currentAttack):
 					if moveAirGroundTransition.get(currentAttack): 
 						airGroundMoveTransition = true
+						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = GlobalVariables.CharacterState.SPECIALGROUND
 						return changeToState
 			GlobalVariables.CharacterState.SPECIALGROUND:
 				if moveGroundAirTransition.has(currentAttack):
 					if moveGroundAirTransition.get(currentAttack): 
 						groundAirMoveTransition = true
+						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = GlobalVariables.CharacterState.SPECIALAIR
 						return changeToState
 	bufferInvincibilityFrames = 0.0
@@ -791,8 +800,8 @@ func toggle_all_hitboxes(onOff):
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
 						hitbox.set_deferred('disabled',true)
-			$InteractionAreas.set_position(Vector2(0,0))
-			$InteractionAreas.set_rotation(0)
+#			$InteractionAreas.set_position(Vector2(0,0))
+#			$InteractionAreas.set_rotation(0)
 			
 func reset_hitboxes():
 	for areaHitbox in $AnimatedSprite/HitBoxes.get_children():

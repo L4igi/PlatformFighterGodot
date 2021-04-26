@@ -34,6 +34,7 @@ shape = SubResource( 2 )
 [node name="CollisionArea" type="Area2D" parent="." groups=[
 "CollisionArea",
 ]]
+visible = false
 collision_layer = 16
 collision_mask = 54
 

@@ -8,8 +8,8 @@ func _ready():
 	grabTimer = create_timer("on_grabTimer_timeout", "GrabTimer")
 	play_animation("grab")
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 
 func _input(event):
 	if character.grabbedCharacter != null && !character.disableInput:

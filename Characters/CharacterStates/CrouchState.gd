@@ -10,8 +10,8 @@ func _ready():
 	if character.onSolidGround && character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.velocity.x = 0
 	character.airTime = 0
 	character.disabledEdgeGrab = false
@@ -21,6 +21,8 @@ func setup(change_state, animationPlayer, character):
 func handle_input():
 	if Input.is_action_just_pressed(character.attack):
 		character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+	elif Input.is_action_just_pressed(character.special):
+		character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
 	elif Input.is_action_just_pressed(character.jump):
 		bufferedInput = null
 		create_shortHop_timer()

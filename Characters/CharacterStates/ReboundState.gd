@@ -12,8 +12,8 @@ func _ready():
 	play_animation("rebound")
 	
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	hitStunTimer.stop()
 	gravity_on_off("on")
 	character.chargingSmashAttack = false
@@ -25,8 +25,13 @@ func setup(change_state, animationPlayer, character):
 	character.backUpDisableInputDI = character.disableInputDI
 	character.disableInputDI = false
 	
+func handle_input_disabled(_delta):
+	if !bufferedInput:
+		.buffer_input()
+	
 func _physics_process(_delta):
 	if !stateDone:
+		handle_input_disabled(_delta)
 		process_movement_physics(_delta)
 		if check_in_air():
 			character.disableInput = false
@@ -37,6 +42,5 @@ func create_rebound_timer(waitTime):
 	start_timer(reboundTimer, waitTime)
 
 func on_rebound_timeout():
-	print("rebound timeout")
 	character.disableInput = false
 	character.change_state(GlobalVariables.CharacterState.GROUND)

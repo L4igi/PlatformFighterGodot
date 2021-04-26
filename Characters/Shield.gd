@@ -15,8 +15,8 @@ func _ready():
 	character = get_parent()
 	set_visible(false)
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.jumpCount = 0
 	
 func _physics_process(_delta):

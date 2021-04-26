@@ -7,8 +7,8 @@ func _ready():
 	create_invincibility_timer(character.counterInvincibilityFrames)
 	character.bufferedCounterDamage *= character.counterDamageMultiplier
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.currentAttack = GlobalVariables.CharacterAnimations.COUNTER
 
 func handle_input_disabled(_delta):

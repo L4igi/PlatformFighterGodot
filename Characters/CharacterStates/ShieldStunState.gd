@@ -9,8 +9,8 @@ func _ready():
 	shieldStunTimer = create_timer("on_shieldStun_timeout", "ShieldStunTimer")
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.disableInput = true 
 	character.characterShield.enable_shield()
 	CharacterInteractionHandler.remove_ground_colliding_character(character)

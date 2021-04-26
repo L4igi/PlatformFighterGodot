@@ -7,8 +7,8 @@ func _ready():
 	#todo shield animation does not play
 	play_animation("shield")
 	
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.airdodgeAvailable = true
 
 			

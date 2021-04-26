@@ -27,8 +27,8 @@ func _ready():
 	reset_gravity()
 	play_animation("airdodge_neutral")
 
-func setup(change_state, animationPlayer, character):
-	.setup(change_state, animationPlayer, character)
+func setup(change_state, transitionBufferedInput, animationPlayer, character):
+	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	if character.platformCollisionDisabledTimer.get_time_left():
 		character.call_deferred("set_collision_mask_bit",1,false)
 	else:
