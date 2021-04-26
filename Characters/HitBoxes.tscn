@@ -24,7 +24,6 @@ collision_mask = 0
 
 [node name="Sweet" type="CollisionShape2D" parent="HitBoxSweetArea"]
 modulate = Color( 0, 0.976471, 1, 1 )
-position = Vector2( 24, -11.25 )
 shape = SubResource( 1 )
 disabled = true
 
@@ -34,7 +33,6 @@ disabled = true
 
 [node name="Neutral" type="CollisionShape2D" parent="HitBoxNeutralArea"]
 modulate = Color( 0.501961, 0.0352941, 0.0352941, 1 )
-position = Vector2( 19.2, 5.68434e-14 )
 shape = SubResource( 2 )
 disabled = true
 
@@ -44,7 +42,6 @@ disabled = true
 
 [node name="Sour" type="CollisionShape2D" parent="HitBoxSourArea"]
 modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
-position = Vector2( -4.8, -16.875 )
 shape = SubResource( 3 )
 disabled = true
 

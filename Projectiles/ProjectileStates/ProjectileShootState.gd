@@ -1,0 +1,3 @@
+extends ProjectileState
+
+class_name ProjectileShootState
