@@ -63,7 +63,7 @@ var bufferXInput = 0
 #crouch 
 var crouchMovement = false
 #bufferInput
-var bufferInputWindow = 500
+var bufferInputWindow = 10
 #hitstun 
 var attackedCalculatedVelocity = 0
 var initLaunchVelocity = Vector2.ZERO
@@ -71,10 +71,10 @@ var launchSpeedDecay = 0.025
 var shortHitStun = false
 var groundHitStun = 3.0
 var getupRollDistance = 100
-var tumblingThreashold = 400
+var tumblingThreashold = 600
 var characterBouncing = false
 var lastVelocity = Vector2.ZERO
-var bounceThreashold = 400
+var bounceThreashold = 600
 var bounceReduction = 0.8
 var stageBounceCollider = null
 #tech 
@@ -345,6 +345,7 @@ func finish_attack_animation(step):
 						change_state(GlobalVariables.CharacterState.AIR)
 						smashAttack = null
 
+#overwrite in character to make special moves change to different states afterwards
 func finish_special_animation(step):
 	if state.enable_player_input():
 		if onSolidGround:

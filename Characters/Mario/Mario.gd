@@ -154,6 +154,8 @@ func finish_special_animation(step):
 		GlobalVariables.CharacterAnimations.UPSPECIAL:
 			moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.UPSPECIAL)
 			moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.UPSPECIAL)
+			change_state(GlobalVariables.CharacterState.HELPLESS)
+			return
 		GlobalVariables.CharacterAnimations.NSPECIAL:
 			pass
 		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
@@ -162,3 +164,4 @@ func finish_special_animation(step):
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
 			pass
 	.finish_special_animation(step)
+

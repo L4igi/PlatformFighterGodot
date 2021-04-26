@@ -140,7 +140,7 @@ func manage_buffered_input_air():
 			character.change_state(GlobalVariables.CharacterState.SPECIALAIR, bufferedInput)
 	bufferedInput = null
 	
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):
@@ -451,7 +451,7 @@ func process_shorthop_attack():
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
 	if character.velocity.x == 0: 
 		character.velocity.x = character.stopAreaVelocity.x
-	character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+	character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
 		
 func enable_player_input():
 	if bufferedInput:

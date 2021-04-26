@@ -24,7 +24,7 @@ func manage_buffered_input():
 	manage_buffered_input_ground()
 
 			
-func handle_input():
+func handle_input(_delta):
 	if Input.is_action_just_pressed(character.attack):
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()
@@ -61,9 +61,9 @@ func _physics_process(_delta):
 			character.airTime += 1
 		if character.disableInput: 
 			handle_input_disabled(_delta)
-			process_movement_physics(_delta)
+			process_movement_physics_air(_delta)
 		elif !character.disableInput:
-			handle_input()
+			handle_input(_delta)
 			input_movement_physics(_delta)
 			character.velocity = character.move_and_slide(character.velocity)
 			# Move based on the velocity and snap to the ground.

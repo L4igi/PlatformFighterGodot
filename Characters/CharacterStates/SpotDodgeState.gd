@@ -12,7 +12,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 func manage_buffered_input():
 	manage_buffered_input_ground()
 
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):

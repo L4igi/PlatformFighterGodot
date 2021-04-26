@@ -3,9 +3,10 @@
 [ext_resource path="res://Characters/InteractionAreas.gd" type="Script" id=1]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 16.0
+radius = 12.0416
 
 [sub_resource type="CapsuleShape2D" id=2]
+radius = 8.57143
 height = 15.6791
 
 [sub_resource type="CapsuleShape2D" id=3]
@@ -34,7 +35,6 @@ shape = SubResource( 2 )
 [node name="CollisionArea" type="Area2D" parent="." groups=[
 "CollisionArea",
 ]]
-visible = false
 collision_layer = 16
 collision_mask = 54
 

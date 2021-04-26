@@ -257,7 +257,7 @@ func jab_handler():
 	if character.jabCount > character.jabCombo: 
 		character.jabCount = 0
 		
-func handle_input():
+func handle_input(_delta):
 	pass
 	
 func handle_input_disabled(_delta):

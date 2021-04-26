@@ -61,7 +61,7 @@ func manage_edge_getup_animation(getUpType, targetPosition, direction):
 			play_attack_animation("jump_getup")
 	character.tween.start()
 	
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):
@@ -73,6 +73,6 @@ func _physics_process(_delta):
 		if character.disableInput:
 			handle_input_disabled(_delta)
 		else:
-			handle_input()
+			handle_input(_delta)
 		character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP, true)
 	#	process_movement_physics(_delta)

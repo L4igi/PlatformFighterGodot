@@ -17,7 +17,7 @@ func manage_roll_animation(rollType):
 		character.left:
 			play_animation("roll")
 	
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):

@@ -14,7 +14,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 #	character.velocity = Vector2.ZERO
 
 
-func handle_input():
+func handle_input(_delta):
 	if Input.is_action_just_pressed(character.attack):
 		character.getUpType = GlobalVariables.CharacterAnimations.ATTACKGETUP
 		character.change_state(GlobalVariables.CharacterState.GETUP)
@@ -42,7 +42,7 @@ func handle_input_disabled(_delta):
 func _physics_process(_delta):
 	if !stateDone:
 		if !character.disableInput:
-			handle_input()
+			handle_input(_delta)
 			if character.pushingCharacter:
 				if check_in_air():
 					character.disableInput = false

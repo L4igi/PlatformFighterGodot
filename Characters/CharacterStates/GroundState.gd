@@ -61,7 +61,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 func manage_buffered_input():
 	manage_buffered_input_ground()
 
-func handle_input():
+func handle_input(_delta):
 	if Input.is_action_just_pressed(character.jump):
 		create_shortHop_timer()
 		return
@@ -149,7 +149,7 @@ func _physics_process(_delta):
 				if character.disableInput:
 					handle_input_disabled(_delta)
 				elif inMovementLag:
-					handle_input()
+					handle_input(_delta)
 		else:
 			input_movement_physics(_delta)
 			check_stop_area_entered(_delta)
@@ -158,7 +158,7 @@ func _physics_process(_delta):
 				character.disableInput = false
 				character.bufferMoveAirTransition = true
 				character.change_state(GlobalVariables.CharacterState.AIR)
-			handle_input()
+			handle_input(_delta)
 			#checks if player walked off platform/stage
 		
 func input_movement_physics(_delta):

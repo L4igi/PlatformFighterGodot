@@ -27,7 +27,7 @@ func manage_buffered_input():
 	else: 
 		manage_buffered_input_air()
 
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):

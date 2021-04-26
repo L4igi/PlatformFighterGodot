@@ -18,9 +18,12 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	character.jumpCount = 0
 	character.airdodgeAvailable = true
 	
-func handle_input():
+func handle_input(_delta):
 	if Input.is_action_just_pressed(character.attack):
-		character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+		if Input.is_action_just_pressed(character.jump):
+			process_shorthop_attack()
+		else:
+			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):
 		character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
 	elif Input.is_action_just_pressed(character.jump):
@@ -42,7 +45,7 @@ func manage_buffered_input():
 func _physics_process(_delta):
 	if !stateDone:
 		if !character.disableInput:
-			handle_input()
+			handle_input(_delta)
 			if get_input_direction_y() <= 0.3:
 				character.change_state(GlobalVariables.CharacterState.GROUND)
 		else:

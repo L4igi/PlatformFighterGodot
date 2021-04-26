@@ -23,7 +23,7 @@ func manage_tech_animation():
 	else:
 		play_animation("techground")
 		
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):

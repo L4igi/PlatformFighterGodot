@@ -97,7 +97,7 @@ func manage_buffered_input():
 	character.disableInputDI = manage_disabled_inputDI()
 	bufferedInput = null
 	
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):

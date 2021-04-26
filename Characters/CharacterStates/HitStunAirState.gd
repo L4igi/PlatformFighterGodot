@@ -50,7 +50,7 @@ func switch_to_current_state_again(transitionBufferedInput):
 	hitlagDone = false
 	.switch_to_current_state_again(transitionBufferedInput)
 
-func handle_input():
+func handle_input(_delta):
 	if hitStunTimerDone:
 		if Input.is_action_just_pressed(character.attack):
 			if Input.is_action_pressed(character.jump):
@@ -95,7 +95,7 @@ func _physics_process(_delta):
 				if character.airTime <= 300: 
 					character.airTime += 1
 			elif !character.disableInput:
-				handle_input()
+				handle_input(_delta)
 				input_movement_physics(_delta)
 			if handle_character_bounce():
 				pass

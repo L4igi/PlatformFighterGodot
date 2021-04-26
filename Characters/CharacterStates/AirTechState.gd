@@ -18,7 +18,7 @@ func manage_tech_animation():
 func manage_buffered_input():
 	manage_buffered_input_air()
 		
-func handle_input():
+func handle_input(_delta):
 	pass
 
 func handle_input_disabled(_delta):

@@ -26,12 +26,12 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.airTime = 0
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if !stateDone:
 		if character.snappedEdge:
-			handle_input()
+			handle_input(_delta)
 			
-func handle_input():
+func handle_input(_delta):
 	if Input.is_action_just_pressed(character.down):
 		disable_invincibility_edge_action()
 		character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())

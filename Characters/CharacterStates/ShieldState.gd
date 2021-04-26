@@ -12,7 +12,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	character.airdodgeAvailable = true
 
 			
-func handle_input():
+func handle_input(_delta):
 	if Input.is_action_just_pressed(character.jump):
 		character.characterShield.disable_shield()
 		bufferedInput = null
@@ -56,7 +56,7 @@ func _physics_process(_delta):
 		if !character.disableInput:
 			process_movement_physics(_delta)
 		if !hitlagAttackedTimer.get_time_left():
-			handle_input()
+			handle_input(_delta)
 			if !Input.is_action_pressed(character.shield) && character.characterShield.enableShieldFrames == 0:
 				character.characterShield.disable_shield()
 				character.shieldDropped = true
