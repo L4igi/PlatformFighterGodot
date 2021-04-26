@@ -9,6 +9,7 @@ var characterList = []
 #var characters = [$Mario, $Dark_Mario]
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	GlobalVariables.currentStage = self
 	spawn_characters()
 		
 

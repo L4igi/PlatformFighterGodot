@@ -28,6 +28,9 @@ func _on_CollisionDetectionArea_body_entered(body):
 	elif body.is_in_group("Character") && body.velocity.y >= 0:
 		collidingBodies.append(body)
 		body.platformCollision = self
+	elif body.is_in_group("Projectile") && body.velocity.y >= 0:
+		collidingBodies.append(body)
+		body.platformCollision = self
 	
 
 func _on_CollisionDetectionArea_body_exited(body):
@@ -36,6 +39,10 @@ func _on_CollisionDetectionArea_body_exited(body):
 		body.onSolidGround = null
 		body.platformCollision = null
 		body.set_collision_mask_bit(1,true)
+	elif body.is_in_group("Projectile"):
+		collidingBodies.erase(body)
+		body.onSolidGround = null
+		body.platformCollision = null
 		
 func add_collding_edge_body(body):
 	if !collidingEdgeBodies.has(body):

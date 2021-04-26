@@ -7,7 +7,7 @@ func _ready():
 	reset_gravity()
 	character.chargingSmashAttack = false
 	character.smashAttack = null
-	character.global_position = character.inGrabByCharacter.grabPoint.global_position
+	character.global_position = character.inGrabByCharacter.interactionPoint.global_position
 	character.velocity = Vector2.ZERO
 	gravity_on_off("off")
 	play_animation("ingrab")

@@ -97,7 +97,7 @@ var shieldDropped = false
 var grabbedCharacter = null
 var inGrabByCharacter = null
 var grabTime = 60
-onready var grabPoint = get_node("GrabPoint")
+onready var interactionPoint = get_node("InteractionPoint")
 #character stats
 var weight = 1
 var fastFallGravity = 4000
@@ -702,7 +702,7 @@ func change_state(new_state, transitionBufferedInput = null):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():

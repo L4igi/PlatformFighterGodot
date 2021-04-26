@@ -2,6 +2,7 @@ extends Character
 
 var upspecialInvincibilityFrames = 3.0
 
+onready var fireBall = preload("res://Projectiles/FireBall/FireBall.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -42,7 +43,7 @@ func apply_special_animation_steps(step = 0):
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
 			pass
 		GlobalVariables.CharacterAnimations.NSPECIAL:
-			pass
+			manage_neutral_special(step)
 	
 func manage_dair(step):
 	match step:
@@ -77,6 +78,20 @@ func manage_up_special(step = 0):
 				GlobalVariables.MoveDirection.RIGHT:
 					velocity = Vector2(upSpecialSpeed.x, -upSpecialSpeed.y)
 			
+func manage_neutral_special(step = 0):
+	neutralSpecialAnimationStep = step
+	match step:
+		0:
+			enableSpecialInput = false
+		1:
+			var newFireBall = fireBall.instance()
+			GlobalVariables.currentStage.add_child(newFireBall)
+			newFireBall.set_base_stats(self)
+			print("interactionPoint.global_position " +str(interactionPoint.position))
+			newFireBall.global_position = interactionPoint.global_position
+		2:
+			pass
+		
 func manage_down_special(step = 0):
 	downSpecialAnimationStep = step
 	match step:
@@ -89,8 +104,6 @@ func manage_down_special(step = 0):
 			set_collision_mask_bit(1,true) 
 		2:
 			pass
-		
-	 
 			
 func change_to_special_state():
 	if Input.is_action_just_pressed(up):

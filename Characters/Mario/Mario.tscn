@@ -1504,8 +1504,8 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-animation = "idle"
-frame = 0
+animation = "grab"
+frame = 2
 speed_scale = 2.0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
@@ -1545,6 +1545,9 @@ disabled = true
 [node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0"]
 position = Vector2( -0.999939, 3.66665 )
 disabled = true
+
+[node name="InteractionPoint" parent="." index="5"]
+position = Vector2( 32, 2.38419e-07 )
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

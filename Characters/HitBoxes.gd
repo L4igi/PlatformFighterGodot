@@ -290,6 +290,9 @@ func check_hitbox_areas(area, hitboxType):
 	attackingObjectState = attackingObject.currentState
 	if area.is_in_group("Hitbox"): 
 		if attackingObject != area.get_parent().get_parent().get_parent(): 
+			attackedObject = area.get_parent().get_parent().get_parent()
+			if is_projectile_parentNode_interaction(attackedObject):
+				return
 			if hitBoxesClashed.empty():
 				apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CLASHED)
 			if !hitBoxesClashed.has(hitboxType):
@@ -297,6 +300,9 @@ func check_hitbox_areas(area, hitboxType):
 #			print("hit Hitbox " +str(area.get_parent().attackingObject.name))
 	if area.is_in_group("Hurtbox")\
 	&& area.get_parent().get_parent() != attackingObject:
+		attackedObject = area.get_parent().get_parent()
+		if is_projectile_parentNode_interaction(attackedObject):
+			return
 		if hitBoxesClashed.empty() && hitBoxesConnected.empty():
 			apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CONNECTED)
 		if !hitBoxesConnected.has(hitboxType):
@@ -306,6 +312,8 @@ func check_special_hitbox_area(area, hitboxType):
 	if area.is_in_group("Hitbox"): 
 		if attackingObject != area.get_parent().get_parent().get_parent(): 
 			attackedObject = area.get_parent().get_parent().get_parent()
+			if is_projectile_parentNode_interaction(attackedObject):
+				return
 			if !specialHitboxesClashed.has(hitboxType):
 				specialHitboxesClashed.append(hitboxType)
 			if !specialHitboxAttackedObject.has(area):
@@ -313,8 +321,16 @@ func check_special_hitbox_area(area, hitboxType):
 	if area.is_in_group("Hurtbox")\
 	&& area.get_parent().get_parent() != attackingObject:
 		attackedObject = area.get_parent().get_parent()
+		if is_projectile_parentNode_interaction(attackedObject):
+			return
 		if !specialHitboxesConnected.has(hitboxType):
 			specialHitboxesConnected.append(hitboxType)
+			
+func is_projectile_parentNode_interaction(object):
+	if attackingObject.is_in_group("Projectile"):
+		if attackingObject.check_hit_parentNode(object):
+			return true
+	return false
 			
 func apply_hitlag(hitArea, interactionType):
 		match interactionType:

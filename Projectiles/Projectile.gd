@@ -9,8 +9,10 @@ var currentMoveDirection = null
 var grabAble = false
 var damage = 0.0
 var velocity = Vector2.ZERO
-var bounce = false
+var bounceVelocity = 0.0
 var deleteOnImpact = false
+var canHitSelf = false
+var destroyOnParentImpact = false
 #state changer 
 var state_factory = null
 var state = null
@@ -37,32 +39,24 @@ var backUpDisableInput = false
 var hitLagFrames = 2.0
 #collisions 
 var platformCollision = null
+var onSolidGround = null
 #parent 
-var parent = null
+var parentNode = null
 #hitboxes and hurtboxes 
 onready var projectilecollider = get_node("ProjectileCollider")
 
 func _ready():
 	self.set_collision_mask_bit(1,true)
 	self.set_collision_mask_bit(2,true)
-	var file = File.new()
-	file.open("res://Projectiles/FireBall//FireBallAttacks.json", file.READ)
-	var jsondata = JSON.parse(file.get_as_text())
-	file.close()
-	attackData = jsondata.get_result()
 	attackDataEnum = GlobalVariables.ProjectileAnimations
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
 	change_state(GlobalVariables.ProjectileState.SHOOT)
-	set_base_stats()
 	
 func _physics_process(delta):
 	stateChangedThisFrame = false
 	
-func set_base_stats():
-	pass
-
-func setup_parent(parent):
+func set_base_stats(parentNode):
 	pass
 	
 func change_parent():
@@ -88,7 +82,7 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.ProjectileState.keys()[changeToState]))
+#	print(self.name + " Changing to " +str(GlobalVariables.ProjectileState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.ProjectileState.keys()[new_state]
 #	if state.get_parent():
@@ -112,28 +106,40 @@ func calculate_vertical_velocity(_delta):
 
 func apply_special_hitbox_effect_attacked(effectArray, attackingObject, attackingDamage, interactionType):
 	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
-#	for effect in effectArray:
-#		match effect: 
-#			GlobalVariables.SpecialHitboxType.REVERSE:
+	for effect in effectArray:
+		match effect: 
+			GlobalVariables.SpecialHitboxType.REVERSE:
+				pass
 #				handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage)
-#			GlobalVariables.SpecialHitboxType.REFLECT:
+			GlobalVariables.SpecialHitboxType.REFLECT:
+				pass
 #				handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage)
-#			GlobalVariables.SpecialHitboxType.ABSORB:
+			GlobalVariables.SpecialHitboxType.ABSORB:
+				pass
 #				handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage)
-#			GlobalVariables.SpecialHitboxType.COUNTER:
+			GlobalVariables.SpecialHitboxType.COUNTER:
+				pass
 #				handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage)
+
 func apply_special_hitbox_effect_attacking(effectArray, attackedObject, attackingDamage, interactionType):
 	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
-#	for effect in effectArray:
-#		match effect: 
-#			GlobalVariables.SpecialHitboxType.REVERSE:
+	for effect in effectArray:
+		match effect: 
+			GlobalVariables.SpecialHitboxType.REVERSE:
+				pass
 #				handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage)
-#			GlobalVariables.SpecialHitboxType.REFLECT:
-#				handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage)
-#			GlobalVariables.SpecialHitboxType.ABSORB:
+			GlobalVariables.SpecialHitboxType.REFLECT:
+				handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage)
+			GlobalVariables.SpecialHitboxType.ABSORB:
+				pass
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
-#			GlobalVariables.SpecialHitboxType.COUNTER:
+			GlobalVariables.SpecialHitboxType.COUNTER:
+				pass
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
+
+func handle_effect_reflect_attacking(interactionType, attackingObject, attackingDamage):
+	parentNode = attackingObject
+	velocity.x *= -2
 
 func check_ground_platform_collision():
 	if velocity.y >= 0 && get_slide_count():
@@ -176,3 +182,11 @@ func toggle_all_hitboxes(onOff):
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
 						hitbox.set_deferred('disabled',true)
+
+func check_hit_parentNode(object):
+	if object == parentNode: 
+		if destroyOnParentImpact: 
+			change_state(GlobalVariables.ProjectileState.DESTROYED)
+		return true
+	else: 
+		return false
