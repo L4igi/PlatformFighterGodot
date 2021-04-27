@@ -40,6 +40,11 @@ func process_projectile_physics(_delta):
 		velocity.y = -bounceVelocity
 
 func on_impact():
-	toggle_all_hitboxes("off")
-	change_state(GlobalVariables.ProjectileState.IMPACT)
-	projectilecollider.set_deferred("disabled", true)
+	if projectileSpecialInteraction == GlobalVariables.SpecialHitboxType.REFLECT:
+		print("fireball on impact special " +str(parentNode.name))
+		projectileSpecialInteraction = null
+	else:
+		print("fireball on impact not special " +str(parentNode.name))
+		toggle_all_hitboxes("off")
+		change_state(GlobalVariables.ProjectileState.IMPACT)
+		projectilecollider.set_deferred("disabled", true)

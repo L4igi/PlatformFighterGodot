@@ -1388,7 +1388,8 @@
 		"launchAngle_1": 260,
 		"knockBackGrowth_1": 0,
 		"effects_1":{
-			"effect1": "REVERSE"
+			"effect1": "REVERSE",
+			"effect2": "REFLECT"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,
@@ -1411,7 +1412,8 @@
 		"launchAngle_1": 260,
 		"knockBackGrowth_1": 0,
 		"effects_1":{
-			"effect1": "REVERSE"
+			"effect1": "REVERSE",
+			"effect2": "REFLECT"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,
@@ -1430,7 +1432,8 @@
 		"launchAngle_1": 260,
 		"knockBackGrowth_1": 0,
 		"effects_1":{
-			"effect1": "REVERSE"
+			"effect1": "REVERSE",
+			"effect2": "REFLECT"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,

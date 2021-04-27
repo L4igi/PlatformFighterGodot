@@ -228,7 +228,8 @@ var counterDamageMultiplier = 1.2
 var counteredHitlagFrames = 50.0
 #landinglag
 var normalLandingLag = 3.0
-
+#interactionobject
+var currentInteractionObject = null
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -431,7 +432,6 @@ func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, i
 		pushDirection = -1
 	initLaunchVelocity = pushDirection * Vector2(400, 0)
 	bufferHitLagFrames = hitLagFrames
-	change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	#((damage * parameters.shield.mult * projectileMult * perfectshieldMult * groundedMult * aerialMult) + parameters.shield.constant) * 0.09 * perfectshieldMult2;
 	
 func calculate_attack_knockback(attackDamage, attackBaseKnockBack, knockBackScaling):
@@ -839,6 +839,8 @@ func character_attacked_handler(hitLagFrames):
 	#handle superarmour 
 	if superarmour_handler():
 		state.create_hitlag_timer(bufferHitLagFrames)
+	if currentState == GlobalVariables.CharacterState.SHIELD:
+		change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	elif !perfectShieldActivated:
 		change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	else:
@@ -905,35 +907,23 @@ func set_hitboxes_active(active = 0):
 			state.hitBoxesActive = true
 		1:
 			state.hitBoxesActive = false
-			
-#call these two functions in reverse order if effect is applied by attack
-func apply_special_hitbox_effect_attacked(effectArray, attackingObject, attackingDamage, interactionType):
-#	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
-	for effect in effectArray:
-		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
-				handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.REFLECT:
-				handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.ABSORB:
-				handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.COUNTER:
-				handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage)
 					
-func apply_special_hitbox_effect_attacking(effectArray, attackedObject, attackingDamage, interactionType):
+func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage, interactionType):
 #	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+	var characterInteracted = false
 	for effect in effectArray:
 		match effect: 
 			GlobalVariables.SpecialHitboxType.REVERSE:
-				handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage)
+				handle_effect_reverse(interactionType, interactionObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.REFLECT:
-				handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage)
+				handle_effect_reflect(interactionType, interactionObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.ABSORB:
-				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
+				handle_effect_absorb(interactionType, interactionObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.COUNTER:
-				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
+				handle_effect_counter(interactionType, interactionObject, attackingDamage)
+	return characterInteracted
 				
-func handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage):
+func handle_effect_reverse(interactionType, interactionObject, attackingDamage):
 	match interactionType:
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			pass
@@ -952,43 +942,22 @@ func handle_effect_reverse_attacking(interactionType, attackedObject, attackingD
 					GlobalVariables.MoveDirection.RIGHT:
 						currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 						state.mirror_areas()
-			
-func handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage):
+
+func handle_effect_reflect(interactionType, interactionObject, attackingDamage):
 	match interactionType:
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			pass
 		GlobalVariables.HitBoxInteractionType.CONNECTED:
 			pass
 	
-func handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage):
+func handle_effect_absorb(interactionType, interactionObject, attackingDamage):
 	match interactionType:
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			pass
 		GlobalVariables.HitBoxInteractionType.CONNECTED:
 			pass
 	
-func handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage):
-	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CLASHED:
-			pass
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
-			pass
-	
-func handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage):
-	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CLASHED:
-			pass
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
-			pass
-	
-func handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage):
-	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CLASHED:
-			pass
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
-			pass
-	
-func handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage):
+func handle_effect_counter(interactionType, interactionObject, attackingDamage):
 	match interactionType:
 		GlobalVariables.HitBoxInteractionType.CLASHED:
 			toggle_all_hitboxes("off")
@@ -996,15 +965,15 @@ func handle_effect_counter_attacking(interactionType, attackedObject, attackingD
 		GlobalVariables.HitBoxInteractionType.CONNECTED:
 			pass
 	
-func handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage):
-	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CLASHED:
-			toggle_all_hitboxes("off")
-			bufferedCounterDamage = attackingDamage
-			change_state(GlobalVariables.CharacterState.COUNTER)
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
-			pass
-	
+#func handle_effect_counter(interactionType, attackingObject, attackingDamage):
+#	match interactionType:
+#		GlobalVariables.HitBoxInteractionType.CLASHED:
+#			toggle_all_hitboxes("off")
+#			bufferedCounterDamage = attackingDamage
+#			change_state(GlobalVariables.CharacterState.COUNTER)
+#		GlobalVariables.HitBoxInteractionType.CONNECTED:
+#			pass
+#
 
 func reverse_inputs():
 	if reverseTimer.get_time_left():

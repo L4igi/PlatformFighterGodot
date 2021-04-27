@@ -12,6 +12,7 @@ var hitlagAttackedTimer = null
 var bufferedAnimation = null
 #state done 
 var stateDone = false
+ 
 
 func _ready():
 	hitlagTimer = create_timer("on_hitlag_timeout", "HitLagTimer")
@@ -72,4 +73,3 @@ func gravity_on_off(status):
 		projectile.gravity = projectile.baseGravity
 	elif status == "off":
 		projectile.gravity = 0
-

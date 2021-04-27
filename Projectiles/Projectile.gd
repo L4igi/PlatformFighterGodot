@@ -44,8 +44,12 @@ var onSolidGround = null
 var parentNode = null
 #hitboxes and hurtboxes 
 onready var projectilecollider = get_node("ProjectileCollider")
+#interactionobject
+var currentInteractionObject = null
+var projectileSpecialInteraction = null
 
 func _ready():
+	self.set_collision_mask_bit(0,false)
 	self.set_collision_mask_bit(1,true)
 	self.set_collision_mask_bit(2,true)
 	attackDataEnum = GlobalVariables.ProjectileAnimations
@@ -104,42 +108,32 @@ func calculate_vertical_velocity(_delta):
 	if velocity.y >= maxFallSpeed: 
 		velocity.y = maxFallSpeed
 
-func apply_special_hitbox_effect_attacked(effectArray, attackingObject, attackingDamage, interactionType):
-	print(self.name + " is apply_special_hitbox_effect_attacked " +str(effectArray) + " " +str(attackingObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
-	for effect in effectArray:
-		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
-				pass
-#				handle_effect_reverse_attacked(interactionType, attackingObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.REFLECT:
-				pass
-#				handle_effect_reflect_attacked(interactionType, attackingObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.ABSORB:
-				pass
-#				handle_effect_absorb_attacked(interactionType, attackingObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.COUNTER:
-				pass
-#				handle_effect_counter_attacked(interactionType, attackingObject, attackingDamage)
-
-func apply_special_hitbox_effect_attacking(effectArray, attackedObject, attackingDamage, interactionType):
-	print(self.name + " apply_special_hitbox_effect_attacking " +str(effectArray) + " " +str(attackedObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage, interactionType):
+	print(self.name + " apply_special_hitbox_effect " +str(effectArray) + " " +str(interactionObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+	var projectileInteracted = false
 	for effect in effectArray:
 		match effect: 
 			GlobalVariables.SpecialHitboxType.REVERSE:
 				pass
 #				handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.REFLECT:
-				handle_effect_reflect_attacking(interactionType, attackedObject, attackingDamage)
+				if handle_effect_reflect_attacking(interactionType, interactionObject, attackingDamage):
+					projectileInteracted = true
 			GlobalVariables.SpecialHitboxType.ABSORB:
 				pass
+				return false
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.COUNTER:
 				pass
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
+	return projectileInteracted
 
-func handle_effect_reflect_attacking(interactionType, attackingObject, attackingDamage):
-	parentNode = attackingObject
-	velocity.x *= -2
+func handle_effect_reflect_attacking(interactionType, interactionObject, attackingDamage):
+	projectileSpecialInteraction = GlobalVariables.SpecialHitboxType.REFLECT
+	parentNode = interactionObject
+	print("InteractionObject Name " +str(interactionObject.name))
+	initLaunchVelocity.x *= -2
+	return true
 
 func check_ground_platform_collision():
 	if velocity.y >= 0 && get_slide_count():
