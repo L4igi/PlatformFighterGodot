@@ -3497,7 +3497,7 @@ tracks/5/keys = {
 "times": PoolRealArray( 0.116667, 0.35 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, true ]
+"values": [ false, true ]
 }
 tracks/6/type = "value"
 tracks/6/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:position")
@@ -3530,7 +3530,7 @@ tracks/8/loop_wrap = true
 tracks/8/imported = false
 tracks/8/enabled = true
 tracks/8/keys = {
-"times": PoolRealArray( 0.116667, 0.25 ),
+"times": PoolRealArray( 0.2, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
@@ -3566,7 +3566,7 @@ tracks/11/loop_wrap = true
 tracks/11/imported = false
 tracks/11/enabled = true
 tracks/11/keys = {
-"times": PoolRealArray( 0.116667, 0.25 ),
+"times": PoolRealArray( 0.2, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
@@ -4316,10 +4316,9 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 [node name="Tween" type="Tween" parent="."]
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( -6.00005, -4.66665 )
 frames = SubResource( 2 )
 animation = "sidespecial"
-frame = 13
+frame = 7
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"

@@ -99,7 +99,7 @@ func apply_specialhitbox_attacked(specialHitBoxEffects, specialHighestHitboxAtta
 		damage = currentAttackData["damage_" + String(currentHitBoxNumber)]
 		interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CLASHED
 #	attackingObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackedObject, damage, interactionTypeToUse)
-	attackedObject.apply_special_hitbox_effect(specialHitBoxEffects, attackingObject, damage, interactionTypeToUse)
+	attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, damage, interactionTypeToUse)
 	specialHitboxesConnected.clear()
 	specialHitboxesClashed.clear()
 	specialHitboxAttackedObject.clear()
@@ -185,6 +185,7 @@ func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInve
 			attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
 	else:
 		attackedObject.is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
+	var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, GlobalVariables.HitBoxInteractionType.CONNECTED)
 	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier, launchVelocity, weightLaunchVelocity)
 
 func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects):

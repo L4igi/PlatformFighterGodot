@@ -50,13 +50,13 @@ var controlsP1 = {
 var controlsP2 = {
 	"up": "Up2",
 	"down" : "Down2",
-	"left" : "Right1",
-	"right" : "Left1",
+	"left" : "Left2",
+	"right" : "Right2",
 	"jump" : "Jump2",
-	"attack" : "Attack1",
+	"attack" : "Attack2",
 	"shield" : "Shield2",
 	"grab" : "Grab2", 
-	"special": "Special1"
+	"special": "Special2"
 }
 
 var gameRunning = 0

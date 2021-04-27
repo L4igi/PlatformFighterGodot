@@ -109,7 +109,7 @@ func calculate_vertical_velocity(_delta):
 	if velocity.y >= maxFallSpeed: 
 		velocity.y = maxFallSpeed
 
-func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage, interactionType):
+func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attackingDamage, interactionType):
 	print(self.name + " apply_special_hitbox_effect " +str(effectArray) + " " +str(interactionObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
 	var projectileInteracted = false
 	for effect in effectArray:
@@ -118,7 +118,7 @@ func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage
 				pass
 #				handle_effect_reverse_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.REFLECT:
-				if handle_effect_reflect_attacking(interactionType, interactionObject, attackingDamage):
+				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
 			GlobalVariables.SpecialHitboxType.ABSORB:
 				pass
@@ -129,7 +129,7 @@ func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
 	return projectileInteracted
 
-func handle_effect_reflect_attacking(interactionType, interactionObject, attackingDamage):
+func handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 	projectileSpecialInteraction = GlobalVariables.SpecialHitboxType.REFLECT
 	match currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT:
