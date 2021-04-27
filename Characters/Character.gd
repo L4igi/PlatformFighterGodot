@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 class_name Character
+
+var characterName = null
 #base stats to return to after changes were made
 var baseDisableInputInfluence = 1200
 var baseWalkMaxSpeed = 300
@@ -395,6 +397,8 @@ func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, lau
 	else: 
 		shortHitStun = true
 	backUpHitStunTime = hitStun
+	print(name)
+	print(backUpHitStunTime)
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
 		

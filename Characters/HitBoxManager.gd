@@ -130,12 +130,12 @@ func manage_collisionboxes_and_hitboxes_connected_one_winner(collidedHitBoxes,at
 		set_hitlag_frames(attackingObject, attackingObjectHitlagFrames)
 	var attackedObjectHitlagFrames = calc_hitlag_attacked(collidedHitBoxes,attackedObjectArrayPos)
 	set_hitlag_attacked_frames(attackedObject, attackedObjectHitlagFrames)
-	collidedHitBoxes[attackedObjectArrayPos][8].call_funcv(collidedHitBoxes[attackedObjectArrayPos][9])
+	collidedHitBoxes[attackingObjectArrayPos][8].call_funcv(collidedHitBoxes[attackingObjectArrayPos][9])
 			
 	
 func manage_collisionboxes_and_hitboxes_connected_no_winner(collidedHitBoxes,attackingObject1ArrayPos, attackingObject2ArrayPos):
-	var attackingObject1 = collidedHitBoxes[attackingObject1ArrayPos][0]
-	var attackingObject2 = collidedHitBoxes[attackingObject2ArrayPos][0]
+	var attackingObject1 = collidedHitBoxes[attackingObject1ArrayPos][1]
+	var attackingObject2 = collidedHitBoxes[attackingObject2ArrayPos][1]
 	#both objects have connecting collisionboxes
 	if !collidedHitBoxes[attackingObject1ArrayPos][4].empty()\
 	&& !collidedHitBoxes[attackingObject2ArrayPos][4].empty():

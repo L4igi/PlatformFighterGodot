@@ -23,6 +23,7 @@ func spawn_characters():
 	self.add_child(char1)
 	char1.global_position = Vector2(300, -500)
 	char1.set_name("Mario")
+	char1.characterName = "Mario"
 	characterList.append(char1)
 	char1.characterControls = GlobalVariables.controlsP1
 	setup_controls_characters(char1, GlobalVariables.controlsP1)
@@ -30,6 +31,7 @@ func spawn_characters():
 	self.add_child(char2)
 	char2.global_position = Vector2(700, -500)
 	char2.set_name("DarkMario")
+	char2.characterName = "DarkMario"
 	characterList.append(char2)
 	char2.characterControls = GlobalVariables.controlsP2
 	char2.get_node("AnimatedSprite").set_self_modulate(Color(0,1,0,1))
