@@ -12,8 +12,8 @@ func _process(delta):
 		#get attack damage from colliding hitboxes
 		var object1Damage = collidedHitBoxes[0][1] 
 		var object2Damage = collidedHitBoxes[1][1]
-		#if special hitbox interacted successfully
-		if manage_hitbox_special_interactions(0,1):
+		#if special hitbox interacted character projectile
+		if manage_hitbox_special_interactions_projectile(0,1):
 			pass
 		#object one wins trade finish attack object 2 enters rebound or attacked if hitboxconneteted != empty
 		elif object1Damage > object2Damage + 9:
@@ -36,21 +36,33 @@ func _process(delta):
 				manage_only_hitboxes_connected_no_winner(0,1)
 		collidedHitBoxes.clear()
 		
-func manage_hitbox_special_interactions(object1ArrayPos, object2ArrayPos):
+func manage_hitbox_special_interactions_projectile(object1ArrayPos, object2ArrayPos):
 	var object1 = collidedHitBoxes[object1ArrayPos][0]
 	var object2 = collidedHitBoxes[object2ArrayPos][0]
 #	print("OBJECT 1 " +str(object1.name))
 #	print("OBJECT 2 " +str(object2.name))
-	var damage = 0.0
-	var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
-	var object1Interacted = object2.apply_special_hitbox_effect(collidedHitBoxes[object1ArrayPos][6], object1, damage, interactionTypeToUse)
-	var object2Interacted = object1.apply_special_hitbox_effect(collidedHitBoxes[object2ArrayPos][6], object2, damage, interactionTypeToUse)
-	if object1Interacted || object2Interacted:
-		var object1HitlagFrames = calc_hitlag_attacker(object1ArrayPos)
-		set_hitlag_frames(object1, object1HitlagFrames)
-		var object2HitlagFrames = calc_hitlag_attacker(object2ArrayPos)
-		set_hitlag_frames(object2, object2HitlagFrames)
-		return true
+	if object1.is_in_group("Projectile")||object2.is_in_group("Projectile"):
+		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+		var object1Interacted = object2.apply_special_hitbox_effect(collidedHitBoxes[object1ArrayPos][6], object1, collidedHitBoxes[0][1] , interactionTypeToUse)
+		var object2Interacted = object1.apply_special_hitbox_effect(collidedHitBoxes[object2ArrayPos][6], object2, collidedHitBoxes[1][1] , interactionTypeToUse)
+		if object1Interacted || object2Interacted:
+			var object1HitlagFrames = calc_hitlag_attacker(object1ArrayPos)
+			set_hitlag_frames(object1, object1HitlagFrames)
+			var object2HitlagFrames = calc_hitlag_attacker(object2ArrayPos)
+			set_hitlag_frames(object2, object2HitlagFrames)
+			return true
+	return false
+	
+#after one character won the interaction only interacted of this character is called
+func manage_hitbox_special_interactions_character(object1ArrayPos, object2ArrayPos):
+	var object1 = collidedHitBoxes[object1ArrayPos][0]
+	var object2 = collidedHitBoxes[object2ArrayPos][0]
+#	print("OBJECT 1 " +str(object1.name))
+#	print("OBJECT 2 " +str(object2.name))
+	if object1.is_in_group("Character")&&object2.is_in_group("Character"):
+		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+		var object1Interacted = object2.apply_special_hitbox_effect(collidedHitBoxes[object1ArrayPos][6], object1, collidedHitBoxes[0][1] , interactionTypeToUse)
+		var object2Interacted = object1.apply_special_hitbox_effect(collidedHitBoxes[object2ArrayPos][6], object2, collidedHitBoxes[1][1] , interactionTypeToUse)
 	return false
 		
 func manage_only_hitboxes_connected_one_winner(attackingObjectArrayPos, attackedObjectArrayPos):

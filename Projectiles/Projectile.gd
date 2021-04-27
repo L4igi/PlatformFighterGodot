@@ -32,6 +32,7 @@ var initLaunchVelocity = 0.0
 var airStopForce = 100
 var airMaxSpeed = 100
 var maxFallSpeed = 100
+var baseAirMaxSpeed = 100
 #inputs 
 var disableInput = true
 var backUpDisableInput = false
@@ -130,9 +131,14 @@ func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage
 
 func handle_effect_reflect_attacking(interactionType, interactionObject, attackingDamage):
 	projectileSpecialInteraction = GlobalVariables.SpecialHitboxType.REFLECT
+	match currentMoveDirection:
+		GlobalVariables.MoveDirection.LEFT:
+			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+			initLaunchVelocity = Vector2(baseAirMaxSpeed * 2, maxFallSpeed)
+		GlobalVariables.MoveDirection.RIGHT:
+			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+			initLaunchVelocity = Vector2(baseAirMaxSpeed * -2, maxFallSpeed)
 	parentNode = interactionObject
-	print("InteractionObject Name " +str(interactionObject.name))
-	initLaunchVelocity.x *= -2
 	return true
 
 func check_ground_platform_collision():

@@ -15,6 +15,7 @@ func set_base_stats(parentNode):
 	initLaunchVelocity = 0.0
 #	var airStopForce = 100
 	airMaxSpeed = 200
+	baseAirMaxSpeed = 500
 	maxFallSpeed = 10000
 	bounceVelocity = 600
 	match parentNode.currentMoveDirection: 
@@ -22,6 +23,7 @@ func set_base_stats(parentNode):
 			velocity = Vector2(-airMaxSpeed,0)
 		GlobalVariables.MoveDirection.RIGHT:
 			velocity = Vector2(airMaxSpeed,0)
+	currentMoveDirection = parentNode.currentMoveDirection
 	self.name = "Fireball"
 	deleteOnImpact = true
 	set_collision_mask_bit(0,false)
@@ -35,7 +37,7 @@ func process_projectile_physics(_delta):
 	calculate_vertical_velocity(_delta)
 	velocity = move_and_slide(velocity)  
 	if check_ground_platform_collision():
-		airMaxSpeed = 500
+		airMaxSpeed = baseAirMaxSpeed
 		velocity = velocity.bounce(Vector2(0,-1))
 		velocity.y = -bounceVelocity
 

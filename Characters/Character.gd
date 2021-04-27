@@ -230,6 +230,7 @@ var counteredHitlagFrames = 50.0
 var normalLandingLag = 3.0
 #interactionobject
 var currentInteractionObject = null
+#hitboxmanager
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -914,6 +915,7 @@ func apply_special_hitbox_effect(effectArray, interactionObject, attackingDamage
 	for effect in effectArray:
 		match effect: 
 			GlobalVariables.SpecialHitboxType.REVERSE:
+				characterInteracted = true
 				handle_effect_reverse(interactionType, interactionObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.REFLECT:
 				handle_effect_reflect(interactionType, interactionObject, attackingDamage)

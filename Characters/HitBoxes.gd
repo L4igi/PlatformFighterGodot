@@ -248,8 +248,8 @@ func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier, launchVel
 		|| attackedObject.perfectShieldActivated:
 			attackingObjectHitlag = floor(attackingObjectHitlag * 0.67)
 			attackedObjectHitlag = floor(attackedObjectHitlag * 0.67)
-	attackingObjectHitlag = 200
-	attackedObjectHitlag = 200
+#	attackingObjectHitlag = 200
+#	attackedObjectHitlag = 200
 	attackingObject.state.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
 	print("attackingObjectHitlag " +str(attackingObjectHitlag))
 	print("attackedObjectHitlag " +str(attackedObjectHitlag))
