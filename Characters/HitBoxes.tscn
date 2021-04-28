@@ -45,11 +45,11 @@ modulate = Color( 0.121569, 0.588235, 0.0235294, 1 )
 shape = SubResource( 3 )
 disabled = true
 
-[node name="HitBoxSpecial" type="Area2D" parent="."]
-
-[node name="Special" type="CollisionShape2D" parent="HitBoxSpecial" groups=[
-"SpecialHitBox",
+[node name="HitBoxSpecial" type="Area2D" parent="." groups=[
+"Hitbox",
 ]]
+
+[node name="Special" type="CollisionShape2D" parent="HitBoxSpecial"]
 shape = SubResource( 4 )
 disabled = true
 

@@ -3585,6 +3585,26 @@ tracks/12/keys = {
 "method": "apply_special_animation_steps"
 } ]
 }
+tracks/13/type = "method"
+tracks/13/path = NodePath("..")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"times": PoolRealArray( 0, 0.2, 0.266667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [ 1 ],
+"method": "set_current_hitbox"
+}, {
+"args": [ 2 ],
+"method": "set_current_hitbox"
+}, {
+"args": [ 1 ],
+"method": "set_current_hitbox"
+} ]
+}
 
 [sub_resource type="Animation" id=53]
 length = 0.7
