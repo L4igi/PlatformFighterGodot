@@ -170,6 +170,11 @@ func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInvers
 	|| (attackingObject.is_in_group("Character")\
 	&& attackedObject.is_in_group("Projectile")): 
 		apply_attack_clashed_character_projectile(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects)
+	#projectile projectile interaction 
+	elif attackedObject.is_in_group("Projectile")\
+	&& attackingObject.is_in_group("Projectile"):
+		apply_attack_clashed_projectile_projectile(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects) 
+			
 			
 func apply_attack_clashed_character_character(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects):
 		var attackingObjectAttackType = GlobalVariables.match_attack_type_character(attackingObject.currentAttack)
@@ -198,12 +203,25 @@ func apply_attack_clashed_character_character(attackDamage, hitStun, launchAngle
 
 func apply_attack_clashed_character_projectile(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects):
 	#if projectile belongs to attacker let it pass through 
-	if attackingObject.is_in_group("Projectile"):
-		if attackingObject.parentNode == attackedObject: 
-			return 
-	elif attackedObject.is_in_group("Projectile"):
-		if attackedObject.parentNode == attackingObject: 
-			return 
+#	if attackingObject.is_in_group("Projectile"):
+#		if attackingObject.parentNode == attackedObject: 
+#			return 
+#	elif attackedObject.is_in_group("Projectile"):
+#		if attackedObject.parentNode == attackingObject: 
+#			return 
+	#if one attack damage is > 9% other attack damage, it is outprioritized, this attack hits
+	var isAttackedHandlerParamArray = [attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position]
+	var isAttackedHandlerFuncRef = funcref(attackedObject, "is_attacked_handler")
+	HitBoxManager.add_colliding_hitbox(attackingObject, attackedObject, attackDamage, hitlagMultiplier, hitBoxesConnectedCopy, reboundingHitbox, transcendentHitBox, specialHitBoxEffects, isAttackedHandlerFuncRef, isAttackedHandlerParamArray)
+
+func apply_attack_clashed_projectile_projectile(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects) :
+	#if projectile belongs to attacker let it pass through 
+#	if attackingObject.is_in_group("Projectile"):
+#		if attackingObject.parentNode == attackedObject: 
+#			return 
+#	elif attackedObject.is_in_group("Projectile"):
+#		if attackedObject.parentNode == attackingObject: 
+#			return 
 	#if one attack damage is > 9% other attack damage, it is outprioritized, this attack hits
 	var isAttackedHandlerParamArray = [attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position]
 	var isAttackedHandlerFuncRef = funcref(attackedObject, "is_attacked_handler")
@@ -265,8 +283,8 @@ func check_hitbox_areas(area, hitboxType):
 		if attackingObject != area.get_parent().get_parent().get_parent(): 
 			attackedObject = area.get_parent().get_parent().get_parent()
 			attackingObject.currentInteractionObject = attackedObject
-			if is_projectile_parentNode_interaction(attackedObject):
-				return
+#			if is_projectile_parentNode_interaction(attackedObject):
+#				return
 			if hitBoxesClashed.empty():
 				apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CLASHED)
 			if !hitBoxesClashed.has(hitboxType):

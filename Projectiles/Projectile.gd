@@ -28,8 +28,7 @@ var bufferedAnimation = null
 #attributes 
 var gravity = 1000.0
 var baseGravity = 1000
-var initLaunchVelocity = 0.0
-var airStopForce = 100
+var initLaunchVelocity = null
 var airMaxSpeed = 100
 var maxFallSpeed = 100
 var baseAirMaxSpeed = 100
@@ -130,7 +129,7 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	return projectileInteracted
 
 func handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
-	projectileSpecialInteraction = GlobalVariables.SpecialHitboxType.REFLECT
+	projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.REFLECTED
 	match currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT:
 			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT

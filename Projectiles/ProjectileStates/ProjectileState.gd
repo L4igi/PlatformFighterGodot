@@ -44,7 +44,9 @@ func create_hitlag_timer(waitTime):
 	#	character.toggle_all_hitboxes("off")
 		animationPlayer.stop(false)
 		gravity_on_off("off")
-		projectile.initLaunchVelocity = projectile.velocity
+		if projectile.initLaunchVelocity == null:
+			projectile.initLaunchVelocity = projectile.velocity
+		print("PROJECTILE VELOCITY " +str(projectile.velocity))
 		projectile.velocity = Vector2.ZERO
 		projectile.backUpDisableInput = projectile.disableInput
 		projectile.disableInput = true
@@ -53,6 +55,7 @@ func create_hitlag_timer(waitTime):
 func on_hitlag_timeout():
 	gravity_on_off("on")
 	projectile.velocity = projectile.initLaunchVelocity
+	projectile.initLaunchVelocity = null
 	animationPlayer.play()
 	projectile.on_impact()
 

@@ -21,14 +21,14 @@
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 10 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 5 ), ExtResource( 11 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 1 ) ],
-"loop": true,
-"name": "shoot",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 2 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 12 ) ],
 "loop": true,
 "name": "impact",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 10 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 5 ), ExtResource( 11 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "shoot",
 "speed": 5.0
 } ]
 
@@ -127,7 +127,7 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "impact"
+animation = "shoot"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "shoot"
@@ -139,6 +139,10 @@ visible = true
 
 [node name="HitBoxSweetArea" parent="AnimatedSprite/HitBoxes" index="0"]
 visible = false
+
+[node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
+scale = Vector2( 0.2, 0.2 )
+disabled = false
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
 visible = false

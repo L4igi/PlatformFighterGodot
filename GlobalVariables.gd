@@ -28,6 +28,8 @@ enum AttackType {GROUNDED, AERIAL, PROJECTILE}
 
 enum SpecialHitboxType {REFLECT, REVERSE, ABSORB, COUNTER, NEUTRAL}
 
+enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS}
+
 #connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
 enum HitBoxInteractionType {CONNECTED, CLASHED}
 
@@ -56,7 +58,7 @@ var controlsP2 = {
 	"attack" : "Attack2",
 	"shield" : "Shield2",
 	"grab" : "Grab2", 
-	"special": "Special2"
+	"special": "Special1"
 }
 
 var gameRunning = 0

@@ -4430,7 +4430,6 @@ disabled = false
 [node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0"]
 position = Vector2( 11.6001, 3.06665 )
 scale = Vector2( 2, 2 )
-disabled = false
 
 [node name="InteractionAreas" parent="." instance=ExtResource( 66 )]
 visible = false

@@ -792,15 +792,15 @@ func create_platformCollisionDisabled_timer(waitTime):
 func on_platformCollisionDisabled_timeout():
 	call_deferred("set_collision_mask_bit",1,true)
 
-func toggle_all_hitboxes(onOff):
+func toggle_all_hitboxes(onOff, toggleSpecial = false):
 	match onOff: 
 		"on":
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
 						#todo: maybe change this to handle special hitboxes differently
-						if !hitbox.is_in_group("SpecialHitBox"):
-							hitbox.set_deferred('disabled',false)
+#						if !toggleSpecial && !hitbox.is_in_group("SpecialHitBox"):
+						hitbox.set_deferred('disabled',false)
 		"off":
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():

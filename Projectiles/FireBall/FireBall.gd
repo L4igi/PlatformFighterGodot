@@ -12,7 +12,6 @@ func _ready():
 func set_base_stats(parentNode):
 	gravity = 2000.0
 	baseGravity = 2000.0
-	initLaunchVelocity = 0.0
 #	var airStopForce = 100
 	airMaxSpeed = 200
 	baseAirMaxSpeed = 500
@@ -42,11 +41,22 @@ func process_projectile_physics(_delta):
 		velocity.y = -bounceVelocity
 
 func on_impact():
-	if projectileSpecialInteraction == GlobalVariables.SpecialHitboxType.REFLECT:
-		print("fireball on impact special " +str(parentNode.name))
-		projectileSpecialInteraction = null
-	else:
-		print("fireball on impact not special " +str(parentNode.name))
-		toggle_all_hitboxes("off")
-		change_state(GlobalVariables.ProjectileState.IMPACT)
-		projectilecollider.set_deferred("disabled", true)
+	match projectileSpecialInteraction:
+		GlobalVariables.ProjectileInteractions.REFLECTED:
+			print("fireball on impact REFLECTED " +str(parentNode.name))
+		GlobalVariables.ProjectileInteractions.ABSORBED:
+			print("fireball on impact ABSORBED " +str(parentNode.name))
+		GlobalVariables.ProjectileInteractions.COUNTERED:
+			print("fireball on impact COUNTERED " +str(parentNode.name))
+		GlobalVariables.ProjectileInteractions.DESTROYED:
+			print("fireball on impact DESTROYED " +str(parentNode.name))
+		GlobalVariables.ProjectileInteractions.IMPACTED:
+			print("fireball on impact IMPACTED " +str(parentNode.name))
+		GlobalVariables.ProjectileInteractions.CONTINOUS:
+			print("fireball on impact CONTINOUS " +str(parentNode.name))
+		_:
+			print("fireball on impact not special " +str(parentNode.name))
+			toggle_all_hitboxes("off")
+			change_state(GlobalVariables.ProjectileState.IMPACT)
+			projectilecollider.set_deferred("disabled", true)
+	projectileSpecialInteraction = null
