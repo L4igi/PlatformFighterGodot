@@ -414,8 +414,6 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 	else: 
 		shortHitStun = true
 	backUpHitStunTime = hitStun
-	print(name)
-	print(backUpHitStunTime)
 	if characterShield.shieldBreak:
 		characterShield.shieldBreak_end()
 		

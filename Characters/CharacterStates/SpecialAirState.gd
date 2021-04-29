@@ -73,8 +73,11 @@ func _physics_process(_delta):
 				character.check_special_animation_steps()
 				character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
 			else:
-				var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
-				character.applyLandingLag = currentAttackData["landingLag"]
+				if character.attackData.has(GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):
+					var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
+					character.applyLandingLag = currentAttackData["landingLag"]
+				else:
+					character.applyLandingLag = character.normalLandingLag
 			character.change_state(GlobalVariables.CharacterState.GROUND)
 			return
 			#toggle_all_hitboxes("off")

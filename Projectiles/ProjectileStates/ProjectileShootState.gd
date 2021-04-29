@@ -3,7 +3,6 @@ extends ProjectileState
 class_name ProjectileShootState
 
 func _ready():
-	print("SHOOOT")
 	play_animation("shoot")
 	
 func setup(change_state, animationPlayer, projectile):

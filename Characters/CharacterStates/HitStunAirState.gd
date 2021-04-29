@@ -154,8 +154,6 @@ func handle_tech(collisionNormal):
 func on_hitlagAttacked_timeout():
 	.on_hitlagAttacked_timeout()
 	character.calculate_hitlag_di()
-	print(character.name)
-	print(character.backUpHitStunTime)
 	create_hitStun_timer(character.backUpHitStunTime)
 	if character.shortHitStun:
 		play_animation("hurt_short")

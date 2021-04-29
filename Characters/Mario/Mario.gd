@@ -135,9 +135,6 @@ func change_to_special_state():
 		else:
 			change_state(GlobalVariables.CharacterState.SPECIALGROUND)
 	else:
-		print(grabbedItem)
-		print(get_input_direction_x())
-		print(get_input_direction_y())
 		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
 			change_state(GlobalVariables.CharacterState.ATTACKAIR)
 		else:

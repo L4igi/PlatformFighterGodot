@@ -424,7 +424,6 @@ func on_hitlagAttacked_timeout():
 		enable_player_input()
 
 func on_shorthop_timeout():
-	print(character.currentState)
 	if shortHopTimer:
 		.on_shorthop_timeout()
 		inMovementLag = false

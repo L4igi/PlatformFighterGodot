@@ -506,7 +506,7 @@ func create_hitlagAttacked_timer(waitTime):
 	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
-	print("current damage " +str(character.damagePercent))
+#	print("current damage " +str(character.damagePercent))
 	gravity_on_off("on")
 	attackedInitLaunchAngle = atan2(character.initLaunchVelocity.y, character.initLaunchVelocity.x)
 	character.velocity = character.initLaunchVelocity
@@ -595,7 +595,6 @@ func initialize_superarmour():
 		character.damagePercentArmour = currentAttackData["damagePercentArmour"]
 		character.knockbackArmour = currentAttackData["knockbackArmour"]
 		character.multiHitArmour = currentAttackData["multiHitArmour"]
-		print(character.damagePercentArmour)
 		
 func manage_disabled_inputDI():
 	if character.currentAttack && !character.is_currentAttack_itemthrow():

@@ -236,8 +236,8 @@ func calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier, launchVel
 #	attackingObjectHitlag = 200
 #	attackedObjectHitlag = 200
 	GlobalVariables.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
-	print("attackingObjectHitlag " +str(attackingObjectHitlag))
-	print("attackedObjectHitlag " +str(attackedObjectHitlag))
+#	print("attackingObjectHitlag " +str(attackingObjectHitlag))
+#	print("attackedObjectHitlag " +str(attackedObjectHitlag))
 	if launchVelocity == 0 && weightLaunchVelocity == 0:
 		attackedObject.is_attacked_handler_no_knockback(attackedObjectHitlag, attackingObject)
 	else:
@@ -317,13 +317,15 @@ func check_item_catch(attackingObject, attackedObject):
 	if attackingObject.is_in_group("Projectile")\
 		&& attackedObject.is_in_group("Character"):
 			if attackingObject.get_parent() != attackedObject:
-				if attackedObject.check_item_catch_attack():
+				if attackedObject.check_item_catch_attack()\
+				&& attackingObject.grabAble:
 					attackingObject.on_projectile_catch(attackedObject)
 			return true
 	elif attackedObject.is_in_group("Projectile")\
 		&& attackingObject.is_in_group("Character"):
 			if attackedObject.get_parent() != attackingObject:
-				if attackingObject.check_item_catch_attack():
+				if attackingObject.check_item_catch_attack()\
+				&& attackedObject.grabAble:
 					attackedObject.on_projectile_catch(attackingObject)
 			return true
 	return false
@@ -420,8 +422,6 @@ func get_hitbox_by_area(area):
 func manage_hurtbox_special_interactions_projectile(attackingObject, attackedObject, specialHitBoxEffects, attackDamage):
 	if attackedObject.is_in_group("Projectile"):
 		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
-		print(attackedObject.name)
-		print(attackedObject.parentNode.name)
 		var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, interactionTypeToUse)
 		if attackedObjectInteracted:
 			return true

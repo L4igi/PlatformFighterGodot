@@ -25,7 +25,7 @@
 		"damage_1": 20.5,
 		"hitStun_1": 10,
 		"launchVelocity_1": 15,
-		"launchVelocityWeight_1": 15,
+		"launchVelocityWeight_1": 0,
 		"launchAngle_1": 270,
 		"knockBackGrowth_1": 100,
 		"effects_1": {

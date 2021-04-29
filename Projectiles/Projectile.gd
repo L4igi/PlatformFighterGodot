@@ -63,6 +63,8 @@ var backupDisabledHitboxes = []
 var projectileThrown = false
 #projectile already caught 
 var projectileCaughtThisFrame = false
+#hitboxes 
+onready var neutralHitbox = get_node("AnimatedSprite/HitBoxes/HitBoxNeutralArea/Neutral")
 
 func _ready():
 	self.set_collision_mask_bit(0,false)

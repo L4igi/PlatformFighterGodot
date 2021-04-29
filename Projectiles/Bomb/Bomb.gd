@@ -49,9 +49,11 @@ func on_impact():
 			print("bomb on impact Catch " +str(parentNode.name))
 #			projectile.on_projectile_catch()
 		_:
-			print("bomb on impact not special " +str(parentNode.name))
+#			print("bomb on impact not special " +str(parentNode.name))
 			toggle_all_hitboxes("off")
 			deleteOnImpact = true
+			parentNode = null
+			originalOwner = null
 			change_state(GlobalVariables.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null

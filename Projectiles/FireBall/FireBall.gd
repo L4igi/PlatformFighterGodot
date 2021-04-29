@@ -20,6 +20,7 @@ func set_base_stats(parentNode, originalOwner):
 	maxFallSpeed = 1000
 	bounceVelocity = 600
 	global_position = parentNode.interactionPoint.global_position
+	grabAble = false
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
