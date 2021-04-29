@@ -47,7 +47,6 @@ var parentNode = null
 #hitboxes and hurtboxes 
 onready var projectilecollider = get_node("ProjectileCollider")
 #interactionobject
-var currentInteractionObject = null
 var projectileSpecialInteraction = null
 #chargeable projectile
 var currentCharge = 0.0

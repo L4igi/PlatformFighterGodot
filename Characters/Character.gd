@@ -230,8 +230,6 @@ var counterDamageMultiplier = 1.2
 var counteredHitlagFrames = 50.0
 #landinglag
 var normalLandingLag = 3.0
-#interactionobject
-var currentInteractionObject = null
 #items 
 var grabbedItem = null
 #backuped disabled hitboxes
