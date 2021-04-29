@@ -122,8 +122,11 @@ func _physics_process(_delta):
 		var solidGroundCollision = check_ground_platform_collision(character.platformCollisionDisabledTimer.get_time_left())
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
-			var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
-			character.applyLandingLag = currentAttackData["landingLag"]
+			if character.attackData.has(GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):
+				var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
+				character.applyLandingLag = currentAttackData["landingLag"]
+			else:
+				character.applyLandingLag = character.normalLandingLag
 			if character.moveAirGroundTransition.has(character.currentAttack):
 				character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
 			character.change_state(GlobalVariables.CharacterState.GROUND)
@@ -132,7 +135,9 @@ func _physics_process(_delta):
 		if character.groundAirMoveTransition:
 			manage_ground_air_move_transition()
 		elif !character.disableInput:
-			if abs(get_input_direction_x()) == 0\
+			if character.grabbedItem: 
+				attack_handler_air_throw_attack()
+			elif abs(get_input_direction_x()) == 0\
 			&& abs(get_input_direction_y()) == 0:
 				play_attack_animation("nair")
 				character.currentAttack = GlobalVariables.CharacterAnimations.NAIR
@@ -159,3 +164,27 @@ func _physics_process(_delta):
 			
 func manage_ground_air_move_transition():
 	character.disableInput = true
+
+func attack_handler_air_throw_attack():
+	if (abs(get_input_direction_x()) == 0) \
+	&& get_input_direction_y() == 0:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")
+	elif get_input_direction_y() < 0:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMUP
+		play_attack_animation("throw_item_up")
+	elif get_input_direction_y() > 0:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMDOWN
+		play_attack_animation("throw_item_down")
+	elif get_input_direction_x() > 0:
+		if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+			character.mirror_areas()
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")
+	elif get_input_direction_x() < 0:
+		if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+			character.mirror_areas()
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")

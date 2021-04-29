@@ -261,6 +261,7 @@ func reset_attributes():
 	character.hitsTaken = 0
 	character.backUpDisableInputDI = false
 	character.backUpDisableInput = false
+	character.backupDisabledHitboxes.clear()
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
@@ -277,25 +278,18 @@ func calculate_vertical_velocity(_delta):
 	if character.velocity.y >= character.maxFallSpeed: 
 		character.velocity.y = character.maxFallSpeed
 
-func get_input_direction_x():
-	return Input.get_action_strength(character.right) - Input.get_action_strength(character.left)
-			
-func get_input_direction_y():
-	return Input.get_action_strength(character.down) - Input.get_action_strength(character.up)
-
 func gravity_on_off(status):
 	if status == "on":
 		character.gravity = character.baseGravity
 	elif status == "off":
 		character.gravity = 0
 	
-func mirror_areas():
-	match character.currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
-			character.set_scale(Vector2(-1*abs(character.get_scale().x), abs(character.get_scale().y)))
-		GlobalVariables.MoveDirection.RIGHT:
-			character.set_scale(Vector2(-1*abs(character.get_scale().x), -1*abs(character.get_scale().y)))
-
+func get_input_direction_x():
+	return Input.get_action_strength(character.right) - Input.get_action_strength(character.left)
+			
+func get_input_direction_y():
+	return Input.get_action_strength(character.down) - Input.get_action_strength(character.up)
+	
 func play_animation(animationToPlay, queue = false):
 #	print("play " +str(animationToPlay) +str(queue))
 	animationPlayer.playback_speed = 1
@@ -595,7 +589,7 @@ func double_jump_attack_handler():
 			character.velocity.x = character.airMaxSpeed * xInput 
 
 func initialize_superarmour():
-	if character.currentAttack:
+	if character.currentAttack && !character.is_currentAttack_itemthrow():
 		var combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
 		var currentAttackData = character.attackData[combinedAttackDataString]
 		character.damagePercentArmour = currentAttackData["damagePercentArmour"]
@@ -604,7 +598,7 @@ func initialize_superarmour():
 		print(character.damagePercentArmour)
 		
 func manage_disabled_inputDI():
-	if character.currentAttack:
+	if character.currentAttack && !character.is_currentAttack_itemthrow():
 		var combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
 		var currentAttackData = character.attackData[combinedAttackDataString]
 		if currentAttackData["disableInputDI"] == 0: 

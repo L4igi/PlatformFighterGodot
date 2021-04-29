@@ -8,6 +8,7 @@ func _ready():
 	var jsondata = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = jsondata.get_result()
+	change_state(GlobalVariables.ProjectileState.SHOOT)
 	
 func set_base_stats(parentNode, originalOwner):
 	.set_base_stats(parentNode, originalOwner)
@@ -16,9 +17,9 @@ func set_base_stats(parentNode, originalOwner):
 #	var airStopForce = 100
 	airMaxSpeed = 200
 	baseAirMaxSpeed = 500
-	maxFallSpeed = 10000
+	maxFallSpeed = 1000
 	bounceVelocity = 600
-	change_state(GlobalVariables.ProjectileState.SHOOT)
+	global_position = parentNode.interactionPoint.global_position
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)

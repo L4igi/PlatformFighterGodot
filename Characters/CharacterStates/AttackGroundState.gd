@@ -109,7 +109,7 @@ func manage_transition_buffered_input():
 			else:
 				if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-					mirror_areas()
+					character.mirror_areas()
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 				shift_attack_angle()
 				play_attack_animation("ftilt")
@@ -119,7 +119,7 @@ func manage_transition_buffered_input():
 			else:
 				if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-					mirror_areas()
+					character.mirror_areas()
 				character.currentAttack = GlobalVariables.CharacterAnimations.FTILT
 				shift_attack_angle()
 				play_attack_animation("ftilt")
@@ -176,9 +176,8 @@ func _physics_process(_delta):
 							character.comboNextJab = false
 		else:
 			if character.grabbedItem: 
-				character.grabbedItem.on_projectile_throw()
-				character.grabbedItem = null
-			if character.smashAttack != null: 
+				attack_handler_ground_throw_attack()
+			elif character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()
 			elif (abs(get_input_direction_x()) == 0 || character.jabCount > 0) \
 			&& get_input_direction_y() == 0:
@@ -232,13 +231,13 @@ func attack_handler_ground_smash_attacks():
 		GlobalVariables.CharacterAnimations.FSMASHR:
 			if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-				mirror_areas()
+				character.mirror_areas()
 			animationToPlay = "fsmash"
 			character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 		GlobalVariables.CharacterAnimations.FSMASHL:
 			if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-				mirror_areas()
+				character.mirror_areas()
 			animationToPlay = "fsmash"
 			character.currentAttack = GlobalVariables.CharacterAnimations.FSMASH
 	play_attack_animation(animationToPlay)
@@ -343,5 +342,20 @@ func shift_attack_angle():
 		else: angle = 0.0
 		rotateSmashAttackDegrees = angle
 
-#func manage_air_ground_move_transition():
-#	character.disableInput = true
+func attack_handler_ground_throw_attack():
+	if (abs(get_input_direction_x()) == 0) \
+	&& get_input_direction_y() == 0:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")
+	elif get_input_direction_y() < 0:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMUP
+		play_attack_animation("throw_item_up")
+	elif get_input_direction_y() > 0:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMDOWN
+		play_attack_animation("throw_item_down")
+	elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")
+	elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")

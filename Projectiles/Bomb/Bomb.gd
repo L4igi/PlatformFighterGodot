@@ -11,8 +11,8 @@ func _ready():
 	
 func set_base_stats(parentNode, originalOwner):
 	.set_base_stats(parentNode, originalOwner)
-	gravity = 400.0
-	baseGravity = 400.0
+#	gravity = 200.0
+#	baseGravity = 400.0
 #	var airStopForce = 100
 	airMaxSpeed = 500
 	baseAirMaxSpeed = 500
@@ -21,6 +21,7 @@ func set_base_stats(parentNode, originalOwner):
 	grabAble = true
 	canHitSelf = false
 	deleteOnImpact = false
+	global_position = parentNode.interactionPoint.global_position
 	change_state(GlobalVariables.ProjectileState.HOLD)
 	
 func process_projectile_physics(_delta):
@@ -50,6 +51,7 @@ func on_impact():
 		_:
 			print("bomb on impact not special " +str(parentNode.name))
 			toggle_all_hitboxes("off")
+			deleteOnImpact = true
 			change_state(GlobalVariables.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null

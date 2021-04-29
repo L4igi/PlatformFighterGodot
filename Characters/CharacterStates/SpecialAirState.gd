@@ -99,7 +99,7 @@ func _physics_process(_delta):
 					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
 				elif character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-				mirror_areas()
+				character.mirror_areas()
 				play_attack_animation("sidespecial")
 				character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
 			elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:

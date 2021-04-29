@@ -26,12 +26,14 @@ var attackDataEnum
 #buffers 
 var bufferedAnimation = null
 #attributes 
-var gravity = 1000.0
-var baseGravity = 1000
+var gravity = 2000.0
+var baseGravity = 2000
 var initLaunchVelocity = null
 var airMaxSpeed = 100
 var maxFallSpeed = 100
 var baseAirMaxSpeed = 100
+var airStopForce = 150
+var groundStopForce = 500
 #inputs 
 var disableInput = true
 var backUpDisableInput = false
@@ -57,6 +59,10 @@ var originalOwner = null
 var projectileTTLTimer = null
 #backup disabled hitboxes
 var backupDisabledHitboxes = []
+#shows if projectile was thrown 
+var projectileThrown = false
+#projectile already caught 
+var projectileCaughtThisFrame = false
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -68,6 +74,7 @@ func _ready():
 	projectileTTLTimer = GlobalVariables.create_timer("onProjectileTTLTimeout", "ProjectileTTLTimer", self)
 	
 func _physics_process(delta):
+	projectileCaughtThisFrame = false
 	stateChangedThisFrame = false
 	
 func set_base_stats(parentNode, originalOwner):
@@ -116,12 +123,29 @@ func change_state(new_state):
 	currentState = changeToState
 	add_child(state)
 	
+func manage_projectile_physics(_delta):
+	if projectileThrown:
+		process_projectile_physics_thrown(_delta)
+	else:
+		process_projectile_physics(_delta)
+	if check_ground_platform_collision():
+		onSolidGround = true
+	else:
+		onSolidGround = false
 	
 func process_projectile_physics(_delta):
-#	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 	calculate_vertical_velocity(_delta)
 	velocity = move_and_slide(velocity)     
+	
+func process_projectile_physics_thrown(_delta):
+	if onSolidGround:
+		velocity.x = move_toward(velocity.x, 0, groundStopForce * _delta)
+	else:
+		velocity.x = move_toward(velocity.x, 0, airStopForce * _delta)
+	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
+	calculate_vertical_velocity(_delta)
+	velocity = move_and_slide(velocity)   
 
 func calculate_vertical_velocity(_delta):
 	velocity.y += gravity * _delta
@@ -141,7 +165,6 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 					projectileInteracted = true
 			GlobalVariables.SpecialHitboxType.ABSORB:
 				pass
-				return false
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
 			GlobalVariables.SpecialHitboxType.COUNTER:
 				pass
@@ -228,21 +251,44 @@ func check_hit_parentNode(object):
 	else: 
 		return false
 
-func on_projectile_throw():
-	set_base_stats(parentNode, originalOwner)
-	parentNode.remove_child(self)
-	GlobalVariables.currentStage.add_child(self)
-	self.global_position = parentNode.interactionPoint.global_position
+func on_projectile_throw(throwType):
+	projectileThrown = true
+	parentNode.call_deferred("remove_child",self)
+	GlobalVariables.currentStage.call_deferred("add_child",self)
+	call_deferred("setup_throw_item",throwType)
+	projectileSpecialInteraction = null
 	change_state(GlobalVariables.ProjectileState.SHOOT)
 	
 func on_projectile_catch(newParent):
-	parentNode = newParent
-	GlobalVariables.currentStage.remove_child(self)
-	newParent.add_child(self)
-	change_state(GlobalVariables.ProjectileState.HOLD)
+	if !projectileCaughtThisFrame:
+		projectileCaughtThisFrame = true
+		parentNode = newParent
+		parentNode.grabbedItem = self
+		GlobalVariables.currentStage.call_deferred("remove_child",self)
+		newParent.call_deferred("add_child",self)
+		set_deferred("global_position", newParent.global_position)
+		projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.CATCH
+		change_state(GlobalVariables.ProjectileState.HOLD)
 	
 func is_attacked_handler(hitLagFrames, attackingObject):
 	state.create_hitlagAttacked_timer(hitLagFrames)
 
 func is_attacked_handler_no_knockback(hitLagFrames, attackingObject):
 	state.create_hitlagAttacked_timer(hitLagFrames)
+	
+func setup_throw_item(throwType):
+	self.global_position = parentNode.interactionPoint.global_position
+	currentMoveDirection = parentNode.currentMoveDirection
+	var direction = Vector2(1,1)
+	match parentNode.currentMoveDirection: 
+		GlobalVariables.MoveDirection.LEFT:
+			direction = Vector2(-1,1)
+		GlobalVariables.MoveDirection.RIGHT:
+			direction = Vector2(1,1)
+	match throwType: 
+		GlobalVariables.CharacterAnimations.THROWITEMDOWN:
+			velocity = Vector2(0, 200)
+		GlobalVariables.CharacterAnimations.THROWITEMUP:
+			velocity = Vector2(0, -1000)
+		GlobalVariables.CharacterAnimations.THROWITEMFORWARD:
+			velocity = Vector2(1500, -400) * direction

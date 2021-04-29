@@ -35,7 +35,6 @@ func create_hitlag_timer(waitTime):
 		gravity_on_off("off")
 		if projectile.initLaunchVelocity == null:
 			projectile.initLaunchVelocity = projectile.velocity
-		print("PROJECTILE VELOCITY " +str(projectile.velocity))
 		projectile.velocity = Vector2.ZERO
 		projectile.backUpDisableInput = projectile.disableInput
 		projectile.disableInput = true

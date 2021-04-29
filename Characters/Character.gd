@@ -295,10 +295,10 @@ func snap_edge(collidingEdge):
 	snappedEdge = collidingEdge
 	if currentMoveDirection == GlobalVariables.MoveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
 		currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-		state.mirror_areas()
+		mirror_areas()
 	elif currentMoveDirection == GlobalVariables.MoveDirection.LEFT && collidingEdge.edgeSnapDirection == "left": 
 		currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-		state.mirror_areas()
+		mirror_areas()
 	var targetPosition = collidingEdge.global_position + Vector2((characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
 	if self.global_position < collidingEdge.centerStage.global_position:
 		targetPosition = collidingEdge.global_position + Vector2(-(characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
@@ -372,6 +372,14 @@ func apply_attack_animation_steps(step = 0):
 func apply_special_animation_steps(step = 0):
 	pass
 	
+func apply_item_throw_animation_step(step = 0):
+	match step:
+		0:
+			grabbedItem.on_projectile_throw(currentAttack)
+			grabbedItem = null
+		1: 
+			pass
+	
 func jab_animation_step(step = 0):
 	match step: 
 		0: 
@@ -385,9 +393,15 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 	hitsTaken += 1
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
-		attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
+		if state.hitlagAttackedTimer.get_time_left():
+			attackedCalculatedVelocity += calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
+		else:
+			attackedCalculatedVelocity = calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
 	else:
-		attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
+		if state.hitlagAttackedTimer.get_time_left():
+			attackedCalculatedVelocity += calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
+		else:
+			attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
 	velocity = Vector2.ZERO
 	var launchVector = calculate_launch_vector(launchAngle, attackedCalculatedVelocity)
 	if launchVectorInversion:
@@ -806,10 +820,6 @@ func toggle_all_hitboxes(onOff, toggleSpecial = false):
 						if !hitbox.is_disabled():
 							backupDisabledHitboxes.append(hitbox)
 						hitbox.set_deferred('disabled',true)
-			if name == "Mario":
-				print(self.name +str(" turning off ") +str(backupDisabledHitboxes))
-#			$InteractionAreas.set_position(Vector2(0,0))
-#			$InteractionAreas.set_rotation(0)
 			
 func reset_hitboxes():
 	for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
@@ -944,10 +954,10 @@ func handle_effect_reverse_attacked(interactionType, interactionObject, attackin
 				match currentMoveDirection:
 					GlobalVariables.MoveDirection.LEFT:
 						currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-						state.mirror_areas()
+						mirror_areas()
 					GlobalVariables.MoveDirection.RIGHT:
 						currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-						state.mirror_areas()
+						mirror_areas()
 				return true
 	return false
 
@@ -976,3 +986,67 @@ func create_reverse_timer(waitTime):
 
 func on_reverse_timeout():
 	reverse_inputs()
+
+func is_currentAttack_itemthrow():
+	match currentAttack:
+		GlobalVariables.CharacterAnimations.THROWITEMDOWN:
+			return true
+		GlobalVariables.CharacterAnimations.THROWITEMFORWARD:
+			return true
+		GlobalVariables.CharacterAnimations.THROWITEMUP:
+			return true
+	return false
+	
+func get_input_direction_x():
+	return Input.get_action_strength(right) - Input.get_action_strength(left)
+			
+func get_input_direction_y():
+	return Input.get_action_strength(down) - Input.get_action_strength(up)
+	
+func mirror_areas():
+	match currentMoveDirection:
+		GlobalVariables.MoveDirection.LEFT:
+			set_scale(Vector2(-1*abs(get_scale().x), abs(get_scale().y)))
+		GlobalVariables.MoveDirection.RIGHT:
+			set_scale(Vector2(-1*abs(get_scale().x), -1*abs(get_scale().y)))
+
+func attack_handler_air_throw_attack():
+	if (abs(get_input_direction_x()) == 0) \
+	&& get_input_direction_y() == 0:
+		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		state.play_attack_animation("throw_item_forward")
+	elif get_input_direction_y() < 0:
+		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMUP
+		state.play_attack_animation("throw_item_up")
+	elif get_input_direction_y() > 0:
+		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMDOWN
+		state.play_attack_animation("throw_item_down")
+	elif get_input_direction_x() > 0:
+		if currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+			mirror_areas()
+		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		state.play_attack_animation("throw_item_forward")
+	elif get_input_direction_x() < 0:
+		if currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+			mirror_areas()
+		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		state.play_attack_animation("throw_item_forward")
+
+#checks if current attack/state can catch item, pick up item
+func check_item_catch_attack():
+	print(GlobalVariables.CharacterState.keys()[currentState])
+	match currentState:
+		GlobalVariables.CharacterState.ATTACKAIR:
+			return true
+		GlobalVariables.CharacterState.ATTACKGROUND:
+			match currentAttack:
+				GlobalVariables.CharacterAnimations.FSMASH: 
+					return false
+				GlobalVariables.CharacterAnimations.DSMASH:
+					return false
+				GlobalVariables.CharacterAnimations.UPSMASH:
+					return false
+			return true
+	return false

@@ -83,7 +83,6 @@ func get_attackData_match_highest_hitbox_json_data(object, hbType):
 func apply_attack(hbType, interactionType):
 	var currentHitBoxNumber = attackingObject.currentHitBox
 	var currentAttackData = get_attackData_match_highest_hitbox_json_data(attackingObject, hbType)
-	print("hbType " +str(hbType))
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
 	#calculate damage if charged smash attack
 	if attackingObject.is_in_group("Character"):
@@ -151,7 +150,8 @@ func apply_attack_connected(attackDamage, hitStun, launchAngle, launchVectorInve
 			attackedObject.is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
 	elif attackedObject.is_in_group("Projectile"):
 		if !manage_hurtbox_special_interactions_projectile(attackingObject, attackedObject, specialHitBoxEffects, attackDamage):
-			attackedObject.is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
+#			attackedObject.is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObject.global_position)
+			pass
 	calculate_hitlag_frames_connected(attackDamage, hitlagMultiplier, launchVelocity, weightLaunchVelocity)
 
 func apply_attack_clashed(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects):
@@ -251,7 +251,7 @@ func apply_grab():
 			attackedObject.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 		elif attackedObject.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 			attackedObject.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-		attackedObject.state.mirror_areas()
+		attackedObject.character.mirror_areas()
 	attackedObject.inGrabByCharacter = attackingObject
 	attackedObject.change_state(GlobalVariables.CharacterState.INGRAB)
 
@@ -275,8 +275,8 @@ func check_hitbox_areas(area, hitboxType):
 		if attackingObject != area.get_parent().get_parent().get_parent(): 
 			attackedObject = area.get_parent().get_parent().get_parent()
 			attackingObject.currentInteractionObject = attackedObject
-#			if is_projectile_parentNode_interaction(attackedObject):
-#				return
+			if check_item_catch(attackingObject, attackedObject):
+				return
 			if hitBoxesClashed.empty():
 				apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CLASHED)
 			if !hitBoxesClashed.has(hitboxType):
@@ -286,7 +286,7 @@ func check_hitbox_areas(area, hitboxType):
 	&& area.get_parent().get_parent() != attackingObject:
 		attackedObject = area.get_parent().get_parent()
 		attackingObject.currentInteractionObject = attackedObject
-		if is_projectile_parentNode_interaction(attackedObject):
+		if is_projectile_parentNode_interaction(attackingObject, attackedObject):
 			return
 		if hitBoxesClashed.empty() && hitBoxesConnected.empty():
 			apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CONNECTED)
@@ -296,22 +296,35 @@ func check_hitbox_areas(area, hitboxType):
 		attackedObject = area.get_parent()
 		if attackedObject != attackingObject\
 		&& attackedObject.parentNode != attackingObject:
-			print("ParentNode " +str(attackedObject.parentNode))
-			print("attackingObject " +str(attackingObject))
 			attackingObject.currentInteractionObject = attackedObject
-			if is_projectile_parentNode_interaction(attackedObject):
+			if is_projectile_parentNode_interaction(attackingObject, attackedObject):
 				return
-			print("ParentNode name "+ str(attackedObject.parentNode.name))
 			if hitBoxesClashed.empty() && hitBoxesConnected.empty():
 				apply_hitlag(area, GlobalVariables.HitBoxInteractionType.CONNECTED)
-			print("ParentNode name "+ str(attackedObject.parentNode.name))
 			if !hitBoxesConnected.has(hitboxType):
 				hitBoxesConnected.append(hitboxType)
-			print("ParentNode name "+ str(attackedObject.parentNode.name))
 			
-func is_projectile_parentNode_interaction(object):
+func is_projectile_parentNode_interaction(attackingObject, attackedObject):
 	if attackingObject.is_in_group("Projectile"):
-		if attackingObject.check_hit_parentNode(object):
+		if attackingObject.check_hit_parentNode(attackedObject):
+			return attackingObject
+	if attackedObject.is_in_group("Projectile"):
+		if attackedObject.check_hit_parentNode(attackingObject):
+			return attackedObject
+	return null
+	
+func check_item_catch(attackingObject, attackedObject):
+	if attackingObject.is_in_group("Projectile")\
+		&& attackedObject.is_in_group("Character"):
+			if attackingObject.get_parent() != attackedObject:
+				if attackedObject.check_item_catch_attack():
+					attackingObject.on_projectile_catch(attackedObject)
+			return true
+	elif attackedObject.is_in_group("Projectile")\
+		&& attackingObject.is_in_group("Character"):
+			if attackedObject.get_parent() != attackingObject:
+				if attackingObject.check_item_catch_attack():
+					attackedObject.on_projectile_catch(attackingObject)
 			return true
 	return false
 			

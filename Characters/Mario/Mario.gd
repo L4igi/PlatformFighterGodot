@@ -83,8 +83,9 @@ func manage_neutral_special(step = 0):
 			enableSpecialInput = false
 		1:
 			var newFireBall = fireBall.instance()
-			GlobalVariables.currentStage.add_child(newFireBall)
-			newFireBall.set_base_stats(self, self)
+#			newFireBall.set_base_stats(self, self)
+			GlobalVariables.currentStage.call_deferred("add_child" ,newFireBall)
+			newFireBall.call_deferred("set_base_stats", self, self)
 		2:
 			pass
 		
@@ -97,10 +98,9 @@ func manage_neutral_special_bomb(step = 0):
 			enableSpecialInput = false
 		1:
 			var newBomb = bomb.instance()
-			self.add_child(newBomb)
+			self.call_deferred("add_child" ,newBomb)
 			grabbedItem = newBomb
-			newBomb.set_base_stats(self, self)
-			newBomb.global_position = self.global_position
+			newBomb.call_deferred("set_base_stats", self, self)
 		2:
 			pass
 		
@@ -128,23 +128,18 @@ func manage_side_special(step = 0):
 			pass
 			
 func change_to_special_state():
-	if Input.is_action_just_pressed(up):
-		change_state(GlobalVariables.CharacterState.SPECIALAIR)
-	elif Input.is_action_just_pressed(down):
-		change_state(GlobalVariables.CharacterState.SPECIALGROUND)
-	elif Input.is_action_just_pressed(left):
-		if onSolidGround:
-			change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		#changes for each character, if item is held and this moves would spawn new item throw current item instead
+	if onSolidGround:
+		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
+			change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 		else:
-			change_state(GlobalVariables.CharacterState.SPECIALAIR)
-	elif Input.is_action_just_pressed(right):
-		if onSolidGround:
 			change_state(GlobalVariables.CharacterState.SPECIALGROUND)
-		else:
-			change_state(GlobalVariables.CharacterState.SPECIALAIR)
 	else:
-		if onSolidGround:
-			change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		print(grabbedItem)
+		print(get_input_direction_x())
+		print(get_input_direction_y())
+		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
+			change_state(GlobalVariables.CharacterState.ATTACKAIR)
 		else:
 			change_state(GlobalVariables.CharacterState.SPECIALAIR)
 
@@ -216,3 +211,7 @@ func finish_special_animation(step):
 			moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.SIDESPECIAL)
 	.finish_special_animation(step)
 
+
+func manage_throw_item_special_moves():
+	currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+	state.play_attack_animation("throw_item_forward")

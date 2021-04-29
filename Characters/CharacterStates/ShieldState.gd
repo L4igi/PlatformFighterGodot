@@ -24,14 +24,14 @@ func handle_input(_delta):
 		character.characterShield.disable_shield()
 		if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
 			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-			mirror_areas()
+			character.mirror_areas()
 		character.rollType = character.left
 		character.change_state(GlobalVariables.CharacterState.ROLL)
 	elif Input.is_action_just_pressed(character.right):
 		character.characterShield.disable_shield()
 		if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
 			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-			mirror_areas()
+			character.mirror_areas()
 		character.rollType = character.right
 		character.change_state(GlobalVariables.CharacterState.ROLL)
 	elif Input.is_action_just_pressed(character.down):

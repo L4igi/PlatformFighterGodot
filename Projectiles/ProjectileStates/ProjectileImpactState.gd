@@ -7,3 +7,4 @@ func _ready():
 	
 func setup(change_state, animationPlayer, projectile):
 	.setup(change_state, animationPlayer, projectile)
+	projectile.currentAttack = GlobalVariables.ProjectileAnimations.IMPACT

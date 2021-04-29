@@ -32,7 +32,7 @@ func handle_input(_delta):
 	elif Input.is_action_just_pressed(character.special):
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()
-		character.change_state(GlobalVariables.CharacterState.SPECIALAIR) 
+		character.change_to_special_state()
 	elif Input.is_action_just_pressed(character.jump):
 		double_jump_handler()
 	elif Input.is_action_just_pressed(character.down) && !character.onSolidGround && int(character.velocity.y) >= 0:

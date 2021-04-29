@@ -312,10 +312,10 @@ func create_turnAround_timer(waitTime):
 	match character.currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT:
 			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-			mirror_areas()
+			character.mirror_areas()
 		GlobalVariables.MoveDirection.RIGHT:
 			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-			mirror_areas()
+			character.mirror_areas()
 
 func on_turnAroundTimer_timeout():
 	character.turnAroundSmashAttack = false
@@ -389,11 +389,11 @@ func switch_from_air_to_ground(landingLag):
 		GlobalVariables.MoveDirection.LEFT:
 			if get_input_direction_x() > 0:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-				mirror_areas()
+				character.mirror_areas()
 		GlobalVariables.MoveDirection.RIGHT:
 			if get_input_direction_x() < 0:
 				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-				mirror_areas()
+				character.mirror_areas()
 
 func check_character_crouch():
 	if get_input_direction_y() >= 0.5 && !inMovementLag:
