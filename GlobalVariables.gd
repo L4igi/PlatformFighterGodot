@@ -28,12 +28,12 @@ enum AttackType {GROUNDED, AERIAL, PROJECTILE}
 
 enum SpecialHitboxType {REFLECT, REVERSE, ABSORB, COUNTER, NEUTRAL}
 
-enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS}
+enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS, CATCH}
 
 #connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
 enum HitBoxInteractionType {CONNECTED, CLASHED}
 
-enum ProjectileState {SHOOT, IMPACT, CONTROL, DESTROYED}
+enum ProjectileState {SHOOT, IMPACT, CONTROL, DESTROYED, HOLD}
 
 enum ProjectileAnimations {SHOOT, IMPACT}
 
@@ -58,7 +58,7 @@ var controlsP2 = {
 	"attack" : "Attack2",
 	"shield" : "Shield2",
 	"grab" : "Grab2", 
-	"special": "Special1"
+	"special": "Special2"
 }
 
 var gameRunning = 0
@@ -127,3 +127,15 @@ func match_attack_type_character(attack):
 		GlobalVariables.CharacterAnimations.BTHROW:
 			attackType = AttackType.GROUNDED
 	return attackType
+
+func create_timer(timeout_function, timerName, object):
+	var timer = Timer.new()    
+	timer.set_name(timerName)
+	object.add_child (timer)
+	timer.connect("timeout", object, timeout_function) 
+	return timer
+	
+func start_timer(timer, waitTime, oneShot = true):
+	timer.set_wait_time(waitTime/60.0)
+	timer.set_one_shot(oneShot)
+	timer.start()

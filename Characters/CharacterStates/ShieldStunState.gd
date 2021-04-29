@@ -6,7 +6,7 @@ var shieldStunTimer = null
 #var shieldStunFrames = 0
 
 func _ready():
-	shieldStunTimer = create_timer("on_shieldStun_timeout", "ShieldStunTimer")
+	shieldStunTimer = GlobalVariables.create_timer("on_shieldStun_timeout", "ShieldStunTimer", self)
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
@@ -33,7 +33,7 @@ func _physics_process(_delta):
 func create_shieldStun_timer(waitTime):
 	character.disableInput = true
 	character.set_collision_mask_bit(0,false)
-	start_timer(shieldStunTimer, waitTime)
+	GlobalVariables.start_timer(shieldStunTimer, waitTime)
 	
 func on_shieldStun_timeout():
 	character.shieldStunFrames = 0

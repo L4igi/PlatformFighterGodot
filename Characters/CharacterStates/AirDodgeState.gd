@@ -22,7 +22,7 @@ var invincibilityTimerStarted = false
 var airDodgeLandingLag = 20.0
 
 func _ready():
-	airDodgeTimer = create_timer("on_airDodgeTimer_timeout", "AirDodgeTimer")
+	airDodgeTimer = GlobalVariables.create_timer("on_airDodgeTimer_timeout", "AirDodgeTimer", self)
 	get_airDodge_angle()
 	reset_gravity()
 	play_animation("airdodge_neutral")
@@ -119,7 +119,7 @@ func get_airDodge_angle():
 	
 func create_airDodge_timer(waitTime):
 	currentAirDodgeDuration = waitTime
-	start_timer(airDodgeTimer, waitTime)
+	GlobalVariables.start_timer(airDodgeTimer, waitTime)
 	
 func on_airDodgeTimer_timeout():
 	if enable_player_input():

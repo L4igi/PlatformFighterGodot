@@ -34,6 +34,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Characters/CharacterStates/AttackGroundState.gd"
 }, {
+"base": "Projectile",
+"class": "Bomb",
+"language": "GDScript",
+"path": "res://Projectiles/Bomb/Bomb.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Character",
 "language": "GDScript",
@@ -125,6 +130,11 @@ _global_script_classes=[ {
 "path": "res://Projectiles/ProjectileStates/ProjectileDestroyedState.gd"
 }, {
 "base": "ProjectileState",
+"class": "ProjectileHoldState",
+"language": "GDScript",
+"path": "res://Projectiles/ProjectileStates/ProjectileHoldState.gd"
+}, {
+"base": "ProjectileState",
 "class": "ProjectileImpactState",
 "language": "GDScript",
 "path": "res://Projectiles/ProjectileStates/ProjectileImpactState.gd"
@@ -210,6 +220,7 @@ _global_script_class_icons={
 "AirTechState": "",
 "AttackAirState": "",
 "AttackGroundState": "",
+"Bomb": "",
 "Character": "",
 "CounterState": "",
 "CrouchState": "",
@@ -228,6 +239,7 @@ _global_script_class_icons={
 "Projectile": "",
 "ProjectileControlState": "",
 "ProjectileDestroyedState": "",
+"ProjectileHoldState": "",
 "ProjectileImpactState": "",
 "ProjectileShootState": "",
 "ProjectileState": "",

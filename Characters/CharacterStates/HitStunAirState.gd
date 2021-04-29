@@ -14,8 +14,8 @@ var hitStunIncreaseValue = 50
 var hitlagDone = false
 
 func _ready():
-	techTimer = create_timer("on_tech_timeout", "TechTimer")
-	techCoolDownTimer = create_timer("on_techCooldown_timeout", "TechCooldownTimer")
+	techTimer = GlobalVariables.create_timer("on_tech_timeout", "TechTimer", self)
+	techCoolDownTimer = GlobalVariables.create_timer("on_techCooldown_timeout", "TechCooldownTimer", self)
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 	
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
@@ -192,14 +192,14 @@ func input_movement_physics(_delta):
 	
 func create_tech_timer(waitTime):
 	teched = true
-	start_timer(techTimer, waitTime)
+	GlobalVariables.start_timer(techTimer, waitTime)
 	
 func on_tech_timeout():
 	teched = false
 	create_techCooldown_timer(techCooldownFrames)
 	
 func create_techCooldown_timer(waitTime):
-	start_timer(techCoolDownTimer, waitTime)
+	GlobalVariables.start_timer(techCoolDownTimer, waitTime)
 	
 func on_techCooldown_timeout():
 	pass

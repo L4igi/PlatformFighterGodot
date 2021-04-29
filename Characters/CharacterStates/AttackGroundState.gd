@@ -11,8 +11,8 @@ var shiftDegrees = 10.0
 var rotateSmashAttackDegrees = 0.0
 
 func _ready():
-	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
-	smashAttackMultiplierTimer = create_timer("on_smashAttackMultiplier_timeout", "SmashAttackMultiplierTimer")
+	landingLagTimer = GlobalVariables.create_timer("on_landingLag_timeout", "LandingLagTimer", self)
+	smashAttackMultiplierTimer = GlobalVariables.create_timer("on_smashAttackMultiplier_timeout", "SmashAttackMultiplierTimer", self)
 	character.currentHitBox = 1
 	if !character.airGroundMoveTransition: 
 		if character.applyLandingLag:
@@ -175,6 +175,9 @@ func _physics_process(_delta):
 							jab_handler()
 							character.comboNextJab = false
 		else:
+			if character.grabbedItem: 
+				character.grabbedItem.on_projectile_throw()
+				character.grabbedItem = null
 			if character.smashAttack != null: 
 				attack_handler_ground_smash_attacks()
 			elif (abs(get_input_direction_x()) == 0 || character.jabCount > 0) \
@@ -289,7 +292,7 @@ func create_landingLag_timer(waitTime):
 	inLandingLag = true
 	character.disableInput = true
 	character.disableInputDI = false
-	start_timer(landingLagTimer, waitTime)
+	GlobalVariables.start_timer(landingLagTimer, waitTime)
 	
 func on_landingLag_timeout():
 	inLandingLag = false
@@ -315,7 +318,7 @@ func check_stop_area_entered(_delta):
 					pass
 
 func create_smashAttackMultiplier_timer(waitTime):
-	start_timer(smashAttackMultiplierTimer, waitTime)
+	GlobalVariables.start_timer(smashAttackMultiplierTimer, waitTime)
 	
 func calculate_smash_multiplier():
 	var framesLeft = smashAttackHoldFrames - smashAttackMultiplierTimer.get_time_left()*60.0

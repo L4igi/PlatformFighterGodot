@@ -6,7 +6,7 @@ var dropDownFrames = 2.0
 
 func _ready():
 	play_animation("crouch")
-	dropDownTimer = create_timer("on_dropDown_timeout", "DropDownTimer")
+	dropDownTimer = GlobalVariables.create_timer("on_dropDown_timeout", "DropDownTimer", self)
 	if character.onSolidGround && character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
 	
@@ -52,7 +52,7 @@ func _physics_process(_delta):
 			handle_input_disabled(_delta)
 	
 func create_dropDown_timer(waitTime):
-	start_timer(dropDownTimer, waitTime)
+	GlobalVariables.start_timer(dropDownTimer, waitTime)
 
 func on_dropDown_timeout():
 	if get_input_direction_y() >= 0.8:

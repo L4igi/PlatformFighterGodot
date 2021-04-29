@@ -1,10 +1,12 @@
 extends ProjectileState
 
-class_name ProjectileDestroyedState
+class_name ProjectileHoldState
 
 func _ready():
-	projectile.deleteOnImpact = true
-	animationPlayer.play("impact")
+	play_animation("hold")
 	
 func setup(change_state, animationPlayer, projectile):
 	.setup(change_state, animationPlayer, projectile)
+	projectile.toggle_all_hurtboxes("off")
+	projectile.toggle_all_hitboxes("off")
+

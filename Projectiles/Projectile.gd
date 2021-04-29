@@ -47,6 +47,16 @@ onready var projectilecollider = get_node("ProjectileCollider")
 #interactionobject
 var currentInteractionObject = null
 var projectileSpecialInteraction = null
+#chargeable projectile
+var currentCharge = 0.0
+var maxCharge = 0.0
+var chargeTickRate = 0.0
+#original owner 
+var originalOwner = null
+#projectile ttl timer
+var projectileTTLTimer = null
+#backup disabled hitboxes
+var backupDisabledHitboxes = []
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -55,13 +65,23 @@ func _ready():
 	attackDataEnum = GlobalVariables.ProjectileAnimations
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
-	change_state(GlobalVariables.ProjectileState.SHOOT)
+	projectileTTLTimer = GlobalVariables.create_timer("onProjectileTTLTimeout", "ProjectileTTLTimer", self)
 	
 func _physics_process(delta):
 	stateChangedThisFrame = false
 	
-func set_base_stats(parentNode):
-	pass
+func set_base_stats(parentNode, originalOwner):
+	self.global_position = parentNode.interactionPoint.global_position
+	match parentNode.currentMoveDirection: 
+		GlobalVariables.MoveDirection.LEFT:
+			velocity = Vector2(-airMaxSpeed,0)
+		GlobalVariables.MoveDirection.RIGHT:
+			velocity = Vector2(airMaxSpeed,0)
+	currentMoveDirection = parentNode.currentMoveDirection
+	set_collision_mask_bit(0,false)
+	if !canHitSelf: 
+		self.parentNode = parentNode
+		self.originalOwner = originalOwner
 	
 func change_parent():
 	pass
@@ -129,6 +149,8 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	return projectileInteracted
 
 func handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
+	print("CURRENTMOVEDIRECTION " +str(currentMoveDirection))
+	print("PARENTNODE " +str(parentNode.name))
 	projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.REFLECTED
 	match currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT:
@@ -174,13 +196,29 @@ func toggle_all_hitboxes(onOff):
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
 						#todo: maybe change this to handle special hitboxes differently
-						if !hitbox.is_in_group("SpecialHitBox"):
+						if backupDisabledHitboxes.has(hitbox):
 							hitbox.set_deferred('disabled',false)
 		"off":
+			backupDisabledHitboxes.clear()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
+						if !hitbox.is_disabled():
+							backupDisabledHitboxes.append(hitbox)
 						hitbox.set_deferred('disabled',true)
+						
+func toggle_all_hurtboxes(onOff):
+	match onOff: 
+		"on":
+			for hurtBox in $HurtBoxArea.get_children():
+				if hurtBox is CollisionShape2D:
+					#todo: maybe change this to handle special hitboxes differently
+					hurtBox.set_deferred('disabled',false)
+		"off":
+			for hurtBox in $HurtBoxArea.get_children():
+				if hurtBox is CollisionShape2D:
+					#todo: maybe change this to handle special hitboxes differently
+					hurtBox.set_deferred('disabled',true)
 
 func check_hit_parentNode(object):
 	if object == parentNode: 
@@ -189,3 +227,22 @@ func check_hit_parentNode(object):
 		return true
 	else: 
 		return false
+
+func on_projectile_throw():
+	set_base_stats(parentNode, originalOwner)
+	parentNode.remove_child(self)
+	GlobalVariables.currentStage.add_child(self)
+	self.global_position = parentNode.interactionPoint.global_position
+	change_state(GlobalVariables.ProjectileState.SHOOT)
+	
+func on_projectile_catch(newParent):
+	parentNode = newParent
+	GlobalVariables.currentStage.remove_child(self)
+	newParent.add_child(self)
+	change_state(GlobalVariables.ProjectileState.HOLD)
+	
+func is_attacked_handler(hitLagFrames, attackingObject):
+	state.create_hitlagAttacked_timer(hitLagFrames)
+
+func is_attacked_handler_no_knockback(hitLagFrames, attackingObject):
+	state.create_hitlagAttacked_timer(hitLagFrames)

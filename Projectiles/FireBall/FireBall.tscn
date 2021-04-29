@@ -6,4 +6,7 @@
 [node name="FireBall" instance=ExtResource( 2 )]
 script = ExtResource( 1 )
 
+[node name="AnimatedSprite" parent="." index="1"]
+animation = "impact"
+
 [editable path="AnimatedSprite/HitBoxes"]

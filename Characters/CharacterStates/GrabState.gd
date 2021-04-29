@@ -5,7 +5,7 @@ class_name GrabState
 var grabTimer = null
 
 func _ready():
-	grabTimer = create_timer("on_grabTimer_timeout", "GrabTimer")
+	grabTimer = GlobalVariables.create_timer("on_grabTimer_timeout", "GrabTimer", self)
 	play_animation("grab")
 	
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
@@ -51,7 +51,7 @@ func _physics_process(_delta):
 				character.grabbedCharacter.on_grab_release()
 			
 func create_grab_timer(waitTime):
-	start_timer(grabTimer, waitTime)
+	GlobalVariables.start_timer(grabTimer, waitTime)
 	
 func on_grabTimer_timeout():
 	if character.grabbedCharacter:

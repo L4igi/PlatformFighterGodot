@@ -40,12 +40,12 @@ func _ready():
 		create_sidestep_timer(sideStepFrames)
 		
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
-	stopMovementTimer = create_timer("on_stop_movement_timeout", "StopMovementTimer")
-	turnAroundTimer = create_timer("on_turnAroundTimer_timeout", "TurnAroundTimer")
-	sideStepTimer = create_timer("on_sideStep_timeout", "SideStepTimer")
-	dropDownTimer = create_timer("on_dropDown_timeout", "DropDownTimer")
-	shieldDropTimer = create_timer("on_shielddrop_timeout", "ShieldDropTimer")
-	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
+	stopMovementTimer = GlobalVariables.create_timer("on_stop_movement_timeout", "StopMovementTimer", self)
+	turnAroundTimer = GlobalVariables.create_timer("on_turnAroundTimer_timeout", "TurnAroundTimer", self)
+	sideStepTimer = GlobalVariables.create_timer("on_sideStep_timeout", "SideStepTimer", self)
+	dropDownTimer = GlobalVariables.create_timer("on_dropDown_timeout", "DropDownTimer", self)
+	shieldDropTimer = GlobalVariables.create_timer("on_shielddrop_timeout", "ShieldDropTimer", self)
+	landingLagTimer = GlobalVariables.create_timer("on_landingLag_timeout", "LandingLagTimer", self)
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.canGetEdgeInvincibility = true
 	character.disabledEdgeGrab = false
@@ -295,7 +295,7 @@ func change_max_speed(xInput):
 	
 func create_stop_movement_timer(waitTime):
 	inMovementLag = true
-	start_timer(stopMovementTimer, waitTime)
+	GlobalVariables.start_timer(stopMovementTimer, waitTime)
 	
 func on_stop_movement_timeout():
 	change_max_speed(get_input_direction_x())
@@ -307,7 +307,7 @@ func create_turnAround_timer(waitTime):
 	inMovementLag = true
 	character.stopAreaVelocity.x = 0
 	stopMovementTimer.stop()
-	start_timer(turnAroundTimer, waitTime)
+	GlobalVariables.start_timer(turnAroundTimer, waitTime)
 	lastXInputZeroCount = 0
 	match character.currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT:
@@ -328,7 +328,7 @@ func on_turnAroundTimer_timeout():
 	enable_player_input()
 
 func create_sidestep_timer(waitTime):
-	start_timer(sideStepTimer, waitTime)
+	GlobalVariables.start_timer(sideStepTimer, waitTime)
 	
 func on_sideStep_timeout():
 	pass
@@ -337,7 +337,7 @@ func create_shieldDrop_timer(waitTime):
 	character.disableInput = true
 	perfectShieldFramesLeft = perfectShieldFrames
 	play_animation("shielddrop")
-	start_timer(shieldDropTimer, waitTime)
+	GlobalVariables.start_timer(shieldDropTimer, waitTime)
 	
 func on_shielddrop_timeout():
 	lastXInputZeroCount = 0
@@ -366,7 +366,7 @@ func create_landingLag_timer(waitTime):
 	inLandingLag = true
 	character.disableInput = true
 	character.disableInputDI = false
-	start_timer(landingLagTimer, waitTime)
+	GlobalVariables.start_timer(landingLagTimer, waitTime)
 	
 func on_landingLag_timeout():
 	inLandingLag = false

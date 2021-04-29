@@ -5,7 +5,7 @@ class_name SpecialGround
 var landingLagTimer = null
 
 func _ready():
-	landingLagTimer = create_timer("on_landingLag_timeout", "LandingLagTimer")
+	landingLagTimer = GlobalVariables.create_timer("on_landingLag_timeout", "LandingLagTimer", self)
 	character.currentHitBox = 1
 	if !character.airGroundMoveTransition: 
 		if character.applyLandingLag:
@@ -112,7 +112,7 @@ func create_landingLag_timer(waitTime):
 	inLandingLag = true
 	character.disableInput = true
 	character.disableInputDI = false
-	start_timer(landingLagTimer, waitTime)
+	GlobalVariables.start_timer(landingLagTimer, waitTime)
 	
 func on_landingLag_timeout():
 	inLandingLag = false

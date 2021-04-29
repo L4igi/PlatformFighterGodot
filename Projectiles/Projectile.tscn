@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Projectiles/FireBall/shoot/7.png" type="Texture" id=1]
 [ext_resource path="res://Projectiles/FireBall/impact/0.png" type="Texture" id=2]
@@ -21,14 +21,14 @@
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 12 ) ],
-"loop": true,
-"name": "impact",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 10 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 5 ), ExtResource( 11 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 1 ) ],
 "loop": true,
 "name": "shoot",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "impact",
 "speed": 5.0
 } ]
 
@@ -115,6 +115,8 @@ tracks/3/keys = {
 "values": [ false ]
 }
 
+[sub_resource type="CircleShape2D" id=5]
+
 [node name="Projectile" type="KinematicBody2D" groups=[
 "Projectile",
 ]]
@@ -127,7 +129,7 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "shoot"
+animation = "impact"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "shoot"
@@ -149,6 +151,13 @@ visible = false
 
 [node name="HitBoxSpecial" parent="AnimatedSprite/HitBoxes" index="3"]
 visible = false
+
+[node name="HurtBoxArea" type="Area2D" parent="." groups=[
+"HurtboxProjectile",
+]]
+
+[node name="HurtBoxShape" type="CollisionShape2D" parent="HurtBoxArea"]
+shape = SubResource( 5 )
 
 [connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 

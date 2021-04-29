@@ -3,6 +3,7 @@ extends Character
 var upspecialInvincibilityFrames = 3.0
 
 onready var fireBall = preload("res://Projectiles/FireBall/FireBall.tscn")
+onready var bomb = preload("res://Projectiles/Bomb/Bomb.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -40,7 +41,7 @@ func apply_special_animation_steps(step = 0):
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
 			manage_side_special(step)
 		GlobalVariables.CharacterAnimations.NSPECIAL:
-			manage_neutral_special(step)
+			manage_neutral_special_bomb(step)
 	
 func manage_dair(step):
 	match step:
@@ -83,9 +84,23 @@ func manage_neutral_special(step = 0):
 		1:
 			var newFireBall = fireBall.instance()
 			GlobalVariables.currentStage.add_child(newFireBall)
-			newFireBall.set_base_stats(self)
-			print("interactionPoint.global_position " +str(interactionPoint.position))
-			newFireBall.global_position = interactionPoint.global_position
+			newFireBall.set_base_stats(self, self)
+		2:
+			pass
+		
+#testing function for different projectilke types
+#testing grabable bomb
+func manage_neutral_special_bomb(step = 0):
+	neutralSpecialAnimationStep = step
+	match step:
+		0:
+			enableSpecialInput = false
+		1:
+			var newBomb = bomb.instance()
+			self.add_child(newBomb)
+			grabbedItem = newBomb
+			newBomb.set_base_stats(self, self)
+			newBomb.global_position = self.global_position
 		2:
 			pass
 		

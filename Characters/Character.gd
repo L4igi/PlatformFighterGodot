@@ -232,7 +232,10 @@ var counteredHitlagFrames = 50.0
 var normalLandingLag = 3.0
 #interactionobject
 var currentInteractionObject = null
-#hitboxmanager
+#items 
+var grabbedItem = null
+#backuped disabled hitboxes
+var backupDisabledHitboxes = []
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -251,9 +254,9 @@ func _ready():
 	animationPlayer = $AnimatedSprite/AnimationPlayer
 	hurtBox = $InteractionAreas/Hurtbox
 	tween = $Tween
-	edgeRegrabTimer = create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer") 
-	platformCollisionDisabledTimer = create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer")
-	reverseTimer = create_timer("on_reverse_timeout", "ReverseTimer")
+	edgeRegrabTimer = GlobalVariables.create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer", self)
+	platformCollisionDisabledTimer = GlobalVariables.create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer", self)
+	reverseTimer = GlobalVariables.create_timer("on_reverse_timeout", "ReverseTimer", self)
 	animationPlayer.set_animation_process_mode(0)
 	attackDataEnum = GlobalVariables.CharacterAnimations
 	GlobalVariables.charactersInGame.append(self)
@@ -376,7 +379,7 @@ func jab_animation_step(step = 0):
 		1:
 			comboNextJab = false
 	
-func is_attacked_handler(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObjectGlobalPosition):
+func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObjectGlobalPosition):
 	lastBounceCollision = null
 	lastReceivedDamage = damage
 	hitsTaken += 1
@@ -419,11 +422,11 @@ func calculate_launch_vector(launchAngle, knockBack):
 #			print("Normal angle nothing to see here " +str(launchAngle))
 	return launchVector
 		
-func is_attacked_handler_perfect_shield():
+func is_attacked_calculations_perfect_shield():
 	#todo: add perfect shield animation and particle effects
 	print("perfect shield")
 	
-func is_attacked_in_shield_handler(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackingObjectGlobalPosition):
+func is_attacked_in_shield_calculations(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackingObjectGlobalPosition):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	characterShield.buffer_shield_damage(damage, shieldDamage)
 #	characterShield.apply_shield_damage(damage, shieldDamage)
@@ -478,7 +481,7 @@ func apply_throw(actionType):
 	print("buffered hitlag frames throw " +str(bufferHitLagFrames))
 	var launchVectorInversion = false
 	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
-	is_attacked_handler(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
+	is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
 #	if shortHitStun:
 #		state.play_animation("hurt_short")
 #	elif !shortHitStun:
@@ -769,17 +772,10 @@ func check_state_transition(changeToState):
 	airGroundMoveTransition = false
 	return changeToState
 
-func create_timer(timeout_function, timerName):
-	var timer = Timer.new()    
-	timer.set_name(timerName)
-	add_child (timer)
-	timer.connect("timeout", self, timeout_function) 
-	return timer
-
 func create_edgeRegrab_timer(waitTime):
 	disabledEdgeGrab = true
 	edgeGrabShape.set_deferred("disabled", true)
-	state.start_timer(edgeRegrabTimer, waitTime)
+	GlobalVariables.start_timer(edgeRegrabTimer, waitTime)
 
 func on_edgeRegrab_timeout():
 	disabledEdgeGrab = false
@@ -787,7 +783,7 @@ func on_edgeRegrab_timeout():
 		edgeGrabShape.set_deferred("disabled", false)
 		
 func create_platformCollisionDisabled_timer(waitTime):
-	state.start_timer(platformCollisionDisabledTimer, waitTime)
+	GlobalVariables.start_timer(platformCollisionDisabledTimer, waitTime)
 	
 func on_platformCollisionDisabled_timeout():
 	call_deferred("set_collision_mask_bit",1,true)
@@ -800,12 +796,18 @@ func toggle_all_hitboxes(onOff, toggleSpecial = false):
 					if hitbox is CollisionShape2D:
 						#todo: maybe change this to handle special hitboxes differently
 #						if !toggleSpecial && !hitbox.is_in_group("SpecialHitBox"):
-						hitbox.set_deferred('disabled',false)
+						if backupDisabledHitboxes.has(hitbox):
+							hitbox.set_deferred('disabled',false)
 		"off":
+			backupDisabledHitboxes.clear()
 			for areaHitbox in $AnimatedSprite/HitBoxes.get_children():
 				for hitbox in areaHitbox.get_children():
 					if hitbox is CollisionShape2D:
+						if !hitbox.is_disabled():
+							backupDisabledHitboxes.append(hitbox)
 						hitbox.set_deferred('disabled',true)
+			if name == "Mario":
+				print(self.name +str(" turning off ") +str(backupDisabledHitboxes))
 #			$InteractionAreas.set_position(Vector2(0,0))
 #			$InteractionAreas.set_rotation(0)
 			
@@ -839,7 +841,7 @@ func calculate_hitlag_di():
 	velocity -= velocity * (horizontalInfluence * hitlagDI.y)
 		
 #called whenever character is attacked
-func character_attacked_handler(hitLagFrames):
+func is_attacked_handler(hitLagFrames, attackingObject):
 	bufferHitLagFrames = hitLagFrames
 	#handle superarmour 
 	if superarmour_handler():
@@ -851,7 +853,7 @@ func character_attacked_handler(hitLagFrames):
 	else:
 		state.create_hitlagAttacked_timer(bufferHitLagFrames)
 		
-func character_attacked_handler_no_knockback(hitLagFrames):
+func is_attacked_handler_no_knockback(hitLagFrames, attackingObject):
 	bufferHitLagFrames = hitLagFrames
 	#current animation is not finished on hitlag timeout
 	state.create_hitlag_timer(bufferHitLagFrames)
@@ -970,7 +972,7 @@ func reverse_inputs():
 		left = characterControls.get("left")
 
 func create_reverse_timer(waitTime):
-	state.start_timer(reverseTimer, waitTime)
+	GlobalVariables.start_timer(reverseTimer, waitTime)
 
 func on_reverse_timeout():
 	reverse_inputs()

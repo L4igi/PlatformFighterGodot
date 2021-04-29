@@ -226,13 +226,13 @@ func _ready():
 	pass
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
-	smashAttackTimer = create_timer("on_smashAttack_timeout", "SmashAttackTimer")
-	shortHopTimer = create_timer("on_shorthop_timeout", "ShortHopTimer")
-	invincibilityTimer = create_timer("on_invincibility_timeout", "InvincibilityTimer")
-	hitlagTimer = create_timer("on_hitlag_timeout", "HitLagTimer")
-	hitStunTimer = create_timer("on_hitstun_timeout", "HitStunTimer")
-	hitlagAttackedTimer = create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer")
-	rehitTimer = create_timer("on_rehit_timeout", "RehitTimer")
+	smashAttackTimer = GlobalVariables.create_timer("on_smashAttack_timeout", "SmashAttackTimer", self)
+	shortHopTimer = GlobalVariables.create_timer("on_shorthop_timeout", "ShortHopTimer", self)
+	invincibilityTimer = GlobalVariables.create_timer("on_invincibility_timeout", "InvincibilityTimer", self)
+	hitlagTimer = GlobalVariables.create_timer("on_hitlag_timeout", "HitLagTimer", self)
+	hitStunTimer = GlobalVariables.create_timer("on_hitstun_timeout", "HitStunTimer", self)
+	hitlagAttackedTimer = GlobalVariables.create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer", self)
+	rehitTimer = GlobalVariables.create_timer("on_rehit_timeout", "RehitTimer", self)
 	self.change_state = change_state
 	self.animationPlayer = animationPlayer
 	self.character = character
@@ -272,18 +272,6 @@ func input_movement_physics(_delta):
 #	character.move_and_slide(character.velocity, Vector2.UP)
 	character.move_and_slide(character.velocity)
 
-func create_timer(timeout_function, timerName):
-	var timer = Timer.new()    
-	timer.set_name(timerName)
-	add_child (timer)
-	timer.connect("timeout", self, timeout_function) 
-	return timer
-	
-func start_timer(timer, waitTime, oneShot = true):
-	timer.set_wait_time(waitTime/60.0)
-	timer.set_one_shot(oneShot)
-	timer.start()
-
 func calculate_vertical_velocity(_delta):
 	character.velocity.y += character.gravity * _delta
 	if character.velocity.y >= character.maxFallSpeed: 
@@ -311,7 +299,7 @@ func mirror_areas():
 func play_animation(animationToPlay, queue = false):
 #	print("play " +str(animationToPlay) +str(queue))
 	animationPlayer.playback_speed = 1
-	reset_anaimtedSprite()
+	reset_animatedSprite()
 	if queue:
 		animationPlayer.queue(animationToPlay)
 	else:
@@ -321,13 +309,13 @@ func play_animation(animationToPlay, queue = false):
 func play_attack_animation(animationToPlay, queue = false):
 	character.disableInput = true
 	animationPlayer.playback_speed = 1
-	reset_anaimtedSprite()
+	reset_animatedSprite()
 	if queue: 
 		animationPlayer.queue(animationToPlay)
 	else:
 		animationPlayer.play(animationToPlay)
 		
-func reset_anaimtedSprite():
+func reset_animatedSprite():
 	character.animatedSprite.set_rotation_degrees(0.0)
 	character.animatedSprite.set_position(Vector2(0,0))
 	character.animatedSprite.set_modulate(Color(1,1,1,1))
@@ -377,7 +365,7 @@ func check_stage_slide_collide(doubleJump = false):
 
 
 func create_smashAttack_timer(waitTime):
-	start_timer(smashAttackTimer, waitTime)
+	GlobalVariables.start_timer(smashAttackTimer, waitTime)
 	
 func on_smashAttack_timeout():
 #	if !inMovementLag: 
@@ -387,7 +375,7 @@ func on_smashAttack_timeout():
 
 func create_shortHop_timer():
 	character.disableInput = true
-	start_timer(shortHopTimer, shortHopWaitTime)
+	GlobalVariables.start_timer(shortHopTimer, shortHopWaitTime)
 			
 func on_shorthop_timeout():
 #	print(self.name + " shorthop timeout")
@@ -475,7 +463,7 @@ func check_character_crouch():
 	
 func create_invincibility_timer(waitTime):
 	character.enable_disable_hurtboxes(false)
-	start_timer(invincibilityTimer, waitTime)
+	GlobalVariables.start_timer(invincibilityTimer, waitTime)
 
 func on_invincibility_timeout():
 	character.enable_disable_hurtboxes(true)
@@ -494,7 +482,7 @@ func create_hitlag_timer(waitTime):
 		character.disableInput = true
 		character.backUpDisableInputDI = character.disableInputDI
 		character.disableInputDI = false
-	start_timer(hitlagTimer, waitTime)
+	GlobalVariables.start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
 	#character.toggle_all_hitboxes("on")
@@ -521,7 +509,7 @@ func create_hitlagAttacked_timer(waitTime):
 	character.disableInput = true
 	character.backUpDisableInputDI = character.disableInputDI
 	character.disableInputDI = false
-	start_timer(hitlagAttackedTimer, waitTime)
+	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
 	print("current damage " +str(character.damagePercent))
@@ -541,7 +529,7 @@ func create_hitStun_timer(waitTime):
 	hitStunTimerDone = false
 	character.disableInput = true
 	character.disableInputDI = false
-	start_timer(hitStunTimer, waitTime)
+	GlobalVariables.start_timer(hitStunTimer, waitTime)
 	
 func on_hitstun_timeout():
 	hitStunTimerDone = true
@@ -624,8 +612,10 @@ func manage_disabled_inputDI():
 	return true
 
 func create_rehit_timer(waitTime):
-	start_timer(rehitTimer, waitTime)
+	print("rehit turn off")
+	GlobalVariables.start_timer(rehitTimer, waitTime)
 	
 func on_rehit_timeout():
 	if hitBoxesActive:
 		character.toggle_all_hitboxes("on")
+		

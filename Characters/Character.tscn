@@ -3530,10 +3530,10 @@ tracks/8/loop_wrap = true
 tracks/8/imported = false
 tracks/8/enabled = true
 tracks/8/keys = {
-"times": PoolRealArray( 0.2, 0.25 ),
+"times": PoolRealArray( 0.116667, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ false, true ]
+"values": [ true, true ]
 }
 tracks/9/type = "value"
 tracks/9/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:position")
@@ -3566,10 +3566,10 @@ tracks/11/loop_wrap = true
 tracks/11/imported = false
 tracks/11/enabled = true
 tracks/11/keys = {
-"times": PoolRealArray( 0.2, 0.25 ),
+"times": PoolRealArray( 0.116667, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ false, true ]
+"values": [ true, true ]
 }
 tracks/12/type = "method"
 tracks/12/path = NodePath("..")
@@ -4337,8 +4337,7 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "sidespecial"
-frame = 7
+animation = "downspecial"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"

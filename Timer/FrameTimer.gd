@@ -18,7 +18,7 @@ func _init(timerType, character):
 func set_frames(frames):
 	self.frames = frames
 	
-func start_timer():
+func GlobalVariables.start_timer():
 	timerStarted = true
 	character.frameTimerManager.add_timer(self)
 	

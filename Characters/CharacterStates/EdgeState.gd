@@ -9,7 +9,7 @@ var edgeDropTimeHigh = 150.0
 var edgeRegrabFrames = 50.0
 
 func _ready():
-	edgeDropTimer = create_timer("on_edgeDrop_timeout", "EdgeDropTimer")
+	edgeDropTimer = GlobalVariables.create_timer("on_edgeDrop_timeout", "EdgeDropTimer", self)
 	var edgeDamagePercent = 120
 	if character.damagePercent < edgeDamagePercent: 
 		edgeDamagePercent = character.damagePercent
@@ -111,7 +111,7 @@ func disable_invincibility_edge_action():
 	character.enable_disable_hurtboxes(true)
 
 func create_edgeDrop_timer(waitTime):
-	start_timer(edgeDropTimer, waitTime)
+	GlobalVariables.start_timer(edgeDropTimer, waitTime)
 
 func on_edgeDrop_timeout():
 	character.create_edgeRegrab_timer(edgeRegrabFrames)

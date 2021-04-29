@@ -119,7 +119,7 @@ func manage_collisionboxes_and_hitboxes_connected_one_winner(collidedHitBoxes,at
 	if collidedHitBoxes[attackedObjectArrayPos][6] == 1\
 	&& !collidedHitBoxes[attackedObjectArrayPos][4].empty():
 		var attackingObjectHitlagFrames = calc_hitlag_attacked(collidedHitBoxes,attackingObjectArrayPos)
-		set_hitlag_attacked_frames(attackingObject, attackingObjectHitlagFrames)
+		set_hitlag_attacked_frames(attackingObject, attackingObjectHitlagFrames, attackingObject)
 		collidedHitBoxes[attackingObjectArrayPos][8].call_funcv(collidedHitBoxes[attackingObjectArrayPos][9])
 		manage_hitbox_special_interactions_character(collidedHitBoxes,attackedObjectArrayPos, attackingObjectArrayPos, GlobalVariables.HitBoxInteractionType.CONNECTED)
 	#if transcendent but hitbox not connecting with attcker continou attack for attacker
@@ -127,7 +127,7 @@ func manage_collisionboxes_and_hitboxes_connected_one_winner(collidedHitBoxes,at
 		var attackingObjectHitlagFrames = calc_hitlag_attacker(collidedHitBoxes,attackingObjectArrayPos)
 		set_hitlag_frames(attackingObject, attackingObjectHitlagFrames)
 	var attackedObjectHitlagFrames = calc_hitlag_attacked(collidedHitBoxes,attackedObjectArrayPos)
-	set_hitlag_attacked_frames(attackedObject, attackedObjectHitlagFrames)
+	set_hitlag_attacked_frames(attackedObject, attackedObjectHitlagFrames, attackingObject)
 	collidedHitBoxes[attackingObjectArrayPos][8].call_funcv(collidedHitBoxes[attackingObjectArrayPos][9])
 	manage_hitbox_special_interactions_character(collidedHitBoxes,attackingObjectArrayPos, attackedObjectArrayPos, GlobalVariables.HitBoxInteractionType.CONNECTED)
 	
@@ -153,7 +153,7 @@ func manage_object_collisionboxes_and_hitbox_interactions_both_collision(collide
 	if collidedHitBoxes[attackingObject1ArrayPos][6] == 1\
 	&& collidedHitBoxes[attackingObject2ArrayPos][6] == 1:
 		var attackingObject1HitlagFrames = calc_hitlag_attacked(collidedHitBoxes,attackingObject1ArrayPos)
-		set_hitlag_attacked_frames(attackingObject2, attackingObject1HitlagFrames)
+		set_hitlag_attacked_frames(attackingObject2, attackingObject1HitlagFrames, attackingObject1)
 		collidedHitBoxes[attackingObject1ArrayPos][8].call_funcv(collidedHitBoxes[attackingObject1ArrayPos][9])
 	elif collidedHitBoxes[attackingObject1ArrayPos][6] == 0\
 	&& collidedHitBoxes[attackingObject2ArrayPos][6] == 1:
@@ -162,7 +162,7 @@ func manage_object_collisionboxes_and_hitbox_interactions_both_collision(collide
 	elif collidedHitBoxes[attackingObject1ArrayPos][6] == 1\
 	&& collidedHitBoxes[attackingObject2ArrayPos][6] == 0:
 		var attackingObject1HitlagFrames = calc_hitlag_attacked(collidedHitBoxes,attackingObject1ArrayPos)
-		set_hitlag_attacked_frames(attackingObject2, attackingObject1HitlagFrames)
+		set_hitlag_attacked_frames(attackingObject2, attackingObject1HitlagFrames, attackingObject1)
 		collidedHitBoxes[attackingObject1ArrayPos][8].call_funcv(collidedHitBoxes[attackingObject1ArrayPos][9])
 	#check if both are non rebound
 	elif collidedHitBoxes[attackingObject1ArrayPos][5] == 1:
@@ -178,7 +178,7 @@ func manage_object_collisionboxes_and_hitbox_interactions_one_collision(collided
 	#if transcendend hitbox, attack other character, apply hitlag to selfe
 	if collidedHitBoxes[attackingObjectArrayPos][6] == 1:
 		var attackedObjectHitlagFrames = calc_hitlag_attacked(collidedHitBoxes,attackedObjectArrayPos)
-		set_hitlag_attacked_frames(attackedObject, attackedObjectHitlagFrames)
+		set_hitlag_attacked_frames(attackedObject, attackedObjectHitlagFrames, attackingObject)
 		collidedHitBoxes[attackingObjectArrayPos][8].call_funcv(collidedHitBoxes[attackingObjectArrayPos][9])
 		var attackingObjectHitlagFrames = calc_hitlag_attacker(collidedHitBoxes,attackingObjectArrayPos)
 		set_hitlag_frames(attackingObject, attackingObjectHitlagFrames)
@@ -213,7 +213,7 @@ func calc_hitlag_attacker(collidedHitBoxes,arrayPosition):
 	var attackingObject = collidedHitBoxes[arrayPosition][0]
 	var attackingObjectDamage = collidedHitBoxes[arrayPosition][2]
 	var attackingObjectHitlagMultiplier = collidedHitBoxes[arrayPosition][3]
-	var attackingObjectHitlag = floor((attackingObjectDamage*0.75+4)*attackingObjectHitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*70))
+	var attackingObjectHitlag = floor((attackingObjectDamage*0.75+4)*attackingObjectHitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))
 	return attackingObjectHitlag
 #	calculate_hitlag_frames_clashed_attackingObject(attackingObjectDamage, attackingObjectHitlagMultiplier, attackingObject)
 
@@ -221,7 +221,7 @@ func calc_hitlag_attacked(collidedHitBoxes,arrayPosition):
 	var attackedObject = collidedHitBoxes[arrayPosition][0]
 	var attackedObjectDamage = collidedHitBoxes[arrayPosition][2]
 	var attackedObjectHitlagMultiplier = collidedHitBoxes[arrayPosition][3]
-	var attackedObjectHitlag = floor((attackedObjectDamage*0.75+4)*attackedObjectHitlagMultiplier + (attackedObject.state.hitlagTimer.get_time_left()*70))
+	var attackedObjectHitlag = floor((attackedObjectDamage*0.75+4)*attackedObjectHitlagMultiplier + (attackedObject.state.hitlagTimer.get_time_left()*60))
 	return attackedObjectHitlag
 #	calculate_hitlag_frames_clashed_attackedObject(attackedObjectDamage, attackedObjectHitlagMultiplier, attackedObject)
 	
@@ -229,13 +229,13 @@ func calc_reboundLag(collidedHitBoxes,arrayPosition):
 	var reboundObject = collidedHitBoxes[arrayPosition][0]
 	var reboundObjectDamage = collidedHitBoxes[arrayPosition][2]
 	var reboundObjectHitlagMultiplier = collidedHitBoxes[arrayPosition][3]
-	var reboundObjectHitlag = floor((reboundObjectDamage*0.75+4)*reboundObjectHitlagMultiplier + (reboundObject.state.hitlagTimer.get_time_left()*70))
+	var reboundObjectHitlag = floor((reboundObjectDamage*0.75+4)*reboundObjectHitlagMultiplier + (reboundObject.state.hitlagTimer.get_time_left()*60))
 	return reboundObjectHitlag
 	
 func set_hitlag_frames(object, objectHitlag):
 	object.state.hitlagTimer.stop()
 	object.state.create_hitlag_timer(objectHitlag)
 
-func set_hitlag_attacked_frames(object, objectHitlag):
+func set_hitlag_attacked_frames(object, objectHitlag, attackingObject):
 	object.state.hitlagTimer.stop()
-	object.character_attacked_handler(objectHitlag)
+	object.is_attacked_handler(objectHitlag, attackingObject)
