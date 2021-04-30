@@ -7,9 +7,11 @@
 script = ExtResource( 1 )
 
 [node name="AnimatedSprite" parent="." index="1"]
-frame = 4
+animation = "shoot"
+frame = 3
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
 scale = Vector2( 0.5, 0.5 )
+disabled = false
 
 [editable path="AnimatedSprite/HitBoxes"]

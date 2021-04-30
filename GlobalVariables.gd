@@ -55,7 +55,7 @@ var controlsP2 = {
 	"left" : "Left2",
 	"right" : "Right2",
 	"jump" : "Jump2",
-	"attack" : "Attack2",
+	"attack" : "Attack1",
 	"shield" : "Shield2",
 	"grab" : "Grab2", 
 	"special": "Special2"

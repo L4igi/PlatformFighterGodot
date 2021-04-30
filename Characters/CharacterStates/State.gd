@@ -506,7 +506,7 @@ func create_hitlagAttacked_timer(waitTime):
 	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
-#	print("current damage " +str(character.damagePercent))
+#	print("current damagqe " +str(character.damagePercent))
 	gravity_on_off("on")
 	attackedInitLaunchAngle = atan2(character.initLaunchVelocity.y, character.initLaunchVelocity.x)
 	character.velocity = character.initLaunchVelocity

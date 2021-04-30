@@ -8,7 +8,6 @@ func add_colliding_hitbox(attackingObject, attackedObject, attackDamage, hitlagM
 	allCollidedHitBoxes.append([attackingObject, attackedObject, attackDamage, hitlagMultiplier, hitBoxesConnectedCopy, reboundingHitbox, transcendentHitBox,specialHitBoxEffects, isAttackedHandlerFuncRef, isAttackedHandlerParamArray])
 
 func match_colliding_hitboxes():
-	print(allCollidedHitBoxes)
 	var tempAllCollidedHitBoxes = allCollidedHitBoxes.duplicate(true)
 	var loopCount = 0
 	for object1Count in range(0,tempAllCollidedHitBoxes.size()):
@@ -22,7 +21,7 @@ func match_colliding_hitboxes():
 				collidedHitBoxes.append(tempAllCollidedHitBoxes[object2Count])
 				process_collision(collidedHitBoxes)
 	tempAllCollidedHitBoxes.clear()
-#	allCollidedHitBoxes.clear()
+	allCollidedHitBoxes.clear()
 
 func _process(delta):
 	if allCollidedHitBoxes.size() >= 2:

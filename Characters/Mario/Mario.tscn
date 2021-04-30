@@ -822,7 +822,7 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0.0333333, 0.0666667 ),
+"times": PoolRealArray( 0.0333333, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
@@ -911,7 +911,7 @@ tracks/10/loop_wrap = true
 tracks/10/imported = false
 tracks/10/enabled = true
 tracks/10/keys = {
-"times": PoolRealArray( 0.0333333, 0.0666667 ),
+"times": PoolRealArray( 0.0333333, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
@@ -923,7 +923,7 @@ tracks/11/loop_wrap = true
 tracks/11/imported = false
 tracks/11/enabled = true
 tracks/11/keys = {
-"times": PoolRealArray( 0.0333333, 0.0666667 ),
+"times": PoolRealArray( 0.0333333, 0.3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
@@ -1504,6 +1504,8 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
+animation = "jab1"
+frame = 2
 speed_scale = 2.0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
@@ -1525,6 +1527,14 @@ anims/tumble = SubResource( 14 )
 anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
+
+[node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
+position = Vector2( 16.4103, 2.38419e-07 )
+scale = Vector2( 1.2, 1.2 )
+
+[node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
+position = Vector2( 8.20513, 0 )
+scale = Vector2( 1, 1 )
 
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = true

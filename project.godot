@@ -269,6 +269,7 @@ config/icon="res://icon.png"
 GlobalVariables="*res://GlobalVariables.gd"
 CharacterInteractionHandler="*res://Characters/CharacterInteractionHandler.gd"
 HitBoxManager="*res://Characters/HitBoxManager.gd"
+HitBoxHurtBoxManager="*res://Characters/HitBoxHurtBoxManager.gd"
 
 [debug]
 

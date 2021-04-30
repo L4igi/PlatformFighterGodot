@@ -173,8 +173,6 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	return projectileInteracted
 
 func handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
-	print("CURRENTMOVEDIRECTION " +str(currentMoveDirection))
-	print("PARENTNODE " +str(parentNode.name))
 	projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.REFLECTED
 	match currentMoveDirection:
 		GlobalVariables.MoveDirection.LEFT:

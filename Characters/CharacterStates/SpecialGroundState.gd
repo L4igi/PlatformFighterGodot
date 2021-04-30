@@ -17,6 +17,8 @@ func _ready():
 			character.bufferInvincibilityFrames = 0
 #	character.check_special_animation_steps()
 				
+func switch_to_current_state_again(transitionBufferedInput):
+	self.transitionBufferedInput = transitionBufferedInput
 				
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
