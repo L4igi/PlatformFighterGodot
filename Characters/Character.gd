@@ -385,7 +385,7 @@ func jab_animation_step(step = 0):
 		1:
 			comboNextJab = false
 	
-func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, attackingObjectGlobalPosition):
+func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  attackingObjectGlobalPosition):
 	lastBounceCollision = null
 	lastReceivedDamage = damage
 	hitsTaken += 1
@@ -436,7 +436,7 @@ func is_attacked_calculations_perfect_shield():
 	#todo: add perfect shield animation and particle effects
 	print("perfect shield")
 	
-func is_attacked_in_shield_calculations(damage, shieldStunMultiplier, shieldDamage, isProjectile, attackingObjectGlobalPosition):
+func is_attacked_in_shield_calculations(damage, shieldStunMultiplier, shieldDamage, attackingObjectGlobalPosition):
 	shieldStunFrames = int(floor(damage * 0.8 * shieldStunMultiplier + 2))
 	characterShield.buffer_shield_damage(damage, shieldDamage)
 #	characterShield.apply_shield_damage(damage, shieldDamage)
@@ -491,7 +491,7 @@ func apply_throw(actionType):
 	print("buffered hitlag frames throw " +str(bufferHitLagFrames))
 	var launchVectorInversion = false
 	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
-	is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, isProjectile, inGrabByCharacter)
+	is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  inGrabByCharacter)
 #	if shortHitStun:
 #		state.play_animation("hurt_short")
 #	elif !shortHitStun:
@@ -701,7 +701,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func change_state(new_state, transitionBufferedInput = null):
 	if currentState == new_state:
-		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
+#		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
 		state.switch_to_current_state_again(transitionBufferedInput)
 		return
 	if stateChangedThisFrame:
@@ -721,7 +721,7 @@ func change_state(new_state, transitionBufferedInput = null):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():

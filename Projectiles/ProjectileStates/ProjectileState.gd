@@ -13,17 +13,16 @@ var bufferedAnimation = null
 #state done 
 var stateDone = false
 
- 
-
 func _ready():
-	hitlagTimer = GlobalVariables.create_timer("on_hitlag_timeout", "HitLagTimer", self)
-	hitlagAttackedTimer = GlobalVariables.create_timer("on_hitlagAttacked_timeout", "HitLagTimer", self)
+	pass
 	
 func setup(change_state, animationPlayer, projectile):
 	self.change_state = change_state
 	self.animationPlayer = animationPlayer
 	self.projectile = projectile
 	self.bufferedAnimation = projectile.bufferedAnimation
+	hitlagTimer = GlobalVariables.create_timer("on_hitlag_timeout", "HitLagTimer", self)
+	hitlagAttackedTimer = GlobalVariables.create_timer("on_hitlagAttacked_timeout", "HitLagTimer", self)
 
 func switch_to_current_state_again():
 	pass

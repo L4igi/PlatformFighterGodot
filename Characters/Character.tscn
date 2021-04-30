@@ -3545,7 +3545,7 @@ tracks/8/keys = {
 "times": PoolRealArray( 0.116667, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, true ]
+"values": [ false, true ]
 }
 tracks/9/type = "value"
 tracks/9/path = NodePath("HitBoxes/HitBoxSweetArea/Sweet:position")
@@ -3581,7 +3581,7 @@ tracks/11/keys = {
 "times": PoolRealArray( 0.116667, 0.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, true ]
+"values": [ false, true ]
 }
 tracks/12/type = "method"
 tracks/12/path = NodePath("..")

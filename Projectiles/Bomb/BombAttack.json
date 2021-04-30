@@ -22,7 +22,7 @@
 		"disableInputDI": 0
 	},
 	"IMPACT_neutral": {
-		"damage_1": 20.5,
+		"damage_1": 10.5,
 		"hitStun_1": 10,
 		"launchVelocity_1": 15,
 		"launchVelocityWeight_1": 0,

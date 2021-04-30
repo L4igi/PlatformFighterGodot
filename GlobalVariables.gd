@@ -49,16 +49,27 @@ var controlsP1 = {
 	"special" : "Special1"
 }
 
+#var controlsP2 = {
+#	"up": "Up2",
+#	"down" : "Down2",
+#	"left" : "Left2",
+#	"right" : "Right2",
+#	"jump" : "Jump2",
+#	"attack" : "Attack2",
+#	"shield" : "Shield2",
+#	"grab" : "Grab2", 
+#	"special": "Special2"
+#}
 var controlsP2 = {
-	"up": "Up2",
-	"down" : "Down2",
-	"left" : "Left2",
-	"right" : "Right2",
-	"jump" : "Jump2",
+	"up": "Up1",
+	"down" : "Down1",
+	"left" : "Right1",
+	"right" : "Left1",
+	"jump" : "Jump1",
 	"attack" : "Attack1",
-	"shield" : "Shield2",
-	"grab" : "Grab2", 
-	"special": "Special2"
+	"shield" : "Shield1",
+	"grab" : "Grab1", 
+	"special": "Special1"
 }
 
 var gameRunning = 0
