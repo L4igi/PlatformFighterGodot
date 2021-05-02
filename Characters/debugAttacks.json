@@ -1397,7 +1397,22 @@
 		"shield_damage_1": 1,
 		"rebounding_1": 0,
 		"transcendent_1": 0,
-		"priority": 2,
+		"damage_2": 7,
+		"hitStun_2": 4,
+		"launchVelocity_2": 0,
+		"launchVelocityWeight_2": 0,
+		"launchAngle_2": 260,
+		"knockBackGrowth_2": 0,
+		"effects_2":{
+			"effect1": "REVERSE",
+			"effect2": "REFLECT"
+		},
+		"shieldStun_multiplier_2": 1,
+		"hitlag_multiplier_2": 1,
+		"shield_damage_2": 1,
+		"rebounding_2": 0,
+		"transcendent_2": 0,
+		"priority": 3,
 		"landingLag": 4,
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
@@ -1421,7 +1436,22 @@
 		"shield_damage_1": 1,
 		"rebounding_1": 0,
 		"transcendent_1": 0,
-		"priority": 1,
+		"damage_2": 7,
+		"hitStun_2": 4,
+		"launchVelocity_2": 0,
+		"launchVelocityWeight_2": 0,
+		"launchAngle_2": 260,
+		"knockBackGrowth_2": 0,
+		"effects_2":{
+			"effect1": "REVERSE",
+			"effect2": "REFLECT"
+		},
+		"shieldStun_multiplier_2": 1,
+		"hitlag_multiplier_2": 1,
+		"shield_damage_2": 1,
+		"rebounding_2": 0,
+		"transcendent_2": 0,
+		"priority": 2,
 		"landingLag": 4,
 		"facing_direction": 0
 	},
@@ -1441,6 +1471,21 @@
 		"shield_damage_1": 1,
 		"rebounding_1": 0,
 		"transcendent_1": 0,
+		"damage_2": 7,
+		"hitStun_2": 4,
+		"launchVelocity_2": 0,
+		"launchVelocityWeight_2": 0,
+		"launchAngle_2": 260,
+		"knockBackGrowth_2": 0,
+		"effects_2":{
+			"effect1": "REVERSE",
+			"effect2": "REFLECT"
+		},
+		"shieldStun_multiplier_2": 1,
+		"hitlag_multiplier_2": 1,
+		"shield_damage_2": 1,
+		"rebounding_2": 0,
+		"transcendent_2": 0,
 		"priority": 1,
 		"landingLag": 4,
 		"facing_direction": 0
@@ -1453,7 +1498,7 @@
 		"launchAngle_1": 0,
 		"knockBackGrowth_1": 0,
 		"effects_1":{
-			"effect2": "REFLECT"
+			"effect1": "REFLECT"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,
@@ -1467,7 +1512,7 @@
 		"launchAngle_2": 0,
 		"knockBackGrowth_2": 0,
 		"effects_2":{
-			"effect2": "REFLECT"
+			"effect1": "REFLECT"
 		},
 		"shieldStun_multiplier_2": 1,
 		"hitlag_multiplier_2": 1,

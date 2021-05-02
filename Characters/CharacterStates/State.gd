@@ -492,17 +492,18 @@ func on_hitlag_timeout():
 
 func create_hitlagAttacked_timer(waitTime):
 	hitlagTimer.stop()
-	reset_gravity()
-	gravity_on_off("off")
-	character.chargingSmashAttack = false
-	character.smashAttack = null
-	hitStunTimer.stop()
-	hitStunTimerDone = true
-	animationPlayer.stop(false)
-	character.velocity = Vector2.ZERO
-	character.disableInput = true
-	character.backUpDisableInputDI = character.disableInputDI
-	character.disableInputDI = false
+	if !hitlagAttackedTimer.get_time_left():
+		reset_gravity()
+		gravity_on_off("off")
+		character.chargingSmashAttack = false
+		character.smashAttack = null
+		hitStunTimer.stop()
+		hitStunTimerDone = true
+		animationPlayer.stop(false)
+		character.velocity = Vector2.ZERO
+		character.disableInput = true
+		character.backUpDisableInputDI = character.disableInputDI
+		character.disableInputDI = false
 	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():

@@ -1504,9 +1504,9 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-position = Vector2( 0.400028, -4.80002 )
+position = Vector2( -6.00001, 7.51022e-06 )
 animation = "sidespecial"
-frame = 1
+frame = 3
 speed_scale = 2.0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
@@ -1529,6 +1529,12 @@ anims/upair = SubResource( 15 )
 anims/uptilt = SubResource( 16 )
 anims/walk = SubResource( 17 )
 
+[node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
+disabled = false
+
+[node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
+disabled = false
+
 [node name="HitBoxSourArea" parent="AnimatedSprite/HitBoxes" index="2"]
 visible = true
 
@@ -1538,7 +1544,7 @@ scale = Vector2( 1, 1 )
 disabled = true
 
 [node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0"]
-position = Vector2( 14.0001, 0.800035 )
+position = Vector2( 12.4, 1.74042e-05 )
 disabled = false
 
 [editable path="AnimatedSprite/HitBoxes"]

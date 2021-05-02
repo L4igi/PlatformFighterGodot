@@ -111,7 +111,7 @@ var backUpDisableInputDI = false
 var backUpDisableInput = false
 var backupStopAnimation = false
 var hitlagDI = Vector2.ZERO
-var hitLagFrames = 2.0
+var hitLagFrames = 3.0
 #invincibility lengths
 var rollInvincibilityFrames = 25
 var spotdodgeInvincibilityFrames = 25
@@ -234,6 +234,8 @@ var normalLandingLag = 3.0
 var grabbedItem = null
 #backuped disabled hitboxes
 var backupDisabledHitboxes = []
+#if multiple character attacks connected but cannot clash 
+var multiObjectsConnected = false
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -405,7 +407,7 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 	if launchVectorInversion:
 		launchVector.x = launchVector.x*-1
 	initLaunchVelocity = launchVector
-#	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
+	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
 	if attackedCalculatedVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
 		shortHitStun = false
@@ -1033,6 +1035,8 @@ func attack_handler_air_throw_attack():
 
 #checks if current attack/state can catch item, pick up item
 func check_item_catch_attack():
+	if grabbedItem: 
+		return false
 	match currentState:
 		GlobalVariables.CharacterState.ATTACKAIR:
 			return true

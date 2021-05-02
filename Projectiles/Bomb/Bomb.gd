@@ -50,7 +50,6 @@ func on_impact():
 #			projectile.on_projectile_catch()
 		_:
 #			print("bomb on impact not special " +str(parentNode.name))
-			toggle_all_hitboxes("off")
 			deleteOnImpact = true
 			parentNode = null
 			originalOwner = null

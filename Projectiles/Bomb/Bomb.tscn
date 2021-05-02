@@ -41,6 +41,18 @@ tracks/2/keys = {
 "update": 0,
 "values": [ Color( 0, 0, 0, 1 ) ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath("HitBoxes/HitBoxNeutralArea/Neutral:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 2, 2 ) ]
+}
 
 [sub_resource type="Animation" id=2]
 length = 0.333333
@@ -76,7 +88,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0.0166667, 0.2 ),
+"times": PoolRealArray( 0, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
@@ -91,7 +103,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 4, 4 ), Vector2( 20, 20 ) ]
+"values": [ Vector2( 20, 20 ), Vector2( 10, 10 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -156,7 +168,7 @@ visible = false
 [node name="AnimatedSprite" parent="." index="1"]
 modulate = Color( 0, 0, 0, 1 )
 animation = "impact"
-frame = 2
+frame = 0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 anims/hold = SubResource( 1 )

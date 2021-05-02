@@ -6,18 +6,21 @@ var allConnectedHurtBoxes = []
 
 enum InteractionState {WIN, LOSE, REBOUND, TRANSCENDENT}
 
-func add_connected_hitbox(attackingObject, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldStunMultiplier, shieldDamage, specialHitBoxEffects, hitlagMultiplier):
-	allConnectedHitboxes.append([attackingObject, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldStunMultiplier, shieldDamage, specialHitBoxEffects, hitlagMultiplier])
+func add_connected_hitbox(attackingObject, hbType, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldStunMultiplier, shieldDamage, specialHitBoxEffects, hitlagMultiplier):
+	allConnectedHitboxes.append([attackingObject,hbType, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldStunMultiplier, shieldDamage, specialHitBoxEffects, hitlagMultiplier])
 
-func add_connected_hurtbox(attackingObject, attackedObject):
-	allConnectedHurtBoxes.append([attackingObject, attackedObject])
+func add_connected_hurtbox(attackingObject, attackedObject, hbType):
+	allConnectedHurtBoxes.append([attackingObject, attackedObject, hbType])
 
 func match_connected_hit_hurtboxes():
-	var tempAllConnectedHurtBoxes = allConnectedHurtBoxes.duplicate(true)
-	for hitObject in allConnectedHitboxes: 
-		for hurtObject in tempAllConnectedHurtBoxes:
-			if hurtObject[0] == hitObject[0]:
-				apply_attack_connected(hitObject, hurtObject[1])
+	while !allConnectedHurtBoxes.empty():
+		for hitObject in allConnectedHitboxes: 
+			for hurtObject in allConnectedHurtBoxes:
+				if hurtObject[0] == hitObject[0]\
+				&& hurtObject[2] == hitObject[1]:
+					apply_attack_connected(hitObject, hurtObject[1])
+					allConnectedHurtBoxes.erase(hurtObject)
+					break
 	allConnectedHitboxes.clear()
 	allConnectedHurtBoxes.clear()
 
@@ -28,17 +31,18 @@ func _process(delta):
 
 func apply_attack_connected(attackingObjectArray, attackedObject):
 	var attackingObject = attackingObjectArray[0]
-	var attackDamage = attackingObjectArray[1]
-	var hitStun = attackingObjectArray[2]
-	var launchAngle = attackingObjectArray[3]
-	var launchVectorInversion = attackingObjectArray[4]
-	var launchVelocity = attackingObjectArray[5]
-	var weightLaunchVelocity = attackingObjectArray[6]
-	var knockBackScaling = attackingObjectArray[7]
-	var shieldStunMultiplier = attackingObjectArray[8]
-	var shieldDamage = attackingObjectArray[9]
-	var specialHitBoxEffects = attackingObjectArray[10]
-	var hitlagMultiplier = attackingObjectArray[11]
+	var hitboxType = attackingObjectArray[1]
+	var attackDamage = attackingObjectArray[2]
+	var hitStun = attackingObjectArray[3]
+	var launchAngle = attackingObjectArray[4]
+	var launchVectorInversion = attackingObjectArray[5]
+	var launchVelocity = attackingObjectArray[6]
+	var weightLaunchVelocity = attackingObjectArray[7]
+	var knockBackScaling = attackingObjectArray[8]
+	var shieldStunMultiplier = attackingObjectArray[9]
+	var shieldDamage = attackingObjectArray[10]
+	var specialHitBoxEffects = attackingObjectArray[11]
+	var hitlagMultiplier = attackingObjectArray[12]
 	if attackedObject.is_in_group("Character"):
 		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD:
 			attackedObject.is_attacked_in_shield_calculations(attackDamage, shieldStunMultiplier, shieldDamage,  attackingObject.global_position)
@@ -61,7 +65,10 @@ func calculate_hitlag_frames_connected(attackingObject, attackedObject, attackDa
 			attackedObjectHitlag = floor(attackedObjectHitlag * 0.67)
 #	attackingObjectHitlag = 200
 #	attackedObjectHitlag = 200
-	GlobalVariables.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
+	if attackedObject.multiObjectsConnected: 
+		attackedObject.multiObjectsConnected = false
+	else: 
+		GlobalVariables.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
 #	print("attackingObjectHitlag " +str(attackingObjectHitlag))
 #	print("attackedObjectHitlag " +str(attackedObjectHitlag))
 	if launchVelocity == 0 && weightLaunchVelocity == 0:

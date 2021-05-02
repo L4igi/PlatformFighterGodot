@@ -38,7 +38,7 @@ var groundStopForce = 500
 var disableInput = true
 var backUpDisableInput = false
 #hitlag
-var hitLagFrames = 2.0
+var hitLagFrames = 3.0
 #collisions 
 var platformCollision = null
 var onSolidGround = null
@@ -64,6 +64,8 @@ var projectileThrown = false
 var projectileCaughtThisFrame = false
 #hitboxes 
 onready var neutralHitbox = get_node("AnimatedSprite/HitBoxes/HitBoxNeutralArea/Neutral")
+
+var multiObjectsConnected = false 
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -114,7 +116,7 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-#	print(self.name + " Changing to " +str(GlobalVariables.ProjectileState.keys()[changeToState]))
+	print(self.name + " Changing to " +str(GlobalVariables.ProjectileState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.ProjectileState.keys()[new_state]
 #	if state.get_parent():
@@ -269,6 +271,9 @@ func on_projectile_catch(newParent):
 		projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.CATCH
 		change_state(GlobalVariables.ProjectileState.HOLD)
 	
+func on_projectile_projectile_collision_no_winner():
+	pass
+
 func is_attacked_handler(hitLagFrames, attackingObject):
 	state.create_hitlagAttacked_timer(hitLagFrames)
 

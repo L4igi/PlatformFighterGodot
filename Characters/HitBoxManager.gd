@@ -205,7 +205,7 @@ func match_rebound_objecttype(collidedHitBoxes,object, objectArrayPosition):
 		object.bufferReboundFrames = calc_reboundLag(collidedHitBoxes,objectArrayPosition)
 		object.change_state(GlobalVariables.CharacterState.REBOUND)
 	elif object.is_in_group("Projectile"):
-		object.change_state(GlobalVariables.ProjectileState.DESTROYED)
+		object.change_state(GlobalVariables.ProjectileState.IMPACT)
 		
 func calc_hitlag_attacker(collidedHitBoxes,arrayPosition):
 	var attackingObject = collidedHitBoxes[arrayPosition][0]

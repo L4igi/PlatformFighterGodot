@@ -1412,7 +1412,7 @@
 		"shield_damage_2": 1,
 		"rebounding_2": 0,
 		"transcendent_2": 0,
-		"priority": 1,
+		"priority": 3,
 		"landingLag": 4,
 		"facing_direction": 0,
 		"damagePercentArmour": 0.0,
@@ -1451,7 +1451,7 @@
 		"shield_damage_2": 1,
 		"rebounding_2": 0,
 		"transcendent_2": 0,
-		"priority": 1,
+		"priority": 2,
 		"landingLag": 4,
 		"facing_direction": 0
 	},
