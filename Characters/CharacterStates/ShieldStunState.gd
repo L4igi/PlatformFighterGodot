@@ -7,7 +7,7 @@ var shieldStunTimer = null
 
 func _ready():
 	shieldStunTimer = GlobalVariables.create_timer("on_shieldStun_timeout", "ShieldStunTimer", self)
-	create_hitlagAttacked_timer(character.bufferHitLagFrames)
+	create_hitlag_timer(character.bufferHitLagFrames)
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
@@ -15,6 +15,10 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	character.characterShield.enable_shield()
 	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
+func switch_to_current_state_again(transitionBufferedInput):
+	self.transitionBufferedInput = transitionBufferedInput
+	shieldStunTimer.stop()
+	create_hitlag_timer(character.bufferHitLagFrames)
 #func manage_buffered_input():
 #	manage_buffered_input_ground()
 #
@@ -44,11 +48,11 @@ func on_shieldStun_timeout():
 	else:
 		character.change_state(GlobalVariables.CharacterState.SHIELD)
 		
-func create_hitlagAttacked_timer(waitTime):
-	.create_hitlagAttacked_timer(waitTime)
+func create_hitlag_timer(waitTime):
+	.create_hitlag_timer(waitTime)
 	character.characterShield.pause_shield()
 		
-func on_hitlagAttacked_timeout():
+func on_hitlag_timeout():
 	.on_hitlag_timeout()
 	character.characterShield.unpause_shield()
 	character.characterShield.apply_shield_damage()

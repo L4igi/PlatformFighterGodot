@@ -49,28 +49,28 @@ var controlsP1 = {
 	"special" : "Special1"
 }
 
-#var controlsP2 = {
-#	"up": "Up2",
-#	"down" : "Down2",
-#	"left" : "Left2",
-#	"right" : "Right2",
-#	"jump" : "Jump2",
-#	"attack" : "Attack2",
-#	"shield" : "Shield2",
-#	"grab" : "Grab2", 
-#	"special": "Special2"
-#}
 var controlsP2 = {
-	"up": "Up1",
-	"down" : "Down1",
-	"left" : "Right1",
-	"right" : "Left1",
-	"jump" : "Jump1",
-	"attack" : "Attack1",
-	"shield" : "Shield1",
-	"grab" : "Grab1", 
-	"special": "Special1"
+	"up": "Up2",
+	"down" : "Down2",
+	"left" : "Left2",
+	"right" : "Right2",
+	"jump" : "Jump2",
+	"attack" : "Attack2",
+	"shield" : "Shield2",
+	"grab" : "Grab2", 
+	"special": "Special2"
 }
+#var controlsP2 = {
+#	"up": "Up1",
+#	"down" : "Down1",
+#	"left" : "Right1",
+#	"right" : "Left1",
+#	"jump" : "Jump1",
+#	"attack" : "Attack1",
+#	"shield" : "Shield1",
+#	"grab" : "Grab1", 
+#	"special": "Special1"
+#}
 
 var gameRunning = 0
 var frameByFrame = false
@@ -96,7 +96,7 @@ func _process(_delta):
 		if Input.is_action_just_released("AdvanceFrame"):
 			gameRunning = 0
 
-func match_attack_type_character(attack):
+func match_attack_type_character(object, attack):
 	var attackType = null
 	match attack:
 		GlobalVariables.CharacterAnimations.JAB1:
@@ -137,6 +137,27 @@ func match_attack_type_character(attack):
 			attackType = AttackType.GROUNDED
 		GlobalVariables.CharacterAnimations.BTHROW:
 			attackType = AttackType.GROUNDED
+		#special moves
+		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			if object.onSolidGround:
+				attackType = AttackType.GROUNDED
+			else: 
+				attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.UPSPECIAL:
+			if object.onSolidGround:
+				attackType = AttackType.GROUNDED
+			else: 
+				attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			if object.onSolidGround:
+				attackType = AttackType.GROUNDED
+			else: 
+				attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.NSPECIAL:
+			if object.onSolidGround:
+				attackType = AttackType.GROUNDED
+			else: 
+				attackType = AttackType.AERIAL
 	return attackType
 
 func create_timer(timeout_function, timerName, object):

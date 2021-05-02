@@ -855,7 +855,8 @@ func is_attacked_handler(hitLagFrames, attackingObject):
 	#handle superarmour 
 	if superarmour_handler():
 		state.create_hitlag_timer(bufferHitLagFrames)
-	if currentState == GlobalVariables.CharacterState.SHIELD:
+	if currentState == GlobalVariables.CharacterState.SHIELD\
+	|| currentState == GlobalVariables.CharacterState.SHIELDSTUN:
 		change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	elif !perfectShieldActivated:
 		change_state(GlobalVariables.CharacterState.HITSTUNAIR)

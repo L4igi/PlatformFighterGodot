@@ -231,7 +231,6 @@ func calc_reboundLag(collidedHitBoxes,arrayPosition):
 	return reboundObjectHitlag
 	
 func set_hitlag_frames(object, objectHitlag):
-	object.state.hitlagTimer.stop()
 	object.state.create_hitlag_timer(objectHitlag)
 
 func set_hitlag_attacked_frames(object, objectHitlag, attackingObject):

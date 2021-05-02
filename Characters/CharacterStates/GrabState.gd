@@ -10,6 +10,7 @@ func _ready():
 	
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
+	character.currentAttack = GlobalVariables.CharacterAnimations.GRAB
 
 func _input(event):
 	if character.grabbedCharacter != null && !character.disableInput:
