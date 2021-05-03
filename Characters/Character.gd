@@ -703,7 +703,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func change_state(new_state, transitionBufferedInput = null):
 	if currentState == new_state:
-#		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
+		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
 		state.switch_to_current_state_again(transitionBufferedInput)
 		return
 	if stateChangedThisFrame:
@@ -723,7 +723,7 @@ func change_state(new_state, transitionBufferedInput = null):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():

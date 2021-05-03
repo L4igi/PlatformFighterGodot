@@ -44,7 +44,8 @@ func apply_attack_connected(attackingObjectArray, attackedObject):
 	var specialHitBoxEffects = attackingObjectArray[11]
 	var hitlagMultiplier = attackingObjectArray[12]
 	if attackedObject.is_in_group("Character"):
-		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD:
+		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
+		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDSTUN:
 			attackedObject.is_attacked_in_shield_calculations(attackDamage, shieldStunMultiplier, shieldDamage,  attackingObject.global_position)
 		elif attackedObject.perfectShieldActivated:
 			attackedObject.is_attacked_calculations_perfect_shield()
@@ -85,4 +86,10 @@ func manage_hurtbox_special_interactions_projectile(attackingObject, attackedObj
 		var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, interactionTypeToUse)
 		if attackedObjectInteracted:
 			return true
+	return false
+	
+func manage_hurtbox_special_interactions_character(attackingObject, attackedObject, specialHitBoxEffects, attackDamage):
+	if attackingObject.is_in_group("Character") && attackedObject.is_in_group("Character"):
+		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+		var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, interactionTypeToUse)
 	return false
