@@ -41,6 +41,7 @@ func handle_input_disabled(_delta):
 
 func _physics_process(_delta):
 	if !stateDone:
+		process_movement_physics(_delta)
 		if !character.disableInput:
 			handle_input(_delta)
 			if character.pushingCharacter:
@@ -48,4 +49,3 @@ func _physics_process(_delta):
 					character.disableInput = false
 					character.bufferMoveAirTransition = true
 					character.change_state(GlobalVariables.CharacterState.AIR)
-		process_movement_physics(_delta)

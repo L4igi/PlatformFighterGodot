@@ -24,6 +24,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	character.disableInput = true
 	character.backUpDisableInputDI = character.disableInputDI
 	character.disableInputDI = false
+	character.currentMaxSpeed = character.baseWalkMaxSpeed
 	
 func handle_input_disabled(_delta):
 	if !bufferedInput:

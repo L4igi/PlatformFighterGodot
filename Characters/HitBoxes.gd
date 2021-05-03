@@ -166,6 +166,7 @@ func apply_attack_clashed_character_character(attackedObject, attackDamage, hitS
 		#both characters attacked in air: 
 		if attackingObjectAttackType == GlobalVariables.AttackType.AERIAL\
 		&& attackedObjectAttackType == GlobalVariables.AttackType.AERIAL:
+			attackingObject.multiObjectsConnected = true
 			attackedObject.multiObjectsConnected = true
 			clashedObjectArray.erase(attackedObject)
 		#ground air || air ground collision

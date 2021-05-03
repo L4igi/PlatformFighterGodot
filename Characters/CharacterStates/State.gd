@@ -265,6 +265,26 @@ func reset_attributes():
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
+	character.shortTurnAround = false
+	character.pushingAction = false
+	character.perfectShieldActivated = false
+	character.bufferedSmashAttack = null
+	character.stopAreaVelocity.x = 0
+	character.currentHitBox = 1
+	character.toggle_all_hitboxes("off")
+	character.characterShield.disable_shield()
+	character.reset_hitboxes()
+	character.jabCount = 0
+	if bufferedAnimation:
+		animationPlayer.play()
+		bufferedAnimation = null
+	character.damagePercentArmour = 0.0
+	character.knockbackArmour = 0.0
+	character.multiHitArmour = 0.0
+	character.hitsTaken = 0
+	character.backUpDisableInputDI = false
+	character.backUpDisableInput = false
+	character.backupDisabledHitboxes.clear()
 
 func _unhandled_input(event):
 	pass
@@ -467,6 +487,7 @@ func on_invincibility_timeout():
 		
 func create_hitlag_timer(waitTime):
 	if !hitlagTimer.get_time_left():
+		print("create_hitlag_timer " +str(character.name) +str(character.velocity))
 	#	character.toggle_all_hitboxes("off")
 		animationPlayer.stop(false)
 		gravity_on_off("off")
@@ -479,10 +500,12 @@ func create_hitlag_timer(waitTime):
 	GlobalVariables.start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
+	print("on timeout htilag timer " +str(character.name))
 	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	character.velocity = character.initLaunchVelocity
-	if character.superArmourOn\
+	if (character.superArmourOn\
+	&& character.smashAttack)\
 	|| character.smashAttack:
 		character.superArmourOn = false
 	else:

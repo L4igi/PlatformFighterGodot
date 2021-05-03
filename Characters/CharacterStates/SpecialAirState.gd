@@ -15,6 +15,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
+	
 
 func manage_transition_buffered_input():
 	match transitionBufferedInput:

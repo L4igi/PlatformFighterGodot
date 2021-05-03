@@ -403,11 +403,13 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 		else:
 			attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
 	velocity = Vector2.ZERO
-	var launchVector = calculate_launch_vector(launchAngle, attackedCalculatedVelocity)
-	if launchVectorInversion:
-		launchVector.x = launchVector.x*-1
-	initLaunchVelocity = launchVector
-	print("attackedCalculatedVelocity "+str(attackedCalculatedVelocity))
+	if attackedCalculatedVelocity == 0: 
+		initLaunchVelocity = Vector2.ZERO
+	else:
+		var launchVector = calculate_launch_vector(launchAngle, attackedCalculatedVelocity)
+		if launchVectorInversion:
+			launchVector.x = launchVector.x*-1
+		initLaunchVelocity = launchVector
 	if attackedCalculatedVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
 		shortHitStun = false
@@ -550,23 +552,6 @@ func dodge_animation_step(step = 0):
 			elif state.enable_player_input():
 				applySideStepFrames = true
 				change_state(GlobalVariables.CharacterState.GROUND)
-				
-#func airDodge_animation_step(step = 0):
-#	match step: 
-#		0:
-#			disableInput = true
-#		1:
-#			state.create_invincibility_timer(neutralAirDodgeInvicibilitFrames)
-#		2:
-#			if !onSolidGround && !state.bufferedInput:
-#				change_state(GlobalVariables.CharacterState.AIR)
-#			if onSolidGround && Input.is_action_pressed(shield):
-#				change_state(GlobalVariables.CharacterState.SHIELD)
-#			elif onSolidGround && !state.bufferedInput:
-#				applySideStepFrames = true
-#				change_state(GlobalVariables.CharacterState.GROUND)
-#			else:
-#				state.enable_player_input()
 			
 func getup_animation_step(step = 0):
 	match step: 
@@ -703,7 +688,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func change_state(new_state, transitionBufferedInput = null):
 	if currentState == new_state:
-		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
+#		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
 		state.switch_to_current_state_again(transitionBufferedInput)
 		return
 	if stateChangedThisFrame:
@@ -723,7 +708,9 @@ func change_state(new_state, transitionBufferedInput = null):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+#	if changeToState == GlobalVariables.CharacterState.AIR:
+#		pass
 	state = state_factory.get_state(changeToState).new()
 	state.name = GlobalVariables.CharacterState.keys()[new_state]
 #	if state.get_parent():
@@ -855,7 +842,7 @@ func is_attacked_handler(hitLagFrames, attackingObject):
 	#handle superarmour 
 	if superarmour_handler():
 		state.create_hitlag_timer(bufferHitLagFrames)
-	if currentState == GlobalVariables.CharacterState.SHIELD\
+	elif currentState == GlobalVariables.CharacterState.SHIELD\
 	|| currentState == GlobalVariables.CharacterState.SHIELDSTUN:
 		change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	elif !perfectShieldActivated:

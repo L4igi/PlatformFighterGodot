@@ -1207,7 +1207,7 @@
 		"priority": 2,
 		"landingLag": 4,
 		"facing_direction": 0,
-		"damagePercentArmour": 0.0,
+		"damagePercentArmour": 100.0,
 		"knockbackArmour": 0.0,
 		"multiHitArmour": 0.0,
 		"disableInputDI": 1

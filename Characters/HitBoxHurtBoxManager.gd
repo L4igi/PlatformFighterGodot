@@ -50,6 +50,7 @@ func apply_attack_connected(attackingObjectArray, attackedObject):
 		elif attackedObject.perfectShieldActivated:
 			attackedObject.is_attacked_calculations_perfect_shield()
 		else:
+			manage_hurtbox_special_interactions_character(attackingObject, attackedObject, specialHitBoxEffects, attackDamage)
 			attackedObject.is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  attackingObject.global_position)
 	elif attackedObject.is_in_group("Projectile"):
 		if !manage_hurtbox_special_interactions_projectile(attackingObject, attackedObject, specialHitBoxEffects, attackDamage):
@@ -92,4 +93,3 @@ func manage_hurtbox_special_interactions_character(attackingObject, attackedObje
 	if attackingObject.is_in_group("Character") && attackedObject.is_in_group("Character"):
 		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
 		var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, interactionTypeToUse)
-	return false
