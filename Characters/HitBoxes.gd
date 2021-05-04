@@ -252,7 +252,7 @@ func check_hitbox_areas(area, hitboxType):
 			connectedObjectArray[attackedObject] = set_hightest_priority_hitbox(attackingObject, hitboxType, connectedObjectArray[attackedObject])
 #		apply_hitlag(attackedObject)
 		apply_hurtbox_hitlag(attackedObject)
-		
+			
 func is_projectile_parentNode_interaction(attackingObject, attackedObject):
 	if attackingObject.is_in_group("Projectile"):
 		if attackingObject.check_hit_parentNode(attackedObject):
@@ -284,6 +284,8 @@ func check_item_catch(attackingObject, attackedObject):
 	return false
 	
 func check_character_grab(attackedObject):
+	if clashedObjectArray.has(attackedObject):
+		return false
 	if attackingObject.is_in_group("Character")\
 	&& attackedObject.is_in_group("Character")\
 	&& attackingObject.currentState == GlobalVariables.CharacterState.GRAB:
@@ -291,13 +293,13 @@ func check_character_grab(attackedObject):
 		|| attackedObject.currentState == GlobalVariables.CharacterState.AIR\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.ATTACKGROUND\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.ATTACKAIR\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.GRAB\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.SPECIALGROUND\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.SPECIALAIR\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.ROLL\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDBREAK\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.EDGEGETUP:
+			print(attackedObject.currentState)
 			attackingObject.grabbedCharacter = attackedObject
 			attackingObject.apply_grab_animation_step(1)
 			apply_grab(attackedObject)

@@ -158,6 +158,8 @@ func match_attack_type_character(object, attack):
 				attackType = AttackType.GROUNDED
 			else: 
 				attackType = AttackType.AERIAL
+		GlobalVariables.CharacterAnimations.GRAB:
+			attackType = AttackType.GROUNDED
 	return attackType
 
 func create_timer(timeout_function, timerName, object):

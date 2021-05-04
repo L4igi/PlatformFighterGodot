@@ -196,7 +196,6 @@ var superArmourOn = false
 var damagePercentArmour = 0.0
 var knockbackArmour = 0.0
 var multiHitArmour = 0
-var lastReceivedDamage = 0
 var hitsTaken = 0
 #dictionary to keep moves that transition from attackair to attackground and vice versa in check
 #dictionary to keep moves that transition from specialair to specialground and vice versa in check
@@ -389,7 +388,6 @@ func jab_animation_step(step = 0):
 	
 func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  attackingObjectGlobalPosition):
 	lastBounceCollision = null
-	lastReceivedDamage = damage
 	hitsTaken += 1
 	damagePercent += damage
 	if weightLaunchVelocity == 0:
@@ -402,6 +400,9 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 			attackedCalculatedVelocity += calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
 		else:
 			attackedCalculatedVelocity = calculate_attack_knockback_weight_based(damage, weightLaunchVelocity, knockBackScaling)
+	#check superaromour 
+	if superarmour_handler(damage):
+		return 
 	velocity = Vector2.ZERO
 	if attackedCalculatedVelocity == 0: 
 		initLaunchVelocity = Vector2.ZERO
@@ -840,7 +841,7 @@ func calculate_hitlag_di():
 func is_attacked_handler(hitLagFrames, attackingObject):
 	bufferHitLagFrames = hitLagFrames
 	#handle superarmour 
-	if superarmour_handler():
+	if superArmourOn:
 		state.create_hitlag_timer(bufferHitLagFrames)
 	elif currentState == GlobalVariables.CharacterState.SHIELD\
 	|| currentState == GlobalVariables.CharacterState.SHIELDSTUN:
@@ -855,9 +856,9 @@ func is_attacked_handler_no_knockback(hitLagFrames, attackingObject):
 	#current animation is not finished on hitlag timeout
 	state.create_hitlag_timer(bufferHitLagFrames)
 		
-func superarmour_handler():
+func superarmour_handler(damage):
 	if damagePercentArmour > 0.0:
-		damagePercentArmour -= lastReceivedDamage
+		damagePercentArmour -= damage
 		if damagePercent > 0.0:
 			superArmourOn = true
 			return true

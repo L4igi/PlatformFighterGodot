@@ -438,21 +438,6 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 213 ) ],
-"loop": true,
-"name": "shield",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
-"loop": true,
-"name": "grab",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
 "loop": true,
 "name": "techroll",
@@ -696,6 +681,21 @@ animations = [ {
 "frames": [ ExtResource( 427 ), ExtResource( 426 ) ],
 "loop": true,
 "name": "helpless",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
+"loop": true,
+"name": "grab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 213 ) ],
+"loop": true,
+"name": "shield",
 "speed": 5.0
 } ]
 

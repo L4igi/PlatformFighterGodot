@@ -1011,6 +1011,28 @@
 		"priority": 0,
 		"facing_direction": 0
 	},
+	"GRAB_neutral": {
+		"damage_1": 0,
+		"hitStun_1": 0,
+		"launchVelocity_1": 0,
+		"launchVelocityWeight_1": 0,
+		"launchAngle_1": 0,
+		"knockBackGrowth_1": 0,
+		"effects_1":{
+			"effect1": "NEUTRAL"
+		},
+		"shieldStun_multiplier_1": 1,
+		"hitlag_multiplier_1": 1,
+		"shield_damage_1": 1,
+		"rebounding_1": 0,
+		"transcendent_1": 0,
+		"priority": 2,
+		"facing_direction": 0,
+		"damagePercentArmour": 0.0,
+		"knockbackArmour": 0.0,
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
+	},
 	"GRABJAB": {
 		"damage": 3.25
 	},
