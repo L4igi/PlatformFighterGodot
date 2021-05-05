@@ -49,7 +49,6 @@ func _physics_process(_delta):
 				shieldBreakTimer.stop()
 				if check_in_air():
 					character.disableInput = false
-					character.bufferMoveAirTransition = GlobalVariables.CharacterState.SHIELDBREAK
 					character.change_state(GlobalVariables.CharacterState.AIR)
 	
 func create_shieldbreak_timer(waitTime):

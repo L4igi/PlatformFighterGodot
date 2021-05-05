@@ -36,7 +36,6 @@ func _physics_process(_delta):
 		process_movement_physics(_delta)
 		if check_in_air():
 			character.disableInput = false
-			character.bufferMoveAirTransition = GlobalVariables.CharacterState.AIR
 			character.change_state(GlobalVariables.CharacterState.AIR)
 
 func create_rebound_timer(waitTime):

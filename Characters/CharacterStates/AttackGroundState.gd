@@ -147,7 +147,6 @@ func _physics_process(_delta):
 					return
 				else:
 					character.disableInput = false
-					character.bufferMoveAirTransition = GlobalVariables.CharacterState.ATTACKAIR
 					character.change_state(GlobalVariables.CharacterState.AIR)
 					return
 #			if character.airGroundMoveTransition:

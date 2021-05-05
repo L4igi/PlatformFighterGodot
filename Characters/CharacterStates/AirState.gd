@@ -20,6 +20,12 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 #	CharacterInteractionHandler.remove_ground_colliding_character(character)
 
+func manage_transition_buffered_input():
+	match transitionBufferedInput: 
+		GlobalVariables.CharacterAnimations.JUMP:
+			double_jump_handler()
+	transitionBufferedInput = null
+
 func manage_buffered_input():
 	manage_buffered_input_ground()
 
@@ -68,6 +74,9 @@ func _physics_process(_delta):
 	if !stateDone:
 		if character.airTime <= 300: 
 			character.airTime += 1
+		if transitionBufferedInput:
+			manage_transition_buffered_input()
+			return
 		if character.disableInput: 
 			handle_input_disabled(_delta)
 			process_movement_physics_air(_delta)

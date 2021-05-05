@@ -23,6 +23,8 @@ func switch_to_current_state_again(transitionBufferedInput):
 	
 func manage_transition_buffered_input():
 	match transitionBufferedInput:
+		GlobalVariables.CharacterAnimations.JUMP:
+			double_jump_attack_handler()
 		GlobalVariables.CharacterAnimations.JAB1:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
