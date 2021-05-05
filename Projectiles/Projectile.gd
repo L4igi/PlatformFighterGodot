@@ -310,6 +310,8 @@ func setup_throw_item(throwType):
 			velocity = Vector2(0, -1000)
 		GlobalVariables.CharacterAnimations.THROWITEMFORWARD:
 			velocity = Vector2(1500, -400) * direction
+		GlobalVariables.CharacterAnimations.ZDROPITEM: 
+			velocity = Vector2(0,0)
 
 func create_projectileTTL_timer(waittime):
 	GlobalVariables.start_timer(projectileTTLTimer, waittime)

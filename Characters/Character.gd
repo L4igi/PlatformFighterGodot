@@ -772,6 +772,10 @@ func check_state_transition(changeToState):
 						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = change_to_special_state()
 						return changeToState
+	elif changeToState == GlobalVariables.CharacterState.GRAB:
+		if grabbedItem:
+			changeToState = GlobalVariables.CharacterState.ATTACKGROUND
+			return changeToState
 	bufferInvincibilityFrames = 0.0
 	groundAirMoveTransition = false
 	airGroundMoveTransition = false

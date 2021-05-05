@@ -29,6 +29,13 @@ func handle_input(_delta):
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()
 		character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+	elif Input.is_action_just_pressed(character.grab):
+		if character.grabbedItem:
+			character.grabbedItem.on_projectile_throw(GlobalVariables.CharacterAnimations.ZDROPITEM)
+			character.grabbedItem = null
+		else:
+			#character aeral grab (link hook, samus phaser etc)
+			pass
 	elif Input.is_action_just_pressed(character.special):
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()

@@ -121,6 +121,8 @@ func manage_side_special(step = 0):
 	sideSpecialAnimationStep = step
 	match step:
 		0:
+			if onSolidGround: 
+				velocity.x = 0
 			enableSpecialInput = false
 		1:
 			pass

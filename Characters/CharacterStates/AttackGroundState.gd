@@ -139,6 +139,7 @@ func _physics_process(_delta):
 		handle_input_disabled(_delta)
 		if character.disableInput:
 			process_movement_physics(_delta)
+			check_stop_area_entered(_delta)
 			if check_in_air():
 				if character.moveGroundAirTransition.has(character.currentAttack):
 					character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
@@ -153,7 +154,7 @@ func _physics_process(_delta):
 #				manage_air_ground_move_transition()
 			if !landingLagTimer.get_time_left():
 				if character.chargingSmashAttack:
-					check_stop_area_entered(_delta)
+#					check_stop_area_entered(_delta)
 					shift_attack_angle()
 					if (Input.is_action_just_released(character.attack)\
 					|| !Input.is_action_pressed(character.attack)):
@@ -162,8 +163,8 @@ func _physics_process(_delta):
 						character.smashAttack = null
 						character.animatedSprite.set_rotation_degrees(rotateSmashAttackDegrees)
 						character.apply_smash_attack_steps(2)
-				if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
-					check_stop_area_entered(_delta)
+#				if character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK:
+#					check_stop_area_entered(_delta)
 				if character.currentAttack == GlobalVariables.CharacterAnimations.JAB1\
 				|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB2\
 				|| character.currentAttack == GlobalVariables.CharacterAnimations.JAB3:

@@ -2,6 +2,9 @@ extends State
 
 class_name SpecialAir
 
+var bReverseTimer = null
+var bReverseFrames = 40.0
+
 func _ready():
 	character.currentHitBox = 1
 	if character.groundAirMoveTransition: 
@@ -12,6 +15,7 @@ func _ready():
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	bufferedInput = character.moveTransitionBufferedInput
+	bReverseTimer = GlobalVariables.create_timer("on_b_reverse_timeout", "bReverseTimer", self)
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
@@ -42,6 +46,7 @@ func manage_transition_buffered_input():
 	transitionBufferedInput = null
 	character.initialize_special_animation_steps()
 	character.disableInputDI = manage_disabled_inputDI()
+	create_b_reverse_timer(bReverseFrames)
 
 func manage_buffered_input():
 	.manage_buffered_input_air()
@@ -63,6 +68,7 @@ func _physics_process(_delta):
 		handle_input_disabled(_delta)
 		if character.disableInputDI:
 			process_disable_input_direction_influence(_delta)
+			check_b_reverse()
 		else:
 			process_movement_physics_air(_delta)
 		if character.airTime <= 300: 
@@ -115,10 +121,27 @@ func _physics_process(_delta):
 			character.initialize_special_animation_steps()
 			initialize_superarmour()
 			character.disableInputDI = manage_disabled_inputDI()
-#		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
-#			character.set_collision_mask_bit(1,false)
-#		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():
-#			character.set_collision_mask_bit(1,true) 
+			create_b_reverse_timer(bReverseFrames)
 
 func manage_ground_air_move_transition():
 	character.disableInput = true
+	
+func check_b_reverse():
+	if bReverseTimer.get_time_left():
+		match character.currentMoveDirection: 
+			GlobalVariables.MoveDirection.LEFT: 
+				if Input.is_action_pressed(character.right):
+					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+					character.mirror_areas()
+					bReverseTimer.stop()
+			GlobalVariables.MoveDirection.RIGHT: 
+				if Input.is_action_pressed(character.left):
+					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+					character.mirror_areas()
+					bReverseTimer.stop()
+					
+func create_b_reverse_timer(waitTime):
+	GlobalVariables.start_timer(bReverseTimer, waitTime)
+
+func on_b_reverse_timeout():
+	pass
