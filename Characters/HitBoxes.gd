@@ -102,32 +102,7 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	var reboundingHitbox = currentAttackData["rebounding_" + String(currentHitBoxNumber)]
 	var transcendentHitBox = currentAttackData["transcendent_" + String(currentHitBoxNumber)]
 	##direction player if facing
-	if currentAttackData["facing_direction"] == 0:
-		match attackingObject.currentMoveDirection:
-			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorInversion = false
-			GlobalVariables.MoveDirection.LEFT:
-				launchVectorInversion = true
-	elif currentAttackData["facing_direction"] == 1\
-	&& attackedObject.global_position.x < attackingObject.global_position.x:
-		match attackingObject.currentMoveDirection:
-			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorInversion = false
-			GlobalVariables.MoveDirection.LEFT:
-				launchVectorInversion = true
-	#opposit direction player if facing
-	if currentAttackData["facing_direction"] == 2:
-		match attackingObject.currentMoveDirection:
-			GlobalVariables.MoveDirection.RIGHT:
-				launchVectorInversion = true
-			GlobalVariables.MoveDirection.LEFT:
-				launchVectorInversion = false
-	#always send attacked attackingObject in the direction it is in comparison to attacker
-	elif currentAttackData["facing_direction"] == 3:
-		if attackedObject.global_position.x <= attackingObject.global_position.x:
-			launchVectorInversion = true
-		else:
-			launchVectorInversion = false
+	launchVectorInversion = GlobalVariables.launchVector_inversion(currentAttackData, attackingObject, attackedObject)
 	var launchVelocity = currentAttackData["launchVelocity_" + String(currentHitBoxNumber)]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight_" + String(currentHitBoxNumber)]
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier_" + String(currentHitBoxNumber)]
@@ -242,9 +217,12 @@ func check_hitbox_areas(area, hitboxType):
 			connectedObjectArray[attackedObject] = set_hightest_priority_hitbox(attackingObject, hitboxType, connectedObjectArray[attackedObject])
 #		apply_hitlag(attackedObject)
 		apply_hurtbox_hitlag(attackedObject)
-	elif area.is_in_group("HurtboxProjectile"):
+	elif area.is_in_group("HurtboxProjectile")\
+	&& area.get_parent() != attackingObject:
 		attackedObject = area.get_parent()
 		if is_projectile_parentNode_interaction(attackingObject, attackedObject):
+			return 
+		if check_item_catch(attackingObject, attackedObject):
 			return 
 		if !connectedObjectArray.has(attackedObject):
 			connectedObjectArray[attackedObject] = set_hightest_priority_hitbox(attackingObject, hitboxType)
@@ -299,7 +277,6 @@ func check_character_grab(attackedObject):
 		|| attackedObject.currentState == GlobalVariables.CharacterState.ROLL\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDBREAK\
 		|| attackedObject.currentState == GlobalVariables.CharacterState.EDGEGETUP:
-			print(attackedObject.currentState)
 			attackingObject.grabbedCharacter = attackedObject
 			attackingObject.apply_grab_animation_step(1)
 			apply_grab(attackedObject)

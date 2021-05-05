@@ -489,12 +489,12 @@ func apply_throw(actionType):
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity"]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight"]
+	var launchVectorInversion = GlobalVariables.launchVector_inversion(currentAttackData, inGrabByCharacter, self)
 	self.global_position = inGrabByCharacter.global_position
 	var isProjectile = false
 	inGrabByCharacter = null
 	bufferHitLagFrames = hitLagFrames
 	print("buffered hitlag frames throw " +str(bufferHitLagFrames))
-	var launchVectorInversion = false
 	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  inGrabByCharacter)
 #	if shortHitStun:
@@ -625,6 +625,7 @@ func apply_throw_animation_step(step = 0):
 		0:
 			state.grabTimer.stop()
 			disableInput = true
+			toggle_all_hitboxes("off")
 		1:
 			state.gravity_on_off("on")
 			grabbedCharacter.apply_throw(currentAttack)
@@ -632,7 +633,9 @@ func apply_throw_animation_step(step = 0):
 			state.create_hitlag_timer(hitLagFrames)
 		2: 
 			disableInput = false
+#			currentMaxSpeed = baseWalkMaxSpeed
 			change_state(GlobalVariables.CharacterState.GROUND)
+			
 
 func apply_tech_animation_step_ground(step = 0):
 	match step: 
@@ -709,7 +712,8 @@ func change_state(new_state, transitionBufferedInput = null):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+	if name == "DarkMario":
+		print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
 #	if changeToState == GlobalVariables.CharacterState.AIR:
 #		pass
 	state = state_factory.get_state(changeToState).new()
@@ -752,7 +756,7 @@ func check_state_transition(changeToState):
 					if moveGroundAirTransition.get(currentAttack): 
 						groundAirMoveTransition = true
 						moveTransitionBufferedInput = state.bufferedInput
-						changeToState = GlobalVariables.CharacterState.ATTACKAIR
+						changeToState = change_to_special_state()
 						return changeToState
 			GlobalVariables.CharacterState.SPECIALAIR:
 				if moveAirGroundTransition.has(currentAttack):
@@ -766,7 +770,7 @@ func check_state_transition(changeToState):
 					if moveGroundAirTransition.get(currentAttack): 
 						groundAirMoveTransition = true
 						moveTransitionBufferedInput = state.bufferedInput
-						changeToState = GlobalVariables.CharacterState.SPECIALAIR
+						changeToState = change_to_special_state()
 						return changeToState
 	bufferInvincibilityFrames = 0.0
 	groundAirMoveTransition = false
@@ -1039,3 +1043,6 @@ func check_item_catch_attack():
 					return false
 			return true
 	return false
+
+func set_character_z_index(index):
+	self.set_z_index(index)

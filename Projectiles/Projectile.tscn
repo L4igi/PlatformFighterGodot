@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Projectiles/FireBall/shoot/7.png" type="Texture" id=1]
 [ext_resource path="res://Projectiles/FireBall/impact/0.png" type="Texture" id=2]
@@ -33,7 +33,35 @@ animations = [ {
 } ]
 
 [sub_resource type="Animation" id=3]
-resource_name = "impact"
+resource_name = "destroy"
+length = 0.333333
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.133333 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 4, 5 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "impact" ]
+}
+
+[sub_resource type="Animation" id=4]
 length = 0.333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -85,8 +113,7 @@ tracks/3/keys = {
 "values": [ true, true ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "shoot"
+[sub_resource type="Animation" id=5]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -139,7 +166,49 @@ tracks/3/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="Animation" id=7]
+resource_name = "shoot_no_hitbox"
+length = 0.383333
+loop = true
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "shoot" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../HurtBoxArea/HurtBoxShape:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="CircleShape2D" id=6]
 
 [node name="Projectile" type="KinematicBody2D" groups=[
 "Projectile",
@@ -154,12 +223,13 @@ shape = SubResource( 1 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
 animation = "shoot"
-frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "shoot"
-anims/impact = SubResource( 3 )
-anims/shoot = SubResource( 4 )
+anims/destroy = SubResource( 3 )
+anims/impact = SubResource( 4 )
+anims/shoot = SubResource( 5 )
+anims/shoot_no_hitbox = SubResource( 7 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 16 )]
 visible = true
@@ -168,7 +238,7 @@ visible = true
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-scale = Vector2( 2, 2 )
+scale = Vector2( 1.72728, 1.72728 )
 disabled = false
 
 [node name="Sour" parent="AnimatedSprite/HitBoxes/HitBoxSourArea" index="0"]
@@ -182,7 +252,7 @@ visible = false
 ]]
 
 [node name="HurtBoxShape" type="CollisionShape2D" parent="HurtBoxArea"]
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 

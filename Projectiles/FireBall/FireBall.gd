@@ -11,6 +11,7 @@ func _ready():
 	change_state(GlobalVariables.ProjectileState.SHOOT)
 	
 func set_base_stats(parentNode, originalOwner):
+	ttlFrames = 180.0
 	.set_base_stats(parentNode, originalOwner)
 	gravity = 2000.0
 	baseGravity = 2000.0
@@ -21,6 +22,10 @@ func set_base_stats(parentNode, originalOwner):
 	bounceVelocity = 600
 	global_position = parentNode.interactionPoint.global_position
 	grabAble = false
+	canHitSelf = false
+	deleteOnImpact = true
+	ttlTimeoutAction = GlobalVariables.ProjectileState.DESTROYED
+	
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
@@ -46,6 +51,10 @@ func on_impact():
 			print("fireball on impact IMPACTED " +str(parentNode.name))
 		GlobalVariables.ProjectileInteractions.CONTINOUS:
 			print("fireball on impact CONTINOUS " +str(parentNode.name))
+		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER:
+			toggle_all_hitboxes("off")
+			change_state(GlobalVariables.ProjectileState.DESTROYED)
+			projectilecollider.set_deferred("disabled", true)
 		_:
 			print("fireball on impact not special " +str(parentNode.name))
 			toggle_all_hitboxes("off")

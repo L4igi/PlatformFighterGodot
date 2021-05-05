@@ -7,6 +7,7 @@ var dropDownFrames = 2.0
 func _ready():
 	play_animation("crouch")
 	dropDownTimer = GlobalVariables.create_timer("on_dropDown_timeout", "DropDownTimer", self)
+	character.disableInput = false
 	if character.onSolidGround && character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
 	
@@ -25,7 +26,8 @@ func handle_input(_delta):
 		else:
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):
-		character.change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+		var changeToState = character.change_to_special_state()
+		character.change_state(changeToState)
 	elif Input.is_action_just_pressed(character.jump):
 		bufferedInput = null
 		create_shortHop_timer()

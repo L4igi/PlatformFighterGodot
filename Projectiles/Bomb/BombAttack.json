@@ -23,7 +23,7 @@
 	},
 	"IMPACT_neutral": {
 		"damage_1": 10.5,
-		"hitStun_1": 10,
+		"hitStun_1": 45,
 		"launchVelocity_1": 15,
 		"launchVelocityWeight_1": 0,
 		"launchAngle_1": 270,

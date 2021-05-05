@@ -86,15 +86,20 @@ func manage_buffered_input_ground():
 		GlobalVariables.CharacterAnimations.FTILTL:
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
 		GlobalVariables.CharacterAnimations.UPSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.NSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALGROUND, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 	bufferedInput = null
 	
 func manage_buffered_input_air():
@@ -129,15 +134,20 @@ func manage_buffered_input_air():
 			if character.airdodgeAvailable:
 				character.change_state(GlobalVariables.CharacterState.AIRDODGE, bufferedInput)
 		GlobalVariables.CharacterAnimations.UPSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 		GlobalVariables.CharacterAnimations.NSPECIAL:
-			character.change_state(GlobalVariables.CharacterState.SPECIALAIR, bufferedInput)
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState, bufferedInput)
 	bufferedInput = null
 	
 func handle_input(_delta):
@@ -262,6 +272,7 @@ func reset_attributes():
 	character.backUpDisableInputDI = false
 	character.backUpDisableInput = false
 	character.backupDisabledHitboxes.clear()
+	character.set_character_z_index(0)
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
@@ -286,9 +297,6 @@ func switch_to_current_state_again(transitionBufferedInput):
 	character.backUpDisableInput = false
 	character.backupDisabledHitboxes.clear()
 
-func _unhandled_input(event):
-	pass
-	
 func input_movement_physics(_delta):
 #	character.move_and_slide(character.velocity, Vector2.UP)
 	character.move_and_slide(character.velocity)
@@ -487,7 +495,6 @@ func on_invincibility_timeout():
 		
 func create_hitlag_timer(waitTime):
 	if !hitlagTimer.get_time_left():
-		print("create_hitlag_timer " +str(character.name) +str(character.velocity))
 	#	character.toggle_all_hitboxes("off")
 		animationPlayer.stop(false)
 		gravity_on_off("off")
@@ -500,7 +507,6 @@ func create_hitlag_timer(waitTime):
 	GlobalVariables.start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
-	print("on timeout htilag timer " +str(character.name))
 	#character.toggle_all_hitboxes("on")
 	gravity_on_off("on")
 	character.velocity = character.initLaunchVelocity
@@ -508,7 +514,7 @@ func on_hitlag_timeout():
 	&& character.smashAttack)\
 	|| character.smashAttack:
 		character.superArmourOn = false
-	else:
+	elif !bufferedAnimation:
 		animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
 	character.disableInput = character.backUpDisableInput
@@ -554,11 +560,10 @@ func on_hitstun_timeout():
 	character.disableInput = false
 	if character.shortHitStun: 
 		if character.onSolidGround:
-			character.applyLandingLag = character.normalLandingLag
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			pass
+#			character.applyLandingLag = character.normalLandingLag
+#			character.change_state(GlobalVariables.CharacterState.GROUND)
 		else:
-			hitStunTimer.stop()
-			hitStunTimerDone = true
 			character.change_state(GlobalVariables.CharacterState.AIR)
 	else: 
 		if character.currentState == GlobalVariables.CharacterState.HITSTUNAIR:

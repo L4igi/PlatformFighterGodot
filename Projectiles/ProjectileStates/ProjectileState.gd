@@ -29,6 +29,7 @@ func switch_to_current_state_again():
 	
 func create_hitlag_timer(waitTime):
 	if !hitlagTimer.get_time_left():
+		projectile.projectileTTLTimer.set_paused(true)
 	#	character.toggle_all_hitboxes("off")
 		animationPlayer.stop(false)
 		gravity_on_off("off")
@@ -40,6 +41,7 @@ func create_hitlag_timer(waitTime):
 	GlobalVariables.start_timer(hitlagTimer, waitTime)
 	
 func on_hitlag_timeout():
+	projectile.projectileTTLTimer.set_paused(false)
 	gravity_on_off("on")
 	projectile.velocity = projectile.initLaunchVelocity
 	projectile.initLaunchVelocity = null
@@ -47,6 +49,7 @@ func on_hitlag_timeout():
 	projectile.on_impact()
 
 func create_hitlagAttacked_timer(waitTime):
+	projectile.projectileTTLTimer.set_paused(true)
 	hitlagTimer.stop()
 	gravity_on_off("off")
 	if projectile.initLaunchVelocity == null:
@@ -57,6 +60,7 @@ func create_hitlagAttacked_timer(waitTime):
 	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
+	projectile.projectileTTLTimer.set_paused(false)
 	gravity_on_off("on")
 	projectile.velocity = projectile.initLaunchVelocity
 	projectile.initLaunchVelocity = null
@@ -82,3 +86,4 @@ func reset_animatedSprite():
 	projectile.animatedSprite.set_rotation_degrees(0.0)
 	projectile.animatedSprite.set_position(Vector2(0,0))
 	projectile.animatedSprite.set_modulate(Color(1,1,1,1))
+	projectile.animatedSprite.set_scale(Vector2(1,1))

@@ -28,7 +28,7 @@ enum AttackType {GROUNDED, AERIAL, PROJECTILE}
 
 enum SpecialHitboxType {REFLECT, REVERSE, ABSORB, COUNTER, NEUTRAL}
 
-enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS, CATCH}
+enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS, CATCH, HITOTHERCHARACTER}
 
 #connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
 enum HitBoxInteractionType {CONNECTED, CLASHED}
@@ -49,28 +49,28 @@ var controlsP1 = {
 	"special" : "Special1"
 }
 
-#var controlsP2 = {
-#	"up": "Up2",
-#	"down" : "Down2",
-#	"left" : "Left2",
-#	"right" : "Right2",
-#	"jump" : "Jump2",
-#	"attack" : "Attack2",
-#	"shield" : "Shield2",
-#	"grab" : "Grab2", 
-#	"special": "Special2"
-#}
 var controlsP2 = {
-	"up": "Up1",
-	"down" : "Down1",
-	"left" : "Right1",
-	"right" : "Left1",
-	"jump" : "Jump1",
-	"attack" : "Attack1",
-	"shield" : "Shield1",
-	"grab" : "Grab1", 
-	"special": "Special1"
+	"up": "Up2",
+	"down" : "Down2",
+	"left" : "Left2",
+	"right" : "Right2",
+	"jump" : "Jump2",
+	"attack" : "Attack2",
+	"shield" : "Shield2",
+	"grab" : "Grab2", 
+	"special": "Special2"
 }
+#var controlsP2 = {
+#	"up": "Up1",
+#	"down" : "Down1",
+#	"left" : "Right1",
+#	"right" : "Left1",
+#	"jump" : "Jump1",
+#	"attack" : "Attack1",
+#	"shield" : "Shield1",
+#	"grab" : "Grab1", 
+#	"special": "Special1"
+#}
 
 var gameRunning = 0
 var frameByFrame = false
@@ -161,6 +161,36 @@ func match_attack_type_character(object, attack):
 		GlobalVariables.CharacterAnimations.GRAB:
 			attackType = AttackType.GROUNDED
 	return attackType
+
+func launchVector_inversion(currentAttackData, attackingObject, attackedObject):
+	var launchVectorInversion = false
+	if currentAttackData["facing_direction"] == 0:
+		match attackingObject.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				launchVectorInversion = false
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorInversion = true
+	elif currentAttackData["facing_direction"] == 1\
+	&& attackedObject.global_position.x < attackingObject.global_position.x:
+		match attackingObject.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				launchVectorInversion = false
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorInversion = true
+	#opposit direction player if facing
+	if currentAttackData["facing_direction"] == 2:
+		match attackingObject.currentMoveDirection:
+			GlobalVariables.MoveDirection.RIGHT:
+				launchVectorInversion = true
+			GlobalVariables.MoveDirection.LEFT:
+				launchVectorInversion = false
+	#always send attacked attackingObject in the direction it is in comparison to attacker
+	elif currentAttackData["facing_direction"] == 3:
+		if attackedObject.global_position.x <= attackingObject.global_position.x:
+			launchVectorInversion = true
+		else:
+			launchVectorInversion = false
+	return launchVectorInversion
 
 func create_timer(timeout_function, timerName, object):
 	var timer = Timer.new()    

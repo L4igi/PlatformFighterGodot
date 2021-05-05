@@ -1043,7 +1043,8 @@
 		"launchVelocityWeight": 0,
 		"launchAngle": 270,
 		"knockBackGrowth": 72,
-		"effect": "NEUTRAL"
+		"effect": "NEUTRAL",
+		"facing_direction": 0
 	},
 	"DTHROW": {
 		"damage": 5,
@@ -1052,7 +1053,8 @@
 		"launchVelocityWeight": 0,
 		"launchAngle": 292,
 		"knockBackGrowth": 90,
-		"effect": "NEUTRAL"
+		"effect": "NEUTRAL",
+		"facing_direction": 0
 	},
 	"FTHROW": {
 		"damage": 8,
@@ -1061,7 +1063,8 @@
 		"launchVelocityWeight": 0,
 		"launchAngle": 315,
 		"knockBackGrowth": 65,
-		"effect": "NEUTRAL"
+		"effect": "NEUTRAL",
+		"facing_direction": 0
 	},
 	"BTHROW": {
 		"damage": 11,
@@ -1070,7 +1073,8 @@
 		"launchVelocityWeight": 0,
 		"launchAngle": 225,
 		"knockBackGrowth": 66,
-		"effect": "NEUTRAL"
+		"effect": "NEUTRAL",
+		"facing_direction": 0
 	},
 	"ATTACKGETUP_neutral": {
 		"damage_1": 7,

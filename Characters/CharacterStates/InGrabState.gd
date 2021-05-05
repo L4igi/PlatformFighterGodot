@@ -21,7 +21,5 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	character.jumpCount = 0
 	character.airdodgeAvailable = true
 
-#func _physics_process(_delta):
-#	if abs(int(character.inGrabByCharacter.velocity.x)) != 0: 
-#		character.global_position = character.inGrabByCharacter.grabPoint.global_position
-#	process_movement_physics(_delta)
+func _physics_process(_delta):
+	character.characterSprite.global_position = character.inGrabByCharacter.interactionPoint.global_position

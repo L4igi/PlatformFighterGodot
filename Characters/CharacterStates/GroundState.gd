@@ -91,7 +91,8 @@ func handle_input(_delta):
 			character.smashAttack = character.bufferedSmashAttack
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 		if Input.is_action_just_pressed(character.special):
-			character.change_to_special_state()
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState)
 	elif character.bufferedSmashAttack && smashAttackTimer.get_time_left():
 		if Input.is_action_just_pressed(character.attack):
 			if Input.is_action_pressed(character.right):
@@ -113,7 +114,8 @@ func handle_input(_delta):
 	if Input.is_action_just_pressed(character.attack):
 		character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):
-		character.change_to_special_state()
+		var changeToState = character.change_to_special_state()
+		character.change_state(changeToState)
 		
 func handle_input_disabled(_delta):
 	if !bufferedInput:

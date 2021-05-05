@@ -438,6 +438,21 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 213 ) ],
+"loop": true,
+"name": "shield",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
+"loop": true,
+"name": "grab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
 "loop": true,
 "name": "techroll",
@@ -682,21 +697,6 @@ animations = [ {
 "loop": true,
 "name": "helpless",
 "speed": 5.0
-}, {
-"frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 230 ), ExtResource( 231 ), ExtResource( 232 ), ExtResource( 233 ) ],
-"loop": true,
-"name": "grab",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 213 ) ],
-"loop": true,
-"name": "shield",
-"speed": 5.0
 } ]
 
 [sub_resource type="Animation" id=3]
@@ -905,7 +905,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=8]
-length = 1.5
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -925,10 +925,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.05, 0.116667, 0.183333, 0.25, 0.316667, 0.383333, 0.416667, 0.466667, 0.516667, 0.566667, 0.616667, 0.666667, 0.733333, 0.783333, 0.833333, 0.883333, 0.933333, 0.983333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
+"values": [ 0, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13, 14 ]
 }
 tracks/2/type = "method"
 tracks/2/path = NodePath("..")
@@ -937,7 +937,7 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 1.1, 1.5 ),
+"times": PoolRealArray( 0, 0.733333, 1 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "values": [ {
 "args": [ 0 ],
@@ -948,6 +948,38 @@ tracks/2/keys = {
 }, {
 "args": [ 2 ],
 "method": "apply_throw_animation_step"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../InteractionPoint:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.05, 0.116667, 0.183333, 0.25, 0.316667, 0.4, 0.416667, 0.466667, 0.516667, 0.566667, 0.616667, 0.683333, 0.733333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 8, -4 ), Vector2( 16, -4 ), Vector2( 6.39999, 0 ), Vector2( 4, 1.74042e-05 ), Vector2( 0, 2 ), Vector2( -8, 2 ), Vector2( -15, 2 ), Vector2( 16, -4 ), Vector2( 6.39999, 0 ), Vector2( 4, 1.74042e-05 ), Vector2( 0, 2 ), Vector2( -8, 2 ), Vector2( -15, 2 ), Vector2( -16, -16.4 ) ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath("..")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.116667, 0.466667 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [ 1 ],
+"method": "set_character_z_index"
+}, {
+"args": [ -1 ],
+"method": "set_character_z_index"
+}, {
+"args": [ -1 ],
+"method": "set_character_z_index"
 } ]
 }
 
@@ -1802,6 +1834,7 @@ tracks/12/keys = {
 
 [sub_resource type="Animation" id=17]
 length = 1.3
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -1857,6 +1890,18 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, 4 ), Vector2( 0, 12 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( 0, 2 ), Vector2( 0, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("../InteractionPoint:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 10.5, -12 ), Vector2( 11, -8 ), Vector2( 14.4, 16 ), Vector2( 14.4, 28 ) ]
 }
 
 [sub_resource type="Animation" id=18]
@@ -2361,6 +2406,18 @@ tracks/4/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
 "values": [ false, true ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("../InteractionPoint:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0.116667 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 19, 1.74046e-05 ) ]
 }
 
 [sub_resource type="Animation" id=26]
@@ -4422,6 +4479,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=67]
 length = 0.6
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -4514,8 +4572,7 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "sidespecial"
-frame = 7
+animation = "bthrow"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -4617,7 +4674,7 @@ visible = false
 [node name="Shield" parent="." instance=ExtResource( 214 )]
 
 [node name="InteractionPoint" type="Position2D" parent="."]
-position = Vector2( 20, 0 )
+position = Vector2( 10.6667, -4 )
 
 [node name="CharacterEdgeGrabArea" type="Area2D" parent="." groups=[
 "EdgeGrabArea",

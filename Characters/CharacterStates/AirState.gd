@@ -32,7 +32,8 @@ func handle_input(_delta):
 	elif Input.is_action_just_pressed(character.special):
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()
-		character.change_to_special_state()
+		var changeToState = character.change_to_special_state()
+		character.change_state(changeToState)
 	elif Input.is_action_just_pressed(character.jump):
 		double_jump_handler()
 	elif Input.is_action_just_pressed(character.down) && !character.onSolidGround && int(character.velocity.y) >= 0:
@@ -42,7 +43,8 @@ func handle_input(_delta):
 		if character.airdodgeAvailable:
 			character.change_state(GlobalVariables.CharacterState.AIRDODGE)
 	elif Input.is_action_just_pressed(character.special):
-		character.change_to_special_state()
+		var changeToState = character.change_to_special_state()
+		character.change_state(changeToState)
 	elif Input.is_action_just_pressed("StopGravity"):
 		if character.gravity == 0:
 			gravity_on_off("on")

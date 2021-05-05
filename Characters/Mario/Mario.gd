@@ -128,17 +128,19 @@ func manage_side_special(step = 0):
 			pass
 			
 func change_to_special_state():
+	var changeToState = null
 		#changes for each character, if item is held and this moves would spawn new item throw current item instead
 	if onSolidGround:
 		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-			change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+			changeToState = GlobalVariables.CharacterState.ATTACKGROUND
 		else:
-			change_state(GlobalVariables.CharacterState.SPECIALGROUND)
+			changeToState = GlobalVariables.CharacterState.SPECIALGROUND
 	else:
 		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-			change_state(GlobalVariables.CharacterState.ATTACKAIR)
+			changeToState = GlobalVariables.CharacterState.ATTACKAIR
 		else:
-			change_state(GlobalVariables.CharacterState.SPECIALAIR)
+			changeToState = GlobalVariables.CharacterState.SPECIALAIR
+	return changeToState
 
 func check_special_animation_steps():
 	match currentAttack:
