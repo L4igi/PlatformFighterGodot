@@ -49,7 +49,7 @@ func _physics_process(_delta):
 		handle_input_disabled(_delta)
 		if check_in_air():
 			character.disableInput = false
-			character.bufferMoveAirTransition = true
+			character.bufferMoveAirTransition = GlobalVariables.CharacterState.AIRDODGE
 			character.change_state(GlobalVariables.CharacterState.AIR)
 			if character.grabbedCharacter != null:
 				character.grabbedCharacter.on_grab_release()

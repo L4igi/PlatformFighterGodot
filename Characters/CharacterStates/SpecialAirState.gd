@@ -3,7 +3,7 @@ extends State
 class_name SpecialAir
 
 var bReverseTimer = null
-var bReverseFrames = 40.0
+var bReverseFrames = 4.0
 
 func _ready():
 	character.currentHitBox = 1

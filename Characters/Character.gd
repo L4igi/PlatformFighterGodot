@@ -162,7 +162,7 @@ var bufferHitLagFrames = 0
 var stopAreaEntered = false
 var applyLandingLag = null
 var queueFreeFall = false
-var bufferMoveAirTransition = false
+var bufferMoveAirTransition = null
 #last bounce collision platform 
 var lastBounceCollision = null
 #airdodge
@@ -728,10 +728,9 @@ func change_state(new_state, transitionBufferedInput = null):
 	
 func check_state_transition(changeToState):
 	if bufferMoveAirTransition && !shortHopAttack && !pushingCharacter:
-		bufferMoveAirTransition = false
 		match currentState:
 			GlobalVariables.CharacterState.ATTACKGROUND:
-				changeToState = GlobalVariables.CharacterState.ATTACKAIR
+				changeToState = bufferMoveAirTransition
 			GlobalVariables.CharacterState.SHIELD:
 				if changeToState == GlobalVariables.CharacterState.AIR:
 					if airdodgeAvailable:
@@ -740,6 +739,9 @@ func check_state_transition(changeToState):
 				if state.shortHopTimer.get_time_left():
 					queueFreeFall = false
 					state.process_jump()
+				if bufferMoveAirTransition: 
+					changeToState = bufferMoveAirTransition
+		bufferMoveAirTransition = null
 		return changeToState
 	if changeToState == GlobalVariables.CharacterState.GROUND\
 	|| changeToState == GlobalVariables.CharacterState.AIR:

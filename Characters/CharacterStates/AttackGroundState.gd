@@ -138,8 +138,8 @@ func _physics_process(_delta):
 			return
 		handle_input_disabled(_delta)
 		if character.disableInput:
-			process_movement_physics(_delta)
 			check_stop_area_entered(_delta)
+			process_movement_physics(_delta)
 			if check_in_air():
 				if character.moveGroundAirTransition.has(character.currentAttack):
 					character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
@@ -147,7 +147,7 @@ func _physics_process(_delta):
 					return
 				else:
 					character.disableInput = false
-					character.bufferMoveAirTransition = true
+					character.bufferMoveAirTransition = GlobalVariables.CharacterState.ATTACKAIR
 					character.change_state(GlobalVariables.CharacterState.AIR)
 					return
 #			if character.airGroundMoveTransition:

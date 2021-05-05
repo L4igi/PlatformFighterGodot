@@ -27,6 +27,8 @@ var landingLagTimer = null
 #count last xInputs equal 0 
 var lastXInputZeroCount = 0
 var lastXInputSlowTurnAround = 5
+#set attack if next frame in air change to attack air else change to attackground
+var tempHandleInput = null
 
 func _ready():
 	if character.shieldDropped:
@@ -67,12 +69,15 @@ func handle_input(_delta):
 		return
 	elif Input.is_action_pressed(character.shield):
 		if Input.is_action_just_pressed(character.attack):
-			character.change_state(GlobalVariables.CharacterState.GRAB)
+			tempHandleInput = GlobalVariables.CharacterState.GRAB
+#			character.change_state(GlobalVariables.CharacterState.GRAB)
 		else:
-			character.change_state(GlobalVariables.CharacterState.SHIELD)
+			tempHandleInput = GlobalVariables.CharacterState.SHIELD
+#			character.change_state(GlobalVariables.CharacterState.SHIELD)
 		return
 	elif Input.is_action_just_pressed(character.grab):
-		character.change_state(GlobalVariables.CharacterState.GRAB)
+		tempHandleInput = GlobalVariables.CharacterState.GRAB
+#		character.change_state(GlobalVariables.CharacterState.GRAB)
 		return
 	if !character.bufferedSmashAttack:
 		if Input.is_action_just_pressed(character.right):
@@ -92,30 +97,37 @@ func handle_input(_delta):
 			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 		if Input.is_action_just_pressed(character.special):
 			var changeToState = character.change_to_special_state()
-			character.change_state(changeToState)
+			tempHandleInput = changeToState
+#			character.change_state(changeToState)
 	elif character.bufferedSmashAttack && smashAttackTimer.get_time_left():
 		if Input.is_action_just_pressed(character.attack):
 			if Input.is_action_pressed(character.right):
 				if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
 					character.turnAroundSmashAttack = true
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				tempHandleInput = GlobalVariables.CharacterState.ATTACKGROUND
+#				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 			elif Input.is_action_pressed(character.left):
 				if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
 					character.turnAroundSmashAttack = true
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				tempHandleInput = GlobalVariables.CharacterState.ATTACKGROUND
+#				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 			elif Input.is_action_pressed(character.up):
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				tempHandleInput = GlobalVariables.CharacterState.ATTACKGROUND
+#				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 			elif Input.is_action_pressed(character.down):
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				tempHandleInput = GlobalVariables.CharacterState.ATTACKGROUND
+#				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	if Input.is_action_just_pressed(character.attack):
-		character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				tempHandleInput = GlobalVariables.CharacterState.ATTACKGROUND
+#				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):
 		var changeToState = character.change_to_special_state()
-		character.change_state(changeToState)
+		tempHandleInput = changeToState
+#		character.change_state(changeToState)
 		
 func handle_input_disabled(_delta):
 	if !bufferedInput:
@@ -145,22 +157,26 @@ func _physics_process(_delta):
 					perfectShieldFramesLeft -= 1
 			if check_in_air():
 				character.disableInput = false
-				character.bufferMoveAirTransition = true
+				character.bufferMoveAirTransition = GlobalVariables.CharacterState.AIR
 				character.change_state(GlobalVariables.CharacterState.AIR)
 			if !character.perfectShieldActivated:
 				if character.disableInput:
 					handle_input_disabled(_delta)
 				elif inMovementLag:
 					handle_input(_delta)
+					if tempHandleInput: 
+						character.change_state(tempHandleInput)
 		else:
 			input_movement_physics(_delta)
-			check_stop_area_entered(_delta)
+#			check_stop_area_entered(_delta)
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
+			handle_input(_delta)
 			if check_in_air():
 				character.disableInput = false
-				character.bufferMoveAirTransition = true
+				character.bufferMoveAirTransition = tempHandleInput
 				character.change_state(GlobalVariables.CharacterState.AIR)
-			handle_input(_delta)
+			elif tempHandleInput: 
+				character.change_state(tempHandleInput)
 			#checks if player walked off platform/stage
 		
 func input_movement_physics(_delta):

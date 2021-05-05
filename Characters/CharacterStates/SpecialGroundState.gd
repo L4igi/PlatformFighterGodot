@@ -4,7 +4,7 @@ class_name SpecialGround
 
 var landingLagTimer = null
 var bReverseTimer = null
-var bReverseFrames = 40.0
+var bReverseFrames = 4.0
 
 func _ready():
 	landingLagTimer = GlobalVariables.create_timer("on_landingLag_timeout", "LandingLagTimer", self)
@@ -75,7 +75,7 @@ func _physics_process(_delta):
 					return
 				else:
 					character.disableInput = false
-					character.bufferMoveAirTransition = true
+					character.bufferMoveAirTransition = GlobalVariables.CharacterState.SPECIALAIR
 					character.change_state(GlobalVariables.CharacterState.AIR)
 					return
 			if character.airGroundMoveTransition:
