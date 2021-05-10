@@ -188,6 +188,11 @@ func input_movement_physics(_delta):
 	character.velocity = character.move_and_slide(character.velocity)
 #	print(character.velocity)
 	
+func calculate_vertical_velocity(_delta):
+	if character.velocity.y >= character.maxFallSpeed: 
+		character.velocity.y = move_toward(character.velocity.y,character.maxFallSpeed, _delta)
+	else:
+		character.velocity.y += character.gravity * _delta
 	
 func create_tech_timer(waitTime):
 	teched = true

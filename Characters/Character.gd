@@ -20,6 +20,7 @@ var airStopForce = 450
 var baseFallSpeed = 700
 var maxFallSpeed = 850
 var maxFallSpeedFastFall = 1200
+var maxHitStunFallSpeed = 1500
 var groundStopForce = 1500
 var jumpSpeed = 900
 var shortHopSpeed = 600
