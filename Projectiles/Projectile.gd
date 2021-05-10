@@ -72,6 +72,10 @@ var lastVelocityNotZero = Vector2.ZERO
 var solidGroundInteractionThreasholdY = 550.0
 #var projectilereflectvelocity
 var projectileReflectVelocityY= -500
+#when projectile bounces on character shield, save bounce character node 
+var shieldBounceCharacter = null
+#solidgroundInitBounceVelocity 
+var solidGroundInitBounceVelocity = 100
 
 var multiObjectsConnected = false 
 
@@ -157,11 +161,12 @@ func process_projectile_physics(_delta):
 	
 func process_projectile_physics_thrown(_delta):
 	if onSolidGround:
+		velocity.y = int(abs(lastVelocityNotZero.y) *-0.5)
 		velocity.x = move_toward(velocity.x, 0, groundStopForce * _delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, airStopForce * _delta)
-	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 	calculate_vertical_velocity(_delta)
+	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
 	velocity = move_and_slide(velocity)   
 
 func calculate_vertical_velocity(_delta):
@@ -327,3 +332,7 @@ func on_projectileTTL_timeout():
 
 func projectile_touched_solid_ground():
 	pass
+	
+func bounce_projectile_relative_to_object(object):
+	var bounceVector = (self.global_position-object.global_position).normalized()
+	velocity = bounceVector * 300

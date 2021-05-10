@@ -10,7 +10,7 @@ func _ready():
 	attackData = jsondata.get_result()
 	
 func set_base_stats(parentNode, originalOwner):
-	ttlFrames = 240.0
+	ttlFrames = 300.0
 	.set_base_stats(parentNode, originalOwner)
 #	gravity = 200.0
 #	baseGravity = 400.0
@@ -37,7 +37,7 @@ func process_projectile_physics(_delta):
 func _physics_process(_delta):
 	._physics_process(_delta)
 #	print(projectileTTLTimer.get_time_left()*60)
-	
+
 
 func on_impact():
 	match projectileSpecialInteraction:
@@ -62,6 +62,13 @@ func on_impact():
 #			originalOwner = null
 			change_state(GlobalVariables.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
+		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
+			if currentState != GlobalVariables.ProjectileState.IMPACT:
+				print("bomb hit other character shield " +str(shieldBounceCharacter))
+				bounce_projectile_relative_to_object(shieldBounceCharacter)
+				shieldBounceCharacter = null
+				toggle_all_hitboxes("off")
+				state.play_animation("shoot_no_hitbox")
 		_:
 #			print("bomb on impact not special " +str(parentNode.name))
 			deleteOnImpact = true
@@ -78,3 +85,4 @@ func projectile_touched_solid_ground():
 	else: 
 		toggle_all_hitboxes("off")
 		state.play_animation("shoot_no_hitbox")
+		velocity.y = -solidGroundInitBounceVelocity

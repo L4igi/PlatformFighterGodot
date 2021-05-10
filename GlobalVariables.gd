@@ -28,7 +28,7 @@ enum AttackType {GROUNDED, AERIAL, PROJECTILE}
 
 enum SpecialHitboxType {REFLECT, REVERSE, ABSORB, COUNTER, NEUTRAL}
 
-enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS, CATCH, HITOTHERCHARACTER}
+enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED, CONTINOUS, CATCH, HITOTHERCHARACTER, HITOTHERCHARACTERSHIELD}
 
 #connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
 enum HitBoxInteractionType {CONNECTED, CLASHED}

@@ -72,7 +72,12 @@ func calculate_hitlag_frames_connected(attackingObject, attackedObject, attackDa
 	else: 
 		if attackingObject.is_in_group("Projectile")\
 		&& attackedObject.is_in_group("Character"):
-			attackingObject.projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER
+			if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
+			|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDSTUN: 
+				attackingObject.shieldBounceCharacter = attackedObject
+				attackingObject.projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD
+			else:
+				attackingObject.projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER
 		GlobalVariables.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
 #	print("attackingObjectHitlag " +str(attackingObjectHitlag))
 #	print("attackedObjectHitlag " +str(attackedObjectHitlag))

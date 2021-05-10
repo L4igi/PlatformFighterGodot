@@ -220,9 +220,9 @@ func check_hitbox_areas(area, hitboxType):
 	elif area.is_in_group("HurtboxProjectile")\
 	&& area.get_parent() != attackingObject:
 		attackedObject = area.get_parent()
-		if is_projectile_parentNode_interaction(attackingObject, attackedObject):
-			return 
 		if check_item_catch(attackingObject, attackedObject):
+			return 
+		if is_projectile_parentNode_interaction(attackingObject, attackedObject):
 			return 
 		if !connectedObjectArray.has(attackedObject):
 			connectedObjectArray[attackedObject] = set_hightest_priority_hitbox(attackingObject, hitboxType)
