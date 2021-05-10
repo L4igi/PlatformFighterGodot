@@ -33,7 +33,7 @@ enum ProjectileInteractions {REFLECTED, ABSORBED, DESTROYED, IMPACTED, COUNTERED
 #connected if hitbox conneted with hurtbox, clashes if two hitboxes connected with each other
 enum HitBoxInteractionType {CONNECTED, CLASHED}
 
-enum ProjectileState {SHOOT, IMPACT, CONTROL, DESTROYED, HOLD}
+enum ProjectileState {SHOOT, IMPACT, CONTROL, DESTROYED, HOLD, CHARGE}
 
 enum ProjectileAnimations {SHOOT, IMPACT}
 

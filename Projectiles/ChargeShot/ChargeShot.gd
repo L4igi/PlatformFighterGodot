@@ -1,67 +1,85 @@
 extends Projectile
 
-class_name FireBall
+class_name ChargeShot
 
 func _ready():
 	var file = File.new()
-	file.open("res://Projectiles/FireBall/FireBallAttacks.json", file.READ)
+	file.open("res://Projectiles/ChargeShot/ChargeShot.json", file.READ)
 	var jsondata = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = jsondata.get_result()
-	change_state(GlobalVariables.ProjectileState.SHOOT)
-	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
 	
 func set_base_stats(parentNode, originalOwner):
-	ttlFrames = 180.0
+	ttlFrames = 300.0
 	.set_base_stats(parentNode, originalOwner)
-	gravity = 2000.0
-	baseGravity = 2000.0
+#	gravity = 200.0
+#	baseGravity = 400.0
 #	var airStopForce = 100
-	airMaxSpeed = 200
+	airMaxSpeed = 500
 	baseAirMaxSpeed = 500
-	maxFallSpeed = 1000
-	bounceVelocity = 600
-	global_position = parentNode.interactionPoint.global_position
+	maxFallSpeed = 0
+	bounceVelocity = 0
 	grabAble = false
 	canHitSelf = false
 	deleteOnImpact = true
-	ttlTimeoutAction = GlobalVariables.ProjectileState.DESTROYED
-	
+	global_position = parentNode.interactionPoint.global_position
+	ttlTimeoutAction = GlobalVariables.ProjectileState.IMPACT
+	solidGroundInteractionThreasholdY = 550.0
+	projectileReflectVelocityY = -500
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
 	velocity.x = clamp(velocity.x, -airMaxSpeed, airMaxSpeed)
-	calculate_vertical_velocity(_delta)
+#	calculate_vertical_velocity(_delta)
 	velocity = move_and_slide(velocity)  
-	if check_ground_platform_collision():
-		airMaxSpeed = baseAirMaxSpeed
-		velocity = velocity.bounce(Vector2(0,-1))
-		velocity.y = -bounceVelocity
+	
+func _physics_process(_delta):
+	._physics_process(_delta)
+#	print(projectileTTLTimer.get_time_left()*60)
+
 
 func on_impact():
 	match projectileSpecialInteraction:
 		GlobalVariables.ProjectileInteractions.REFLECTED:
-			print("fireball on impact REFLECTED " +str(parentNode.name))
+			change_state(GlobalVariables.ProjectileState.SHOOT)
 		GlobalVariables.ProjectileInteractions.ABSORBED:
-			print("fireball on impact ABSORBED " +str(parentNode.name))
+			print("bomb on impact ABSORBED " +str(parentNode.name))
 		GlobalVariables.ProjectileInteractions.COUNTERED:
-			print("fireball on impact COUNTERED " +str(parentNode.name))
+			print("bomb on impact COUNTERED " +str(parentNode.name))
 		GlobalVariables.ProjectileInteractions.DESTROYED:
-			print("fireball on impact DESTROYED " +str(parentNode.name))
+			print("bomb on impact DESTROYED " +str(parentNode.name))
 		GlobalVariables.ProjectileInteractions.IMPACTED:
-			print("fireball on impact IMPACTED " +str(parentNode.name))
+			print("bomb on impact IMPACTED " +str(parentNode.name))
 		GlobalVariables.ProjectileInteractions.CONTINOUS:
-			print("fireball on impact CONTINOUS " +str(parentNode.name))
+			pass
+		GlobalVariables.ProjectileInteractions.CATCH:
+			pass
 		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER:
-			toggle_all_hitboxes("off")
-			change_state(GlobalVariables.ProjectileState.DESTROYED)
+			deleteOnImpact = true
+#			parentNode = null
+#			originalOwner = null
+			change_state(GlobalVariables.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
+		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
+			pass
 		_:
-			print("fireball on impact not special " +str(parentNode.name))
-			toggle_all_hitboxes("off")
-			change_state(GlobalVariables.ProjectileState.DESTROYED)
+#			print("bomb on impact " +str(interactionObject.name))
+#			print("bomb on impact not special " +str(parentNode.name))
+			deleteOnImpact = true
+			parentNode = null
+			originalOwner = null
+			change_state(GlobalVariables.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null
+
+func projectile_touched_solid_ground():
+	if lastVelocityNotZero.y > solidGroundInteractionThreasholdY\
+	&& projectileThrown: 
+		on_impact()
+	else: 
+		toggle_all_hitboxes("off")
+		state.play_animation("shoot_no_hitbox")
+		velocity.y = -solidGroundInitBounceVelocity
 
 func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attackingDamage, interactionType):
 	print(self.name + " apply_special_hitbox_effect " +str(effectArray) + " " +str(interactionObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
@@ -83,6 +101,8 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 			GlobalVariables.SpecialHitboxType.FIRE:
 				pass
 			GlobalVariables.SpecialHitboxType.BOMB:
-				projectileInteracted = true 
-				projectileSpecialInteraction = null
+				pass
 	return projectileInteracted
+
+#func check_projectile_projectile_no_interaction(interactionObject):
+#	if interactionObject.

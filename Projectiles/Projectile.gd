@@ -86,7 +86,6 @@ func _ready():
 	attackDataEnum = GlobalVariables.ProjectileAnimations
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
-	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
 	
 	
 func _physics_process(delta):

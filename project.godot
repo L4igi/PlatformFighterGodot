@@ -44,6 +44,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Characters/Character.gd"
 }, {
+"base": "Projectile",
+"class": "ChargeShot",
+"language": "GDScript",
+"path": "res://Projectiles/ChargeShot/ChargeShot.gd"
+}, {
 "base": "State",
 "class": "CounterState",
 "language": "GDScript",
@@ -118,6 +123,11 @@ _global_script_classes=[ {
 "class": "Projectile",
 "language": "GDScript",
 "path": "res://Projectiles/Projectile.gd"
+}, {
+"base": "ProjectileState",
+"class": "ProjectileChargeState",
+"language": "GDScript",
+"path": "res://Projectiles/ProjectileStates/ProjectileChargeState.gd"
 }, {
 "base": "ProjectileState",
 "class": "ProjectileControlState",
@@ -222,6 +232,7 @@ _global_script_class_icons={
 "AttackGroundState": "",
 "Bomb": "",
 "Character": "",
+"ChargeShot": "",
 "CounterState": "",
 "CrouchState": "",
 "EdgeGetUpState": "",
@@ -237,6 +248,7 @@ _global_script_class_icons={
 "InGrabState": "",
 "MarioStateFactory": "",
 "Projectile": "",
+"ProjectileChargeState": "",
 "ProjectileControlState": "",
 "ProjectileDestroyedState": "",
 "ProjectileHoldState": "",
