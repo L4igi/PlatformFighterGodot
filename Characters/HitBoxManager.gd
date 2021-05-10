@@ -58,6 +58,7 @@ func process_collision(collidedHitBoxes):
 		collidedHitBoxes.clear()
 		
 func manage_hitbox_special_interactions_projectile(collidedHitBoxes, object1ArrayPos, object2ArrayPos):
+	var objectsInteracted = false
 	var object1 = collidedHitBoxes[object1ArrayPos][0]
 	var object2 = collidedHitBoxes[object2ArrayPos][0]
 	if object1.is_in_group("Projectile")||object2.is_in_group("Projectile"):
@@ -66,11 +67,19 @@ func manage_hitbox_special_interactions_projectile(collidedHitBoxes, object1Arra
 		var object2Interacted = object2.apply_special_hitbox_effect_attacked(collidedHitBoxes[object1ArrayPos][7], object1, collidedHitBoxes[1][2] , interactionTypeToUse)
 		if object1Interacted || object2Interacted:
 			var object1HitlagFrames = calc_hitlag_attacker(collidedHitBoxes,object1ArrayPos)
-			set_hitlag_frames(object1, object1HitlagFrames)
 			var object2HitlagFrames = calc_hitlag_attacker(collidedHitBoxes,object2ArrayPos)
-			set_hitlag_frames(object2, object2HitlagFrames)
-			return true
-	return false
+			if object1.is_in_group("Projectile") && object2.is_in_group("Projectile"):
+				if object1.projectileSpecialInteraction == GlobalVariables.ProjectileInteractions.CONTINOUS\
+				&& object2.projectileSpecialInteraction == GlobalVariables.ProjectileInteractions.CONTINOUS: 
+					object1.state.hitlagTimer.stop()
+					object1.state.on_hitlag_timeout()
+					object2.state.hitlagTimer.stop()
+					object2.state.on_hitlag_timeout()
+				else:
+					set_hitlag_frames(object1, object1HitlagFrames)
+					set_hitlag_frames(object2, object2HitlagFrames)
+			objectsInteracted = true
+	return objectsInteracted
 	
 #after one character won the interaction only interacted of this character is called
 func manage_hitbox_special_interactions_character(collidedHitBoxes,attackingObjectArrayPos, attackedObjectArrayPos, interactionTypeToUse):
@@ -83,7 +92,7 @@ func manage_hitbox_special_interactions_character(collidedHitBoxes,attackingObje
 func manage_only_hitboxes_connected_one_winner(collidedHitBoxes,attackingObjectArrayPos, attackedObjectArrayPos):
 	var attackingObject = collidedHitBoxes[attackingObjectArrayPos][0]
 	var attackedObject = collidedHitBoxes[attackedObjectArrayPos][0]
-	manage_hitbox_interactions(collidedHitBoxes,attackedObjectArrayPos)
+	manage_hitbox_interactions(collidedHitBoxes,attackedObjectArrayPos, attackingObjectArrayPos)
 	var attackingObjectHitlag = calc_hitlag_attacker(collidedHitBoxes,attackingObjectArrayPos)
 	set_hitlag_frames(attackingObject, attackingObjectHitlag)
 	if attackingObject.is_in_group("Projectile"):
@@ -91,11 +100,12 @@ func manage_only_hitboxes_connected_one_winner(collidedHitBoxes,attackingObjectA
 	manage_hitbox_special_interactions_character(collidedHitBoxes,attackingObjectArrayPos, attackedObjectArrayPos,GlobalVariables.HitBoxInteractionType.CLASHED)
 	
 func manage_only_hitboxes_connected_no_winner(collidedHitBoxes,object1ArrayPos, object2ArrayPos):
-	manage_hitbox_interactions(collidedHitBoxes,object1ArrayPos)
-	manage_hitbox_interactions(collidedHitBoxes,object2ArrayPos)
+	manage_hitbox_interactions(collidedHitBoxes,object1ArrayPos, object2ArrayPos)
+	manage_hitbox_interactions(collidedHitBoxes,object2ArrayPos, object1ArrayPos)
 	
-func manage_hitbox_interactions(collidedHitBoxes,objectArrayPos):
+func manage_hitbox_interactions(collidedHitBoxes,objectArrayPos,interactionObjectArrayPos):
 	var object = collidedHitBoxes[objectArrayPos][0]
+	var interactionObject = collidedHitBoxes[interactionObjectArrayPos][0]
 	#check if move is transcendent 1 = is transcendent
 	if collidedHitBoxes[objectArrayPos][6] == 1:
 		var objectHitlagFrames = calc_hitlag_attacker(collidedHitBoxes,objectArrayPos)
@@ -107,7 +117,7 @@ func manage_hitbox_interactions(collidedHitBoxes,objectArrayPos):
 		var objectHitlagFrames = calc_hitlag_attacker(collidedHitBoxes,objectArrayPos)
 		set_hitlag_frames(object, objectHitlagFrames)
 	#if move can rebound attackingObject continous attack, attackedobject rebounds
-	match_rebound_objecttype(collidedHitBoxes,object, objectArrayPos)
+	match_rebound_objecttype(collidedHitBoxes,object, objectArrayPos, interactionObject)
 	
 func manage_collisionboxes_and_hitboxes_connected_one_winner(collidedHitBoxes,attackingObjectArrayPos, attackedObjectArrayPos):
 	var attackingObject = collidedHitBoxes[attackingObjectArrayPos][0]
@@ -168,7 +178,7 @@ func manage_object_collisionboxes_and_hitbox_interactions_both_collision(collide
 		var object1HitlagFrames = calc_hitlag_attacker(collidedHitBoxes,attackingObject1ArrayPos)
 		set_hitlag_frames(attackingObject1, object1HitlagFrames)
 	#if rebound hitbox
-	match_rebound_objecttype(collidedHitBoxes,attackingObject1, attackingObject1ArrayPos)
+	match_rebound_objecttype(collidedHitBoxes,attackingObject1, attackingObject1ArrayPos, attackingObject2)
 
 func manage_object_collisionboxes_and_hitbox_interactions_one_collision(collidedHitBoxes,attackingObjectArrayPos, attackedObjectArrayPos):
 	var attackingObject = collidedHitBoxes[attackingObjectArrayPos][0]
@@ -183,28 +193,29 @@ func manage_object_collisionboxes_and_hitbox_interactions_one_collision(collided
 	#set both characters to state rebound if they can rebound 
 	elif collidedHitBoxes[attackingObjectArrayPos][5] == 0\
 	&& collidedHitBoxes[attackedObjectArrayPos][5] == 0:
-		match_rebound_objecttype(collidedHitBoxes,attackingObject, attackingObjectArrayPos)
-		match_rebound_objecttype(collidedHitBoxes,attackedObject, attackedObjectArrayPos)
+		match_rebound_objecttype(collidedHitBoxes,attackingObject, attackingObjectArrayPos, attackedObject)
+		match_rebound_objecttype(collidedHitBoxes,attackedObject, attackedObjectArrayPos, attackedObject)
 	#one to rebound one to finish attack 
 	elif collidedHitBoxes[attackingObjectArrayPos][5] == 1\
 	&& collidedHitBoxes[attackedObjectArrayPos][5] == 0:
 		attackingObject.toggle_all_hitboxes("off")
 		var attackingObjectHitlagFrames = calc_hitlag_attacker(collidedHitBoxes,attackingObjectArrayPos)
 		set_hitlag_frames(attackingObject, attackingObjectHitlagFrames)
-		match_rebound_objecttype(collidedHitBoxes,attackedObject, attackedObjectArrayPos)
+		match_rebound_objecttype(collidedHitBoxes,attackedObject, attackedObjectArrayPos, attackingObject)
 	#one to rebound one to finish attack 
 	elif collidedHitBoxes[attackingObjectArrayPos][5] == 0\
 	&& collidedHitBoxes[attackedObjectArrayPos][5] == 1:
-		match_rebound_objecttype(collidedHitBoxes,attackingObject, attackingObjectArrayPos)
+		match_rebound_objecttype(collidedHitBoxes,attackingObject, attackingObjectArrayPos, attackedObject)
 		attackedObject.toggle_all_hitboxes("off")
 		var attackedObjectHitlagFrames = calc_hitlag_attacker(collidedHitBoxes,attackedObjectArrayPos)
 		set_hitlag_frames(attackedObject, attackedObjectHitlagFrames)
 		
-func match_rebound_objecttype(collidedHitBoxes,object, objectArrayPosition):
+func match_rebound_objecttype(collidedHitBoxes,object, objectArrayPosition, interactionObject):
 	if object.is_in_group("Character"):
 		object.bufferReboundFrames = calc_reboundLag(collidedHitBoxes,objectArrayPosition)
 		object.change_state(GlobalVariables.CharacterState.REBOUND)
 	elif object.is_in_group("Projectile"):
+		object.interactionObject = interactionObject
 		object.on_impact()
 		
 func calc_hitlag_attacker(collidedHitBoxes,arrayPosition):

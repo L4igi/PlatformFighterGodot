@@ -1,13 +1,13 @@
 {
 	"SHOOT_neutral": {
-		"damage_1": 2.5,
+		"damage_1": 20.5,
 		"hitStun_1": 10,
 		"launchVelocity_1": 15,
 		"launchVelocityWeight_1": 15,
 		"launchAngle_1": 350,
 		"knockBackGrowth_1": 100,
 		"effects_1": {
-			"effect1": "NEUTRAL"
+			"effect1": "FIRE"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,
@@ -29,7 +29,7 @@
 		"launchAngle_1": 270,
 		"knockBackGrowth_1": 100,
 		"effects_1": {
-			"effect1": "NEUTRAL"
+			"effect1": "FIRE"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,

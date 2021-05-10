@@ -41,7 +41,10 @@ func apply_special_animation_steps(step = 0):
 		GlobalVariables.CharacterAnimations.SIDESPECIAL:
 			manage_side_special(step)
 		GlobalVariables.CharacterAnimations.NSPECIAL:
-			manage_neutral_special_bomb(step)
+			if name == "Mario":
+				manage_neutral_special_bomb(step)
+			else: 
+				manage_neutral_special(step)
 	
 func manage_dair(step):
 	match step:

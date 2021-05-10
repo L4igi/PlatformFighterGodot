@@ -52,7 +52,7 @@ func on_impact():
 		GlobalVariables.ProjectileInteractions.IMPACTED:
 			print("bomb on impact IMPACTED " +str(parentNode.name))
 		GlobalVariables.ProjectileInteractions.CONTINOUS:
-			print("bomb on impact CONTINOUS " +str(parentNode.name))
+			pass
 		GlobalVariables.ProjectileInteractions.CATCH:
 			print("bomb on impact Catch " +str(parentNode.name))
 			change_state(GlobalVariables.ProjectileState.HOLD)
@@ -64,12 +64,13 @@ func on_impact():
 			projectilecollider.set_deferred("disabled", true)
 		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
 			if currentState != GlobalVariables.ProjectileState.IMPACT:
-				print("bomb hit other character shield " +str(shieldBounceCharacter))
-				bounce_projectile_relative_to_object(shieldBounceCharacter)
-				shieldBounceCharacter = null
+				print("bomb hit other character shield " +str(interactionObject))
+				bounce_projectile_relative_to_object(interactionObject)
+				interactionObject = null
 				toggle_all_hitboxes("off")
 				state.play_animation("shoot_no_hitbox")
 		_:
+#			print("bomb on impact " +str(interactionObject.name))
 #			print("bomb on impact not special " +str(parentNode.name))
 			deleteOnImpact = true
 			parentNode = null
@@ -86,3 +87,31 @@ func projectile_touched_solid_ground():
 		toggle_all_hitboxes("off")
 		state.play_animation("shoot_no_hitbox")
 		velocity.y = -solidGroundInitBounceVelocity
+
+func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attackingDamage, interactionType):
+	print(self.name + " apply_special_hitbox_effect " +str(effectArray) + " " +str(interactionObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+	var projectileInteracted = false
+	for effect in effectArray:
+		match effect: 
+			GlobalVariables.SpecialHitboxType.REVERSE:
+				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
+					projectileInteracted = true
+			GlobalVariables.SpecialHitboxType.REFLECT:
+				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
+					projectileInteracted = true
+			GlobalVariables.SpecialHitboxType.ABSORB:
+				pass
+#				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
+			GlobalVariables.SpecialHitboxType.COUNTER:
+				pass
+#				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
+			GlobalVariables.SpecialHitboxType.FIRE:
+				projectileInteracted = true
+				projectileSpecialInteraction = null
+			GlobalVariables.SpecialHitboxType.BOMB:
+				projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.CONTINOUS
+				projectileInteracted = true
+	return projectileInteracted
+
+#func check_projectile_projectile_no_interaction(interactionObject):
+#	if interactionObject.

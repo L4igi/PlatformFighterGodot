@@ -61,3 +61,27 @@ func on_impact():
 			change_state(GlobalVariables.ProjectileState.DESTROYED)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null
+
+func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attackingDamage, interactionType):
+	print(self.name + " apply_special_hitbox_effect " +str(effectArray) + " " +str(interactionObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
+	var projectileInteracted = false
+	for effect in effectArray:
+		match effect: 
+			GlobalVariables.SpecialHitboxType.REVERSE:
+				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
+					projectileInteracted = true
+			GlobalVariables.SpecialHitboxType.REFLECT:
+				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
+					projectileInteracted = true
+			GlobalVariables.SpecialHitboxType.ABSORB:
+				pass
+#				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
+			GlobalVariables.SpecialHitboxType.COUNTER:
+				pass
+#				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
+			GlobalVariables.SpecialHitboxType.FIRE:
+				pass
+			GlobalVariables.SpecialHitboxType.BOMB:
+				projectileInteracted = true 
+				projectileSpecialInteraction = null
+	return projectileInteracted

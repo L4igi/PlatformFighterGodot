@@ -7,7 +7,7 @@
 		"launchAngle_1": 350,
 		"knockBackGrowth_1": 100,
 		"effects_1": {
-			"effect1": "NEUTRAL"
+			"effect1": "BOMB"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,
@@ -29,7 +29,7 @@
 		"launchAngle_1": 270,
 		"knockBackGrowth_1": 100,
 		"effects_1": {
-			"effect1": "NEUTRAL"
+			"effect1": "BOMB"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,

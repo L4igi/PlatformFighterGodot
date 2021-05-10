@@ -73,7 +73,7 @@ var solidGroundInteractionThreasholdY = 550.0
 #var projectilereflectvelocity
 var projectileReflectVelocityY= -500
 #when projectile bounces on character shield, save bounce character node 
-var shieldBounceCharacter = null
+var interactionObject = null
 #solidgroundInitBounceVelocity 
 var solidGroundInitBounceVelocity = 100
 
@@ -336,3 +336,6 @@ func projectile_touched_solid_ground():
 func bounce_projectile_relative_to_object(object):
 	var bounceVector = (self.global_position-object.global_position).normalized()
 	velocity = bounceVector * 300
+
+func check_projectile_projectile_no_interaction(interactionObject):
+	pass
