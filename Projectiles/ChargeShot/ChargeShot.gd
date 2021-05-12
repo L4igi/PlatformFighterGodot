@@ -15,9 +15,6 @@ func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 300.0
 	canHitSelf = false
 	.set_base_stats(parentNode, originalOwner)
-#	gravity = 200.0
-#	baseGravity = 400.0
-#	var airStopForce = 100
 	airMaxSpeed = 500
 	baseAirMaxSpeed = 500
 	maxFallSpeed = 0
@@ -28,8 +25,9 @@ func set_base_stats(parentNode, originalOwner):
 	ttlTimeoutAction = GlobalVariables.ProjectileState.IMPACT
 	solidGroundInteractionThreasholdY = 550.0
 	projectileReflectVelocityY = 0
-	ttlFrames = 500
+	ttlFrames = 240
 	projectilePushVelocity = 200
+	parentNode.chargingProjectile = self
 	set_collision_mask_bit(1,false)
 	change_state(GlobalVariables.ProjectileState.CHARGE)
 	
@@ -78,6 +76,17 @@ func on_impact():
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null
 
+func check_ground_platform_collision():
+	if get_slide_count():
+		var collision = get_slide_collision(0)
+		if collision.get_collider().is_in_group("Ground"):
+			var roundedCollisionNormal = Vector2(stepify(collision.get_normal().x, 0.01),stepify(collision.get_normal().y, 0.01))
+			if roundedCollisionNormal != Vector2(0,1)\
+			&& roundedCollisionNormal != Vector2(0,-1):
+				platformCollision = collision.get_collider()
+				return platformCollision
+	return null
+
 func projectile_touched_solid_ground():
 	on_impact()
 
@@ -105,8 +114,7 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	return projectileInteracted
 
 func charge_projectile(mode):
-	animatedSprite.set_scale(Vector2(currentCharge, currentCharge))
-	print(animatedSprite.get_scale())
+	self.set_scale(Vector2(currentCharge, currentCharge))
 	.charge_projectile(mode)
 
 func check_fully_charged(step):

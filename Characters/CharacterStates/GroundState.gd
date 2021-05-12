@@ -111,6 +111,9 @@ func handle_input(_delta):
 			elif Input.is_action_pressed(character.down):
 				character.smashAttack = character.bufferedSmashAttack
 				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+		elif Input.is_action_just_pressed(character.special):
+			var changeToState = character.change_to_special_state()
+			character.change_state(changeToState)
 	elif Input.is_action_just_pressed(character.attack):
 				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):

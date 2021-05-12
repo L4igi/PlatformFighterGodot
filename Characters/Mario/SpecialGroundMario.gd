@@ -33,30 +33,43 @@ func process_neutral_special_inputs_charge_shot(_delta):
 	if character.enableSpecialInput:
 		if !character.cancelChargeTransition:
 			if Input.is_action_just_pressed(character.attack)\
-			|| Input.is_action_just_pressed(character.special):
-				if character.chargingProjectile:
-					character.chargingProjectile.shoot_charge_projectile()
-			elif Input.is_action_pressed(character.left):
-				character.rollType = character.left
-				character.cancelChargeTransition = GlobalVariables.CharacterAnimations.ROLL
-				if character.chargingProjectile:
-					character.chargingProjectile.store_charged_projectile()
-			elif Input.is_action_pressed(character.right):
-				character.rollType = character.right
-				character.cancelChargeTransition = GlobalVariables.CharacterAnimations.ROLL
-				if character.chargingProjectile:
-					character.chargingProjectile.store_charged_projectile()
-			elif Input.is_action_pressed(character.down):
+			|| Input.is_action_just_pressed(character.special)\
+			|| Input.is_action_just_pressed(character.grab):
+				if character.chargingProjectile && !character.animationPlayer.is_playing():
+					character.enableSpecialInput = false
+					character.chargingProjectile.call_deferred("shoot_charge_projectile")
+			elif Input.is_action_just_pressed(character.left):
+				if !bReverseTimer.get_time_left():
+					character.enableSpecialInput = false
+					character.rollType = character.left
+					character.cancelChargeTransition = GlobalVariables.CharacterAnimations.ROLL
+					if character.chargingProjectile:
+						character.chargingProjectile.call_deferred("store_charged_projectile")
+			elif Input.is_action_just_pressed(character.right):
+				if !bReverseTimer.get_time_left():
+					character.enableSpecialInput = false
+					character.rollType = character.right
+					character.cancelChargeTransition = GlobalVariables.CharacterAnimations.ROLL
+					if character.chargingProjectile:
+						character.chargingProjectile.call_deferred("store_charged_projectile")
+			elif Input.is_action_just_pressed(character.down):
+				character.enableSpecialInput = false
 				character.cancelChargeTransition = GlobalVariables.CharacterAnimations.SPOTDODGE
 				if character.chargingProjectile:
-					character.chargingProjectile.store_charged_projectile()
-			elif Input.is_action_pressed(character.jump):
+					character.chargingProjectile.call_deferred("store_charged_projectile")
+			elif Input.is_action_just_pressed(character.jump):
+				character.enableSpecialInput = false
 				character.moveAirGroundTransition.erase(character.currentAttack)
 				character.moveGroundAirTransition.erase(character.currentAttack)
 				character.cancelChargeTransition = GlobalVariables.CharacterAnimations.JUMP
 				if character.chargingProjectile:
-					character.chargingProjectile.store_charged_projectile()
-	
+					character.chargingProjectile.call_deferred("store_charged_projectile")
+			elif Input.is_action_just_pressed(character.shield):
+				character.enableSpecialInput = false
+				character.cancelChargeTransition = GlobalVariables.CharacterAnimations.SHIELD
+				if character.chargingProjectile:
+					character.chargingProjectile.call_deferred("store_charged_projectile")
+					
 func on_hitlag_timeout():
 	if character.currentAttack == GlobalVariables.CharacterAnimations.DOWNSPECIAL:
 		create_rehit_timer(downSpecialRehitFrames)

@@ -87,4 +87,3 @@ func reset_animatedSprite(setup = false):
 	projectile.animatedSprite.set_rotation_degrees(0.0)
 	projectile.animatedSprite.set_position(Vector2(0,0))
 	projectile.animatedSprite.set_modulate(Color(1,1,1,1))
-	projectile.set_scale(Vector2(projectile.currentCharge,projectile.currentCharge))

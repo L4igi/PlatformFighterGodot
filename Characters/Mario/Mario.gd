@@ -106,21 +106,26 @@ func manage_neutral_special_bomb(step = 0):
 			pass
 			
 func manage_neutral_special_charge_shot(step = 0):
+	print("STEP " +str(step))
 	neutralSpecialAnimationStep = step
 	match step:
 		0:
+			edgeGrabShape.set_deferred("disabled", true)
+			set_collision_mask_bit(1,true) 
 			cancelChargeTransition = null
 			if (chargingProjectile\
 			&& chargingProjectile.currentCharge < chargingProjectile.maxCharge)\
 			|| !chargingProjectile:
 				enableSpecialInput = true
+			else:
+				enableSpecialInput = false
 		1:
 			if cancelChargeTransition:
+				enableSpecialInput = false
 				state.play_attack_animation("cancel_charge")
 			elif !chargingProjectile:
 				var newChargeShot = chargeShot.instance()
 				self.call_deferred("add_child" ,newChargeShot)
-				chargingProjectile = newChargeShot
 				newChargeShot.call_deferred("set_base_stats", self, self)
 			else:
 				if !chargingProjectile.check_fully_charged(0):

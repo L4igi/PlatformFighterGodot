@@ -359,11 +359,12 @@ func shoot_charge_projectile():
 	parentNode.call_deferred("remove_child",self)
 	GlobalVariables.currentStage.call_deferred("add_child",self)
 	set_deferred("global_position",parentNode.interactionPoint.global_position)
+	print("currentCharge " +str(currentCharge))
+	call_deferred("set_scale",Vector2(currentCharge*2, currentCharge*2))
 	projectileSpecialInteraction = null
 	change_state(GlobalVariables.ProjectileState.SHOOT)
 
 func charge_projectile(mode):
-	print(currentCharge)
 	if currentCharge < maxCharge:
 		currentCharge += chargeTickRate
 	else:

@@ -47,15 +47,18 @@ func process_neutral_special_inputs_charge_shot(_delta):
 		if !character.cancelChargeTransition:
 			if Input.is_action_just_pressed(character.attack)\
 			|| Input.is_action_just_pressed(character.special):
-				if character.chargingProjectile:
+				if character.chargingProjectile && !character.animationPlayer.is_playing():
+					character.enableSpecialInput = false
 					character.chargingProjectile.shoot_charge_projectile()
-			elif Input.is_action_pressed(character.shield):
+			elif Input.is_action_just_pressed(character.shield):
 				if character.airdodgeAvailable:
+					character.enableSpecialInput = false
 					character.cancelChargeTransition = GlobalVariables.CharacterAnimations.AIRDODGE
 				if character.chargingProjectile:
 					character.chargingProjectile.store_charged_projectile()
-			elif Input.is_action_pressed(character.jump):
+			elif Input.is_action_just_pressed(character.jump):
 				if character.jumpCount < character.availabelJumps:
+					character.enableSpecialInput = false
 					character.moveAirGroundTransition.erase(character.currentAttack)
 					character.moveGroundAirTransition.erase(character.currentAttack)
 					character.cancelChargeTransition = GlobalVariables.CharacterAnimations.DOUBLEJUMP

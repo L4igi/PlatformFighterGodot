@@ -861,6 +861,12 @@ func is_attacked_handler(hitLagFrames, attackingObject):
 	|| currentState == GlobalVariables.CharacterState.SHIELDSTUN:
 		change_state(GlobalVariables.CharacterState.SHIELDSTUN)
 	elif !perfectShieldActivated:
+		if currentState == GlobalVariables.CharacterState.SPECIALAIR\
+		|| currentState == GlobalVariables.CharacterState.SPECIALGROUND\
+		&& currentAttack == GlobalVariables.CharacterAnimations.NSPECIAL:
+			if chargingProjectile:
+				chargingProjectile.queue_free()
+				chargingProjectile = null
 		change_state(GlobalVariables.CharacterState.HITSTUNAIR)
 	else:
 		state.create_hitlagAttacked_timer(bufferHitLagFrames)
@@ -1085,6 +1091,8 @@ func cancel_charge_transition():
 				state.double_jump_handler()
 			GlobalVariables.CharacterAnimations.AIRDODGE:
 				change_state(GlobalVariables.CharacterState.AIRDODGE)
+			GlobalVariables.CharacterAnimations.SHIELD:
+				change_state(GlobalVariables.CharacterState.SHIELD)
 	cancelChargeTransition = null
 					
 func apply_charge_projectile_pushback(pushVelocity):
