@@ -3,7 +3,7 @@
 [ext_resource path="res://Projectiles/Projectile.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Projectiles/ChargeShot/ChargeShot.gd" type="Script" id=2]
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=1]
 resource_name = "charge"
 length = 0.383333
 loop = true
@@ -45,8 +45,7 @@ tracks/2/keys = {
 "values": [ Color( 0, 0.345098, 0.788235, 1 ) ]
 }
 
-[sub_resource type="Animation" id=1]
-resource_name = "destroy"
+[sub_resource type="Animation" id=2]
 length = 0.333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -86,7 +85,7 @@ tracks/2/keys = {
 "values": [ Color( 0, 0.345098, 0.788235, 1 ) ]
 }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=3]
 length = 0.333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -135,10 +134,10 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.183333 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, true ]
+"values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -203,8 +202,7 @@ tracks/4/keys = {
 "values": [ Color( 0, 0.345098, 0.788235, 1 ) ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "shoot_no_hitbox"
+[sub_resource type="Animation" id=5]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -249,18 +247,18 @@ tracks/2/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="1"]
+visible = false
 modulate = Color( 0, 0.345098, 0.788235, 1 )
-frame = 0
+frame = 2
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
-anims/charge = SubResource( 5 )
-anims/destroy = SubResource( 1 )
-anims/impact = SubResource( 2 )
-anims/shoot = SubResource( 3 )
-anims/shoot_no_hitbox = SubResource( 4 )
+anims/charge = SubResource( 1 )
+anims/destroy = SubResource( 2 )
+anims/impact = SubResource( 3 )
+anims/shoot = SubResource( 4 )
+anims/shoot_no_hitbox = SubResource( 5 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
 scale = Vector2( 0.5, 0.5 )
-disabled = true
 
 [editable path="AnimatedSprite/HitBoxes"]

@@ -231,10 +231,14 @@ var counteredHitlagFrames = 50.0
 var normalLandingLag = 3.0
 #items 
 var grabbedItem = null
+#charging projectile 
+var chargingProjectile = null
 #backuped disabled hitboxes
 var backupDisabledHitboxes = []
 #if multiple character attacks connected but cannot clash 
 var multiObjectsConnected = false
+#charges can be cannceled with multiple actions, save action pressed and execute after cancel animation finished
+var cancelChargeTransition = null
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -353,6 +357,7 @@ func finish_attack_animation(step):
 
 #overwrite in character to make special moves change to different states afterwards
 func finish_special_animation(step):
+	enableSpecialInput = false
 	if state.enable_player_input():
 		if onSolidGround:
 			applySideStepFrames = true
@@ -1051,3 +1056,41 @@ func check_item_catch_attack():
 
 func set_character_z_index(index):
 	self.set_z_index(index)
+	
+func cancel_charge_transition():
+	if cancelChargeTransition:
+		animationPlayer.stop()
+		match cancelChargeTransition:
+			GlobalVariables.CharacterAnimations.ROLL:
+				if rollType == left:
+					if currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
+						currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+						mirror_areas()
+					change_state(GlobalVariables.CharacterState.ROLL)
+				elif rollType == right:
+					if currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
+						currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+						mirror_areas()
+					change_state(GlobalVariables.CharacterState.ROLL)
+			GlobalVariables.CharacterAnimations.SPOTDODGE:
+				velocity.x = 0
+				change_state(GlobalVariables.CharacterState.SPOTDODGE)
+			GlobalVariables.CharacterAnimations.JUMP:
+				change_state(GlobalVariables.CharacterState.AIR)
+				if !Input.is_action_pressed(jump):
+					state.shortHop = true
+				state.process_jump()
+			GlobalVariables.CharacterAnimations.DOUBLEJUMP:
+				change_state(GlobalVariables.CharacterState.AIR)
+				state.double_jump_handler()
+			GlobalVariables.CharacterAnimations.AIRDODGE:
+				change_state(GlobalVariables.CharacterState.AIRDODGE)
+	cancelChargeTransition = null
+					
+func apply_charge_projectile_pushback(pushVelocity):
+	if !onSolidGround: 
+		match currentMoveDirection:
+			GlobalVariables.MoveDirection.LEFT:
+				velocity.x += pushVelocity
+			GlobalVariables.MoveDirection.RIGHT:
+				velocity.x -= pushVelocity

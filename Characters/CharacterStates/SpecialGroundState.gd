@@ -53,10 +53,11 @@ func manage_buffered_input():
 	bufferedInput = null
 	
 func handle_input_disabled(_delta):
-	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
-	if animationFramesLeft <= character.bufferInputWindow\
-	&& bufferedInput == null: 
-		.buffer_input()
+	if animationPlayer.is_playing():
+		var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
+		if animationFramesLeft <= character.bufferInputWindow\
+		&& bufferedInput == null: 
+			.buffer_input()
 
 func _physics_process(_delta):
 	if !stateDone && !hitlagTimer.get_time_left():

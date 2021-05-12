@@ -9,7 +9,6 @@ func _ready():
 	file.close()
 	attackData = jsondata.get_result()
 	change_state(GlobalVariables.ProjectileState.SHOOT)
-	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
 	
 func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 180.0
@@ -26,7 +25,7 @@ func set_base_stats(parentNode, originalOwner):
 	canHitSelf = false
 	deleteOnImpact = true
 	ttlTimeoutAction = GlobalVariables.ProjectileState.DESTROYED
-	
+	create_projectileTTL_timer(ttlFrames)
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)

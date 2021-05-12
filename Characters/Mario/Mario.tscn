@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Characters/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Characters/Mario/Mario.gd" type="Script" id=2]
@@ -190,6 +190,49 @@ tracks/11/keys = {
 "values": [ {
 "args": [ 2 ],
 "method": "set_current_hitbox"
+} ]
+}
+
+[sub_resource type="Animation" id=18]
+resource_name = "cancel_charge"
+length = 0.1
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "nspecial" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.0166667, 0.0333333, 0.05, 0.0666667, 0.0833333 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 4, 4, 3, 2, 1, 0 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.0833333 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "cancel_charge_transition"
 } ]
 }
 
@@ -1504,15 +1547,15 @@ tracks/1/keys = {
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-position = Vector2( 0, 6 )
-animation = "dthrow"
-frame = 3
+animation = "nspecial"
+frame = 2
 speed_scale = 2.0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
 anims/backflip = SubResource( 1 )
 anims/bair = SubResource( 2 )
+anims/cancel_charge = SubResource( 18 )
 anims/dair = SubResource( 3 )
 anims/dash_attack = SubResource( 4 )
 anims/doublejump = SubResource( 5 )
@@ -1550,9 +1593,6 @@ disabled = true
 [node name="Special" parent="AnimatedSprite/HitBoxes/HitBoxSpecial" index="0"]
 position = Vector2( 12.4, 1.74042e-05 )
 disabled = false
-
-[node name="InteractionPoint" parent="." index="5"]
-position = Vector2( 14.4, 28 )
 
 [editable path="AnimatedSprite/HitBoxes"]
 [editable path="InteractionAreas"]

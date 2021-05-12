@@ -8,7 +8,6 @@ func _ready():
 	var jsondata = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = jsondata.get_result()
-	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
 	
 func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 300.0
@@ -28,6 +27,7 @@ func set_base_stats(parentNode, originalOwner):
 	ttlTimeoutAction = GlobalVariables.ProjectileState.IMPACT
 	solidGroundInteractionThreasholdY = 550.0
 	projectileReflectVelocityY = -500
+	create_projectileTTL_timer(ttlFrames)
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)

@@ -40,6 +40,7 @@ var transitionBufferedInput = null
 # Writing _delta instead of delta here prevents the unused variable warning.
 func _physics_process(_delta):
 	pass
+#	print(GlobalVariables.CharacterState.keys()[character.currentState])
 	
 func manage_buffered_input():
 	pass
@@ -597,6 +598,7 @@ func double_jump_handler():
 		animationPlayer.stop()
 		play_animation("doublejump")
 		reset_gravity()
+		character.disableInput = false
 		character.velocity.y = -character.jumpSpeed
 		if check_stage_slide_collide(true):
 #			character.velocity.x = 0

@@ -55,10 +55,11 @@ func manage_buffered_input():
 	bufferedInput = null
 
 func handle_input_disabled(_delta):
-	var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
-	if animationFramesLeft <= character.bufferInputWindow\
-	&& bufferedInput == null: 
-		.buffer_input()
+	if animationPlayer.is_playing():
+		var animationFramesLeft = int((animationPlayer.get_current_animation_length()-animationPlayer.get_current_animation_position())*60)
+		if animationFramesLeft <= character.bufferInputWindow\
+		&& bufferedInput == null: 
+			.buffer_input()
 
 func _physics_process(_delta):
 	if !stateDone:
@@ -77,7 +78,7 @@ func _physics_process(_delta):
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
 			if character.moveAirGroundTransition.has(character.currentAttack):
-				character.check_special_animation_steps()
+#				character.check_special_animation_steps()
 				character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
 			else:
 				if character.currentAttack && character.attackData.has(GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):

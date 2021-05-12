@@ -2,6 +2,8 @@ extends Projectile
 
 class_name ChargeShot
 
+var chargeMode = 1
+
 func _ready():
 	var file = File.new()
 	file.open("res://Projectiles/ChargeShot/ChargeShot.json", file.READ)
@@ -11,6 +13,7 @@ func _ready():
 	
 func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 300.0
+	canHitSelf = false
 	.set_base_stats(parentNode, originalOwner)
 #	gravity = 200.0
 #	baseGravity = 400.0
@@ -20,12 +23,15 @@ func set_base_stats(parentNode, originalOwner):
 	maxFallSpeed = 0
 	bounceVelocity = 0
 	grabAble = false
-	canHitSelf = false
 	deleteOnImpact = true
 	global_position = parentNode.interactionPoint.global_position
 	ttlTimeoutAction = GlobalVariables.ProjectileState.IMPACT
 	solidGroundInteractionThreasholdY = 550.0
-	projectileReflectVelocityY = -500
+	projectileReflectVelocityY = 0
+	ttlFrames = 500
+	projectilePushVelocity = 200
+	set_collision_mask_bit(1,false)
+	change_state(GlobalVariables.ProjectileState.CHARGE)
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
@@ -73,13 +79,7 @@ func on_impact():
 	projectileSpecialInteraction = null
 
 func projectile_touched_solid_ground():
-	if lastVelocityNotZero.y > solidGroundInteractionThreasholdY\
-	&& projectileThrown: 
-		on_impact()
-	else: 
-		toggle_all_hitboxes("off")
-		state.play_animation("shoot_no_hitbox")
-		velocity.y = -solidGroundInitBounceVelocity
+	on_impact()
 
 func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attackingDamage, interactionType):
 	print(self.name + " apply_special_hitbox_effect " +str(effectArray) + " " +str(interactionObject.name) + " dmg " +str(attackingDamage) + " interactiontype " +str(interactionType))
@@ -104,5 +104,14 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 				pass
 	return projectileInteracted
 
-#func check_projectile_projectile_no_interaction(interactionObject):
-#	if interactionObject.
+func charge_projectile(mode):
+	animatedSprite.set_scale(Vector2(currentCharge, currentCharge))
+	print(animatedSprite.get_scale())
+	.charge_projectile(mode)
+
+func check_fully_charged(step):
+	if currentCharge >= maxCharge: 
+		if step == 1:
+			shoot_charge_projectile()
+		return true
+	return false

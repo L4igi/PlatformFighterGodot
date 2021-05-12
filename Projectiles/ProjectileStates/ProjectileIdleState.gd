@@ -1,16 +1,13 @@
 extends ProjectileState
 
-class_name ProjectileChargeState
+class_name ProjectileIdleState
 
 func _ready():
 	projectile.velocity = Vector2.ZERO
-	play_animation("charge")
+	play_animation("idle")
 	
 func setup(change_state, animationPlayer, projectile):
 	.setup(change_state, animationPlayer, projectile)
 	projectile.toggle_all_hurtboxes("off")
 	projectile.toggle_all_hitboxes("off")
-	
-func _physics_process(delta):
-	projectile.charge_projectile(projectile.chargeMode)
 

@@ -48,10 +48,6 @@ var parentNode = null
 onready var projectilecollider = get_node("ProjectileCollider")
 #interactionobject
 var projectileSpecialInteraction = null
-#chargeable projectile
-var currentCharge = 0.0
-var maxCharge = 0.0
-var chargeTickRate = 0.0
 #original owner 
 var originalOwner = null
 #projectile ttl timer
@@ -76,6 +72,12 @@ var projectileReflectVelocityY= -500
 var interactionObject = null
 #solidgroundInitBounceVelocity 
 var solidGroundInitBounceVelocity = 100
+#chargeable projectile
+var currentCharge = 1.0
+var maxCharge = 2.0
+var chargeTickRate = 0.01
+#if projectile can push parent Node 
+var projectilePushVelocity = 0
 
 var multiObjectsConnected = false 
 
@@ -86,7 +88,7 @@ func _ready():
 	attackDataEnum = GlobalVariables.ProjectileAnimations
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
-	
+	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
 	
 func _physics_process(delta):
 	projectileCaughtThisFrame = false
@@ -104,7 +106,7 @@ func set_base_stats(parentNode, originalOwner):
 	if !canHitSelf: 
 		self.parentNode = parentNode
 		self.originalOwner = originalOwner
-	create_projectileTTL_timer(ttlFrames)
+	
 	
 func change_parent():
 	pass
@@ -211,6 +213,11 @@ func check_ground_platform_collision():
 		if (collision.get_collider().is_in_group("Platform")\
 		|| collision.get_collider().is_in_group("Ground"))\
 		&& check_max_ground_radians(collision):
+			platformCollision = collision.get_collider()
+			return platformCollision
+	if get_slide_count():
+		var collision = get_slide_collision(0)
+		if collision.get_collider().is_in_group("Ground"):
 			platformCollision = collision.get_collider()
 			return platformCollision
 	return null
@@ -335,6 +342,42 @@ func projectile_touched_solid_ground():
 func bounce_projectile_relative_to_object(object):
 	var bounceVector = (self.global_position-object.global_position).normalized()
 	velocity = bounceVector * 300
+	
+func shoot_charge_projectile():
+	parentNode.enableSpecialInput = false
+	parentNode.animationPlayer.play()
+	match parentNode.currentMoveDirection: 
+		GlobalVariables.MoveDirection.LEFT:
+			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+			velocity.x = -airMaxSpeed
+		GlobalVariables.MoveDirection.RIGHT:
+			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+			velocity.x = airMaxSpeed
+	create_projectileTTL_timer(ttlFrames)
+	parentNode.chargingProjectile = null
+	parentNode.apply_charge_projectile_pushback(projectilePushVelocity*currentCharge)
+	parentNode.call_deferred("remove_child",self)
+	GlobalVariables.currentStage.call_deferred("add_child",self)
+	set_deferred("global_position",parentNode.interactionPoint.global_position)
+	projectileSpecialInteraction = null
+	change_state(GlobalVariables.ProjectileState.SHOOT)
 
-func check_projectile_projectile_no_interaction(interactionObject):
+func charge_projectile(mode):
+	print(currentCharge)
+	if currentCharge < maxCharge:
+		currentCharge += chargeTickRate
+	else:
+		match mode:
+			0:
+				#isntantly shoots projectile on full charge
+				shoot_charge_projectile()
+			1:
+				#changes to idle to keep fully charged projectile
+				store_charged_projectile()
+	
+func store_charged_projectile():
+	parentNode.state.play_attack_animation("cancel_charge")
+	change_state(GlobalVariables.ProjectileState.IDLE)
+
+func check_fully_charged(step):
 	pass

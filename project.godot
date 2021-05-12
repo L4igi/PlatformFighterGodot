@@ -145,6 +145,11 @@ _global_script_classes=[ {
 "path": "res://Projectiles/ProjectileStates/ProjectileHoldState.gd"
 }, {
 "base": "ProjectileState",
+"class": "ProjectileIdleState",
+"language": "GDScript",
+"path": "res://Projectiles/ProjectileStates/ProjectileIdleState.gd"
+}, {
+"base": "ProjectileState",
 "class": "ProjectileImpactState",
 "language": "GDScript",
 "path": "res://Projectiles/ProjectileStates/ProjectileImpactState.gd"
@@ -252,6 +257,7 @@ _global_script_class_icons={
 "ProjectileControlState": "",
 "ProjectileDestroyedState": "",
 "ProjectileHoldState": "",
+"ProjectileIdleState": "",
 "ProjectileImpactState": "",
 "ProjectileShootState": "",
 "ProjectileState": "",

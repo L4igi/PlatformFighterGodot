@@ -1,4 +1,4 @@
-[gd_scene load_steps=497 format=2]
+[gd_scene load_steps=499 format=2]
 
 [ext_resource path="res://Characters/Character.gd" type="Script" id=1]
 [ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=2]
@@ -438,6 +438,251 @@ animations = [ {
 "name": "idle",
 "speed": 5.0
 }, {
+"frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
+"loop": true,
+"name": "techroll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 419 ), ExtResource( 413 ), ExtResource( 422 ), ExtResource( 416 ), ExtResource( 423 ), ExtResource( 412 ), ExtResource( 418 ), ExtResource( 420 ), ExtResource( 415 ), ExtResource( 417 ), ExtResource( 424 ), ExtResource( 425 ), ExtResource( 414 ), ExtResource( 421 ) ],
+"loop": true,
+"name": "upspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
+"loop": true,
+"name": "upair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 218 ), ExtResource( 216 ), ExtResource( 217 ), ExtResource( 215 ), ExtResource( 219 ), ExtResource( 220 ), ExtResource( 221 ), ExtResource( 222 ) ],
+"loop": true,
+"name": "roll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 237 ), ExtResource( 236 ), ExtResource( 239 ), ExtResource( 238 ) ],
+"loop": true,
+"name": "grabjab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 427 ), ExtResource( 426 ) ],
+"loop": true,
+"name": "helpless",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 201 ), ExtResource( 189 ), ExtResource( 197 ), ExtResource( 198 ), ExtResource( 188 ) ],
+"loop": true,
+"name": "normal_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 163 ), ExtResource( 173 ), ExtResource( 164 ), ExtResource( 166 ), ExtResource( 167 ), ExtResource( 170 ), ExtResource( 168 ), ExtResource( 169 ), ExtResource( 172 ), ExtResource( 165 ), ExtResource( 174 ), ExtResource( 171 ) ],
+"loop": true,
+"name": "dsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 383 ), ExtResource( 371 ), ExtResource( 386 ), ExtResource( 378 ), ExtResource( 382 ), ExtResource( 376 ), ExtResource( 381 ), ExtResource( 370 ), ExtResource( 373 ), ExtResource( 377 ), ExtResource( 374 ), ExtResource( 372 ), ExtResource( 375 ), ExtResource( 384 ), ExtResource( 385 ), ExtResource( 380 ), ExtResource( 379 ) ],
+"loop": true,
+"name": "downspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 306 ), ExtResource( 307 ), ExtResource( 308 ), ExtResource( 313 ), ExtResource( 310 ), ExtResource( 309 ), ExtResource( 312 ), ExtResource( 311 ), ExtResource( 314 ), ExtResource( 315 ), ExtResource( 318 ), ExtResource( 316 ), ExtResource( 317 ), ExtResource( 319 ) ],
+"loop": true,
+"name": "shieldbreak",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 265 ), ExtResource( 241 ), ExtResource( 240 ), ExtResource( 244 ), ExtResource( 243 ), ExtResource( 242 ) ],
+"loop": true,
+"name": "uthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
+"loop": true,
+"name": "turnaround_fast",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ), ExtResource( 305 ), ExtResource( 304 ), ExtResource( 303 ) ],
+"loop": true,
+"name": "attack_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 338 ), ExtResource( 345 ), ExtResource( 337 ), ExtResource( 342 ), ExtResource( 343 ), SubResource( 1 ), ExtResource( 344 ), ExtResource( 340 ), ExtResource( 339 ) ],
+"loop": true,
+"name": "techground",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
+"loop": true,
+"name": "turnaround_slow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 268 ), ExtResource( 269 ), ExtResource( 270 ), ExtResource( 271 ), ExtResource( 272 ), ExtResource( 273 ), ExtResource( 274 ), ExtResource( 275 ), ExtResource( 276 ), ExtResource( 277 ), ExtResource( 278 ), ExtResource( 260 ), ExtResource( 245 ), ExtResource( 261 ), ExtResource( 253 ) ],
+"loop": true,
+"name": "bthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 287 ), ExtResource( 286 ), ExtResource( 285 ), ExtResource( 288 ) ],
+"loop": true,
+"name": "shielddrop",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
+"loop": true,
+"name": "nair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 248 ), ExtResource( 246 ), ExtResource( 247 ), ExtResource( 256 ), ExtResource( 249 ), ExtResource( 255 ), ExtResource( 257 ), ExtResource( 258 ), ExtResource( 250 ), ExtResource( 251 ), ExtResource( 252 ), ExtResource( 254 ), ExtResource( 259 ) ],
+"loop": true,
+"name": "dthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 153 ), ExtResource( 155 ), ExtResource( 154 ), ExtResource( 152 ), ExtResource( 156 ), ExtResource( 157 ), ExtResource( 162 ), ExtResource( 158 ), ExtResource( 159 ), ExtResource( 160 ), ExtResource( 161 ) ],
+"loop": true,
+"name": "fsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 109 ), ExtResource( 110 ), ExtResource( 113 ), ExtResource( 114 ), ExtResource( 111 ), ExtResource( 112 ), ExtResource( 120 ), ExtResource( 118 ), ExtResource( 115 ), ExtResource( 117 ), ExtResource( 116 ), ExtResource( 119 ), ExtResource( 121 ), ExtResource( 122 ) ],
+"loop": true,
+"name": "dair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 190 ), ExtResource( 191 ), ExtResource( 192 ), ExtResource( 207 ), ExtResource( 203 ), ExtResource( 205 ), ExtResource( 206 ), ExtResource( 208 ), ExtResource( 204 ), ExtResource( 210 ), ExtResource( 209 ), ExtResource( 212 ), ExtResource( 211 ) ],
+"loop": true,
+"name": "roll_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 391 ), ExtResource( 396 ), ExtResource( 392 ), ExtResource( 387 ), ExtResource( 394 ), ExtResource( 395 ), ExtResource( 388 ), ExtResource( 393 ), ExtResource( 389 ), ExtResource( 390 ) ],
+"loop": true,
+"name": "nspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 108 ), ExtResource( 107 ), ExtResource( 102 ), ExtResource( 103 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 106 ) ],
+"loop": true,
+"name": "dtilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
+"loop": true,
+"name": "freefall",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 263 ), ExtResource( 266 ), ExtResource( 267 ), ExtResource( 262 ), ExtResource( 264 ) ],
+"loop": true,
+"name": "fthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 358 ), ExtResource( 354 ), ExtResource( 356 ), ExtResource( 355 ), ExtResource( 357 ) ],
+"loop": true,
+"name": "techair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 235 ), ExtResource( 234 ) ],
+"loop": true,
+"name": "ingrab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
+"loop": true,
+"name": "run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 67 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 70 ) ],
+"loop": true,
+"name": "jab2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 280 ), ExtResource( 279 ), ExtResource( 281 ) ],
+"loop": true,
+"name": "edgeSnap",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 408 ), ExtResource( 398 ), ExtResource( 401 ), ExtResource( 400 ), ExtResource( 402 ), ExtResource( 404 ), ExtResource( 411 ), ExtResource( 397 ), ExtResource( 405 ), ExtResource( 406 ), ExtResource( 410 ), ExtResource( 403 ), ExtResource( 399 ), ExtResource( 407 ), ExtResource( 409 ) ],
+"loop": true,
+"name": "sidespecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 369 ), ExtResource( 368 ), ExtResource( 365 ), ExtResource( 363 ), ExtResource( 364 ), ExtResource( 366 ), ExtResource( 367 ) ],
+"loop": true,
+"name": "rebound",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 322 ), ExtResource( 332 ), ExtResource( 320 ), ExtResource( 335 ), ExtResource( 323 ), ExtResource( 333 ), ExtResource( 336 ), ExtResource( 328 ), ExtResource( 331 ), ExtResource( 324 ), ExtResource( 326 ), ExtResource( 327 ), ExtResource( 330 ), ExtResource( 334 ), ExtResource( 325 ), ExtResource( 329 ), ExtResource( 321 ) ],
+"loop": true,
+"name": "jump_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 140 ), ExtResource( 141 ), ExtResource( 145 ), ExtResource( 142 ), ExtResource( 143 ), ExtResource( 144 ), ExtResource( 148 ), ExtResource( 146 ), ExtResource( 149 ), ExtResource( 147 ), ExtResource( 150 ), ExtResource( 151 ) ],
+"loop": true,
+"name": "upsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 138 ), ExtResource( 137 ), ExtResource( 139 ), ExtResource( 136 ), ExtResource( 135 ) ],
+"loop": true,
+"name": "ftilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 359 ), ExtResource( 362 ), ExtResource( 360 ), ExtResource( 361 ) ],
+"loop": true,
+"name": "airdodge",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 282 ), ExtResource( 283 ), ExtResource( 284 ) ],
+"loop": true,
+"name": "crouch",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 123 ), ExtResource( 127 ), ExtResource( 128 ), ExtResource( 129 ), ExtResource( 124 ), ExtResource( 130 ), ExtResource( 126 ), ExtResource( 125 ), ExtResource( 131 ), ExtResource( 132 ), ExtResource( 133 ), ExtResource( 134 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 78 ), ExtResource( 82 ), ExtResource( 80 ), ExtResource( 79 ), ExtResource( 81 ), ExtResource( 83 ) ],
+"loop": true,
+"name": "uptilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 95 ), ExtResource( 96 ), ExtResource( 97 ), ExtResource( 98 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 99 ) ],
+"loop": true,
+"name": "bair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 186 ), ExtResource( 185 ), ExtResource( 187 ), ExtResource( 180 ), ExtResource( 179 ), ExtResource( 181 ), ExtResource( 182 ), ExtResource( 183 ), ExtResource( 184 ), ExtResource( 175 ), ExtResource( 178 ), ExtResource( 177 ), ExtResource( 176 ) ],
+"loop": true,
+"name": "hurt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
+"loop": true,
+"name": "jab1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
+"loop": true,
+"name": "doublejump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 224 ), ExtResource( 225 ), ExtResource( 226 ), ExtResource( 227 ), ExtResource( 228 ), ExtResource( 229 ), ExtResource( 223 ) ],
+"loop": true,
+"name": "spotdodge",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 299 ), ExtResource( 298 ), ExtResource( 300 ) ],
+"loop": true,
+"name": "landing_lag",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
+"loop": true,
+"name": "dash_attack",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 84 ), ExtResource( 87 ), ExtResource( 88 ), ExtResource( 85 ), ExtResource( 86 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 94 ), ExtResource( 90 ), ExtResource( 92 ), ExtResource( 89 ) ],
+"loop": true,
+"name": "fair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 302 ), ExtResource( 301 ) ],
+"loop": true,
+"name": "backflip",
+"speed": 5.0
+}, {
 "frames": [ ExtResource( 213 ) ],
 "loop": true,
 "name": "shield",
@@ -451,251 +696,6 @@ animations = [ {
 "frames": [ ExtResource( 27 ), ExtResource( 31 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 30 ), ExtResource( 28 ), ExtResource( 29 ) ],
 "loop": true,
 "name": "jump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 348 ), ExtResource( 353 ), ExtResource( 351 ), ExtResource( 349 ), ExtResource( 352 ), ExtResource( 341 ), ExtResource( 346 ), ExtResource( 347 ), ExtResource( 350 ) ],
-"loop": true,
-"name": "techroll",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 359 ), ExtResource( 362 ), ExtResource( 360 ), ExtResource( 361 ) ],
-"loop": true,
-"name": "airdodge",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 338 ), ExtResource( 345 ), ExtResource( 337 ), ExtResource( 342 ), ExtResource( 343 ), SubResource( 1 ), ExtResource( 344 ), ExtResource( 340 ), ExtResource( 339 ) ],
-"loop": true,
-"name": "techground",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 358 ), ExtResource( 354 ), ExtResource( 356 ), ExtResource( 355 ), ExtResource( 357 ) ],
-"loop": true,
-"name": "techair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 322 ), ExtResource( 332 ), ExtResource( 320 ), ExtResource( 335 ), ExtResource( 323 ), ExtResource( 333 ), ExtResource( 336 ), ExtResource( 328 ), ExtResource( 331 ), ExtResource( 324 ), ExtResource( 326 ), ExtResource( 327 ), ExtResource( 330 ), ExtResource( 334 ), ExtResource( 325 ), ExtResource( 329 ), ExtResource( 321 ) ],
-"loop": true,
-"name": "jump_getup",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 75 ), ExtResource( 71 ), ExtResource( 72 ), ExtResource( 73 ), ExtResource( 74 ), ExtResource( 76 ), ExtResource( 77 ) ],
-"loop": true,
-"name": "upair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 140 ), ExtResource( 141 ), ExtResource( 145 ), ExtResource( 142 ), ExtResource( 143 ), ExtResource( 144 ), ExtResource( 148 ), ExtResource( 146 ), ExtResource( 149 ), ExtResource( 147 ), ExtResource( 150 ), ExtResource( 151 ) ],
-"loop": true,
-"name": "upsmash",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 95 ), ExtResource( 96 ), ExtResource( 97 ), ExtResource( 98 ), ExtResource( 100 ), ExtResource( 101 ), ExtResource( 99 ) ],
-"loop": true,
-"name": "bair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 34 ), ExtResource( 36 ), ExtResource( 33 ), ExtResource( 35 ), ExtResource( 32 ) ],
-"loop": true,
-"name": "doublejump",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
-"loop": true,
-"name": "turnaround_slow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 186 ), ExtResource( 185 ), ExtResource( 187 ), ExtResource( 180 ), ExtResource( 179 ), ExtResource( 181 ), ExtResource( 182 ), ExtResource( 183 ), ExtResource( 184 ), ExtResource( 175 ), ExtResource( 178 ), ExtResource( 177 ), ExtResource( 176 ) ],
-"loop": true,
-"name": "hurt",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 78 ), ExtResource( 82 ), ExtResource( 80 ), ExtResource( 79 ), ExtResource( 81 ), ExtResource( 83 ) ],
-"loop": true,
-"name": "uptilt",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 248 ), ExtResource( 246 ), ExtResource( 247 ), ExtResource( 256 ), ExtResource( 249 ), ExtResource( 255 ), ExtResource( 257 ), ExtResource( 258 ), ExtResource( 250 ), ExtResource( 251 ), ExtResource( 252 ), ExtResource( 254 ), ExtResource( 259 ) ],
-"loop": true,
-"name": "dthrow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 39 ), ExtResource( 38 ), ExtResource( 37 ), ExtResource( 40 ) ],
-"loop": true,
-"name": "freefall",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 163 ), ExtResource( 173 ), ExtResource( 164 ), ExtResource( 166 ), ExtResource( 167 ), ExtResource( 170 ), ExtResource( 168 ), ExtResource( 169 ), ExtResource( 172 ), ExtResource( 165 ), ExtResource( 174 ), ExtResource( 171 ) ],
-"loop": true,
-"name": "dsmash",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 224 ), ExtResource( 225 ), ExtResource( 226 ), ExtResource( 227 ), ExtResource( 228 ), ExtResource( 229 ), ExtResource( 223 ) ],
-"loop": true,
-"name": "spotdodge",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 218 ), ExtResource( 216 ), ExtResource( 217 ), ExtResource( 215 ), ExtResource( 219 ), ExtResource( 220 ), ExtResource( 221 ), ExtResource( 222 ) ],
-"loop": true,
-"name": "roll",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 138 ), ExtResource( 137 ), ExtResource( 139 ), ExtResource( 136 ), ExtResource( 135 ) ],
-"loop": true,
-"name": "ftilt",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 108 ), ExtResource( 107 ), ExtResource( 102 ), ExtResource( 103 ), ExtResource( 104 ), ExtResource( 105 ), ExtResource( 106 ) ],
-"loop": true,
-"name": "dtilt",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 201 ), ExtResource( 189 ), ExtResource( 197 ), ExtResource( 198 ), ExtResource( 188 ) ],
-"loop": true,
-"name": "normal_getup",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 235 ), ExtResource( 234 ) ],
-"loop": true,
-"name": "ingrab",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 41 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 47 ), ExtResource( 45 ), ExtResource( 42 ), ExtResource( 46 ) ],
-"loop": true,
-"name": "nair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 291 ), ExtResource( 295 ), ExtResource( 297 ), ExtResource( 289 ), ExtResource( 290 ), ExtResource( 293 ), ExtResource( 292 ), ExtResource( 296 ), ExtResource( 294 ) ],
-"loop": true,
-"name": "turnaround_fast",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 237 ), ExtResource( 236 ), ExtResource( 239 ), ExtResource( 238 ) ],
-"loop": true,
-"name": "grabjab",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 84 ), ExtResource( 87 ), ExtResource( 88 ), ExtResource( 85 ), ExtResource( 86 ), ExtResource( 93 ), ExtResource( 91 ), ExtResource( 94 ), ExtResource( 90 ), ExtResource( 92 ), ExtResource( 89 ) ],
-"loop": true,
-"name": "fair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 306 ), ExtResource( 307 ), ExtResource( 308 ), ExtResource( 313 ), ExtResource( 310 ), ExtResource( 309 ), ExtResource( 312 ), ExtResource( 311 ), ExtResource( 314 ), ExtResource( 315 ), ExtResource( 318 ), ExtResource( 316 ), ExtResource( 317 ), ExtResource( 319 ) ],
-"loop": true,
-"name": "shieldbreak",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 263 ), ExtResource( 266 ), ExtResource( 267 ), ExtResource( 262 ), ExtResource( 264 ) ],
-"loop": true,
-"name": "fthrow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 268 ), ExtResource( 269 ), ExtResource( 270 ), ExtResource( 271 ), ExtResource( 272 ), ExtResource( 273 ), ExtResource( 274 ), ExtResource( 275 ), ExtResource( 276 ), ExtResource( 277 ), ExtResource( 278 ), ExtResource( 260 ), ExtResource( 245 ), ExtResource( 261 ), ExtResource( 253 ) ],
-"loop": true,
-"name": "bthrow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 2 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
-"loop": true,
-"name": "jab1",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 265 ), ExtResource( 241 ), ExtResource( 240 ), ExtResource( 244 ), ExtResource( 243 ), ExtResource( 242 ) ],
-"loop": true,
-"name": "uthrow",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 153 ), ExtResource( 155 ), ExtResource( 154 ), ExtResource( 152 ), ExtResource( 156 ), ExtResource( 157 ), ExtResource( 162 ), ExtResource( 158 ), ExtResource( 159 ), ExtResource( 160 ), ExtResource( 161 ) ],
-"loop": true,
-"name": "fsmash",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 302 ), ExtResource( 301 ) ],
-"loop": true,
-"name": "backflip",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 202 ), ExtResource( 193 ), ExtResource( 196 ), ExtResource( 199 ), ExtResource( 200 ), ExtResource( 194 ), ExtResource( 195 ), ExtResource( 305 ), ExtResource( 304 ), ExtResource( 303 ) ],
-"loop": true,
-"name": "attack_getup",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 282 ), ExtResource( 283 ), ExtResource( 284 ) ],
-"loop": true,
-"name": "crouch",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 109 ), ExtResource( 110 ), ExtResource( 113 ), ExtResource( 114 ), ExtResource( 111 ), ExtResource( 112 ), ExtResource( 120 ), ExtResource( 118 ), ExtResource( 115 ), ExtResource( 117 ), ExtResource( 116 ), ExtResource( 119 ), ExtResource( 121 ), ExtResource( 122 ) ],
-"loop": true,
-"name": "dair",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 299 ), ExtResource( 298 ), ExtResource( 300 ) ],
-"loop": true,
-"name": "landing_lag",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 190 ), ExtResource( 191 ), ExtResource( 192 ), ExtResource( 207 ), ExtResource( 203 ), ExtResource( 205 ), ExtResource( 206 ), ExtResource( 208 ), ExtResource( 204 ), ExtResource( 210 ), ExtResource( 209 ), ExtResource( 212 ), ExtResource( 211 ) ],
-"loop": true,
-"name": "roll_getup",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 280 ), ExtResource( 279 ), ExtResource( 281 ) ],
-"loop": true,
-"name": "edgeSnap",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 287 ), ExtResource( 286 ), ExtResource( 285 ), ExtResource( 288 ) ],
-"loop": true,
-"name": "shielddrop",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 3 ), ExtResource( 12 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 14 ) ],
-"loop": true,
-"name": "run",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 123 ), ExtResource( 127 ), ExtResource( 128 ), ExtResource( 129 ), ExtResource( 124 ), ExtResource( 130 ), ExtResource( 126 ), ExtResource( 125 ), ExtResource( 131 ), ExtResource( 132 ), ExtResource( 133 ), ExtResource( 134 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 54 ), ExtResource( 51 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 55 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 56 ), ExtResource( 52 ), ExtResource( 60 ), ExtResource( 62 ), ExtResource( 61 ), ExtResource( 63 ), ExtResource( 64 ), ExtResource( 59 ), ExtResource( 48 ), ExtResource( 49 ) ],
-"loop": true,
-"name": "dash_attack",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 67 ), ExtResource( 68 ), ExtResource( 69 ), ExtResource( 70 ) ],
-"loop": true,
-"name": "jab2",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 383 ), ExtResource( 371 ), ExtResource( 386 ), ExtResource( 378 ), ExtResource( 382 ), ExtResource( 376 ), ExtResource( 381 ), ExtResource( 370 ), ExtResource( 373 ), ExtResource( 377 ), ExtResource( 374 ), ExtResource( 372 ), ExtResource( 375 ), ExtResource( 384 ), ExtResource( 385 ), ExtResource( 380 ), ExtResource( 379 ) ],
-"loop": true,
-"name": "downspecial",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 408 ), ExtResource( 398 ), ExtResource( 401 ), ExtResource( 400 ), ExtResource( 402 ), ExtResource( 404 ), ExtResource( 411 ), ExtResource( 397 ), ExtResource( 405 ), ExtResource( 406 ), ExtResource( 410 ), ExtResource( 403 ), ExtResource( 399 ), ExtResource( 407 ), ExtResource( 409 ) ],
-"loop": true,
-"name": "sidespecial",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 391 ), ExtResource( 396 ), ExtResource( 392 ), ExtResource( 387 ), ExtResource( 394 ), ExtResource( 395 ), ExtResource( 388 ), ExtResource( 393 ), ExtResource( 389 ), ExtResource( 390 ) ],
-"loop": true,
-"name": "nspecial",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 369 ), ExtResource( 368 ), ExtResource( 365 ), ExtResource( 363 ), ExtResource( 364 ), ExtResource( 366 ), ExtResource( 367 ) ],
-"loop": true,
-"name": "rebound",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 419 ), ExtResource( 413 ), ExtResource( 422 ), ExtResource( 416 ), ExtResource( 423 ), ExtResource( 412 ), ExtResource( 418 ), ExtResource( 420 ), ExtResource( 415 ), ExtResource( 417 ), ExtResource( 424 ), ExtResource( 425 ), ExtResource( 414 ), ExtResource( 421 ) ],
-"loop": true,
-"name": "upspecial",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 427 ), ExtResource( 426 ) ],
-"loop": true,
-"name": "helpless",
 "speed": 5.0
 } ]
 
@@ -984,7 +984,9 @@ tracks/4/keys = {
 }
 
 [sub_resource type="Animation" id=9]
-resource_name = "counter"
+resource_name = "cancel_charge"
+
+[sub_resource type="Animation" id=10]
 length = 0.733333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1144,7 +1146,7 @@ tracks/12/keys = {
 "values": [ Color( 0.854902, 0.0352941, 0.0352941, 1 ) ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=11]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1183,7 +1185,7 @@ tracks/2/keys = {
 "values": [ Vector2( 2, 0 ), Vector2( 2, 4 ) ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=12]
 length = 1.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1222,7 +1224,7 @@ tracks/2/keys = {
 "values": [ Vector2( 10, 10 ) ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=13]
 length = 1.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1263,7 +1265,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=14]
 length = 0.183333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1291,7 +1293,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=15]
 length = 1.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -1499,7 +1501,7 @@ tracks/14/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 1.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -1667,7 +1669,7 @@ tracks/12/keys = {
 "values": [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=17]
 length = 0.733333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1832,7 +1834,7 @@ tracks/12/keys = {
 "values": [ Vector2( -6, 0 ), Vector2( 0, -8 ), Vector2( 0, -4 ), Vector2( 0, -2 ) ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=18]
 length = 1.3
 step = 0.0166667
 tracks/0/type = "value"
@@ -1904,7 +1906,7 @@ tracks/4/keys = {
 "values": [ Vector2( 10.5, -12 ), Vector2( 11, -8 ), Vector2( 14.4, 16 ), Vector2( 14.4, 28 ) ]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=19]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -1932,7 +1934,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=19]
+[sub_resource type="Animation" id=20]
 length = 0.0333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -1960,7 +1962,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=20]
+[sub_resource type="Animation" id=21]
 length = 1.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1987,7 +1989,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
 }
 
-[sub_resource type="Animation" id=21]
+[sub_resource type="Animation" id=22]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -2015,7 +2017,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
-[sub_resource type="Animation" id=22]
+[sub_resource type="Animation" id=23]
 length = 0.916667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2156,7 +2158,7 @@ tracks/10/keys = {
 "values": [ Vector2( -2.212, 5.927 ), Vector2( -0.291, 5.927 ), Vector2( -0.291, 5.927 ) ]
 }
 
-[sub_resource type="Animation" id=23]
+[sub_resource type="Animation" id=24]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2203,7 +2205,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=24]
+[sub_resource type="Animation" id=25]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -2339,7 +2341,7 @@ tracks/10/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=26]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -2420,7 +2422,7 @@ tracks/5/keys = {
 "values": [ Vector2( 19, 1.74046e-05 ) ]
 }
 
-[sub_resource type="Animation" id=26]
+[sub_resource type="Animation" id=27]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -2465,8 +2467,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=27]
-resource_name = "helpless"
+[sub_resource type="Animation" id=28]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2493,7 +2494,7 @@ tracks/1/keys = {
 "values": [ 1 ]
 }
 
-[sub_resource type="Animation" id=28]
+[sub_resource type="Animation" id=29]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2549,7 +2550,7 @@ tracks/3/keys = {
 "values": [ Vector2( -4, 4 ), Vector2( 0, 8.10256 ), Vector2( 0, 10 ) ]
 }
 
-[sub_resource type="Animation" id=29]
+[sub_resource type="Animation" id=30]
 length = 0.583333
 step = 0.0166667
 tracks/0/type = "value"
@@ -2589,7 +2590,7 @@ tracks/2/keys = {
 "values": [ Vector2( -4, 2 ), Vector2( 2, 8 ), Vector2( 2, 10 ) ]
 }
 
-[sub_resource type="Animation" id=30]
+[sub_resource type="Animation" id=31]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2616,7 +2617,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2 ]
 }
 
-[sub_resource type="Animation" id=31]
+[sub_resource type="Animation" id=32]
 length = 0.7
 loop = true
 tracks/0/type = "value"
@@ -2644,7 +2645,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=32]
+[sub_resource type="Animation" id=33]
 length = 0.1
 loop = true
 tracks/0/type = "value"
@@ -2672,7 +2673,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=33]
+[sub_resource type="Animation" id=34]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2713,7 +2714,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=34]
+[sub_resource type="Animation" id=35]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2740,7 +2741,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=35]
+[sub_resource type="Animation" id=36]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2767,7 +2768,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=36]
+[sub_resource type="Animation" id=37]
 length = 0.75
 step = 0.0166667
 tracks/0/type = "value"
@@ -2824,7 +2825,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 6 ), Vector2( 0, 2 ), Vector2( 0, 6 ), Vector2( 0, 2 ) ]
 }
 
-[sub_resource type="Animation" id=37]
+[sub_resource type="Animation" id=38]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -2852,7 +2853,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=38]
+[sub_resource type="Animation" id=39]
 length = 0.566668
 step = 0.0166667
 tracks/0/type = "value"
@@ -2945,7 +2946,7 @@ tracks/6/keys = {
 "values": [ Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( 6, -2 ), Vector2( 4, 0 ), Vector2( -14, 2.38419e-07 ), Vector2( 20, 4.76837e-07 ), Vector2( 14, 4.76837e-07 ), Vector2( 0, 7.15256e-07 ) ]
 }
 
-[sub_resource type="Animation" id=39]
+[sub_resource type="Animation" id=40]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -2972,7 +2973,68 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=40]
+[sub_resource type="Animation" id=41]
+resource_name = "neutralspecial"
+length = 0.750001
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "nspecial" ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.166667, 0.2, 0.233333, 0.283333, 0.383333, 0.483333, 0.666667 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.166667, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [ 0 ],
+"method": "apply_special_animation_steps"
+}, {
+"args": [ 1 ],
+"method": "apply_special_animation_steps"
+}, {
+"args": [ 2 ],
+"method": "apply_special_animation_steps"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../InteractionPoint:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0.266667 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 20, 0 ) ]
+}
+
+[sub_resource type="Animation" id=42]
 length = 0.816667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3029,7 +3091,7 @@ tracks/3/keys = {
 "values": [ Vector2( 20, 0 ) ]
 }
 
-[sub_resource type="Animation" id=41]
+[sub_resource type="Animation" id=43]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -3086,7 +3148,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 5.05263 ), Vector2( 0, 3.36842 ), Vector2( 0, 1.68421 ) ]
 }
 
-[sub_resource type="Animation" id=42]
+[sub_resource type="Animation" id=44]
 length = 0.5
 step = 0.0166667
 tracks/0/type = "value"
@@ -3126,7 +3188,7 @@ tracks/2/keys = {
 "values": [ Vector2( -15, 0 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=43]
+[sub_resource type="Animation" id=45]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3186,7 +3248,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 6 ), Vector2( 0, 4.31579 ), Vector2( 0, 2 ) ]
 }
 
-[sub_resource type="Animation" id=44]
+[sub_resource type="Animation" id=46]
 length = 1.3
 step = 0.0166667
 tracks/0/type = "value"
@@ -3243,7 +3305,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 10 ), Vector2( 0, 4 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=45]
+[sub_resource type="Animation" id=47]
 length = 1.2
 loop = true
 tracks/0/type = "value"
@@ -3271,7 +3333,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="Animation" id=46]
+[sub_resource type="Animation" id=48]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3298,7 +3360,7 @@ tracks/1/keys = {
 "values": [ 0 ]
 }
 
-[sub_resource type="Animation" id=47]
+[sub_resource type="Animation" id=49]
 length = 0.5
 loop = true
 step = 0.0166667
@@ -3339,7 +3401,7 @@ tracks/2/keys = {
 "values": [ 0.0, -360.0 ]
 }
 
-[sub_resource type="Animation" id=48]
+[sub_resource type="Animation" id=50]
 loop = true
 step = 0.0166667
 tracks/0/type = "value"
@@ -3367,7 +3429,7 @@ tracks/1/keys = {
 "values": [ 9, 10, 11, 12, 13 ]
 }
 
-[sub_resource type="Animation" id=49]
+[sub_resource type="Animation" id=51]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3420,7 +3482,7 @@ tracks/3/keys = {
 "values": [ Vector2( -2, 20 ), Vector2( -4, 18 ), Vector2( 4, 2 ) ]
 }
 
-[sub_resource type="Animation" id=50]
+[sub_resource type="Animation" id=52]
 length = 0.266667
 step = 0.0166667
 tracks/0/type = "value"
@@ -3465,7 +3527,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=51]
+[sub_resource type="Animation" id=53]
 length = 0.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -3493,7 +3555,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=52]
+[sub_resource type="Animation" id=54]
 length = 0.866668
 step = 0.0166667
 tracks/0/type = "value"
@@ -3675,7 +3737,7 @@ tracks/13/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=53]
+[sub_resource type="Animation" id=55]
 length = 0.7
 step = 0.0166667
 tracks/0/type = "value"
@@ -3723,7 +3785,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=54]
+[sub_resource type="Animation" id=56]
 length = 0.25
 step = 0.0166667
 tracks/0/type = "value"
@@ -3780,7 +3842,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, -6 ), Vector2( -4, -4 ) ]
 }
 
-[sub_resource type="Animation" id=55]
+[sub_resource type="Animation" id=57]
 length = 0.75
 step = 0.0166667
 tracks/0/type = "value"
@@ -3837,7 +3899,7 @@ tracks/3/keys = {
 "values": [ Vector2( 4, 5.05263 ), Vector2( 4, 4 ), Vector2( 0, 8 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=56]
+[sub_resource type="Animation" id=58]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -3893,8 +3955,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 4 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=57]
-resource_name = "throw_item_down"
+[sub_resource type="Animation" id=59]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -3948,8 +4009,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, 15 ) ]
 }
 
-[sub_resource type="Animation" id=58]
-resource_name = "throw_item_forward"
+[sub_resource type="Animation" id=60]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -4003,8 +4063,7 @@ tracks/3/keys = {
 "values": [ Vector2( 20, 0 ) ]
 }
 
-[sub_resource type="Animation" id=59]
-resource_name = "throw_item_up"
+[sub_resource type="Animation" id=61]
 length = 0.4
 step = 0.0166667
 tracks/0/type = "value"
@@ -4058,7 +4117,7 @@ tracks/3/keys = {
 "values": [ Vector2( 0, -20 ) ]
 }
 
-[sub_resource type="Animation" id=60]
+[sub_resource type="Animation" id=62]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -4073,7 +4132,7 @@ tracks/0/keys = {
 "values": [ "backflip" ]
 }
 
-[sub_resource type="Animation" id=61]
+[sub_resource type="Animation" id=63]
 length = 0.0666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -4101,7 +4160,7 @@ tracks/1/keys = {
 "values": [  ]
 }
 
-[sub_resource type="Animation" id=62]
+[sub_resource type="Animation" id=64]
 length = 0.35
 step = 0.0166667
 tracks/0/type = "value"
@@ -4129,7 +4188,7 @@ tracks/1/keys = {
 "values": [ 8 ]
 }
 
-[sub_resource type="Animation" id=63]
+[sub_resource type="Animation" id=65]
 length = 0.383333
 step = 0.0166667
 tracks/0/type = "value"
@@ -4157,7 +4216,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=64]
+[sub_resource type="Animation" id=66]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -4310,7 +4369,7 @@ tracks/11/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=65]
+[sub_resource type="Animation" id=67]
 length = 0.633333
 step = 0.0166667
 tracks/0/type = "value"
@@ -4450,7 +4509,7 @@ tracks/9/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=66]
+[sub_resource type="Animation" id=68]
 length = 0.65
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -4477,7 +4536,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=67]
+[sub_resource type="Animation" id=69]
 length = 0.6
 step = 0.0166667
 tracks/0/type = "value"
@@ -4525,7 +4584,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=68]
+[sub_resource type="Animation" id=70]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -4553,7 +4612,7 @@ tracks/1/keys = {
 "values": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="RectangleShape2D" id=69]
+[sub_resource type="RectangleShape2D" id=71]
 extents = Vector2( 42, 22 )
 
 [node name="Character" type="KinematicBody2D" groups=[
@@ -4572,7 +4631,7 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "bthrow"
+animation = "airdodge"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"
@@ -4582,66 +4641,68 @@ anims/attack_getup = SubResource( 5 )
 anims/backflip = SubResource( 6 )
 anims/bair = SubResource( 7 )
 anims/bthrow = SubResource( 8 )
-anims/counter = SubResource( 9 )
-anims/crouch = SubResource( 10 )
-anims/dair = SubResource( 11 )
-anims/dash_attack = SubResource( 12 )
-anims/doublejump = SubResource( 13 )
-anims/downspecial = SubResource( 14 )
-"anims/downspecial (copy)" = SubResource( 15 )
-anims/dsmash = SubResource( 16 )
-anims/dthrow = SubResource( 17 )
-anims/dtilt = SubResource( 18 )
-anims/edgeSnap = SubResource( 19 )
-anims/fair = SubResource( 20 )
-anims/freefall = SubResource( 21 )
-anims/fsmash = SubResource( 22 )
-anims/fthrow = SubResource( 23 )
-anims/ftilt = SubResource( 24 )
-anims/grab = SubResource( 25 )
-anims/grabjab = SubResource( 26 )
-anims/helpless = SubResource( 27 )
-anims/hurt = SubResource( 28 )
-anims/hurtTransition = SubResource( 29 )
-anims/hurt_short = SubResource( 30 )
-anims/idle = SubResource( 31 )
-anims/ingrab = SubResource( 32 )
-anims/jab1 = SubResource( 33 )
-anims/jab2 = SubResource( 34 )
-anims/jump = SubResource( 35 )
-anims/jump_getup = SubResource( 36 )
-anims/landinglagnormal = SubResource( 37 )
-anims/ledgeAttack_getup = SubResource( 38 )
-anims/nair = SubResource( 39 )
-anims/neutralspecial = SubResource( 40 )
-anims/normal_getup = SubResource( 41 )
-anims/rebound = SubResource( 42 )
-anims/roll = SubResource( 43 )
-anims/roll_getup = SubResource( 44 )
-anims/run = SubResource( 45 )
-anims/shield = SubResource( 46 )
-anims/shieldBreakAirLoop = SubResource( 47 )
-anims/shieldBreakGroundLoop = SubResource( 48 )
-anims/shieldBreakLanding = SubResource( 49 )
-anims/shieldBreakStart = SubResource( 50 )
-anims/shielddrop = SubResource( 51 )
-anims/sidespecial = SubResource( 52 )
-anims/spotdodge = SubResource( 53 )
-anims/techair = SubResource( 54 )
-anims/techground = SubResource( 55 )
-anims/techroll = SubResource( 56 )
-anims/throw_item_down = SubResource( 57 )
-anims/throw_item_forward = SubResource( 58 )
-anims/throw_item_up = SubResource( 59 )
-anims/tumble = SubResource( 60 )
-anims/turnaround_fast = SubResource( 61 )
-anims/turnaround_slow = SubResource( 62 )
-anims/upair = SubResource( 63 )
-anims/upsmash = SubResource( 64 )
-anims/upspecial = SubResource( 65 )
-anims/uptilt = SubResource( 66 )
-anims/uthrow = SubResource( 67 )
-anims/walk = SubResource( 68 )
+anims/cancel_charge = SubResource( 9 )
+anims/counter = SubResource( 10 )
+anims/crouch = SubResource( 11 )
+anims/dair = SubResource( 12 )
+anims/dash_attack = SubResource( 13 )
+anims/doublejump = SubResource( 14 )
+anims/downspecial = SubResource( 15 )
+"anims/downspecial (copy)" = SubResource( 16 )
+anims/dsmash = SubResource( 17 )
+anims/dthrow = SubResource( 18 )
+anims/dtilt = SubResource( 19 )
+anims/edgeSnap = SubResource( 20 )
+anims/fair = SubResource( 21 )
+anims/freefall = SubResource( 22 )
+anims/fsmash = SubResource( 23 )
+anims/fthrow = SubResource( 24 )
+anims/ftilt = SubResource( 25 )
+anims/grab = SubResource( 26 )
+anims/grabjab = SubResource( 27 )
+anims/helpless = SubResource( 28 )
+anims/hurt = SubResource( 29 )
+anims/hurtTransition = SubResource( 30 )
+anims/hurt_short = SubResource( 31 )
+anims/idle = SubResource( 32 )
+anims/ingrab = SubResource( 33 )
+anims/jab1 = SubResource( 34 )
+anims/jab2 = SubResource( 35 )
+anims/jump = SubResource( 36 )
+anims/jump_getup = SubResource( 37 )
+anims/landinglagnormal = SubResource( 38 )
+anims/ledgeAttack_getup = SubResource( 39 )
+anims/nair = SubResource( 40 )
+anims/neutralspecial = SubResource( 41 )
+anims/neutralspecial_ = SubResource( 42 )
+anims/normal_getup = SubResource( 43 )
+anims/rebound = SubResource( 44 )
+anims/roll = SubResource( 45 )
+anims/roll_getup = SubResource( 46 )
+anims/run = SubResource( 47 )
+anims/shield = SubResource( 48 )
+anims/shieldBreakAirLoop = SubResource( 49 )
+anims/shieldBreakGroundLoop = SubResource( 50 )
+anims/shieldBreakLanding = SubResource( 51 )
+anims/shieldBreakStart = SubResource( 52 )
+anims/shielddrop = SubResource( 53 )
+anims/sidespecial = SubResource( 54 )
+anims/spotdodge = SubResource( 55 )
+anims/techair = SubResource( 56 )
+anims/techground = SubResource( 57 )
+anims/techroll = SubResource( 58 )
+anims/throw_item_down = SubResource( 59 )
+anims/throw_item_forward = SubResource( 60 )
+anims/throw_item_up = SubResource( 61 )
+anims/tumble = SubResource( 62 )
+anims/turnaround_fast = SubResource( 63 )
+anims/turnaround_slow = SubResource( 64 )
+anims/upair = SubResource( 65 )
+anims/upsmash = SubResource( 66 )
+anims/upspecial = SubResource( 67 )
+anims/uptilt = SubResource( 68 )
+anims/uthrow = SubResource( 69 )
+anims/walk = SubResource( 70 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 65 )]
 visible = true
@@ -4674,7 +4735,7 @@ visible = false
 [node name="Shield" parent="." instance=ExtResource( 214 )]
 
 [node name="InteractionPoint" type="Position2D" parent="."]
-position = Vector2( 10.6667, -4 )
+position = Vector2( 20, 0 )
 
 [node name="CharacterEdgeGrabArea" type="Area2D" parent="." groups=[
 "EdgeGrabArea",
@@ -4685,7 +4746,7 @@ collision_mask = 32
 
 [node name="CharacterEdgeGrabShape" type="CollisionShape2D" parent="CharacterEdgeGrabArea"]
 position = Vector2( 10, -22 )
-shape = SubResource( 69 )
+shape = SubResource( 71 )
 
 [node name="FrameTimers" type="Node" parent="."]
 

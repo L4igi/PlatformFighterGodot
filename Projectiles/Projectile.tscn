@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Projectiles/FireBall/shoot/7.png" type="Texture" id=1]
 [ext_resource path="res://Projectiles/FireBall/impact/0.png" type="Texture" id=2]
@@ -21,14 +21,14 @@
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 12 ) ],
-"loop": true,
-"name": "impact",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 10 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 5 ), ExtResource( 11 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 1 ) ],
 "loop": true,
 "name": "shoot",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 3 ), ExtResource( 7 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "impact",
 "speed": 5.0
 } ]
 
@@ -64,6 +64,21 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id=5]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=6]
 length = 0.333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -115,7 +130,7 @@ tracks/3/keys = {
 "values": [ true, true ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -168,8 +183,7 @@ tracks/3/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "shoot_no_hitbox"
+[sub_resource type="Animation" id=8]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -210,7 +224,7 @@ tracks/2/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="CircleShape2D" id=8]
+[sub_resource type="CircleShape2D" id=9]
 
 [node name="Projectile" type="KinematicBody2D" groups=[
 "Projectile",
@@ -224,16 +238,16 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "impact"
-frame = 4
+animation = "shoot"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "shoot"
 anims/charge = SubResource( 3 )
 anims/destroy = SubResource( 4 )
-anims/impact = SubResource( 5 )
-anims/shoot = SubResource( 6 )
-anims/shoot_no_hitbox = SubResource( 7 )
+anims/idle = SubResource( 5 )
+anims/impact = SubResource( 6 )
+anims/shoot = SubResource( 7 )
+anims/shoot_no_hitbox = SubResource( 8 )
 
 [node name="HitBoxes" parent="AnimatedSprite" instance=ExtResource( 16 )]
 visible = true
@@ -256,7 +270,7 @@ visible = false
 ]]
 
 [node name="HurtBoxShape" type="CollisionShape2D" parent="HurtBoxArea"]
-shape = SubResource( 8 )
+shape = SubResource( 9 )
 
 [connection signal="animation_finished" from="AnimatedSprite/AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 

@@ -21,6 +21,7 @@ func setup(change_state, animationPlayer, projectile):
 	self.animationPlayer = animationPlayer
 	self.projectile = projectile
 	self.bufferedAnimation = projectile.bufferedAnimation
+	projectile.animatedSprite.set_visible(true)
 	hitlagTimer = GlobalVariables.create_timer("on_hitlag_timeout", "HitLagTimer", self)
 	hitlagAttackedTimer = GlobalVariables.create_timer("on_hitlagAttacked_timeout", "HitLagTimer", self)
 
@@ -82,8 +83,8 @@ func play_animation(animationToPlay, queue = false):
 	else:
 		animationPlayer.play(animationToPlay)
 		
-func reset_animatedSprite():
+func reset_animatedSprite(setup = false):
 	projectile.animatedSprite.set_rotation_degrees(0.0)
 	projectile.animatedSprite.set_position(Vector2(0,0))
 	projectile.animatedSprite.set_modulate(Color(1,1,1,1))
-	projectile.animatedSprite.set_scale(Vector2(1,1))
+	projectile.set_scale(Vector2(projectile.currentCharge,projectile.currentCharge))

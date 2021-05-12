@@ -9,7 +9,8 @@ func _init():
 		GlobalVariables.ProjectileState.IMPACT: ProjectileImpactState, 
 		GlobalVariables.ProjectileState.DESTROYED: ProjectileDestroyedState, 
 		GlobalVariables.ProjectileState.HOLD: ProjectileHoldState, 
-		GlobalVariables.ProjectileState.CHARGE: ProjectileChargeState
+		GlobalVariables.ProjectileState.CHARGE: ProjectileChargeState, 
+		GlobalVariables.ProjectileState.IDLE: ProjectileIdleState
 }
 
 func get_state(state_name):
