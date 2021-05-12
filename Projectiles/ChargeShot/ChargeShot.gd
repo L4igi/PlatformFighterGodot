@@ -28,6 +28,10 @@ func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 240
 	projectilePushVelocity = 200
 	parentNode.chargingProjectile = self
+	addChargeDamage = 20.0
+	addChargeKnockBack = 16.0
+	addChargeShieldDamage = 2.0
+	addChargeKnockBackGrowth = 20.0
 	set_collision_mask_bit(1,false)
 	change_state(GlobalVariables.ProjectileState.CHARGE)
 	
@@ -80,7 +84,8 @@ func check_ground_platform_collision():
 	if get_slide_count():
 		var collision = get_slide_collision(0)
 		if collision.get_collider().is_in_group("Ground"):
-			var roundedCollisionNormal = Vector2(stepify(collision.get_normal().x, 0.01),stepify(collision.get_normal().y, 0.01))
+			var roundedCollisionNormal = Vector2(stepify(collision.get_normal().x, 0.1),stepify(collision.get_normal().y, 0.1))
+			print("roundedCollisionNormal " +str(roundedCollisionNormal))
 			if roundedCollisionNormal != Vector2(0,1)\
 			&& roundedCollisionNormal != Vector2(0,-1):
 				platformCollision = collision.get_collider()

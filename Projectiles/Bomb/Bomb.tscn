@@ -76,10 +76,10 @@ tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.0166667, 0.2 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ true, false, true ]
+"values": [ false, true ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath(".:scale")
@@ -197,7 +197,8 @@ visible = false
 
 [node name="AnimatedSprite" parent="." index="1"]
 modulate = Color( 0, 0, 0, 1 )
-scale = Vector2( 4, 4 )
+animation = "impact"
+frame = 1
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 anims/hold = SubResource( 1 )
@@ -210,8 +211,6 @@ visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
 scale = Vector2( 2, 2 )
-
-[node name="HurtBoxArea" parent="." index="2"]
-scale = Vector2( 6, 6 )
+disabled = true
 
 [editable path="AnimatedSprite/HitBoxes"]

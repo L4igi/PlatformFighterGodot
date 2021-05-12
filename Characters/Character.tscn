@@ -3035,6 +3035,7 @@ tracks/3/keys = {
 }
 
 [sub_resource type="Animation" id=42]
+resource_name = "neutralspecial_"
 length = 0.816667
 step = 0.0166667
 tracks/0/type = "value"

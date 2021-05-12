@@ -1,11 +1,11 @@
 {
 	"SHOOT_neutral": {
-		"damage_1": 2.5,
+		"damage_1": 5.0,
 		"hitStun_1": 10,
 		"launchVelocity_1": 15,
-		"launchVelocityWeight_1": 15,
-		"launchAngle_1": 350,
-		"knockBackGrowth_1": 100,
+		"launchVelocityWeight_1": 0,
+		"launchAngle_1": 320,
+		"knockBackGrowth_1": 42,
 		"effects_1": {
 			"effect1": "BOMB"
 		},

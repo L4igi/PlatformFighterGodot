@@ -22,6 +22,10 @@ func switch_to_current_state_again(transitionBufferedInput):
 	.switch_to_current_state_again(transitionBufferedInput)
 	
 func manage_transition_buffered_input():
+	if character.grabbedItem: 
+		attack_handler_air_throw_attack()
+		transitionBufferedInput = null 
+		return
 	match transitionBufferedInput:
 		GlobalVariables.CharacterAnimations.JUMP:
 			double_jump_attack_handler()

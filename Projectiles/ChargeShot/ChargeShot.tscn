@@ -134,7 +134,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.183333 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ false, true ]
+"values": [ true, true ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -249,7 +249,8 @@ script = ExtResource( 2 )
 [node name="AnimatedSprite" parent="." index="1"]
 visible = false
 modulate = Color( 0, 0.345098, 0.788235, 1 )
-frame = 2
+animation = "impact"
+frame = 1
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 anims/charge = SubResource( 1 )
@@ -259,6 +260,6 @@ anims/shoot = SubResource( 4 )
 anims/shoot_no_hitbox = SubResource( 5 )
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 1.31818, 1.31818 )
 
 [editable path="AnimatedSprite/HitBoxes"]

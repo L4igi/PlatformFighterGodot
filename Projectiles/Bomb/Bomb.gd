@@ -19,6 +19,7 @@ func set_base_stats(parentNode, originalOwner):
 	baseAirMaxSpeed = 500
 	maxFallSpeed = 2000
 	bounceVelocity = 100
+	groundStopForce = 10000
 	grabAble = true
 	canHitSelf = true
 	deleteOnImpact = false

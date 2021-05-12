@@ -78,6 +78,11 @@ var maxCharge = 2.0
 var chargeTickRate = 0.01
 #if projectile can push parent Node 
 var projectilePushVelocity = 0
+#multipliers if projectile is chargeable
+var addChargeDamage = 0.0
+var addChargeKnockBack = 0.0
+var addChargeShieldDamage = 0.0
+var addChargeKnockBackGrowth = 0.0
 
 var multiObjectsConnected = false 
 
@@ -89,6 +94,7 @@ func _ready():
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
 	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
+	set_scale(Vector2(1,1))
 	
 func _physics_process(delta):
 	projectileCaughtThisFrame = false
@@ -205,6 +211,7 @@ func handle_effect_reflect_attacked(interactionType, interactionObject, attackin
 			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
 			initLaunchVelocity = Vector2(baseAirMaxSpeed * -2, projectileReflectVelocityY)
 	parentNode = interactionObject
+	state.play_animation("shoot")
 	return true
 
 func check_ground_platform_collision():

@@ -45,6 +45,7 @@ func on_hitlag_timeout():
 	projectile.projectileTTLTimer.set_paused(false)
 	gravity_on_off("on")
 	projectile.velocity = projectile.initLaunchVelocity
+	projectile.airMaxSpeed = abs(projectile.velocity.x)
 	projectile.initLaunchVelocity = null
 	animationPlayer.play()
 	projectile.on_impact()

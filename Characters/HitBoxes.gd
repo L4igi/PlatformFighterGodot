@@ -88,12 +88,6 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	var currentHitBoxNumber = attackingObject.currentHitBox
 	var currentAttackData = get_attackData_match_highest_hitbox_json_data(attackingObject, hbType)
 	var attackDamage = currentAttackData["damage_" + String(currentHitBoxNumber)]
-	#calculate damage if charged smash attack
-	if attackingObject.is_in_group("Character"):
-		if attackingObject.currentAttack == GlobalVariables.CharacterAnimations.COUNTER:
-			attackDamage = clamp(attackingObject.bufferedCounterDamage, attackDamage, 100)
-		attackDamage *= attackingObject.smashAttackMultiplier
-	attackDamage = stepify(attackDamage, 0.1)
 	var hitStun = currentAttackData["hitStun_" + String(currentHitBoxNumber)]
 	var launchAngle = deg2rad(currentAttackData["launchAngle_" + String(currentHitBoxNumber)])
 	var launchVector = Vector2(cos(launchAngle), sin(launchAngle))
@@ -112,6 +106,24 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	var specialHitBoxEffects = []
 	for effect in currentAttackData.get("effects_" +String(currentHitBoxNumber)).values():
 		specialHitBoxEffects.append(GlobalVariables.SpecialHitboxType.keys().find(effect))
+	#calculate damage if charged smash attack
+	if attackingObject.is_in_group("Character"):
+		if attackingObject.currentAttack == GlobalVariables.CharacterAnimations.COUNTER:
+			attackDamage = clamp(attackingObject.bufferedCounterDamage, attackDamage, 100)
+		attackDamage *= attackingObject.smashAttackMultiplier
+	#add charge projectile multipliers
+	if attackingObject.is_in_group("Projectile"):
+		if attackingObject.maxCharge > 1:
+			var chargePercent = (1-attackingObject.currentCharge)/(1-attackingObject.maxCharge)
+			attackDamage += chargePercent*attackingObject.addChargeDamage
+			knockBackScaling += (chargePercent*attackingObject.addChargeKnockBackGrowth)/100
+			shieldDamage += chargePercent*attackingObject.addChargeShieldDamage
+			launchVelocity += chargePercent*attackingObject.addChargeKnockBack
+	attackDamage = stepify(attackDamage, 0.1)
+	knockBackScaling = stepify(knockBackScaling, 0.001)
+	shieldDamage = stepify(shieldDamage, 0.1)
+	launchVelocity = stepify(launchVelocity, 0.1)
+#	print(" attackDamage " +str(attackDamage) + " knockBackScaling " +str(knockBackScaling) + " launchVelocity " +str(launchVelocity))
 	match interactionType:
 		GlobalVariables.HitBoxInteractionType.CONNECTED:
 			HitBoxHurtBoxManager.add_connected_hitbox(attackingObject, hbType, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldStunMultiplier, shieldDamage, specialHitBoxEffects, hitlagMultiplier)

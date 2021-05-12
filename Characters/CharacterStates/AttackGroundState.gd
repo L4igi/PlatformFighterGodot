@@ -42,6 +42,10 @@ func switch_to_current_state_again(transitionBufferedInput):
 	.switch_to_current_state_again(transitionBufferedInput)
 
 func manage_transition_buffered_input():
+	if character.grabbedItem: 
+		attack_handler_ground_throw_attack()
+		transitionBufferedInput = null 
+		return
 	match transitionBufferedInput:
 		GlobalVariables.CharacterAnimations.SHORTHOPATTACK:
 			process_shorthop_attack()
@@ -306,7 +310,7 @@ func check_stop_area_entered(_delta):
 		GlobalVariables.MoveDirection.RIGHT:
 			match character.currentMoveDirection:
 				GlobalVariables.MoveDirection.LEFT:
-					pass
+					character.velocity.x = 0
 				GlobalVariables.MoveDirection.RIGHT:
 					character.velocity.x = 0
 		GlobalVariables.MoveDirection.LEFT:
@@ -314,7 +318,7 @@ func check_stop_area_entered(_delta):
 				GlobalVariables.MoveDirection.LEFT:
 					character.velocity.x = 0
 				GlobalVariables.MoveDirection.RIGHT:
-					pass
+					character.velocity.x = 0
 
 func create_smashAttackMultiplier_timer(waitTime):
 	GlobalVariables.start_timer(smashAttackMultiplierTimer, waitTime)
