@@ -126,3 +126,25 @@ func on_edgeDrop_timeout():
 		GlobalVariables.MoveDirection.RIGHT:
 			character.velocity.x = -character.walkMaxSpeed/2
 	character.change_state(GlobalVariables.CharacterState.AIR)
+
+func on_invincibility_timeout():
+	.on_invincibility_timeout()
+	character.snappedEdge._on_edgeCharacter_invincibility_timeout(character)
+
+func on_push_off_edge():
+	if !invincibilityTimer.get_time_left():
+		character.create_edgeRegrab_timer(edgeRegrabFrames)
+		edgeDropTimer.stop()
+		character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())
+		character.snappedEdge = null
+		character.onEdge = false
+		character.disableInput = false
+		disable_invincibility_edge_action()
+		match character.currentMoveDirection:
+			GlobalVariables.MoveDirection.LEFT: 
+				character.velocity.x = character.walkMaxSpeed
+				character.velocity.y = character.walkMaxSpeed*2
+			GlobalVariables.MoveDirection.RIGHT:
+				character.velocity.x = -character.walkMaxSpeed
+				character.velocity.y = -character.walkMaxSpeed*2
+		character.change_state(GlobalVariables.CharacterState.AIR)

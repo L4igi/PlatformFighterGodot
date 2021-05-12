@@ -13,9 +13,15 @@ func _on_EdgeSnap_area_entered(area):
 	if area.is_in_group("EdgeGrabArea"):
 		var edgeCharacter = area.get_parent()
 		if !character_on_edge.has(edgeCharacter):
+			for character in character_on_edge:
+				character.state.on_push_off_edge()
 			character_on_edge.append(edgeCharacter)
 		edgeCharacter.snap_edge(self)
 
+func _on_edgeCharacter_invincibility_timeout(character):
+	if character_on_edge.size() > 1:
+		if character_on_edge.back() != character:
+			character.state.on_push_off_edge()
 
 func _on_EdgeSnap_area_exited(area):
 	character_on_edge.erase(area.get_parent())
