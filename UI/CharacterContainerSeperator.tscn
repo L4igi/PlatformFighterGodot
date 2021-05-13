@@ -1,8 +1,0 @@
-[gd_scene format=2]
-
-[node name="VSeparator" type="VSeparator"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 200.0
-margin_right = 325.0
-margin_bottom = 100.0
-size_flags_horizontal = 3

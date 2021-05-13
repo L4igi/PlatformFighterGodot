@@ -239,6 +239,12 @@ var backupDisabledHitboxes = []
 var multiObjectsConnected = false
 #charges can be cannceled with multiple actions, save action pressed and execute after cancel animation finished
 var cancelChargeTransition = null
+#gui
+var characterGUI = null
+onready var characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
+onready var characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
+#stocks
+var stocks = 0
 
 func _ready():
 	self.set_collision_mask_bit(0,false)

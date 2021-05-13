@@ -8,6 +8,8 @@ onready var chargeShot = preload("res://Projectiles/ChargeShot/ChargeShot.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
+	characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
 	#air to ground transitions
 	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DAIR] = 1
 	set_base_stats()
