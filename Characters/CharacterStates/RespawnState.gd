@@ -66,4 +66,11 @@ func on_respawn_timeout():
 	play_animation("idle")
 	yield(character.tween, "tween_all_completed")
 	character.disableInput = false
+	create_respawn_platform_timer(respawnPlatformFrames)
+
+func create_respawn_platform_timer(waitTime):
+	GlobalVariables.start_timer(respawnPlatformTimer, waitTime)
 	
+func on_respawnPlatform_timeout():
+	tempRevivalPlatform.queue_free()
+	character.change_state(GlobalVariables.CharacterState.AIR)
