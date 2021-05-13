@@ -2,8 +2,6 @@ extends Node2D
 
 onready var characterMario = preload("res://Characters/Mario/Mario.tscn")
 
-onready var characterStateUI = preload("res://UI/CharacterDamage.tscn")
-
 var characterList = []
 
 #var characters = [$Mario, $Dark_Mario]
@@ -12,11 +10,11 @@ func _ready():
 	GlobalVariables.currentStage = self
 	spawn_characters()
 		
-
-func set_up_character_ui(character):
-	var charUI = characterStateUI.instance()
-	$CanvasLayer.add_child(charUI)
-	charUI.set_name("Character"+str($CanvasLayer.get_child_count())+"UI")
+#
+#func set_up_character_ui(character):
+#	var charUI = characterStateUI.instance()
+#	$CanvasLayer.add_child(charUI)
+#	charUI.set_name("Character"+str($CanvasLayer.get_child_count())+"UI")
 	
 func spawn_characters():
 	var char1 = characterMario.instance()
