@@ -17,7 +17,7 @@ var walkMaxSpeed = 300
 var runMaxSpeed = 600
 var airMaxSpeed = 500
 var airStopForce = 450
-var baseFallSpeed = 700
+var baseFallSpeed = 850
 var maxFallSpeed = 850
 var maxFallSpeedFastFall = 1200
 var maxHitStunFallSpeed = 1500
@@ -701,6 +701,8 @@ func change_state(new_state, transitionBufferedInput = null):
 		var returnValues = check_state_transition(changeToState, transitionBufferedInput)
 		changeToState = returnValues[0]
 		transitionBufferedInput = returnValues[1]
+		if bufferInvincibilityFrames == 0:
+			bufferInvincibilityFrames = round(state.invincibilityTimer.get_time_left()*60)
 	if currentState == changeToState:
 		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
 		state.switch_to_current_state_again(transitionBufferedInput)
@@ -782,7 +784,7 @@ func check_state_transition(changeToState, transitionBufferedInput):
 		if grabbedItem:
 			changeToState = GlobalVariables.CharacterState.ATTACKGROUND
 	else:
-		bufferInvincibilityFrames = 0.0
+#		bufferInvincibilityFrames = 0.0
 		groundAirMoveTransition = false
 		airGroundMoveTransition = false
 	return [changeToState, transitionBufferedInput]
@@ -1102,3 +1104,128 @@ func apply_charge_projectile_pushback(pushVelocity):
 				velocity.x += pushVelocity
 			GlobalVariables.MoveDirection.RIGHT:
 				velocity.x -= pushVelocity
+
+func reset_all():
+	damagePercent = 0.0
+	walkMaxSpeed = 300
+	runMaxSpeed = 600
+	airMaxSpeed = 500
+	maxFallSpeed = baseFallSpeed
+	currentMaxSpeed = baseWalkMaxSpeed
+	pushingAction = false
+	droppedPlatform = false
+	#jump
+	jumpCount = 0
+	airTime = 0
+	#platform
+	platformCollision = null
+	atPlatformEdge = null
+	#edge
+	snappedEdge = null
+	disabledEdgeGrab = false
+	onEdge = false
+	canGetEdgeInvincibility = true
+	stageSlideCollider = null
+	#attack 
+	smashAttack = null
+	currentAttack = null
+	jabCount = 0
+	chargingSmashAttack = false
+	bufferedSmashAttack = null
+	currentHitBox = 1
+	#movement
+	pushingCharacter = null
+	disableInputDI = false
+	currentPushSpeed = 0
+	velocity = Vector2.ZERO
+	onSolidGround = null
+	resetMovementSpeed = false
+	shortTurnAround = false
+	bufferXInput = 0
+	#hitstun 
+	characterBouncing = false
+	lastVelocity = Vector2.ZERO
+	stageBounceCollider = null
+	#shield
+	rolling = false
+	perfectShieldActivated = false
+	shieldDropped = false
+	#grab
+	grabbedCharacter = null
+	inGrabByCharacter = null
+	gravity = 2000
+	#hitlag 
+	backUpHitStunTime = 0
+	backUpDisableInputDI = false
+	backUpDisableInput = false
+	backupStopAnimation = false
+	hitlagDI = Vector2.ZERO
+	applySideStepFrames = true
+	bufferedInputSmashAttack = false
+	getUpType = null
+	rollType = null
+	characterTargetGetUpPosition = null
+	bufferHitLagFrames = 0
+	#var bufferFTiltWalk = false
+	stopAreaEntered = false
+	applyLandingLag = null
+	queueFreeFall = false
+	#last bounce collision platform 
+	lastBounceCollision = null
+	#airdodge
+	currentAirDodgeType = null
+	#stopAreaVelocity
+	stopAreaVelocity = Vector2.ZERO
+	#airdodge
+	airdodgeAvailable = true
+	#jab combo
+	comboNextJab = false
+	#shorthopAttack 
+	shortHopAttack = false
+	#state already changed 
+	stateChangedThisFrame = false
+	#turn around smash 
+	turnAroundSmashAttack = false
+	#buffered animation 
+	bufferedAnimation = null
+	#superarmour 
+	superArmourOn = false
+	damagePercentArmour = 0.0
+	knockbackArmour = 0.0
+	multiHitArmour = 0
+	hitsTaken = 0
+	#dictionary to keep moves that transition from attackair to attackground and vice versa in check
+	#dictionary to keep moves that transition from specialair to specialground and vice versa in check
+	#value of dictionary checks if move continous on ground(1) or applies landing lag while finishing animation(0)
+	moveAirGroundTransition.clear()
+	moveGroundAirTransition.clear()
+	groundAirMoveTransition = false
+	airGroundMoveTransition = false
+	moveTransitionBufferedInput = null
+	#buffer Invincibilty frames to next state 
+#	bufferInvincibilityFrames = 0
+	#upspecial 
+	upSpecialAnimationStep = 0
+	downSpecialAnimationStep = 0
+	sideSpecialAnimationStep = 0
+	neutralSpecialAnimationStep = 0
+	enableSpecialInput = false
+	#rehit 
+	attackRehit = true
+	#reversed inputs 
+	reversedInputs = false
+	#items 
+	if grabbedItem:
+		grabbedItem.queue_free()
+	grabbedItem = null
+	#charging projectile 
+	if chargingProjectile:
+		chargingProjectile.queue_free()
+	chargingProjectile = null
+	#backuped disabled hitboxes
+	backupDisabledHitboxes.clear()
+	#if multiple character attacks connected but cannot clash 
+	multiObjectsConnected = false
+	#charges can be cannceled with multiple actions, save action pressed and execute after cancel animation finished
+	cancelChargeTransition = null
+	

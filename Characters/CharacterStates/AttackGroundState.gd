@@ -18,10 +18,10 @@ func _ready():
 		if character.applyLandingLag:
 			create_landingLag_timer(character.applyLandingLag)
 			character.applyLandingLag = null
-	else:
-		if character.bufferInvincibilityFrames > 0:
-			create_invincibility_timer(character.bufferInvincibilityFrames)
-			character.bufferInvincibilityFrames = 0
+#	else:
+#		if character.bufferInvincibilityFrames > 0:
+#			create_invincibility_timer(character.bufferInvincibilityFrames)
+#			character.bufferInvincibilityFrames = 0
 
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):

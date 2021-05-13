@@ -7,10 +7,10 @@ var bReverseFrames = 4.0
 
 func _ready():
 	character.currentHitBox = 1
-	if character.groundAirMoveTransition: 
-		if character.bufferInvincibilityFrames > 0:
-			create_invincibility_timer(character.bufferInvincibilityFrames)
-			character.bufferInvincibilityFrames = 0
+#	if character.groundAirMoveTransition: 
+#		if character.bufferInvincibilityFrames > 0:
+#			create_invincibility_timer(character.bufferInvincibilityFrames)
+#			character.bufferInvincibilityFrames = 0
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)

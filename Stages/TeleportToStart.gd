@@ -17,4 +17,7 @@ func _ready():
 
 
 func _on_TeleportToStart_body_entered(body):
-	body.global_position = Vector2(700,-500)
+	if body.is_in_group("Character"):
+		if body.currentState != GlobalVariables.CharacterState.RESPAWN:
+			body.animationPlayer.stop()
+			body.change_state(GlobalVariables.CharacterState.RESPAWN)

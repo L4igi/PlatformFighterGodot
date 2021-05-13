@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Stages/CenterStage.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Stages/Platform.tscn" type="PackedScene" id=2]
@@ -7,13 +7,16 @@
 [ext_resource path="res://Stages/World.gd" type="Script" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 1472, 136 )
+extents = Vector2( 1459.2, 96 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 1144, 103.993 )
+extents = Vector2( 1216, 96 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 1216, 95.9924 )
+extents = Vector2( 1216, 96 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 1824, 96 )
 
 [node name="World" type="Node2D"]
 position = Vector2( 4, 112 )
@@ -35,18 +38,25 @@ position = Vector2( 608, 480 )
 script = ExtResource( 5 )
 
 [node name="BlastZoneBottom" type="CollisionShape2D" parent="BlastZones"]
-position = Vector2( 412, 1312 )
+position = Vector2( 604, 1640 )
+scale = Vector2( 1.25, 1 )
 shape = SubResource( 1 )
 
 [node name="BlasZoneLeft" type="CollisionShape2D" parent="BlastZones"]
-position = Vector2( -1164, 280 )
+position = Vector2( -1124, 208 )
 rotation = 1.57079
+scale = Vector2( 1.25, 1 )
 shape = SubResource( 2 )
 
 [node name="BlasZoneRight" type="CollisionShape2D" parent="BlastZones"]
-position = Vector2( 1980, 240 )
+position = Vector2( 2332, 208 )
 rotation = 1.57079
+scale = Vector2( 1.25, 1 )
 shape = SubResource( 3 )
+
+[node name="BlastZoneTop" type="CollisionShape2D" parent="BlastZones"]
+position = Vector2( 604, -1216 )
+shape = SubResource( 4 )
 
 [node name="MultiTargetCamera" parent="." instance=ExtResource( 6 )]
 position = Vector2( 608, 288 )

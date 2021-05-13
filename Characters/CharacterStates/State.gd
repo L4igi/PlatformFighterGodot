@@ -234,7 +234,9 @@ func buffer_input():
 			bufferedInput = GlobalVariables.CharacterAnimations.DTILT
 
 func _ready():
-	pass
+	if character.bufferInvincibilityFrames > 0:
+		create_invincibility_timer(character.bufferInvincibilityFrames)
+		character.bufferInvincibilityFrames = 0
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	smashAttackTimer = GlobalVariables.create_timer("on_smashAttack_timeout", "SmashAttackTimer", self)

@@ -8,6 +8,8 @@ onready var edgeAreaRight = $EdgeSnapRight
 onready var checkYPoint = $CheckYPoint
 var collidingBodies = []
 
+var respawnPositions = [Vector2(200, -1000), Vector2(300, -1000), Vector2(400,-1000), Vector2(500, -1000)]
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	stopAreaRight.set_position(Vector2(440,-35))
