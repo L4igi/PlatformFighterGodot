@@ -18,7 +18,7 @@ func _ready():
 	edgeAreaLeft.edgeSnapDirection = "left"
 	edgeAreaRight.set_position(Vector2(447,-15))
 	edgeAreaRight.edgeSnapDirection = "right"
-	GlobalVariables.centerStage = self
+	Globals.centerStage = self
 
 func _on_CollisionDetectionArea_body_entered(body):
 	if body.is_in_group("Character"):

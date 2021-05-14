@@ -6,12 +6,12 @@ func _ready():
 
 func _on_StopAreaRight_body_entered(body):
 	if body.is_in_group("Character"):
-		body.atPlatformEdge = GlobalVariables.MoveDirection.RIGHT
+		body.atPlatformEdge = Globals.MoveDirection.RIGHT
 		stop_character_velocity(body)
 
 func _on_StopAreaLeft_body_entered(body):
 	if body.is_in_group("Character"):
-		body.atPlatformEdge = GlobalVariables.MoveDirection.LEFT
+		body.atPlatformEdge = Globals.MoveDirection.LEFT
 		stop_character_velocity(body)
 
 

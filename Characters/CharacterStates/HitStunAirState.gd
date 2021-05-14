@@ -14,8 +14,8 @@ var hitStunIncreaseValue = 50
 var hitlagDone = false
 
 func _ready():
-	techTimer = GlobalVariables.create_timer("on_tech_timeout", "TechTimer", self)
-	techCoolDownTimer = GlobalVariables.create_timer("on_techCooldown_timeout", "TechCooldownTimer", self)
+	techTimer = Globals.create_timer("on_tech_timeout", "TechTimer", self)
+	techCoolDownTimer = Globals.create_timer("on_techCooldown_timeout", "TechCooldownTimer", self)
 	create_hitlagAttacked_timer(character.bufferHitLagFrames)
 	
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
@@ -55,7 +55,7 @@ func handle_input(_delta):
 		if Input.is_action_just_pressed(character.attack):
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+			character.change_state(Globals.CharacterState.ATTACKAIR)
 		elif Input.is_action_just_pressed(character.special):
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
@@ -63,7 +63,7 @@ func handle_input(_delta):
 			character.change_state(changeToState)
 		elif Input.is_action_just_pressed(character.jump):
 			double_jump_handler()
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)
 		elif Input.is_action_just_pressed(character.shield)\
 		&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
 			create_tech_timer(techWindowFrames)
@@ -73,7 +73,7 @@ func handle_input_disabled(_delta):
 	&& !techTimer.get_time_left() && !techCoolDownTimer.get_time_left():
 		create_tech_timer(techWindowFrames)
 #		&& !techTimer.timer_running() && !techCoolDownTimer.timer_running():
-#			create_frame_timer(GlobalVariables.TimerType.TECHTIMER, techWindowFrames)
+#			create_frame_timer(Globals.TimerType.TECHTIMER, techWindowFrames)
 #			print("tech")
 	
 func _physics_process(_delta):
@@ -118,7 +118,7 @@ func check_hitStun_transition():
 			character.onSolidGround = solidGroundCollision
 			if !handle_tech(Vector2(0,-1)):
 				play_animation("hurtTransition")
-				character.change_state(GlobalVariables.CharacterState.HITSTUNGROUND)
+				character.change_state(Globals.CharacterState.HITSTUNGROUND)
 
 				
 func handle_character_bounce():
@@ -146,9 +146,9 @@ func handle_tech(collisionNormal):
 		character.velocity = Vector2.ZERO
 		#change to TechGround/Techair
 		if collisionNormal != Vector2(0,-1):
-			character.change_state(GlobalVariables.CharacterState.TECHAIR)
+			character.change_state(Globals.CharacterState.TECHAIR)
 		else:
-			character.change_state(GlobalVariables.CharacterState.TECHGROUND)
+			character.change_state(Globals.CharacterState.TECHGROUND)
 		return true
 	return false
 
@@ -196,14 +196,14 @@ func calculate_vertical_velocity(_delta):
 	
 func create_tech_timer(waitTime):
 	teched = true
-	GlobalVariables.start_timer(techTimer, waitTime)
+	Globals.start_timer(techTimer, waitTime)
 	
 func on_tech_timeout():
 	teched = false
 	create_techCooldown_timer(techCooldownFrames)
 	
 func create_techCooldown_timer(waitTime):
-	GlobalVariables.start_timer(techCoolDownTimer, waitTime)
+	Globals.start_timer(techCoolDownTimer, waitTime)
 	
 func on_techCooldown_timeout():
 	pass

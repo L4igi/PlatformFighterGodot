@@ -27,74 +27,74 @@ func manage_transition_buffered_input():
 		transitionBufferedInput = null 
 		return
 	match transitionBufferedInput:
-		GlobalVariables.CharacterAnimations.JUMP:
+		Globals.CharacterAnimations.JUMP:
 			double_jump_attack_handler()
-		GlobalVariables.CharacterAnimations.JAB1:
+		Globals.CharacterAnimations.JAB1:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("nair")
-			character.currentAttack = GlobalVariables.CharacterAnimations.NAIR
-		GlobalVariables.CharacterAnimations.DSMASH:
+			character.currentAttack = Globals.CharacterAnimations.NAIR
+		Globals.CharacterAnimations.DSMASH:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("dair")
-			character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
-		GlobalVariables.CharacterAnimations.UPSMASH:
+			character.currentAttack = Globals.CharacterAnimations.DAIR
+		Globals.CharacterAnimations.UPSMASH:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("upair")
-			character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
-		GlobalVariables.CharacterAnimations.FSMASHL:
+			character.currentAttack = Globals.CharacterAnimations.UPAIR
+		Globals.CharacterAnimations.FSMASHL:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
-			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+			if character.currentMoveDirection == Globals.MoveDirection.LEFT:
 				play_attack_animation("fair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
-			elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				character.currentAttack = Globals.CharacterAnimations.FAIR
+			elif character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 				play_attack_animation("bair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
-		GlobalVariables.CharacterAnimations.FSMASHR:
+				character.currentAttack = Globals.CharacterAnimations.BAIR
+		Globals.CharacterAnimations.FSMASHR:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
-			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			if character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 				play_attack_animation("fair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
-			elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				character.currentAttack = Globals.CharacterAnimations.FAIR
+			elif character.currentMoveDirection == Globals.MoveDirection.LEFT:
 				play_attack_animation("bair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
-		GlobalVariables.CharacterAnimations.UPTILT:
+				character.currentAttack = Globals.CharacterAnimations.BAIR
+		Globals.CharacterAnimations.UPTILT:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("upair")
-			character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
-		GlobalVariables.CharacterAnimations.DTILT:
+			character.currentAttack = Globals.CharacterAnimations.UPAIR
+		Globals.CharacterAnimations.DTILT:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("dair")
-			character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
-		GlobalVariables.CharacterAnimations.FTILTL:
+			character.currentAttack = Globals.CharacterAnimations.DAIR
+		Globals.CharacterAnimations.FTILTL:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
-			if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+			if character.currentMoveDirection == Globals.MoveDirection.LEFT:
 				play_attack_animation("fair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
-			elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				character.currentAttack = Globals.CharacterAnimations.FAIR
+			elif character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 				play_attack_animation("bair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
-		GlobalVariables.CharacterAnimations.FTILTR:
+				character.currentAttack = Globals.CharacterAnimations.BAIR
+		Globals.CharacterAnimations.FTILTR:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
-			if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			if character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 				play_attack_animation("fair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
-			elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				character.currentAttack = Globals.CharacterAnimations.FAIR
+			elif character.currentMoveDirection == Globals.MoveDirection.LEFT:
 				play_attack_animation("bair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
-		GlobalVariables.CharacterAnimations.DASHATTACK:
+				character.currentAttack = Globals.CharacterAnimations.BAIR
+		Globals.CharacterAnimations.DASHATTACK:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("fair")
-			character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
+			character.currentAttack = Globals.CharacterAnimations.FAIR
 	transitionBufferedInput = null
 			
 func manage_buffered_input():
@@ -128,14 +128,14 @@ func _physics_process(_delta):
 		var solidGroundCollision = check_ground_platform_collision(character.platformCollisionDisabledTimer.get_time_left())
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
-			if character.attackData.has(GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):
-				var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
+			if character.attackData.has(Globals.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):
+				var currentAttackData = character.attackData[Globals.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
 				character.applyLandingLag = currentAttackData["landingLag"]
 			else:
 				character.applyLandingLag = character.normalLandingLag
 			if character.moveAirGroundTransition.has(character.currentAttack):
 				character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			character.change_state(Globals.CharacterState.GROUND)
 			return
 			#toggle_all_hitboxes("off")
 		if character.groundAirMoveTransition:
@@ -146,21 +146,21 @@ func _physics_process(_delta):
 			elif abs(get_input_direction_x()) == 0\
 			&& abs(get_input_direction_y()) == 0:
 				play_attack_animation("nair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.NAIR
+				character.currentAttack = Globals.CharacterAnimations.NAIR
 			elif get_input_direction_y() < 0:
 				play_attack_animation("upair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.UPAIR
-			elif get_input_direction_x() > 0 && character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT\
-			|| get_input_direction_x() < 0 && character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT: 
+				character.currentAttack = Globals.CharacterAnimations.UPAIR
+			elif get_input_direction_x() > 0 && character.currentMoveDirection == Globals.MoveDirection.RIGHT\
+			|| get_input_direction_x() < 0 && character.currentMoveDirection == Globals.MoveDirection.LEFT: 
 				play_attack_animation("fair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.FAIR
-			elif get_input_direction_x() > 0 && character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT\
-			|| get_input_direction_x() < 0 && character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT: 
+				character.currentAttack = Globals.CharacterAnimations.FAIR
+			elif get_input_direction_x() > 0 && character.currentMoveDirection == Globals.MoveDirection.LEFT\
+			|| get_input_direction_x() < 0 && character.currentMoveDirection == Globals.MoveDirection.RIGHT: 
 				play_attack_animation("bair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.BAIR
+				character.currentAttack = Globals.CharacterAnimations.BAIR
 			elif get_input_direction_y() > 0:
 				play_attack_animation("dair")
-				character.currentAttack = GlobalVariables.CharacterAnimations.DAIR
+				character.currentAttack = Globals.CharacterAnimations.DAIR
 			initialize_superarmour()
 			character.disableInputDI = manage_disabled_inputDI()
 		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
@@ -174,23 +174,23 @@ func manage_ground_air_move_transition():
 func attack_handler_air_throw_attack():
 	if (abs(get_input_direction_x()) == 0) \
 	&& get_input_direction_y() == 0:
-		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		play_attack_animation("throw_item_forward")
 	elif get_input_direction_y() < 0:
-		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMUP
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMUP
 		play_attack_animation("throw_item_up")
 	elif get_input_direction_y() > 0:
-		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMDOWN
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMDOWN
 		play_attack_animation("throw_item_down")
 	elif get_input_direction_x() > 0:
-		if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		if character.currentMoveDirection == Globals.MoveDirection.LEFT:
+			character.currentMoveDirection = Globals.MoveDirection.RIGHT
 			character.mirror_areas()
-		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		play_attack_animation("throw_item_forward")
 	elif get_input_direction_x() < 0:
-		if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		if character.currentMoveDirection == Globals.MoveDirection.RIGHT:
+			character.currentMoveDirection = Globals.MoveDirection.LEFT
 			character.mirror_areas()
-		character.currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		play_attack_animation("throw_item_forward")

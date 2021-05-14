@@ -59,6 +59,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Characters/CharacterStates/CrouchState.gd"
 }, {
+"base": "Node2D",
+"class": "CurrentStage",
+"language": "GDScript",
+"path": "res://Stages/World.gd"
+}, {
+"base": "State",
+"class": "DefeatState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/DefeatState.gd"
+}, {
 "base": "State",
 "class": "EdgeGetUpState",
 "language": "GDScript",
@@ -250,6 +260,8 @@ _global_script_class_icons={
 "ChargeShot": "",
 "CounterState": "",
 "CrouchState": "",
+"CurrentStage": "",
+"DefeatState": "",
 "EdgeGetUpState": "",
 "EdgeState": "",
 "FireBall": "",
@@ -296,10 +308,11 @@ config/icon="res://icon.png"
 
 [autoload]
 
-GlobalVariables="*res://GlobalVariables.gd"
+Globals="*res://Globals.gd"
 CharacterInteractionHandler="*res://Characters/CharacterInteractionHandler.gd"
 HitBoxManager="*res://Characters/HitBoxManager.gd"
 HitBoxHurtBoxManager="*res://Characters/HitBoxHurtBoxManager.gd"
+SceneSwitcher="*res://SceneSwitcher.gd"
 
 [debug]
 

@@ -19,25 +19,25 @@ func handle_input(_delta):
 		create_shortHop_timer()
 	elif Input.is_action_just_pressed(character.attack):
 		character.characterShield.disable_shield()
-		character.change_state(GlobalVariables.CharacterState.GRAB)
+		character.change_state(Globals.CharacterState.GRAB)
 	elif Input.is_action_just_pressed(character.left):
 		character.characterShield.disable_shield()
-		if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		if character.currentMoveDirection != Globals.MoveDirection.RIGHT:
+			character.currentMoveDirection = Globals.MoveDirection.RIGHT
 			character.mirror_areas()
 		character.rollType = character.left
-		character.change_state(GlobalVariables.CharacterState.ROLL)
+		character.change_state(Globals.CharacterState.ROLL)
 	elif Input.is_action_just_pressed(character.right):
 		character.characterShield.disable_shield()
-		if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		if character.currentMoveDirection != Globals.MoveDirection.LEFT:
+			character.currentMoveDirection = Globals.MoveDirection.LEFT
 			character.mirror_areas()
 		character.rollType = character.right
-		character.change_state(GlobalVariables.CharacterState.ROLL)
+		character.change_state(Globals.CharacterState.ROLL)
 	elif Input.is_action_just_pressed(character.down):
 		character.velocity.x = 0
 		character.characterShield.disable_shield()
-		character.change_state(GlobalVariables.CharacterState.SPOTDODGE)
+		character.change_state(Globals.CharacterState.SPOTDODGE)
 
 func handle_input_disabled(_delta):
 	if !shortHopTimer.get_time_left():
@@ -49,7 +49,7 @@ func _physics_process(_delta):
 		if !character.onSolidGround:
 			if check_in_air():
 				character.disableInput = false
-				character.change_state(GlobalVariables.CharacterState.AIR)
+				character.change_state(Globals.CharacterState.AIR)
 		if character.disableInput:
 			handle_input_disabled(_delta)
 		if !character.disableInput:
@@ -59,19 +59,19 @@ func _physics_process(_delta):
 			if !Input.is_action_pressed(character.shield) && character.characterShield.enableShieldFrames == 0:
 				character.characterShield.disable_shield()
 				character.shieldDropped = true
-				character.change_state(GlobalVariables.CharacterState.GROUND)
+				character.change_state(Globals.CharacterState.GROUND)
 
 func check_stop_area_entered(_delta):
 	match character.atPlatformEdge:
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			match character.currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					pass
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					character.velocity.x = 0
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			match character.currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					character.velocity.x = 0
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					pass

@@ -32,5 +32,5 @@ func _physics_process(_delta):
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
 			character.applyLandingLag = character.normalLandingLag
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			character.change_state(Globals.CharacterState.GROUND)
 		

@@ -60,7 +60,7 @@ func buffer_shield_damage(damage, shieldDamage):
 func apply_shield_break():
 	shieldHealth = 0
 	shieldBreak = true
-	character.change_state(GlobalVariables.CharacterState.SHIELDBREAK)
+	character.change_state(Globals.CharacterState.SHIELDBREAK)
 	var shieldScale = shieldHealth/baseShieldHealth
 	shieldSprite.set_scale(Vector2(shieldScale, shieldScale))
 	

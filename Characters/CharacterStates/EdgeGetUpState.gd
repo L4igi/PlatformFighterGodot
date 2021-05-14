@@ -9,7 +9,7 @@ var tempGetUpType = null
 
 func _ready():
 	var direction = 1
-	if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT: 
+	if character.currentMoveDirection == Globals.MoveDirection.LEFT: 
 		direction = -1
 	manage_edge_getup_animation(character.getUpType, character.characterTargetGetUpPosition, direction)
 	character.getUpType = null
@@ -21,14 +21,14 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	character.airdodgeAvailable = true
 
 func manage_buffered_input_air():
-	if bufferedInput == GlobalVariables.CharacterAnimations.JUMP:
-		character.change_state(GlobalVariables.CharacterState.AIR)
+	if bufferedInput == Globals.CharacterAnimations.JUMP:
+		character.change_state(Globals.CharacterState.AIR)
 		bufferedInput = null
 	else:
 		.manage_buffered_input_air()
 
 func manage_buffered_input():
-	if tempGetUpType == GlobalVariables.CharacterAnimations.LEDGEJUMPGETUP:
+	if tempGetUpType == Globals.CharacterAnimations.LEDGEJUMPGETUP:
 		manage_buffered_input_air()
 	else:
 		manage_buffered_input_ground()
@@ -38,23 +38,23 @@ func manage_edge_getup_animation(getUpType, targetPosition, direction):
 	character.getUpType = getUpType
 	tempGetUpType = getUpType
 	match getUpType: 
-		GlobalVariables.CharacterAnimations.LEDGEROLLGETUP:
+		Globals.CharacterAnimations.LEDGEROLLGETUP:
 			character.velocity.x = direction*normalGetUpVelocity
 			character.onEdge = false
 			character.tween.interpolate_property(character, "global_position", character.global_position, targetPosition , float(character.rollGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			play_animation("roll_getup")
-		GlobalVariables.CharacterAnimations.LEDGENORMALGETUP:
+		Globals.CharacterAnimations.LEDGENORMALGETUP:
 			character.velocity.x = direction*rollGetUpVelocity
 			character.onEdge = false
 			character.tween.interpolate_property(character, "global_position", character.global_position, targetPosition , float(character.normalGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			play_animation("normal_getup")
-		GlobalVariables.CharacterAnimations.LEDGEATTACKGETUP:
+		Globals.CharacterAnimations.LEDGEATTACKGETUP:
 			character.velocity.x = direction*attackgetUpVelocity
 			character.onEdge = false
 			character.tween.interpolate_property(character, "global_position", character.global_position, targetPosition , float(character.attackGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			play_attack_animation("ledgeAttack_getup")
-			character.currentAttack = GlobalVariables.CharacterAnimations.LEDGEATTACKGETUP
-		GlobalVariables.CharacterAnimations.LEDGEJUMPGETUP:
+			character.currentAttack = Globals.CharacterAnimations.LEDGEATTACKGETUP
+		Globals.CharacterAnimations.LEDGEJUMPGETUP:
 			character.velocity.x = direction*attackgetUpVelocity
 			character.onEdge = false
 			character.tween.interpolate_property(character, "global_position", character.global_position, targetPosition , float(character.attackGetupInvincibilityFrames)/60, Tween.TRANS_LINEAR, Tween.EASE_IN)

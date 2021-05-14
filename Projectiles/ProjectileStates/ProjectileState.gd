@@ -22,8 +22,8 @@ func setup(change_state, animationPlayer, projectile):
 	self.projectile = projectile
 	self.bufferedAnimation = projectile.bufferedAnimation
 	projectile.animatedSprite.set_visible(true)
-	hitlagTimer = GlobalVariables.create_timer("on_hitlag_timeout", "HitLagTimer", self)
-	hitlagAttackedTimer = GlobalVariables.create_timer("on_hitlagAttacked_timeout", "HitLagTimer", self)
+	hitlagTimer = Globals.create_timer("on_hitlag_timeout", "HitLagTimer", self)
+	hitlagAttackedTimer = Globals.create_timer("on_hitlagAttacked_timeout", "HitLagTimer", self)
 
 func switch_to_current_state_again():
 	pass
@@ -39,7 +39,7 @@ func create_hitlag_timer(waitTime):
 		projectile.velocity = Vector2.ZERO
 		projectile.backUpDisableInput = projectile.disableInput
 		projectile.disableInput = true
-	GlobalVariables.start_timer(hitlagTimer, waitTime)
+	Globals.start_timer(hitlagTimer, waitTime)
 	
 func on_hitlag_timeout():
 	projectile.projectileTTLTimer.set_paused(false)
@@ -59,7 +59,7 @@ func create_hitlagAttacked_timer(waitTime):
 	animationPlayer.stop(false)
 	projectile.disableInput = true
 	projectile.velocity = Vector2.ZERO
-	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
+	Globals.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
 	projectile.projectileTTLTimer.set_paused(false)

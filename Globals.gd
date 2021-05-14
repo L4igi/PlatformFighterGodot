@@ -18,7 +18,7 @@ var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmas
 
 var specialAnimationList = ["neutralspecial", "downspecial", "sidespecial", "upspecial", "counter", "cancel_charge"]
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND, COUNTER, RESPAWN, GAMESTART}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND, COUNTER, RESPAWN, GAMESTART, DEFEAT}
 
 enum MoveDirection {LEFT, RIGHT}
 
@@ -105,66 +105,66 @@ func _process(_delta):
 func match_attack_type_character(object, attack):
 	var attackType = null
 	match attack:
-		GlobalVariables.CharacterAnimations.JAB1:
+		Globals.CharacterAnimations.JAB1:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.JAB2:
+		Globals.CharacterAnimations.JAB2:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.JAB2:
+		Globals.CharacterAnimations.JAB2:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.FTILT:
+		Globals.CharacterAnimations.FTILT:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.UPTILT:
+		Globals.CharacterAnimations.UPTILT:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.DTILT:
+		Globals.CharacterAnimations.DTILT:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.DASHATTACK:
+		Globals.CharacterAnimations.DASHATTACK:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.FSMASH:
+		Globals.CharacterAnimations.FSMASH:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.UPSMASH:
+		Globals.CharacterAnimations.UPSMASH:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.DSMASH:
+		Globals.CharacterAnimations.DSMASH:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.NAIR:
+		Globals.CharacterAnimations.NAIR:
 			attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.FAIR:
+		Globals.CharacterAnimations.FAIR:
 			attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.DAIR:
+		Globals.CharacterAnimations.DAIR:
 			attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.UPAIR:
+		Globals.CharacterAnimations.UPAIR:
 			attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.BAIR:
+		Globals.CharacterAnimations.BAIR:
 			attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.BTHROW:
+		Globals.CharacterAnimations.BTHROW:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.DTHROW:
+		Globals.CharacterAnimations.DTHROW:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.UTHROW:
+		Globals.CharacterAnimations.UTHROW:
 			attackType = AttackType.GROUNDED
-		GlobalVariables.CharacterAnimations.BTHROW:
+		Globals.CharacterAnimations.BTHROW:
 			attackType = AttackType.GROUNDED
 		#special moves
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			if object.onSolidGround:
 				attackType = AttackType.GROUNDED
 			else: 
 				attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
+		Globals.CharacterAnimations.UPSPECIAL:
 			if object.onSolidGround:
 				attackType = AttackType.GROUNDED
 			else: 
 				attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+		Globals.CharacterAnimations.SIDESPECIAL:
 			if object.onSolidGround:
 				attackType = AttackType.GROUNDED
 			else: 
 				attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.NSPECIAL:
+		Globals.CharacterAnimations.NSPECIAL:
 			if object.onSolidGround:
 				attackType = AttackType.GROUNDED
 			else: 
 				attackType = AttackType.AERIAL
-		GlobalVariables.CharacterAnimations.GRAB:
+		Globals.CharacterAnimations.GRAB:
 			attackType = AttackType.GROUNDED
 	return attackType
 
@@ -172,23 +172,23 @@ func launchVector_inversion(currentAttackData, attackingObject, attackedObject):
 	var launchVectorInversion = false
 	if currentAttackData["facing_direction"] == 0:
 		match attackingObject.currentMoveDirection:
-			GlobalVariables.MoveDirection.RIGHT:
+			Globals.MoveDirection.RIGHT:
 				launchVectorInversion = false
-			GlobalVariables.MoveDirection.LEFT:
+			Globals.MoveDirection.LEFT:
 				launchVectorInversion = true
 	elif currentAttackData["facing_direction"] == 1\
 	&& attackedObject.global_position.x < attackingObject.global_position.x:
 		match attackingObject.currentMoveDirection:
-			GlobalVariables.MoveDirection.RIGHT:
+			Globals.MoveDirection.RIGHT:
 				launchVectorInversion = false
-			GlobalVariables.MoveDirection.LEFT:
+			Globals.MoveDirection.LEFT:
 				launchVectorInversion = true
 	#opposit direction player if facing
 	if currentAttackData["facing_direction"] == 2:
 		match attackingObject.currentMoveDirection:
-			GlobalVariables.MoveDirection.RIGHT:
+			Globals.MoveDirection.RIGHT:
 				launchVectorInversion = true
-			GlobalVariables.MoveDirection.LEFT:
+			Globals.MoveDirection.LEFT:
 				launchVectorInversion = false
 	#always send attacked attackingObject in the direction it is in comparison to attacker
 	elif currentAttackData["facing_direction"] == 3:
@@ -209,3 +209,13 @@ func start_timer(timer, waitTime, oneShot = true):
 	timer.set_wait_time(waitTime/60.0)
 	timer.set_one_shot(oneShot)
 	timer.start()
+
+func check_game_set():
+	var countDefeated = 0
+	for character in currentStage.characterList:
+		if character.currentState == Globals.CharacterState.DEFEAT:
+			countDefeated += 1
+	if countDefeated == currentStage.characterList.size()-1:
+		Engine.set_time_scale(0.25)
+		currentStage.gameplayGUI.game_set()
+	

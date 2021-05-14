@@ -11,7 +11,7 @@ func _ready():
 	character.disableInput = true
 	character.onSolidGround = null
 	character.enableShieldBreakGroundCheck = false
-	shieldBreakTimer = GlobalVariables.create_timer("on_shieldBreak_timeout", "ShieldBreakTimer", self)
+	shieldBreakTimer = Globals.create_timer("on_shieldBreak_timeout", "ShieldBreakTimer", self)
 	create_shieldbreak_timer(shieldBreakFrames)
 	play_animation("shieldBreakStart")
 	
@@ -49,15 +49,15 @@ func _physics_process(_delta):
 				shieldBreakTimer.stop()
 				if check_in_air():
 					character.disableInput = false
-					character.change_state(GlobalVariables.CharacterState.AIR)
+					character.change_state(Globals.CharacterState.AIR)
 	
 func create_shieldbreak_timer(waitTime):
-	GlobalVariables.start_timer(shieldBreakTimer, waitTime)
+	Globals.start_timer(shieldBreakTimer, waitTime)
 	
 func on_shieldBreak_timeout():
 	character.characterShield.shieldBreak_end()
 	if enable_player_input():
 		if character.onSolidGround: 
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			character.change_state(Globals.CharacterState.GROUND)
 		else:
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)

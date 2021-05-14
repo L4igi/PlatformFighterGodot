@@ -52,11 +52,11 @@ func set_combined_velocity(_delta):
 		
 #sets pushForce to 0 if character is in certain state
 func disable_character_pushforce(character):
-	if character.currentState == GlobalVariables.CharacterState.HITSTUNGROUND\
-	|| character.currentState == GlobalVariables.CharacterState.SHIELD\
-	|| character.currentState == GlobalVariables.CharacterState.SHIELDSTUN\
-	|| character.currentState == GlobalVariables.CharacterState.GRAB\
-	|| character.currentState == GlobalVariables.CharacterState.AIR\
+	if character.currentState == Globals.CharacterState.HITSTUNGROUND\
+	|| character.currentState == Globals.CharacterState.SHIELD\
+	|| character.currentState == Globals.CharacterState.SHIELDSTUN\
+	|| character.currentState == Globals.CharacterState.GRAB\
+	|| character.currentState == Globals.CharacterState.AIR\
 	|| (character.shortTurnAround)\
 	|| (character.disableInput && !character.pushingAction):
 #	|| character.hitStunTimer.timer_running()\
@@ -67,20 +67,20 @@ func calc_characters_velocity(char1, char2, char1XInput, char2XInput, char1MoveD
 	if char1.global_position.x < char2.global_position.x:
 		if char1XInput != 0 && char2XInput == 0:
 			#character 1 is pushing char 2 is standing still
-			if char1MoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			if char1MoveDirection == Globals.MoveDirection.RIGHT:
 				char1.velocity.x = char1XInput * char1.currentPushSpeed
 				char2.velocity.x = char1.velocity.x
 			#charcter 1 is running away from character 2 is standing still
-			elif char1MoveDirection == GlobalVariables.MoveDirection.LEFT:
+			elif char1MoveDirection == Globals.MoveDirection.LEFT:
 				char1.velocity.x = char1XInput * char1.currentMaxSpeed
 				char2.velocity.x = 0
 		elif char2XInput != 0 && char1XInput == 0:
 			#character 2 is pushing char 1 is standing still
-			if char2MoveDirection == GlobalVariables.MoveDirection.LEFT:
+			if char2MoveDirection == Globals.MoveDirection.LEFT:
 				char2.velocity.x = char2XInput * char2.currentPushSpeed
 				char1.velocity.x = char2.velocity.x
 			#charcter 2 is running away from character 1 is standing still
-			elif char2MoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			elif char2MoveDirection == Globals.MoveDirection.RIGHT:
 				char1.velocity.x = 0
 				char2.velocity.x = char2XInput * char2.currentMaxSpeed
 		#both characters are standing still
@@ -90,7 +90,7 @@ func calc_characters_velocity(char1, char2, char1XInput, char2XInput, char1MoveD
 		#both characters posess push force in direction
 		elif char1XInput != 0 && char2XInput != 0:
 			if char1MoveDirection == char2MoveDirection\
-			&& char1MoveDirection == GlobalVariables.MoveDirection.RIGHT:
+			&& char1MoveDirection == Globals.MoveDirection.RIGHT:
 				#character 1 is faster than character 2 therefore pushing both at character 1 speed 
 				if abs(char1XInput) > abs(char2XInput):
 					char1.velocity.x = char1XInput * char1.currentPushSpeed
@@ -100,7 +100,7 @@ func calc_characters_velocity(char1, char2, char1XInput, char2XInput, char1MoveD
 					char1.velocity.x = char1XInput * char1.currentMaxSpeed
 					char2.velocity.x = char2XInput * char2.currentMaxSpeed
 			elif char1MoveDirection == char2MoveDirection\
-			&& char1MoveDirection == GlobalVariables.MoveDirection.LEFT:
+			&& char1MoveDirection == Globals.MoveDirection.LEFT:
 				#character 2 is faster than character 1 therefore pushing both at character 1 speed 
 				if abs(char2XInput) > abs(char1XInput):
 					char2.velocity.x = char2XInput * char2.currentPushSpeed
@@ -110,7 +110,7 @@ func calc_characters_velocity(char1, char2, char1XInput, char2XInput, char1MoveD
 					char2.velocity.x = char2XInput * char2.currentMaxSpeed
 					char1.velocity.x = char1XInput * char1.currentMaxSpeed
 			elif char1MoveDirection != char2MoveDirection:
-				if char1MoveDirection == GlobalVariables.MoveDirection.LEFT:
+				if char1MoveDirection == Globals.MoveDirection.LEFT:
 					char2.velocity.x = char2XInput * char2.currentPushSpeed
 					char1.velocity.x = char1XInput * char1.currentPushSpeed
 				else:
@@ -139,19 +139,19 @@ func remove_ground_colliding_character(character):
 func calc_push_force(character):
 	if character.pushingAction: 
 		match character.currentMoveDirection:
-			GlobalVariables.MoveDirection.LEFT:
-				return [-0.5,GlobalVariables.MoveDirection.LEFT]
-			GlobalVariables.MoveDirection.RIGHT:
-				return [0.5,GlobalVariables.MoveDirection.RIGHT]
-#	elif character.currentAttack == GlobalVariables.CharacterAnimations.DASHATTACK && !character.pushingAction: 
+			Globals.MoveDirection.LEFT:
+				return [-0.5,Globals.MoveDirection.LEFT]
+			Globals.MoveDirection.RIGHT:
+				return [0.5,Globals.MoveDirection.RIGHT]
+#	elif character.currentAttack == Globals.CharacterAnimations.DASHATTACK && !character.pushingAction: 
 #		return [0.0, character.currentMoveDirection]
-	elif character.currentState == GlobalVariables.CharacterState.GROUND\
+	elif character.currentState == Globals.CharacterState.GROUND\
 	&& character.state.turnAroundTimer.get_time_left():
 		match character.currentMoveDirection:
-			GlobalVariables.MoveDirection.LEFT:
-				return [1.0, GlobalVariables.MoveDirection.RIGHT]
-			GlobalVariables.MoveDirection.RIGHT:
-				return [-1.0, GlobalVariables.MoveDirection.LEFT]
+			Globals.MoveDirection.LEFT:
+				return [1.0, Globals.MoveDirection.RIGHT]
+			Globals.MoveDirection.RIGHT:
+				return [-1.0, Globals.MoveDirection.LEFT]
 	else:
 		return [character.state.get_input_direction_x(), character.currentMoveDirection]
 		
@@ -159,13 +159,13 @@ func recalculate_init_calculation():
 	initCalculations = false
 	
 #func moveDirectionCalculation(character):
-#	if character.currentState == GlobalVariables.CharacterState.GROUND\
+#	if character.currentState == Globals.CharacterState.GROUND\
 #	&& character.state.turnAroundTimer.get_time_left():
 #		match character.currentMoveDirection: 
-#			GlobalVariables.MoveDirection.LEFT:
-#				return GlobalVariables.MoveDirection.RIGHT
-#			GlobalVariables.MoveDirection.RIGHT:
-#				return GlobalVariables.MoveDirection.LEFT
+#			Globals.MoveDirection.LEFT:
+#				return Globals.MoveDirection.RIGHT
+#			Globals.MoveDirection.RIGHT:
+#				return Globals.MoveDirection.LEFT
 #	return character.currentMoveDirection
 				 
 

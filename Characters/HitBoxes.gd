@@ -24,11 +24,11 @@ func _process(delta):
 	if !clashedObjectArray.empty() || !connectedObjectArray.empty():
 		attackingObject.toggle_all_hitboxes("off")
 	if !clashedObjectArray.empty():
-		process_clashed_hitboxes(GlobalVariables.HitBoxInteractionType.CLASHED, clashedObjectArray)
+		process_clashed_hitboxes(Globals.HitBoxInteractionType.CLASHED, clashedObjectArray)
 		#remove all successfully clashed attacks if connected from connected array
 		remove_clashed_from_connected()
 	if !connectedObjectArray.empty():
-		process_connected_hitboxes(GlobalVariables.HitBoxInteractionType.CONNECTED, connectedObjectArray)
+		process_connected_hitboxes(Globals.HitBoxInteractionType.CONNECTED, connectedObjectArray)
 	connectedObjectArray.clear()
 	clashedObjectArray.clear()
 
@@ -40,7 +40,7 @@ func process_connected_hitboxes(interactionType, objectArray):
 	for object in objectArray.keys():
 		object.toggle_all_hitboxes("off")
 		if object.is_in_group("Character"):
-			if attackingObject.currentState != GlobalVariables.CharacterState.GRAB:
+			if attackingObject.currentState != Globals.CharacterState.GRAB:
 				HitBoxHurtBoxManager.add_connected_hurtbox(attackingObject, object, objectArray.get(object))
 		elif object.is_in_group("Projectile"):
 			HitBoxHurtBoxManager.add_connected_hurtbox(attackingObject, object, objectArray.get(object))
@@ -96,7 +96,7 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	var reboundingHitbox = currentAttackData["rebounding_" + String(currentHitBoxNumber)]
 	var transcendentHitBox = currentAttackData["transcendent_" + String(currentHitBoxNumber)]
 	##direction player if facing
-	launchVectorInversion = GlobalVariables.launchVector_inversion(currentAttackData, attackingObject, attackedObject)
+	launchVectorInversion = Globals.launchVector_inversion(currentAttackData, attackingObject, attackedObject)
 	var launchVelocity = currentAttackData["launchVelocity_" + String(currentHitBoxNumber)]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight_" + String(currentHitBoxNumber)]
 	var shieldStunMultiplier = currentAttackData["shieldStun_multiplier_" + String(currentHitBoxNumber)]
@@ -105,10 +105,10 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	var hitlagMultiplier = currentAttackData["hitlag_multiplier_" + String(currentHitBoxNumber)]
 	var specialHitBoxEffects = []
 	for effect in currentAttackData.get("effects_" +String(currentHitBoxNumber)).values():
-		specialHitBoxEffects.append(GlobalVariables.SpecialHitboxType.keys().find(effect))
+		specialHitBoxEffects.append(Globals.SpecialHitboxType.keys().find(effect))
 	#calculate damage if charged smash attack
 	if attackingObject.is_in_group("Character"):
-		if attackingObject.currentAttack == GlobalVariables.CharacterAnimations.COUNTER:
+		if attackingObject.currentAttack == Globals.CharacterAnimations.COUNTER:
 			attackDamage = clamp(attackingObject.bufferedCounterDamage, attackDamage, 100)
 		attackDamage *= attackingObject.smashAttackMultiplier
 	#add charge projectile multipliers
@@ -125,9 +125,9 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	launchVelocity = stepify(launchVelocity, 0.1)
 #	print(" attackDamage " +str(attackDamage) + " knockBackScaling " +str(knockBackScaling) + " launchVelocity " +str(launchVelocity))
 	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
+		Globals.HitBoxInteractionType.CONNECTED:
 			HitBoxHurtBoxManager.add_connected_hitbox(attackingObject, hbType, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldStunMultiplier, shieldDamage, specialHitBoxEffects, hitlagMultiplier)
-		GlobalVariables.HitBoxInteractionType.CLASHED:
+		Globals.HitBoxInteractionType.CLASHED:
 			apply_attack_clashed(attackedObject, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling, shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects)
 
 func apply_attack_clashed(attackedObject, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects):
@@ -146,25 +146,25 @@ func apply_attack_clashed(attackedObject, attackDamage, hitStun, launchAngle, la
 			
 			
 func apply_attack_clashed_character_character(attackedObject, attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  shieldDamage, shieldStunMultiplier, hitlagMultiplier, reboundingHitbox, transcendentHitBox, specialHitBoxEffects):
-		var attackingObjectAttackType = GlobalVariables.match_attack_type_character(attackingObject, attackingObject.currentAttack)
-		var attackedObjectAttackType = GlobalVariables.match_attack_type_character(attackedObject, attackedObject.currentAttack)
+		var attackingObjectAttackType = Globals.match_attack_type_character(attackingObject, attackingObject.currentAttack)
+		var attackedObjectAttackType = Globals.match_attack_type_character(attackedObject, attackedObject.currentAttack)
 		#match interaction cases
 		#check case if attack has Transcendent priority
 		#both characters attacked in air: 
-		if attackingObjectAttackType == GlobalVariables.AttackType.AERIAL\
-		&& attackedObjectAttackType == GlobalVariables.AttackType.AERIAL:
+		if attackingObjectAttackType == Globals.AttackType.AERIAL\
+		&& attackedObjectAttackType == Globals.AttackType.AERIAL:
 			attackingObject.multiObjectsConnected = true
 			attackedObject.multiObjectsConnected = true
 			clashedObjectArray.erase(attackedObject)
 		#ground air || air ground collision
-		if (attackingObjectAttackType == GlobalVariables.AttackType.AERIAL\
-		&& attackedObjectAttackType == GlobalVariables.AttackType.GROUNDED)\
-		|| (attackedObjectAttackType == GlobalVariables.AttackType.AERIAL\
-		&& attackingObjectAttackType == GlobalVariables.AttackType.GROUNDED):
+		if (attackingObjectAttackType == Globals.AttackType.AERIAL\
+		&& attackedObjectAttackType == Globals.AttackType.GROUNDED)\
+		|| (attackedObjectAttackType == Globals.AttackType.AERIAL\
+		&& attackingObjectAttackType == Globals.AttackType.GROUNDED):
 			clashedObjectArray.erase(attackedObject)
 		#ground ground collision check for higher priority (damage percent dealt)
-		if attackingObjectAttackType == GlobalVariables.AttackType.GROUNDED\
-		&& attackedObjectAttackType == GlobalVariables.AttackType.GROUNDED:
+		if attackingObjectAttackType == Globals.AttackType.GROUNDED\
+		&& attackedObjectAttackType == Globals.AttackType.GROUNDED:
 			#if one attack damage is > 9% other attack damage, it is outprioritized, this attack hits
 			var isAttackedHandlerParamArray = [attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  attackingObject.global_position]
 			var isAttackedHandlerFuncRef = funcref(attackedObject, "is_attacked_calculations")
@@ -183,13 +183,13 @@ func apply_attack_clashed_projectile_projectile(attackedObject, attackDamage, hi
 
 func apply_grab(attackedObject):
 	if attackingObject.currentMoveDirection == attackedObject.currentMoveDirection:
-		if attackedObject.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
-			attackedObject.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
-		elif attackedObject.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
-			attackedObject.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		if attackedObject.currentMoveDirection != Globals.MoveDirection.LEFT:
+			attackedObject.currentMoveDirection = Globals.MoveDirection.LEFT
+		elif attackedObject.currentMoveDirection != Globals.MoveDirection.RIGHT:
+			attackedObject.currentMoveDirection = Globals.MoveDirection.RIGHT
 		attackedObject.mirror_areas()
 	attackedObject.inGrabByCharacter = attackingObject
-	attackedObject.change_state(GlobalVariables.CharacterState.INGRAB)
+	attackedObject.change_state(Globals.CharacterState.INGRAB)
 
 func _on_HitBoxSweetArea_area_entered(area):
 	check_hitbox_areas(area, HitBoxType.SWEET)
@@ -278,17 +278,17 @@ func check_character_grab(attackedObject):
 		return false
 	if attackingObject.is_in_group("Character")\
 	&& attackedObject.is_in_group("Character")\
-	&& attackingObject.currentState == GlobalVariables.CharacterState.GRAB:
-		if attackedObject.currentState == GlobalVariables.CharacterState.GROUND\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.AIR\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.ATTACKGROUND\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.ATTACKAIR\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.SPECIALGROUND\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.SPECIALAIR\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.ROLL\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDBREAK\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.EDGEGETUP:
+	&& attackingObject.currentState == Globals.CharacterState.GRAB:
+		if attackedObject.currentState == Globals.CharacterState.GROUND\
+		|| attackedObject.currentState == Globals.CharacterState.AIR\
+		|| attackedObject.currentState == Globals.CharacterState.ATTACKGROUND\
+		|| attackedObject.currentState == Globals.CharacterState.ATTACKAIR\
+		|| attackedObject.currentState == Globals.CharacterState.SPECIALGROUND\
+		|| attackedObject.currentState == Globals.CharacterState.SPECIALAIR\
+		|| attackedObject.currentState == Globals.CharacterState.SHIELD\
+		|| attackedObject.currentState == Globals.CharacterState.ROLL\
+		|| attackedObject.currentState == Globals.CharacterState.SHIELDBREAK\
+		|| attackedObject.currentState == Globals.CharacterState.EDGEGETUP:
 			attackingObject.grabbedCharacter = attackedObject
 			attackingObject.apply_grab_animation_step(1)
 			apply_grab(attackedObject)
@@ -301,14 +301,14 @@ func apply_hitlag(attackedObject):
 
 func apply_hurtbox_hitlag(attackedObject, firstCall = false):
 	if attackingObject.is_in_group("Character"):
-		if attackingObject.currentState == GlobalVariables.CharacterState.GRAB:
+		if attackingObject.currentState == Globals.CharacterState.GRAB:
 			return 
 	if attackedObject.is_in_group("Character"):
-		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDSTUN:
+		if attackedObject.currentState == Globals.CharacterState.SHIELD\
+		|| attackedObject.currentState == Globals.CharacterState.SHIELDSTUN:
 			attackingObject.state.create_hitlag_timer(attackingObject.hitLagFrames)
 			attackedObject.state.create_hitlag_timer(attackedObject.hitLagFrames)
-		elif attackedObject.currentState == GlobalVariables.CharacterState.GROUND\
+		elif attackedObject.currentState == Globals.CharacterState.GROUND\
 		&& attackedObject.state.shieldDropTimer.get_time_left() && attackedObject.perfectShieldFramesLeft > 0:
 			attackedObject.perfectShieldActivated = true
 			attackedObject.state.create_hitlag_timer(attackedObject.hitLagFrames + (8.0))

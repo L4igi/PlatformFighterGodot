@@ -10,13 +10,15 @@ onready var spawnPoints = get_node("SpawnPoints").get_children()
 
 var gameStartTimer = null
 
+class_name CurrentStage
+
 #var characters = [$Mario, $Dark_Mario]
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	GlobalVariables.currentStage = self
+	Globals.currentStage = self
 	spawn_characters()
 	setup_gui()
-	gameStartTimer = GlobalVariables.create_timer("on_gameStart_timeout", "GameStartTimer", self)
+	gameStartTimer = Globals.create_timer("on_gameStart_timeout", "GameStartTimer", self)
 	create_gamestart_timer()
 	
 func spawn_characters():
@@ -25,22 +27,22 @@ func spawn_characters():
 	char1.global_position = spawnPoints[0].global_position
 	char1.set_name("Mario")
 	char1.characterName = "Mario"
-	char1.stocks = 3
+	char1.stocks = 1
 	characterList.append(char1)
-	char1.characterControls = GlobalVariables.controlsP1
-	setup_controls_characters(char1, GlobalVariables.controlsP1)
+	char1.characterControls = Globals.controlsP1
+	setup_controls_characters(char1, Globals.controlsP1)
 	var char2 = characterMario.instance()
 	self.add_child(char2)
 	char2.global_position = spawnPoints[1].global_position
-	char2.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+	char2.currentMoveDirection = Globals.MoveDirection.LEFT
 	char2.mirror_areas()
 	char2.set_name("DarkMario")
 	char2.characterName = "DarkMario"
-	char2.stocks = 3
+	char2.stocks = 1
 	characterList.append(char2)
-	char2.characterControls = GlobalVariables.controlsP2
+	char2.characterControls = Globals.controlsP2
 	char2.get_node("AnimatedSprite").set_self_modulate(Color(0,1,0,1))
-	setup_controls_characters(char2, GlobalVariables.controlsP2)
+	setup_controls_characters(char2, Globals.controlsP2)
 	char2.set_attack_data_file()
 	
 func setup_gui():
@@ -61,10 +63,10 @@ func setup_controls_characters(character, globalControls):
 
 
 func create_gamestart_timer():
-	GlobalVariables.start_timer(gameStartTimer, GlobalVariables.gameStartFrames)
+	Globals.start_timer(gameStartTimer, Globals.gameStartFrames)
 	gameplayGUI.gameStartOverlay.gameStartTimer = gameStartTimer
 	
 func on_gameStart_timeout():
-	gameplayGUI.set_timer(GlobalVariables.roundTime)
+	gameplayGUI.set_timer(Globals.roundTime)
 	for character in characterList:
 		character.start_game()

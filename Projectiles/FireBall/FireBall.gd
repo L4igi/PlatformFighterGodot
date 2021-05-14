@@ -8,7 +8,7 @@ func _ready():
 	var jsondata = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = jsondata.get_result()
-	change_state(GlobalVariables.ProjectileState.SHOOT)
+	change_state(Globals.ProjectileState.SHOOT)
 	
 func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 180.0
@@ -24,7 +24,7 @@ func set_base_stats(parentNode, originalOwner):
 	grabAble = false
 	canHitSelf = false
 	deleteOnImpact = true
-	ttlTimeoutAction = GlobalVariables.ProjectileState.DESTROYED
+	ttlTimeoutAction = Globals.ProjectileState.DESTROYED
 	create_projectileTTL_timer(ttlFrames)
 	
 func process_projectile_physics(_delta):
@@ -39,26 +39,26 @@ func process_projectile_physics(_delta):
 
 func on_impact():
 	match projectileSpecialInteraction:
-		GlobalVariables.ProjectileInteractions.REFLECTED:
+		Globals.ProjectileInteractions.REFLECTED:
 			print("fireball on impact REFLECTED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.ABSORBED:
+		Globals.ProjectileInteractions.ABSORBED:
 			print("fireball on impact ABSORBED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.COUNTERED:
+		Globals.ProjectileInteractions.COUNTERED:
 			print("fireball on impact COUNTERED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.DESTROYED:
+		Globals.ProjectileInteractions.DESTROYED:
 			print("fireball on impact DESTROYED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.IMPACTED:
+		Globals.ProjectileInteractions.IMPACTED:
 			print("fireball on impact IMPACTED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.CONTINOUS:
+		Globals.ProjectileInteractions.CONTINOUS:
 			print("fireball on impact CONTINOUS " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER:
+		Globals.ProjectileInteractions.HITOTHERCHARACTER:
 			toggle_all_hitboxes("off")
-			change_state(GlobalVariables.ProjectileState.DESTROYED)
+			change_state(Globals.ProjectileState.DESTROYED)
 			projectilecollider.set_deferred("disabled", true)
 		_:
 			print("fireball on impact not special " +str(parentNode.name))
 			toggle_all_hitboxes("off")
-			change_state(GlobalVariables.ProjectileState.DESTROYED)
+			change_state(Globals.ProjectileState.DESTROYED)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null
 
@@ -67,21 +67,21 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	var projectileInteracted = false
 	for effect in effectArray:
 		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
+			Globals.SpecialHitboxType.REVERSE:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.REFLECT:
+			Globals.SpecialHitboxType.REFLECT:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.ABSORB:
+			Globals.SpecialHitboxType.ABSORB:
 				pass
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.COUNTER:
+			Globals.SpecialHitboxType.COUNTER:
 				pass
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.FIRE:
+			Globals.SpecialHitboxType.FIRE:
 				pass
-			GlobalVariables.SpecialHitboxType.BOMB:
+			Globals.SpecialHitboxType.BOMB:
 				projectileInteracted = true 
 				projectileSpecialInteraction = null
 	return projectileInteracted

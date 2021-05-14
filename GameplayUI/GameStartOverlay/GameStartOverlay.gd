@@ -18,10 +18,14 @@ func _process(_delta):
 func decrease_countDown():
 	if countDown == 0: 
 		countDownLabel.set_bbcode("[center]GO![/center]")
-		gameStartTimer = GlobalVariables.create_timer("on_queueFree_timeout", "gameStartCountdownQueueFreeTimer", self)
-		GlobalVariables.start_timer(gameStartTimer, 20)
+		gameStartTimer = Globals.create_timer("on_queueFree_timeout", "gameStartCountdownQueueFreeTimer", self)
+		Globals.start_timer(gameStartTimer, 20)
 	else: 
 		countDownLabel.set_bbcode("[center]"+str(countDown)+"[/center]")
-
+		
+func game_set():
+	self.set_visible(true)
+	countDownLabel.set_bbcode("[center]Game Set[/center]")
+		
 func on_queueFree_timeout():
-	self.queue_free()
+	self.set_visible(false)

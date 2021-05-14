@@ -6,7 +6,7 @@ onready var centerStage = get_parent()
 
 func _ready():
 	yield(get_tree().root, "ready")
-	for character in GlobalVariables.charactersInGame: 
+	for character in Globals.charactersInGame: 
 		character.connect("character_state_changed", self, "_on_character_state_change")
 
 func _on_EdgeSnap_area_entered(area):
@@ -29,7 +29,7 @@ func _on_EdgeSnap_area_exited(area):
 
 func _on_character_state_change(character, currentState):
 	pass
-#	if character_on_edge.has(character) && character.currentState != GlobalVariables.CharacterState.EDGE:
+#	if character_on_edge.has(character) && character.currentState != Globals.CharacterState.EDGE:
 #		if edgeSnapDirection == "left" && character.state.get_input_direction_x() > 0: 
 #			character.snap_edge(self)
 #		elif edgeSnapDirection == "right" && character.state.get_input_direction_x() < 0: 

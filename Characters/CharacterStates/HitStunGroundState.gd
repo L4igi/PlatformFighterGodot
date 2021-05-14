@@ -16,25 +16,25 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 
 func handle_input(_delta):
 	if Input.is_action_just_pressed(character.attack):
-		character.getUpType = GlobalVariables.CharacterAnimations.ATTACKGETUP
-		character.change_state(GlobalVariables.CharacterState.GETUP)
+		character.getUpType = Globals.CharacterAnimations.ATTACKGETUP
+		character.change_state(Globals.CharacterState.GETUP)
 	elif Input.is_action_just_pressed(character.up):
-		character.getUpType = GlobalVariables.CharacterAnimations.NORMALGETUP
-		character.change_state(GlobalVariables.CharacterState.GETUP)
+		character.getUpType = Globals.CharacterAnimations.NORMALGETUP
+		character.change_state(Globals.CharacterState.GETUP)
 	elif Input.is_action_just_pressed(character.left):
-		character.getUpType = GlobalVariables.CharacterAnimations.ROLLGETUP
-		if character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		character.getUpType = Globals.CharacterAnimations.ROLLGETUP
+		if character.currentMoveDirection != Globals.MoveDirection.LEFT:
+			character.currentMoveDirection = Globals.MoveDirection.LEFT
 			character.mirror_areas()
 		character.velocity.x = -400
-		character.change_state(GlobalVariables.CharacterState.GETUP)
+		character.change_state(Globals.CharacterState.GETUP)
 	elif Input.is_action_just_pressed(character.right):
-		character.getUpType = GlobalVariables.CharacterAnimations.ROLLGETUP
-		if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		character.getUpType = Globals.CharacterAnimations.ROLLGETUP
+		if character.currentMoveDirection != Globals.MoveDirection.RIGHT:
+			character.currentMoveDirection = Globals.MoveDirection.RIGHT
 			character.mirror_areas()
 		character.velocity.x = 400
-		character.change_state(GlobalVariables.CharacterState.GETUP)
+		character.change_state(Globals.CharacterState.GETUP)
 
 func handle_input_disabled(_delta):
 	pass
@@ -47,4 +47,4 @@ func _physics_process(_delta):
 			if character.pushingCharacter:
 				if check_in_air():
 					character.disableInput = false
-					character.change_state(GlobalVariables.CharacterState.AIR)
+					character.change_state(Globals.CharacterState.AIR)

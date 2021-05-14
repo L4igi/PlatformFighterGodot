@@ -22,7 +22,7 @@ func setup(change_state, transitionBufferedInput, animationPlayer, character):
 
 func manage_transition_buffered_input():
 	match transitionBufferedInput: 
-		GlobalVariables.CharacterAnimations.JUMP:
+		Globals.CharacterAnimations.JUMP:
 			double_jump_handler()
 	transitionBufferedInput = null
 
@@ -34,10 +34,10 @@ func handle_input(_delta):
 	if Input.is_action_just_pressed(character.attack):
 		if Input.is_action_pressed(character.jump):
 			double_jump_attack_handler()
-		character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		character.change_state(Globals.CharacterState.ATTACKAIR)
 	elif Input.is_action_just_pressed(character.grab):
 		if character.grabbedItem:
-			character.grabbedItem.on_projectile_throw(GlobalVariables.CharacterAnimations.ZDROPITEM)
+			character.grabbedItem.on_projectile_throw(Globals.CharacterAnimations.ZDROPITEM)
 			character.grabbedItem = null
 		else:
 			#character aeral grab (link hook, samus phaser etc)
@@ -54,7 +54,7 @@ func handle_input(_delta):
 		character.maxFallSpeed = character.maxFallSpeedFastFall
 	elif Input.is_action_just_pressed(character.shield):
 		if character.airdodgeAvailable:
-			character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+			character.change_state(Globals.CharacterState.AIRDODGE)
 	elif Input.is_action_just_pressed(character.special):
 		var changeToState = character.change_to_special_state()
 		character.change_state(changeToState)
@@ -98,7 +98,7 @@ func _physics_process(_delta):
 		if solidGroundCollision:
 			character.onSolidGround = solidGroundCollision
 			character.applyLandingLag = character.normalLandingLag
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			character.change_state(Globals.CharacterState.GROUND)
 		lastVelocity = character.velocity
 
 func input_movement_physics(_delta):

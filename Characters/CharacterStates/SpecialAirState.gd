@@ -15,7 +15,7 @@ func _ready():
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	bufferedInput = character.moveTransitionBufferedInput
-	bReverseTimer = GlobalVariables.create_timer("on_b_reverse_timeout", "bReverseTimer", self)
+	bReverseTimer = Globals.create_timer("on_b_reverse_timeout", "bReverseTimer", self)
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
@@ -23,26 +23,26 @@ func switch_to_current_state_again(transitionBufferedInput):
 
 func manage_transition_buffered_input():
 	match transitionBufferedInput:
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
+		Globals.CharacterAnimations.UPSPECIAL:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("upspecial")
-			character.currentAttack = GlobalVariables.CharacterAnimations.UPSPECIAL
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+			character.currentAttack = Globals.CharacterAnimations.UPSPECIAL
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("downspecial")
-			character.currentAttack = GlobalVariables.CharacterAnimations.DOWNSPECIAL
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+			character.currentAttack = Globals.CharacterAnimations.DOWNSPECIAL
+		Globals.CharacterAnimations.SIDESPECIAL:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("sidespecial")
-			character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
-		GlobalVariables.CharacterAnimations.NSPECIAL:
+			character.currentAttack = Globals.CharacterAnimations.SIDESPECIAL
+		Globals.CharacterAnimations.NSPECIAL:
 			if Input.is_action_pressed(character.jump):
 				double_jump_attack_handler()
 			play_attack_animation("neutralspecial")
-			character.currentAttack = GlobalVariables.CharacterAnimations.NSPECIAL
+			character.currentAttack = Globals.CharacterAnimations.NSPECIAL
 	transitionBufferedInput = null
 	character.initialize_special_animation_steps()
 	character.disableInputDI = manage_disabled_inputDI()
@@ -81,12 +81,12 @@ func _physics_process(_delta):
 #				character.check_special_animation_steps()
 				character.bufferInvincibilityFrames = invincibilityTimer.get_time_left()
 			else:
-				if character.currentAttack && character.attackData.has(GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):
-					var currentAttackData = character.attackData[GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
+				if character.currentAttack && character.attackData.has(Globals.CharacterAnimations.keys()[character.currentAttack] + "_neutral"):
+					var currentAttackData = character.attackData[Globals.CharacterAnimations.keys()[character.currentAttack] + "_neutral"]
 					character.applyLandingLag = currentAttackData["landingLag"]
 				else:
 					character.applyLandingLag = character.normalLandingLag
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			character.change_state(Globals.CharacterState.GROUND)
 			return
 			#toggle_all_hitboxes("off")
 		if character.groundAirMoveTransition:
@@ -95,30 +95,30 @@ func _physics_process(_delta):
 			if abs(get_input_direction_x()) == 0\
 			&& abs(get_input_direction_y()) == 0:
 				play_attack_animation("neutralspecial")
-				character.currentAttack = GlobalVariables.CharacterAnimations.NSPECIAL
+				character.currentAttack = Globals.CharacterAnimations.NSPECIAL
 			elif get_input_direction_y() < 0:
 				reset_gravity()
 				play_attack_animation("upspecial")
-				character.currentAttack = GlobalVariables.CharacterAnimations.UPSPECIAL
+				character.currentAttack = Globals.CharacterAnimations.UPSPECIAL
 			elif get_input_direction_y() > 0:
 				reset_gravity()
 				play_attack_animation("downspecial")
-				character.currentAttack = GlobalVariables.CharacterAnimations.DOWNSPECIAL
-			elif get_input_direction_x() > 0 && character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT\
-			|| get_input_direction_x() < 0 && character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT: 
-				if character.currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
-					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
-				elif character.currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
-					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+				character.currentAttack = Globals.CharacterAnimations.DOWNSPECIAL
+			elif get_input_direction_x() > 0 && character.currentMoveDirection == Globals.MoveDirection.LEFT\
+			|| get_input_direction_x() < 0 && character.currentMoveDirection == Globals.MoveDirection.RIGHT: 
+				if character.currentMoveDirection != Globals.MoveDirection.RIGHT:
+					character.currentMoveDirection = Globals.MoveDirection.RIGHT
+				elif character.currentMoveDirection != Globals.MoveDirection.LEFT:
+					character.currentMoveDirection = Globals.MoveDirection.LEFT
 				character.mirror_areas()
 				play_attack_animation("sidespecial")
-				character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
-			elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				character.currentAttack = Globals.CharacterAnimations.SIDESPECIAL
+			elif character.currentMoveDirection == Globals.MoveDirection.LEFT:
 				play_attack_animation("sidespecial")
-				character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
-			elif character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				character.currentAttack = Globals.CharacterAnimations.SIDESPECIAL
+			elif character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 				play_attack_animation("sidespecial")
-				character.currentAttack = GlobalVariables.CharacterAnimations.SIDESPECIAL
+				character.currentAttack = Globals.CharacterAnimations.SIDESPECIAL
 			character.initialize_special_animation_steps()
 			initialize_superarmour()
 			character.disableInputDI = manage_disabled_inputDI()
@@ -130,19 +130,19 @@ func manage_ground_air_move_transition():
 func check_b_reverse():
 	if bReverseTimer.get_time_left():
 		match character.currentMoveDirection: 
-			GlobalVariables.MoveDirection.LEFT: 
+			Globals.MoveDirection.LEFT: 
 				if Input.is_action_pressed(character.right):
-					character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+					character.currentMoveDirection = Globals.MoveDirection.RIGHT
 					character.mirror_areas()
 					bReverseTimer.stop()
-			GlobalVariables.MoveDirection.RIGHT: 
+			Globals.MoveDirection.RIGHT: 
 				if Input.is_action_pressed(character.left):
-					character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+					character.currentMoveDirection = Globals.MoveDirection.LEFT
 					character.mirror_areas()
 					bReverseTimer.stop()
 					
 func create_b_reverse_timer(waitTime):
-	GlobalVariables.start_timer(bReverseTimer, waitTime)
+	Globals.start_timer(bReverseTimer, waitTime)
 
 func on_b_reverse_timeout():
 	pass

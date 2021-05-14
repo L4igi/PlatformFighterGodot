@@ -9,7 +9,7 @@ func _ready():
 	
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
-	character.currentAttack = GlobalVariables.CharacterAnimations.COUNTER
+	character.currentAttack = Globals.CharacterAnimations.COUNTER
 
 func handle_input_disabled(_delta):
 	if !bufferedInput == null: 

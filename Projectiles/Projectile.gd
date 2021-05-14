@@ -61,7 +61,7 @@ var projectileCaughtThisFrame = false
 #hitboxes 
 onready var neutralHitbox = get_node("AnimatedSprite/HitBoxes/HitBoxNeutralArea/Neutral")
 #impact or destroy(no hitbox) on ttl timeout
-var ttlTimeoutAction = GlobalVariables.ProjectileState.DESTROYED
+var ttlTimeoutAction = Globals.ProjectileState.DESTROYED
 var ttlFrames = 10.0
 #last velocity non zero for impact calculations 
 var lastVelocityNotZero = Vector2.ZERO
@@ -90,10 +90,10 @@ func _ready():
 	self.set_collision_mask_bit(0,false)
 	self.set_collision_mask_bit(1,true)
 	self.set_collision_mask_bit(2,true)
-	attackDataEnum = GlobalVariables.ProjectileAnimations
+	attackDataEnum = Globals.ProjectileAnimations
 	animationPlayer.set_animation_process_mode(0)
 	state_factory = ProjectileStateFactory.new()
-	projectileTTLTimer = GlobalVariables.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
+	projectileTTLTimer = Globals.create_timer("on_projectileTTL_timeout", "ProjectileTTLTimer", self)
 	set_scale(Vector2(1,1))
 	
 func _physics_process(delta):
@@ -103,9 +103,9 @@ func _physics_process(delta):
 func set_base_stats(parentNode, originalOwner):
 	self.global_position = parentNode.interactionPoint.global_position
 	match parentNode.currentMoveDirection: 
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			velocity = Vector2(-airMaxSpeed,0)
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			velocity = Vector2(airMaxSpeed,0)
 	currentMoveDirection = parentNode.currentMoveDirection
 	set_collision_mask_bit(0,false)
@@ -123,7 +123,7 @@ func change_state(new_state):
 		state.switch_to_current_state_again()
 		return
 	if stateChangedThisFrame:
-		print(str(GlobalVariables.ProjectileState.keys()[new_state]) +" State already changed this frame ")
+		print(str(Globals.ProjectileState.keys()[new_state]) +" State already changed this frame ")
 		return
 	stateChangedThisFrame = true
 	var changeToState = new_state
@@ -137,12 +137,12 @@ func change_state(new_state):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-	print(self.name + " Changing to " +str(GlobalVariables.ProjectileState.keys()[changeToState]))
+	print(self.name + " Changing to " +str(Globals.ProjectileState.keys()[changeToState]))
 	state = state_factory.get_state(changeToState).new()
-	state.name = GlobalVariables.ProjectileState.keys()[new_state]
+	state.name = Globals.ProjectileState.keys()[new_state]
 #	if state.get_parent():
 #		print("currentstate " +str(currentState) + " new state " +str(new_state))
-#		print("state " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
+#		print("state " +str(Globals.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
 	state.setup(funcref(self, "change_state"),animationPlayer, self)
 	currentState = changeToState
 	add_child(state)
@@ -186,29 +186,29 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	var projectileInteracted = false
 	for effect in effectArray:
 		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
+			Globals.SpecialHitboxType.REVERSE:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.REFLECT:
+			Globals.SpecialHitboxType.REFLECT:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.ABSORB:
+			Globals.SpecialHitboxType.ABSORB:
 				pass
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.COUNTER:
+			Globals.SpecialHitboxType.COUNTER:
 				pass
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
 	return projectileInteracted
 
 func handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
-	projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.REFLECTED
+	projectileSpecialInteraction = Globals.ProjectileInteractions.REFLECTED
 	lastVelocityNotZero = Vector2.ZERO
 	match interactionObject.currentMoveDirection:
-		GlobalVariables.MoveDirection.RIGHT:
-			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		Globals.MoveDirection.RIGHT:
+			currentMoveDirection = Globals.MoveDirection.RIGHT
 			initLaunchVelocity = Vector2(baseAirMaxSpeed * 2, projectileReflectVelocityY)
-		GlobalVariables.MoveDirection.LEFT:
-			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		Globals.MoveDirection.LEFT:
+			currentMoveDirection = Globals.MoveDirection.LEFT
 			initLaunchVelocity = Vector2(baseAirMaxSpeed * -2, projectileReflectVelocityY)
 	parentNode = interactionObject
 	state.play_animation("shoot")
@@ -282,7 +282,7 @@ func toggle_all_hurtboxes(onOff):
 func check_hit_parentNode(object):
 	if object == parentNode: 
 		if destroyOnParentImpact: 
-			change_state(GlobalVariables.ProjectileState.DESTROYED)
+			change_state(Globals.ProjectileState.DESTROYED)
 		return true
 	else: 
 		return false
@@ -290,20 +290,20 @@ func check_hit_parentNode(object):
 func on_projectile_throw(throwType):
 	projectileThrown = true
 	parentNode.call_deferred("remove_child",self)
-	GlobalVariables.currentStage.call_deferred("add_child",self)
+	Globals.currentStage.call_deferred("add_child",self)
 	call_deferred("setup_throw_item",throwType)
 	projectileSpecialInteraction = null
-	change_state(GlobalVariables.ProjectileState.SHOOT)
+	change_state(Globals.ProjectileState.SHOOT)
 	
 func on_projectile_catch(newParent):
 	if !projectileCaughtThisFrame:
 		projectileCaughtThisFrame = true
 		parentNode = newParent
 		parentNode.grabbedItem = self
-		GlobalVariables.currentStage.call_deferred("remove_child",self)
+		Globals.currentStage.call_deferred("remove_child",self)
 		newParent.call_deferred("add_child",self)
 		set_deferred("global_position", newParent.global_position)
-		projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.CATCH
+		projectileSpecialInteraction = Globals.ProjectileInteractions.CATCH
 		on_impact()
 
 func is_attacked_handler(hitLagFrames, attackingObject):
@@ -317,30 +317,30 @@ func setup_throw_item(throwType):
 	currentMoveDirection = parentNode.currentMoveDirection
 	var direction = Vector2(1,1)
 	match parentNode.currentMoveDirection: 
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			direction = Vector2(-1,1)
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			direction = Vector2(1,1)
 	match throwType: 
-		GlobalVariables.CharacterAnimations.THROWITEMDOWN:
+		Globals.CharacterAnimations.THROWITEMDOWN:
 			velocity = Vector2(0, 800)
-		GlobalVariables.CharacterAnimations.THROWITEMUP:
+		Globals.CharacterAnimations.THROWITEMUP:
 			velocity = Vector2(0, -1000)
-		GlobalVariables.CharacterAnimations.THROWITEMFORWARD:
+		Globals.CharacterAnimations.THROWITEMFORWARD:
 			velocity = Vector2(1500, -400) * direction
-		GlobalVariables.CharacterAnimations.ZDROPITEM: 
+		Globals.CharacterAnimations.ZDROPITEM: 
 			velocity = Vector2(0,0)
 
 func create_projectileTTL_timer(waittime):
-	GlobalVariables.start_timer(projectileTTLTimer, waittime)
+	Globals.start_timer(projectileTTLTimer, waittime)
 
 func on_projectileTTL_timeout():
-	if currentState == GlobalVariables.ProjectileState.HOLD:
+	if currentState == Globals.ProjectileState.HOLD:
 		parentNode.grabbedItem = null
 	match ttlTimeoutAction:
-		GlobalVariables.ProjectileState.DESTROYED: 
-			change_state(GlobalVariables.ProjectileState.DESTROYED)
-		GlobalVariables.ProjectileState.IMPACT: 
+		Globals.ProjectileState.DESTROYED: 
+			change_state(Globals.ProjectileState.DESTROYED)
+		Globals.ProjectileState.IMPACT: 
 			on_impact()
 
 func projectile_touched_solid_ground():
@@ -354,22 +354,22 @@ func shoot_charge_projectile():
 	parentNode.enableSpecialInput = false
 	parentNode.animationPlayer.play()
 	match parentNode.currentMoveDirection: 
-		GlobalVariables.MoveDirection.LEFT:
-			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		Globals.MoveDirection.LEFT:
+			currentMoveDirection = Globals.MoveDirection.LEFT
 			velocity.x = -airMaxSpeed
-		GlobalVariables.MoveDirection.RIGHT:
-			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		Globals.MoveDirection.RIGHT:
+			currentMoveDirection = Globals.MoveDirection.RIGHT
 			velocity.x = airMaxSpeed
 	create_projectileTTL_timer(ttlFrames)
 	parentNode.chargingProjectile = null
 	parentNode.apply_charge_projectile_pushback(projectilePushVelocity*currentCharge)
 	parentNode.call_deferred("remove_child",self)
-	GlobalVariables.currentStage.call_deferred("add_child",self)
+	Globals.currentStage.call_deferred("add_child",self)
 	set_deferred("global_position",parentNode.interactionPoint.global_position)
 	print("currentCharge " +str(currentCharge))
 	call_deferred("set_scale",Vector2(currentCharge*2, currentCharge*2))
 	projectileSpecialInteraction = null
-	change_state(GlobalVariables.ProjectileState.SHOOT)
+	change_state(Globals.ProjectileState.SHOOT)
 
 func charge_projectile(mode):
 	if currentCharge < maxCharge:
@@ -385,7 +385,7 @@ func charge_projectile(mode):
 	
 func store_charged_projectile():
 	parentNode.state.play_attack_animation("cancel_charge")
-	change_state(GlobalVariables.ProjectileState.IDLE)
+	change_state(Globals.ProjectileState.IDLE)
 
 func check_fully_charged(step):
 	pass

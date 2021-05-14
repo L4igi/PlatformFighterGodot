@@ -40,7 +40,7 @@ var transitionBufferedInput = null
 # Writing _delta instead of delta here prevents the unused variable warning.
 func _physics_process(_delta):
 	pass
-#	print(GlobalVariables.CharacterState.keys()[character.currentState])
+#	print(Globals.CharacterState.keys()[character.currentState])
 	
 func manage_buffered_input():
 	pass
@@ -49,56 +49,56 @@ func manage_transition_buffered_input():
 	pass
 	
 func manage_buffered_input_ground():
-	print("Input ground was buffered " +str(GlobalVariables.CharacterAnimations.keys()[bufferedInput]))
+	print("Input ground was buffered " +str(Globals.CharacterAnimations.keys()[bufferedInput]))
 	match bufferedInput: 
-		GlobalVariables.CharacterAnimations.SHORTHOPATTACK:
+		Globals.CharacterAnimations.SHORTHOPATTACK:
 			process_shorthop_attack()
-		GlobalVariables.CharacterAnimations.JAB1:
+		Globals.CharacterAnimations.JAB1:
 			if Input.is_action_pressed(character.jump):
 				process_shorthop_attack()
 			else:
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.JUMP:
+				character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.JUMP:
 			if Input.is_action_pressed(character.attack):
 				process_shorthop_attack()
 			else:
 				process_jump()
-				character.change_state(GlobalVariables.CharacterState.AIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.GRAB:
-			character.change_state(GlobalVariables.CharacterState.GRAB, bufferedInput)
-		GlobalVariables.CharacterAnimations.FSMASHR:
-			character.smashAttack = GlobalVariables.CharacterAnimations.FSMASHR
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.FSMASHL:
-			character.smashAttack = GlobalVariables.CharacterAnimations.FSMASHL
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.UPSMASH:
-			character.smashAttack = GlobalVariables.CharacterAnimations.UPSMASH
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.DSMASH: 
-			character.smashAttack = GlobalVariables.CharacterAnimations.DSMASH
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.UPTILT:
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.DTILT:
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.FTILTR:
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.FTILTL:
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND, bufferedInput)
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
+				character.change_state(Globals.CharacterState.AIR, bufferedInput)
+		Globals.CharacterAnimations.GRAB:
+			character.change_state(Globals.CharacterState.GRAB, bufferedInput)
+		Globals.CharacterAnimations.FSMASHR:
+			character.smashAttack = Globals.CharacterAnimations.FSMASHR
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.FSMASHL:
+			character.smashAttack = Globals.CharacterAnimations.FSMASHL
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.UPSMASH:
+			character.smashAttack = Globals.CharacterAnimations.UPSMASH
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.DSMASH: 
+			character.smashAttack = Globals.CharacterAnimations.DSMASH
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.UPTILT:
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.DTILT:
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.FTILTR:
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.FTILTL:
+			character.change_state(Globals.CharacterState.ATTACKGROUND, bufferedInput)
+		Globals.CharacterAnimations.UPSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+		Globals.CharacterAnimations.SIDESPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.NSPECIAL:
+		Globals.CharacterAnimations.NSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
 	bufferedInput = null
@@ -106,47 +106,47 @@ func manage_buffered_input_ground():
 func manage_buffered_input_air():
 	print("bufferedInput " +str(bufferedInput))
 	match bufferedInput: 
-		GlobalVariables.CharacterAnimations.SHORTHOPATTACK:
+		Globals.CharacterAnimations.SHORTHOPATTACK:
 			double_jump_attack_handler()
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.JAB1:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.JUMP:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.JAB1:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.JUMP:
 			double_jump_handler()
 			character.disableInput = false
-			character.change_state(GlobalVariables.CharacterState.AIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.FSMASHR:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.FSMASHL:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.UPSMASH:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.DSMASH: 
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.UPTILT:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.DTILT:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.FTILTR:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.FTILTL:
-			character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
-		GlobalVariables.CharacterAnimations.SHIELD:
+			character.change_state(Globals.CharacterState.AIR, bufferedInput)
+		Globals.CharacterAnimations.FSMASHR:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.FSMASHL:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.UPSMASH:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.DSMASH: 
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.UPTILT:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.DTILT:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.FTILTR:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.FTILTL:
+			character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
+		Globals.CharacterAnimations.SHIELD:
 			if character.airdodgeAvailable:
-				character.change_state(GlobalVariables.CharacterState.AIRDODGE, bufferedInput)
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
+				character.change_state(Globals.CharacterState.AIRDODGE, bufferedInput)
+		Globals.CharacterAnimations.UPSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+		Globals.CharacterAnimations.SIDESPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
-		GlobalVariables.CharacterAnimations.NSPECIAL:
+		Globals.CharacterAnimations.NSPECIAL:
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState, bufferedInput)
 	bufferedInput = null
@@ -179,39 +179,39 @@ func process_disable_input_direction_influence(_delta):
 func buffer_input():
 	if Input.is_action_just_pressed(character.jump)\
 	&& Input.is_action_just_pressed(character.attack):
-		bufferedInput = GlobalVariables.CharacterAnimations.SHORTHOPATTACK
+		bufferedInput = Globals.CharacterAnimations.SHORTHOPATTACK
 	elif Input.is_action_just_pressed(character.attack)\
 	&& get_input_direction_x() == 0 && get_input_direction_y() == 0:
-		bufferedInput = GlobalVariables.CharacterAnimations.JAB1
+		bufferedInput = Globals.CharacterAnimations.JAB1
 	elif Input.is_action_just_pressed(character.special):
 		if Input.is_action_pressed(character.right):
-			bufferedInput = GlobalVariables.CharacterAnimations.SIDESPECIAL
+			bufferedInput = Globals.CharacterAnimations.SIDESPECIAL
 		elif Input.is_action_pressed(character.left):
-			bufferedInput = GlobalVariables.CharacterAnimations.SIDESPECIAL
+			bufferedInput = Globals.CharacterAnimations.SIDESPECIAL
 		elif Input.is_action_pressed(character.up):
-			bufferedInput = GlobalVariables.CharacterAnimations.UPSPECIAL
+			bufferedInput = Globals.CharacterAnimations.UPSPECIAL
 		elif Input.is_action_pressed(character.down):
-			bufferedInput = GlobalVariables.CharacterAnimations.DOWNSPECIAL
+			bufferedInput = Globals.CharacterAnimations.DOWNSPECIAL
 		else:
-			bufferedInput = GlobalVariables.CharacterAnimations.NSPECIAL
+			bufferedInput = Globals.CharacterAnimations.NSPECIAL
 	elif Input.is_action_just_pressed(character.jump):
-		bufferedInput = GlobalVariables.CharacterAnimations.JUMP
+		bufferedInput = Globals.CharacterAnimations.JUMP
 		if character.onSolidGround: 
 			create_shortHop_timer()
 	elif Input.is_action_just_pressed(character.grab):
-		bufferedInput = GlobalVariables.CharacterAnimations.GRAB
+		bufferedInput = Globals.CharacterAnimations.GRAB
 	elif Input.is_action_just_pressed(character.right):
 		create_smashAttack_timer(smashAttackInputFrames)
-		character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
+		character.bufferedSmashAttack = Globals.CharacterAnimations.FSMASHR
 	elif Input.is_action_just_pressed(character.left):
 		create_smashAttack_timer(smashAttackInputFrames)
-		character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHL
+		character.bufferedSmashAttack = Globals.CharacterAnimations.FSMASHL
 	elif Input.is_action_just_pressed(character.up):
 		create_smashAttack_timer(smashAttackInputFrames)
-		character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.UPSMASH
+		character.bufferedSmashAttack = Globals.CharacterAnimations.UPSMASH
 	elif Input.is_action_just_pressed(character.down):
 		create_smashAttack_timer(smashAttackInputFrames)
-		character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.DSMASH
+		character.bufferedSmashAttack = Globals.CharacterAnimations.DSMASH
 	if smashAttackTimer.get_time_left()\
 	&& Input.is_action_just_pressed(character.attack)\
 	&& character.bufferedSmashAttack != null:
@@ -225,13 +225,13 @@ func buffer_input():
 			bufferedInput = character.bufferedSmashAttack
 	elif !smashAttackTimer.get_time_left() && Input.is_action_just_pressed(character.attack):
 		if Input.is_action_pressed(character.right):
-			bufferedInput = GlobalVariables.CharacterAnimations.FTILTR
+			bufferedInput = Globals.CharacterAnimations.FTILTR
 		elif Input.is_action_pressed(character.left):
-			bufferedInput = GlobalVariables.CharacterAnimations.FTILTL
+			bufferedInput = Globals.CharacterAnimations.FTILTL
 		elif Input.is_action_pressed(character.up):
-			bufferedInput = GlobalVariables.CharacterAnimations.UPTILT
+			bufferedInput = Globals.CharacterAnimations.UPTILT
 		elif Input.is_action_pressed(character.down):
-			bufferedInput = GlobalVariables.CharacterAnimations.DTILT
+			bufferedInput = Globals.CharacterAnimations.DTILT
 
 func _ready():
 	if character.bufferInvincibilityFrames > 0:
@@ -239,13 +239,13 @@ func _ready():
 		character.bufferInvincibilityFrames = 0
 
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
-	smashAttackTimer = GlobalVariables.create_timer("on_smashAttack_timeout", "SmashAttackTimer", self)
-	shortHopTimer = GlobalVariables.create_timer("on_shorthop_timeout", "ShortHopTimer", self)
-	invincibilityTimer = GlobalVariables.create_timer("on_invincibility_timeout", "InvincibilityTimer", self)
-	hitlagTimer = GlobalVariables.create_timer("on_hitlag_timeout", "HitLagTimer", self)
-	hitStunTimer = GlobalVariables.create_timer("on_hitstun_timeout", "HitStunTimer", self)
-	hitlagAttackedTimer = GlobalVariables.create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer", self)
-	rehitTimer = GlobalVariables.create_timer("on_rehit_timeout", "RehitTimer", self)
+	smashAttackTimer = Globals.create_timer("on_smashAttack_timeout", "SmashAttackTimer", self)
+	shortHopTimer = Globals.create_timer("on_shorthop_timeout", "ShortHopTimer", self)
+	invincibilityTimer = Globals.create_timer("on_invincibility_timeout", "InvincibilityTimer", self)
+	hitlagTimer = Globals.create_timer("on_hitlag_timeout", "HitLagTimer", self)
+	hitStunTimer = Globals.create_timer("on_hitstun_timeout", "HitStunTimer", self)
+	hitlagAttackedTimer = Globals.create_timer("on_hitlagAttacked_timeout", "HitLagAttackedTimer", self)
+	rehitTimer = Globals.create_timer("on_rehit_timeout", "RehitTimer", self)
 	self.change_state = change_state
 	self.animationPlayer = animationPlayer
 	self.character = character
@@ -390,7 +390,7 @@ func check_stage_slide_collide(doubleJump = false):
 
 
 func create_smashAttack_timer(waitTime):
-	GlobalVariables.start_timer(smashAttackTimer, waitTime)
+	Globals.start_timer(smashAttackTimer, waitTime)
 	
 func on_smashAttack_timeout():
 #	if !inMovementLag: 
@@ -400,13 +400,13 @@ func on_smashAttack_timeout():
 
 func create_shortHop_timer():
 	character.disableInput = true
-	GlobalVariables.start_timer(shortHopTimer, shortHopWaitTime)
+	Globals.start_timer(shortHopTimer, shortHopWaitTime)
 			
 func on_shorthop_timeout():
 #	print(self.name + " shorthop timeout")
 	if !bufferedInput:
 		process_jump()
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
 	shortHop = false
 		
 func process_jump():
@@ -419,7 +419,7 @@ func process_jump():
 		character.velocity.y = -character.shortHopSpeed
 	else: 
 		character.velocity.y = -character.jumpSpeed
-	if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+	if character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 		if inMovementLag && get_input_direction_x() > 0:
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
 		elif get_input_direction_x() > 0:
@@ -427,7 +427,7 @@ func process_jump():
 		elif get_input_direction_x() < 0:
 			animationToPlay = "backflip"
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
-	elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+	elif character.currentMoveDirection == Globals.MoveDirection.LEFT:
 		if inMovementLag && get_input_direction_x() < 0:
 			character.velocity.x = -get_input_direction_x()*character.airMaxSpeed
 		elif get_input_direction_x() < 0:
@@ -447,14 +447,14 @@ func process_shorthop_attack():
 	character.queueFreeFall = true
 	character.jumpCount += 1
 	character.velocity.y = -character.shortHopSpeed
-	if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+	if character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 		if inMovementLag && get_input_direction_x() > 0:
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
 		elif get_input_direction_x() > 0:
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
 		elif get_input_direction_x() < 0:
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
-	elif character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+	elif character.currentMoveDirection == Globals.MoveDirection.LEFT:
 		if inMovementLag && get_input_direction_x() < 0:
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
 		elif get_input_direction_x() < 0:
@@ -463,7 +463,7 @@ func process_shorthop_attack():
 			character.velocity.x = get_input_direction_x()*character.airMaxSpeed
 	if character.velocity.x == 0: 
 		character.velocity.x = character.stopAreaVelocity.x
-	character.change_state(GlobalVariables.CharacterState.ATTACKAIR, bufferedInput)
+	character.change_state(Globals.CharacterState.ATTACKAIR, bufferedInput)
 		
 func enable_player_input():
 	if bufferedInput:
@@ -488,12 +488,12 @@ func check_character_crouch():
 	
 func create_invincibility_timer(waitTime):
 	character.enable_disable_hurtboxes(false)
-	GlobalVariables.start_timer(invincibilityTimer, waitTime)
+	Globals.start_timer(invincibilityTimer, waitTime)
 
 func on_invincibility_timeout():
 	character.enable_disable_hurtboxes(true)
 	var direction = 1
-	if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT: 
+	if character.currentMoveDirection == Globals.MoveDirection.LEFT: 
 		direction = -1
 		
 func create_hitlag_timer(waitTime):
@@ -507,7 +507,7 @@ func create_hitlag_timer(waitTime):
 		character.disableInput = true
 		character.backUpDisableInputDI = character.disableInputDI
 		character.disableInputDI = false
-	GlobalVariables.start_timer(hitlagTimer, waitTime)
+	Globals.start_timer(hitlagTimer, waitTime)
 		
 func on_hitlag_timeout():
 	#character.toggle_all_hitboxes("on")
@@ -536,7 +536,7 @@ func create_hitlagAttacked_timer(waitTime):
 		character.disableInput = true
 		character.backUpDisableInputDI = character.disableInputDI
 		character.disableInputDI = false
-	GlobalVariables.start_timer(hitlagAttackedTimer, waitTime)
+	Globals.start_timer(hitlagAttackedTimer, waitTime)
 	
 func on_hitlagAttacked_timeout():
 #	print("current damagqe " +str(character.damagePercent))
@@ -545,7 +545,7 @@ func on_hitlagAttacked_timeout():
 	character.velocity = character.initLaunchVelocity
 	animationPlayer.play()
 	character.disableInputDI = character.backUpDisableInputDI
-	if character.currentState == GlobalVariables.CharacterState.GROUND && character.perfectShieldActivated:
+	if character.currentState == Globals.CharacterState.GROUND && character.perfectShieldActivated:
 		character.initLaunchVelocity = Vector2.ZERO
 		character.perfectShieldActivated = false
 		play_animation("idle", true)
@@ -556,7 +556,7 @@ func create_hitStun_timer(waitTime):
 	hitStunTimerDone = false
 	character.disableInput = true
 	character.disableInputDI = false
-	GlobalVariables.start_timer(hitStunTimer, waitTime)
+	Globals.start_timer(hitStunTimer, waitTime)
 	
 func on_hitstun_timeout():
 	hitStunTimerDone = true
@@ -565,11 +565,11 @@ func on_hitstun_timeout():
 		if character.onSolidGround:
 			pass
 #			character.applyLandingLag = character.normalLandingLag
-#			character.change_state(GlobalVariables.CharacterState.GROUND)
+#			character.change_state(Globals.CharacterState.GROUND)
 		else:
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)
 	else: 
-		if character.currentState == GlobalVariables.CharacterState.HITSTUNAIR:
+		if character.currentState == Globals.CharacterState.HITSTUNAIR:
 			play_animation("tumble")
 	
 func reset_gravity():
@@ -579,17 +579,17 @@ func reset_gravity():
 
 func check_stop_area_entered(_delta):
 	match character.atPlatformEdge:
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			match character.currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					character.velocity.x = 0
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					pass
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			match character.currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					pass
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					character.velocity.x = 0
 						
 
@@ -623,7 +623,7 @@ func double_jump_attack_handler():
 
 func initialize_superarmour():
 	if character.currentAttack && !character.is_currentAttack_itemthrow():
-		var combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
+		var combinedAttackDataString = Globals.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
 		var currentAttackData = character.attackData[combinedAttackDataString]
 		character.damagePercentArmour = currentAttackData["damagePercentArmour"]
 		character.knockbackArmour = currentAttackData["knockbackArmour"]
@@ -631,7 +631,7 @@ func initialize_superarmour():
 		
 func manage_disabled_inputDI():
 	if character.currentAttack && !character.is_currentAttack_itemthrow():
-		var combinedAttackDataString = GlobalVariables.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
+		var combinedAttackDataString = Globals.CharacterAnimations.keys()[character.currentAttack] + "_neutral"
 		var currentAttackData = character.attackData[combinedAttackDataString]
 		if currentAttackData["disableInputDI"] == 0: 
 			return false
@@ -639,7 +639,7 @@ func manage_disabled_inputDI():
 
 func create_rehit_timer(waitTime):
 	print("rehit turn off")
-	GlobalVariables.start_timer(rehitTimer, waitTime)
+	Globals.start_timer(rehitTimer, waitTime)
 	
 func on_rehit_timeout():
 	if hitBoxesActive:

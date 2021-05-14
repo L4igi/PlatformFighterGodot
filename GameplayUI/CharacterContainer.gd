@@ -7,7 +7,7 @@ onready var characterNameBg = get_node("VBoxContainer/HBoxContainer/VBoxContaine
 onready var stocksContainer = get_node("VBoxContainer/StocksContainer")
 onready var damagePercentLabel = get_node("VBoxContainer/HBoxContainer/VBoxContainer/MarginContainer/DamagePercent")
 
-onready var stocksTextureRect = preload("res://UI/StocksTextureRect.tscn")
+onready var stocksTextureRect = preload("res://GameplayUI/StocksTextureRect.tscn")
 
 var character = null
 

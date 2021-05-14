@@ -22,7 +22,7 @@ var invincibilityTimerStarted = false
 var airDodgeLandingLag = 20.0
 
 func _ready():
-	airDodgeTimer = GlobalVariables.create_timer("on_airDodgeTimer_timeout", "AirDodgeTimer", self)
+	airDodgeTimer = Globals.create_timer("on_airDodgeTimer_timeout", "AirDodgeTimer", self)
 	get_airDodge_angle()
 	reset_gravity()
 	play_animation("airdodge_neutral")
@@ -71,7 +71,7 @@ func _physics_process(_delta):
 			character.onSolidGround = solidGroundCollision
 			character.applyLandingLag = airDodgeLandingLag
 			if enable_player_input():
-				character.change_state(GlobalVariables.CharacterState.GROUND)
+				character.change_state(Globals.CharacterState.GROUND)
 #		print(round(airDodgeTimer.get_time_left()*60.0))
 		if !invincibilityTimerStarted: 
 			check_invincibilityTimer_start()
@@ -80,11 +80,11 @@ func check_invincibilityTimer_start():
 	var airDodgeFramesLeft = round(airDodgeTimer.get_time_left()*60.0)
 	if airDodgeFramesLeft: 
 		match character.currentAirDodgeType:
-			GlobalVariables.AirDodgeType.NORMAL: 
+			Globals.AirDodgeType.NORMAL: 
 				if currentAirDodgeDuration - airDodgeFramesLeft >= neutralInvincibilityStartFrame:
 					invincibilityTimerStarted = true
 					create_invincibility_timer(neutralInvincibilityFrames)
-			GlobalVariables.AirDodgeType.DIRECTIONAL:
+			Globals.AirDodgeType.DIRECTIONAL:
 				if currentAirDodgeDuration - airDodgeFramesLeft >= directionalInvincibilityStartFrame:
 					invincibilityTimerStarted = true
 					create_invincibility_timer(directionalInvincibilityFrames)
@@ -93,7 +93,7 @@ func check_invincibilityTimer_start():
 func get_airDodge_angle():
 	var inputVector = Vector2(get_input_direction_x(), get_input_direction_y())
 	if inputVector != Vector2.ZERO:
-		character.currentAirDodgeType = GlobalVariables.AirDodgeType.DIRECTIONAL
+		character.currentAirDodgeType = Globals.AirDodgeType.DIRECTIONAL
 		var airDodgeRadian = atan2(inputVector.y, inputVector.x)
 		if airDodgeRadian > -0.125*PI && airDodgeRadian < 0.125*PI:
 			create_airDodge_timer(rightAirDodgeDuration)
@@ -114,27 +114,27 @@ func get_airDodge_angle():
 		var airDodgeVelocity = inputVector.normalized() * character.airDodgeVelocity
 		character.set_deferred("velocity", airDodgeVelocity)
 	else:
-		character.currentAirDodgeType = GlobalVariables.AirDodgeType.NORMAL
+		character.currentAirDodgeType = Globals.AirDodgeType.NORMAL
 		create_airDodge_timer(neutralAirDodgeDuration)
 	
 func create_airDodge_timer(waitTime):
 	currentAirDodgeDuration = waitTime
-	GlobalVariables.start_timer(airDodgeTimer, waitTime)
+	Globals.start_timer(airDodgeTimer, waitTime)
 	
 func on_airDodgeTimer_timeout():
 	if enable_player_input():
 		if !character.onSolidGround:
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)
 		if character.onSolidGround && Input.is_action_pressed(character.shield):
-			character.change_state(GlobalVariables.CharacterState.SHIELD)
+			character.change_state(Globals.CharacterState.SHIELD)
 		elif character.onSolidGround:
 			character.applySideStepFrames = true
-			character.change_state(GlobalVariables.CharacterState.GROUND)
+			character.change_state(Globals.CharacterState.GROUND)
 	
 func on_invincibility_timeout():
 	character.enable_disable_hurtboxes(true)
 	var direction = 1
-	if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT: 
+	if character.currentMoveDirection == Globals.MoveDirection.LEFT: 
 		direction = -1
 	character.edgeGrabShape.set_deferred("disabled", false)
 	character.disableInputDI = true

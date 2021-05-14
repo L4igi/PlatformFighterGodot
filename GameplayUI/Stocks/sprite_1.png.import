@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/shroom.png-24d2ea664a2158d8eb3349a801a8817e.stex"
+path="res://.import/sprite_1.png-042c5c1fb4ddead81925f4667a5f3e8c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/CharacterName/shroom.png"
-dest_files=[ "res://.import/shroom.png-24d2ea664a2158d8eb3349a801a8817e.stex" ]
+source_file="res://GameplayUI/Stocks/sprite_1.png"
+dest_files=[ "res://.import/sprite_1.png-042c5c1fb4ddead81925f4667a5f3e8c.stex" ]
 
 [params]
 

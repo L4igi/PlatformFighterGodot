@@ -54,7 +54,7 @@ var chargingSmashAttack = false
 var bufferedSmashAttack
 var currentHitBox = 1
 #movement
-var currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+var currentMoveDirection = Globals.MoveDirection.RIGHT
 var pushingCharacter = null
 var disableInputDI = false
 var currentPushSpeed = 0
@@ -126,7 +126,7 @@ var tween
 #signal for character state change
 signal character_state_changed(state)
 
-var currentState = GlobalVariables.CharacterState.GROUND
+var currentState = Globals.CharacterState.GROUND
 
 var collisionAreaShape
 var characterSprite
@@ -263,12 +263,12 @@ func _ready():
 	animationPlayer = $AnimatedSprite/AnimationPlayer
 	hurtBox = $InteractionAreas/Hurtbox
 	tween = $Tween
-	edgeRegrabTimer = GlobalVariables.create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer", self)
-	platformCollisionDisabledTimer = GlobalVariables.create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer", self)
-	reverseTimer = GlobalVariables.create_timer("on_reverse_timeout", "ReverseTimer", self)
+	edgeRegrabTimer = Globals.create_timer("on_edgeRegrab_timeout", "EdgeRegrabTimer", self)
+	platformCollisionDisabledTimer = Globals.create_timer("on_platformCollisionDisabled_timeout", "PlatformCollisionDisabledTimer", self)
+	reverseTimer = Globals.create_timer("on_reverse_timeout", "ReverseTimer", self)
 	animationPlayer.set_animation_process_mode(0)
-	attackDataEnum = GlobalVariables.CharacterAnimations
-	GlobalVariables.charactersInGame.append(self)
+	attackDataEnum = Globals.CharacterAnimations
+	Globals.charactersInGame.append(self)
 		
 func set_attack_data_file():
 	var file = File.new()
@@ -302,11 +302,11 @@ func snap_edge(collidingEdge):
 	velocity = Vector2.ZERO
 	jumpCount = 1
 	snappedEdge = collidingEdge
-	if currentMoveDirection == GlobalVariables.MoveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
-		currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+	if currentMoveDirection == Globals.MoveDirection.RIGHT && collidingEdge.edgeSnapDirection == "right": 
+		currentMoveDirection = Globals.MoveDirection.LEFT
 		mirror_areas()
-	elif currentMoveDirection == GlobalVariables.MoveDirection.LEFT && collidingEdge.edgeSnapDirection == "left": 
-		currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+	elif currentMoveDirection == Globals.MoveDirection.LEFT && collidingEdge.edgeSnapDirection == "left": 
+		currentMoveDirection = Globals.MoveDirection.RIGHT
 		mirror_areas()
 	var targetPosition = collidingEdge.global_position + Vector2((characterSprite.frames.get_frame("idle",0).get_size()/2).x,(characterSprite.frames.get_frame("idle",0).get_size()/4).y)
 	if self.global_position < collidingEdge.centerStage.global_position:
@@ -316,7 +316,7 @@ func snap_edge(collidingEdge):
 	$Tween.start()
 	yield($Tween, "tween_all_completed")
 	#calculate edge Invincibility time
-	change_state(GlobalVariables.CharacterState.EDGE)
+	change_state(Globals.CharacterState.EDGE)
 		
 
 func get_character_size():
@@ -327,7 +327,7 @@ func disable_invincibility_edge_action():
 	enable_disable_hurtboxes(true)
 			
 func roll_calculator(distance): 
-	if currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+	if currentMoveDirection == Globals.MoveDirection.LEFT:
 		distance = abs(distance) 
 		velocity.x = distance
 	else:
@@ -350,15 +350,15 @@ func finish_attack_animation(step):
 			disabledEdgeGrab = false
 			if state.enable_player_input():
 				match currentState:
-					GlobalVariables.CharacterState.ATTACKGROUND:
+					Globals.CharacterState.ATTACKGROUND:
 						applySideStepFrames = true
 						smashAttack = null
 						applyLandingLag = null
 						if !state.check_character_crouch():
-							change_state(GlobalVariables.CharacterState.GROUND)
+							change_state(Globals.CharacterState.GROUND)
 						disableInput = false
-					GlobalVariables.CharacterState.ATTACKAIR:
-						change_state(GlobalVariables.CharacterState.AIR)
+					Globals.CharacterState.ATTACKAIR:
+						change_state(Globals.CharacterState.AIR)
 						smashAttack = null
 
 #overwrite in character to make special moves change to different states afterwards
@@ -369,11 +369,11 @@ func finish_special_animation(step):
 			applySideStepFrames = true
 			smashAttack = null
 			if !state.check_character_crouch():
-				change_state(GlobalVariables.CharacterState.GROUND)
+				change_state(Globals.CharacterState.GROUND)
 			disableInput = false
 		else:
 			disableInput = false
-			change_state(GlobalVariables.CharacterState.AIR)
+			change_state(Globals.CharacterState.AIR)
 			smashAttack = null
 		
 func apply_attack_animation_steps(step = 0):
@@ -424,7 +424,7 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 		if launchVectorInversion:
 			launchVector.x = launchVector.x*-1
 		initLaunchVelocity = launchVector
-	if attackedCalculatedVelocity > tumblingThreashold || currentState == GlobalVariables.CharacterState.INGRAB:
+	if attackedCalculatedVelocity > tumblingThreashold || currentState == Globals.CharacterState.INGRAB:
 	#todo: calculate if in tumble animation
 		shortHitStun = false
 	else: 
@@ -485,9 +485,9 @@ func calculate_attack_knockback_weight_based(attackDamage, attackBaseKnockBack, 
 	return calculatedKnockBack
 	
 func apply_throw(actionType):
-	var currentAttackData = (inGrabByCharacter.attackData[GlobalVariables.CharacterAnimations.keys()[actionType]])
+	var currentAttackData = (inGrabByCharacter.attackData[Globals.CharacterAnimations.keys()[actionType]])
 	var attackDamage = currentAttackData["damage"]
-	if actionType == GlobalVariables.CharacterAnimations.GRABJAB:
+	if actionType == Globals.CharacterAnimations.GRABJAB:
 		return
 	var hitStun = currentAttackData["hitStun"]
 	var launchAngle = deg2rad(currentAttackData["launchAngle"])
@@ -502,13 +502,13 @@ func apply_throw(actionType):
 	var launchVectorY = launchVector.y
 	var launchVelocity = currentAttackData["launchVelocity"]
 	var weightLaunchVelocity = currentAttackData["launchVelocityWeight"]
-	var launchVectorInversion = GlobalVariables.launchVector_inversion(currentAttackData, inGrabByCharacter, self)
+	var launchVectorInversion = Globals.launchVector_inversion(currentAttackData, inGrabByCharacter, self)
 	self.global_position = inGrabByCharacter.global_position
 	var isProjectile = false
 	inGrabByCharacter = null
 	bufferHitLagFrames = hitLagFrames
 	print("buffered hitlag frames throw " +str(bufferHitLagFrames))
-	change_state(GlobalVariables.CharacterState.HITSTUNAIR)
+	change_state(Globals.CharacterState.HITSTUNAIR)
 	is_attacked_calculations(attackDamage, hitStun, launchAngle, launchVectorInversion, launchVelocity, weightLaunchVelocity, knockBackScaling,  inGrabByCharacter)
 #	if shortHitStun:
 #		state.play_animation("hurt_short")
@@ -534,7 +534,7 @@ func apply_hurt_animation_step(step =0):
 			disableInputDI = false
 		1:
 			#if !onSolidGround:
-			if currentState == GlobalVariables.CharacterState.HITSTUNAIR:
+			if currentState == Globals.CharacterState.HITSTUNAIR:
 				animationPlayer.stop(false)
 			#else:
 				#print(onSolidGround.name)
@@ -562,10 +562,10 @@ func dodge_animation_step(step = 0):
 			state.create_invincibility_timer(rollInvincibilityFrames)
 		2:
 			if onSolidGround && Input.is_action_pressed(shield):
-				change_state(GlobalVariables.CharacterState.SHIELD)
+				change_state(Globals.CharacterState.SHIELD)
 			elif state.enable_player_input():
 				applySideStepFrames = true
-				change_state(GlobalVariables.CharacterState.GROUND)
+				change_state(Globals.CharacterState.GROUND)
 			
 func getup_animation_step(step = 0):
 	match step: 
@@ -584,7 +584,7 @@ func getup_animation_step(step = 0):
 			if state.enable_player_input():
 				applySideStepFrames = true
 				velocity = Vector2.ZERO
-				change_state(GlobalVariables.CharacterState.GROUND)
+				change_state(Globals.CharacterState.GROUND)
 
 func jump_getup_animation_step(step = 0):
 	match step:
@@ -592,16 +592,16 @@ func jump_getup_animation_step(step = 0):
 			if state.enable_player_input():
 				queueFreeFall = true
 				match currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
+					Globals.MoveDirection.LEFT:
 						velocity = Vector2(-150, -1000)
-					GlobalVariables.MoveDirection.RIGHT:
+					Globals.MoveDirection.RIGHT:
 						velocity = Vector2(150, -1000)
-				change_state(GlobalVariables.CharacterState.AIR)
+				change_state(Globals.CharacterState.AIR)
 			else:
 				match currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
+					Globals.MoveDirection.LEFT:
 						velocity = Vector2(-150, -1000)
-					GlobalVariables.MoveDirection.RIGHT:
+					Globals.MoveDirection.RIGHT:
 						velocity = Vector2(150, -1000)
 				queueFreeFall = true
 
@@ -614,9 +614,9 @@ func apply_grab_animation_step(step = 0):
 			if grabbedCharacter == null: 
 				disableInput = false
 				if Input.is_action_pressed(shield):
-					change_state(GlobalVariables.CharacterState.SHIELD)
+					change_state(Globals.CharacterState.SHIELD)
 				else:
-					change_state(GlobalVariables.CharacterState.GROUND)
+					change_state(Globals.CharacterState.GROUND)
 			else: 
 				velocity.x = 0
 				state.create_grab_timer(grabFrames)
@@ -628,8 +628,8 @@ func disable_input_animation_step(step = 0):
 		1:
 			disableInput = false
 			#apply grabjab to grabbed enemy
-			if currentState == GlobalVariables.CharacterState.GRAB\
-			&& currentAttack == GlobalVariables.CharacterAnimations.GRABJAB:
+			if currentState == Globals.CharacterState.GRAB\
+			&& currentAttack == Globals.CharacterAnimations.GRABJAB:
 				state.gravity_on_off("on")
 				grabbedCharacter.apply_throw(currentAttack)
 			
@@ -647,7 +647,7 @@ func apply_throw_animation_step(step = 0):
 		2: 
 			disableInput = false
 #			currentMaxSpeed = baseWalkMaxSpeed
-			change_state(GlobalVariables.CharacterState.GROUND)
+			change_state(Globals.CharacterState.GROUND)
 			
 
 func apply_tech_animation_step_ground(step = 0):
@@ -656,10 +656,10 @@ func apply_tech_animation_step_ground(step = 0):
 			disableInput = true
 		1:
 			if onSolidGround && Input.is_action_pressed(shield):
-				change_state(GlobalVariables.CharacterState.SHIELD)
+				change_state(Globals.CharacterState.SHIELD)
 			elif state.enable_player_input():
 				applySideStepFrames = true
-				change_state(GlobalVariables.CharacterState.GROUND)
+				change_state(Globals.CharacterState.GROUND)
 
 func apply_tech_roll_animation_step_ground(step = 0):
 	match step: 
@@ -670,19 +670,19 @@ func apply_tech_roll_animation_step_ground(step = 0):
 					roll_calculator_tech(techRollDistance)
 		1:
 			if onSolidGround && Input.is_action_pressed(shield):
-				change_state(GlobalVariables.CharacterState.SHIELD)
+				change_state(Globals.CharacterState.SHIELD)
 			elif state.enable_player_input():
 				applySideStepFrames = true
-				change_state(GlobalVariables.CharacterState.GROUND)
+				change_state(Globals.CharacterState.GROUND)
 				
 func apply_tech_animation_step_air(step = 0):
 	match step: 
 		0: 
 			disableInput = true
 		1:
-#			state.bufferedInput = GlobalVariables.CharacterAnimations.JUMP
+#			state.bufferedInput = Globals.CharacterAnimations.JUMP
 			if state.enable_player_input():
-				change_state(GlobalVariables.CharacterState.AIR)
+				change_state(Globals.CharacterState.AIR)
 
 func enable_disable_hurtboxes(enable = true):
 	for singleHurtbox in hurtBox.get_children():
@@ -698,9 +698,9 @@ func set_current_hitbox(hitBoxNumber):
 	currentHitBox = hitBoxNumber
 
 func _on_AnimationPlayer_animation_finished(anim_name):
-	if GlobalVariables.attackAnimationList.has(anim_name):
+	if Globals.attackAnimationList.has(anim_name):
 		finish_attack_animation(0)
-	if GlobalVariables.specialAnimationList.has(anim_name):
+	if Globals.specialAnimationList.has(anim_name):
 		finish_special_animation(0)
 
 func change_state(new_state, transitionBufferedInput = null):
@@ -712,11 +712,11 @@ func change_state(new_state, transitionBufferedInput = null):
 		if bufferInvincibilityFrames == 0:
 			bufferInvincibilityFrames = round(state.invincibilityTimer.get_time_left()*60)
 	if currentState == changeToState:
-		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" Switching to current state again ")
+		print(str(Globals.CharacterState.keys()[new_state]) +" Switching to current state again ")
 		state.switch_to_current_state_again(transitionBufferedInput)
 		return
 	if stateChangedThisFrame:
-		print(str(GlobalVariables.CharacterState.keys()[new_state]) +" State already changed this frame ")
+		print(str(Globals.CharacterState.keys()[new_state]) +" State already changed this frame ")
 		return
 	stateChangedThisFrame = true
 	moveTransitionBufferedInput = null
@@ -730,67 +730,67 @@ func change_state(new_state, transitionBufferedInput = null):
 #			print(str(state.name) +" STATE CAN BE QUEUED FREE AFTER FRAME")
 #		else:
 #			print(str(state.name) +"STATE CANNOT BE QUEUED FREE AFTER FRAME")
-#	print(self.name + " Changing to " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
-#	if changeToState == GlobalVariables.CharacterState.AIR:
+#	print(self.name + " Changing to " +str(Globals.CharacterState.keys()[changeToState]) + " transitionBufferedInput " +str(transitionBufferedInput))
+#	if changeToState == Globals.CharacterState.AIR:
 #		pass
 	state = state_factory.get_state(changeToState).new()
-	state.name = GlobalVariables.CharacterState.keys()[new_state]
+	state.name = Globals.CharacterState.keys()[new_state]
 #	if state.get_parent():
 #		print("currentstate " +str(currentState) + " new state " +str(new_state))
-#		print("state " +str(GlobalVariables.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
+#		print("state " +str(Globals.CharacterState.keys()[changeToState]) + " already has parent " +str(state.get_parent()))
 	state.setup(funcref(self, "change_state"),transitionBufferedInput, animationPlayer, self)
 	currentState = changeToState
 	emit_signal("character_state_changed", self, currentState)
 	add_child(state)
 	
 func check_state_transition(changeToState, transitionBufferedInput):
-	if changeToState == GlobalVariables.CharacterState.GROUND:
+	if changeToState == Globals.CharacterState.GROUND:
 		match currentState:
-			GlobalVariables.CharacterState.ATTACKAIR:
+			Globals.CharacterState.ATTACKAIR:
 				if moveAirGroundTransition.has(currentAttack):
 					if moveAirGroundTransition.get(currentAttack): 
 						airGroundMoveTransition = true
 						moveTransitionBufferedInput = state.bufferedInput
-						changeToState = GlobalVariables.CharacterState.ATTACKGROUND
-			GlobalVariables.CharacterState.SPECIALAIR:
+						changeToState = Globals.CharacterState.ATTACKGROUND
+			Globals.CharacterState.SPECIALAIR:
 				if moveAirGroundTransition.has(currentAttack):
 					if moveAirGroundTransition.get(currentAttack): 
 						airGroundMoveTransition = true
 						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = change_to_special_state()
-	elif changeToState == GlobalVariables.CharacterState.AIR:
+	elif changeToState == Globals.CharacterState.AIR:
 		match currentState:
-			GlobalVariables.CharacterState.ATTACKGROUND:
+			Globals.CharacterState.ATTACKGROUND:
 				if moveGroundAirTransition.has(currentAttack):
 					if moveGroundAirTransition.get(currentAttack): 
 						groundAirMoveTransition = true
 						moveTransitionBufferedInput = state.bufferedInput
-						changeToState = GlobalVariables.CharacterState.ATTACKAIR
-			GlobalVariables.CharacterState.SPECIALGROUND:
+						changeToState = Globals.CharacterState.ATTACKAIR
+			Globals.CharacterState.SPECIALGROUND:
 				if moveGroundAirTransition.has(currentAttack):
 					if moveGroundAirTransition.get(currentAttack): 
 						groundAirMoveTransition = true
 						moveTransitionBufferedInput = state.bufferedInput
 						changeToState = change_to_special_state()
-			GlobalVariables.CharacterState.GROUND:
+			Globals.CharacterState.GROUND:
 				if state.shortHopTimer.get_time_left()\
 				|| Input.is_action_pressed(jump):
 					if Input.is_action_just_pressed(attack):
-						transitionBufferedInput = GlobalVariables.CharacterAnimations.JAB1
-						changeToState = GlobalVariables.CharacterState.ATTACKAIR
+						transitionBufferedInput = Globals.CharacterAnimations.JAB1
+						changeToState = Globals.CharacterState.ATTACKAIR
 					else:
 						if velocity.y > 0:
-							transitionBufferedInput = GlobalVariables.CharacterAnimations.JUMP
-						changeToState = GlobalVariables.CharacterState.AIR
+							transitionBufferedInput = Globals.CharacterAnimations.JUMP
+						changeToState = Globals.CharacterState.AIR
 				elif Input.is_action_just_pressed(attack):
-#					transitionBufferedInput = GlobalVariables.CharacterAnimations.DSMASH
-					changeToState = GlobalVariables.CharacterState.ATTACKAIR
-			GlobalVariables.CharacterState.SHIELD:
+#					transitionBufferedInput = Globals.CharacterAnimations.DSMASH
+					changeToState = Globals.CharacterState.ATTACKAIR
+			Globals.CharacterState.SHIELD:
 				if airdodgeAvailable:
-					changeToState = GlobalVariables.CharacterState.AIRDODGE
-	elif changeToState == GlobalVariables.CharacterState.GRAB:
+					changeToState = Globals.CharacterState.AIRDODGE
+	elif changeToState == Globals.CharacterState.GRAB:
 		if grabbedItem:
-			changeToState = GlobalVariables.CharacterState.ATTACKGROUND
+			changeToState = Globals.CharacterState.ATTACKGROUND
 	else:
 #		bufferInvincibilityFrames = 0.0
 		groundAirMoveTransition = false
@@ -800,15 +800,15 @@ func check_state_transition(changeToState, transitionBufferedInput):
 func create_edgeRegrab_timer(waitTime):
 	disabledEdgeGrab = true
 	edgeGrabShape.set_deferred("disabled", true)
-	GlobalVariables.start_timer(edgeRegrabTimer, waitTime)
+	Globals.start_timer(edgeRegrabTimer, waitTime)
 
 func on_edgeRegrab_timeout():
 	disabledEdgeGrab = false
-	if currentState == GlobalVariables.CharacterState.AIR && state.get_input_direction_y() < 0.5:
+	if currentState == Globals.CharacterState.AIR && state.get_input_direction_y() < 0.5:
 		edgeGrabShape.set_deferred("disabled", false)
 		
 func create_platformCollisionDisabled_timer(waitTime):
-	GlobalVariables.start_timer(platformCollisionDisabledTimer, waitTime)
+	Globals.start_timer(platformCollisionDisabledTimer, waitTime)
 	
 func on_platformCollisionDisabled_timeout():
 	call_deferred("set_collision_mask_bit",1,true)
@@ -848,7 +848,7 @@ func on_grab_release():
 			velocity = Vector2(400,-400)
 		1: 
 			velocity = Vector2(-400,-400)
-	change_state(GlobalVariables.CharacterState.AIR)
+	change_state(Globals.CharacterState.AIR)
 
 func calculate_hitlag_di():
 	var verticalInfluence = 0.17
@@ -867,17 +867,17 @@ func is_attacked_handler(hitLagFrames, attackingObject):
 	#handle superarmour 
 	if superArmourOn:
 		state.create_hitlag_timer(bufferHitLagFrames)
-	elif currentState == GlobalVariables.CharacterState.SHIELD\
-	|| currentState == GlobalVariables.CharacterState.SHIELDSTUN:
-		change_state(GlobalVariables.CharacterState.SHIELDSTUN)
+	elif currentState == Globals.CharacterState.SHIELD\
+	|| currentState == Globals.CharacterState.SHIELDSTUN:
+		change_state(Globals.CharacterState.SHIELDSTUN)
 	elif !perfectShieldActivated:
-		if currentState == GlobalVariables.CharacterState.SPECIALAIR\
-		|| currentState == GlobalVariables.CharacterState.SPECIALGROUND\
-		&& currentAttack == GlobalVariables.CharacterAnimations.NSPECIAL:
+		if currentState == Globals.CharacterState.SPECIALAIR\
+		|| currentState == Globals.CharacterState.SPECIALGROUND\
+		&& currentAttack == Globals.CharacterAnimations.NSPECIAL:
 			if chargingProjectile:
 				chargingProjectile.queue_free()
 				chargingProjectile = null
-		change_state(GlobalVariables.CharacterState.HITSTUNAIR)
+		change_state(Globals.CharacterState.HITSTUNAIR)
 	else:
 		state.create_hitlagAttacked_timer(bufferHitLagFrames)
 		
@@ -946,46 +946,46 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	var characterInteracted = false
 	for effect in effectArray:
 		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
+			Globals.SpecialHitboxType.REVERSE:
 				if handle_effect_reverse_attacked(interactionType, interactionObject, attackingDamage):
 					characterInteracted = true
-			GlobalVariables.SpecialHitboxType.REFLECT:
+			Globals.SpecialHitboxType.REFLECT:
 				pass
-			GlobalVariables.SpecialHitboxType.ABSORB:
+			Globals.SpecialHitboxType.ABSORB:
 				pass
-			GlobalVariables.SpecialHitboxType.COUNTER:
+			Globals.SpecialHitboxType.COUNTER:
 				pass
 	return characterInteracted
 				
 func handle_effect_reverse_attacked(interactionType, interactionObject, attackingDamage):
 	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CLASHED:
+		Globals.HitBoxInteractionType.CLASHED:
 			return false
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
-			print(GlobalVariables.CharacterState.keys()[currentState])
-			if currentState != GlobalVariables.CharacterState.SHIELD\
-			&& currentState != GlobalVariables.CharacterState.SHIELDSTUN\
+		Globals.HitBoxInteractionType.CONNECTED:
+			print(Globals.CharacterState.keys()[currentState])
+			if currentState != Globals.CharacterState.SHIELD\
+			&& currentState != Globals.CharacterState.SHIELDSTUN\
 			&& !perfectShieldActivated:
 				reverse_inputs()
 				create_reverse_timer(reverseFrames)
 				velocity.x *= -1
 				match currentMoveDirection:
-					GlobalVariables.MoveDirection.LEFT:
-						currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+					Globals.MoveDirection.LEFT:
+						currentMoveDirection = Globals.MoveDirection.RIGHT
 						mirror_areas()
-					GlobalVariables.MoveDirection.RIGHT:
-						currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+					Globals.MoveDirection.RIGHT:
+						currentMoveDirection = Globals.MoveDirection.LEFT
 						mirror_areas()
 				return true
 	return false
 
 func handle_effect_counter_attacked(interactionType, interactionObject, attackingDamage):
 	match interactionType:
-		GlobalVariables.HitBoxInteractionType.CLASHED:
+		Globals.HitBoxInteractionType.CLASHED:
 			toggle_all_hitboxes("off")
 			bufferedCounterDamage = attackingDamage
-			change_state(GlobalVariables.CharacterState.COUNTER)
-		GlobalVariables.HitBoxInteractionType.CONNECTED:
+			change_state(Globals.CharacterState.COUNTER)
+		Globals.HitBoxInteractionType.CONNECTED:
 			pass
 
 func reverse_inputs():
@@ -1000,18 +1000,18 @@ func reverse_inputs():
 		left = characterControls.get("left")
 
 func create_reverse_timer(waitTime):
-	GlobalVariables.start_timer(reverseTimer, waitTime)
+	Globals.start_timer(reverseTimer, waitTime)
 
 func on_reverse_timeout():
 	reverse_inputs()
 
 func is_currentAttack_itemthrow():
 	match currentAttack:
-		GlobalVariables.CharacterAnimations.THROWITEMDOWN:
+		Globals.CharacterAnimations.THROWITEMDOWN:
 			return true
-		GlobalVariables.CharacterAnimations.THROWITEMFORWARD:
+		Globals.CharacterAnimations.THROWITEMFORWARD:
 			return true
-		GlobalVariables.CharacterAnimations.THROWITEMUP:
+		Globals.CharacterAnimations.THROWITEMUP:
 			return true
 	return false
 	
@@ -1023,33 +1023,33 @@ func get_input_direction_y():
 	
 func mirror_areas():
 	match currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			set_scale(Vector2(-1*abs(get_scale().x), abs(get_scale().y)))
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			set_scale(Vector2(-1*abs(get_scale().x), -1*abs(get_scale().y)))
 
 func attack_handler_air_throw_attack():
 	if (abs(get_input_direction_x()) == 0) \
 	&& get_input_direction_y() == 0:
-		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		state.play_attack_animation("throw_item_forward")
 	elif get_input_direction_y() < 0:
-		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMUP
+		currentAttack = Globals.CharacterAnimations.THROWITEMUP
 		state.play_attack_animation("throw_item_up")
 	elif get_input_direction_y() > 0:
-		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMDOWN
+		currentAttack = Globals.CharacterAnimations.THROWITEMDOWN
 		state.play_attack_animation("throw_item_down")
 	elif get_input_direction_x() > 0:
-		if currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
-			currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		if currentMoveDirection == Globals.MoveDirection.LEFT:
+			currentMoveDirection = Globals.MoveDirection.RIGHT
 			mirror_areas()
-		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		state.play_attack_animation("throw_item_forward")
 	elif get_input_direction_x() < 0:
-		if currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
-			currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		if currentMoveDirection == Globals.MoveDirection.RIGHT:
+			currentMoveDirection = Globals.MoveDirection.LEFT
 			mirror_areas()
-		currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+		currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		state.play_attack_animation("throw_item_forward")
 
 #checks if current attack/state can catch item, pick up item
@@ -1057,15 +1057,15 @@ func check_item_catch_attack():
 	if grabbedItem: 
 		return false
 	match currentState:
-		GlobalVariables.CharacterState.ATTACKAIR:
+		Globals.CharacterState.ATTACKAIR:
 			return true
-		GlobalVariables.CharacterState.ATTACKGROUND:
+		Globals.CharacterState.ATTACKGROUND:
 			match currentAttack:
-				GlobalVariables.CharacterAnimations.FSMASH: 
+				Globals.CharacterAnimations.FSMASH: 
 					return false
-				GlobalVariables.CharacterAnimations.DSMASH:
+				Globals.CharacterAnimations.DSMASH:
 					return false
-				GlobalVariables.CharacterAnimations.UPSMASH:
+				Globals.CharacterAnimations.UPSMASH:
 					return false
 			return true
 	return false
@@ -1077,46 +1077,47 @@ func cancel_charge_transition():
 	if cancelChargeTransition:
 		animationPlayer.stop()
 		match cancelChargeTransition:
-			GlobalVariables.CharacterAnimations.ROLL:
+			Globals.CharacterAnimations.ROLL:
 				if rollType == left:
-					if currentMoveDirection != GlobalVariables.MoveDirection.RIGHT:
-						currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+					if currentMoveDirection != Globals.MoveDirection.RIGHT:
+						currentMoveDirection = Globals.MoveDirection.RIGHT
 						mirror_areas()
-					change_state(GlobalVariables.CharacterState.ROLL)
+					change_state(Globals.CharacterState.ROLL)
 				elif rollType == right:
-					if currentMoveDirection != GlobalVariables.MoveDirection.LEFT:
-						currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+					if currentMoveDirection != Globals.MoveDirection.LEFT:
+						currentMoveDirection = Globals.MoveDirection.LEFT
 						mirror_areas()
-					change_state(GlobalVariables.CharacterState.ROLL)
-			GlobalVariables.CharacterAnimations.SPOTDODGE:
+					change_state(Globals.CharacterState.ROLL)
+			Globals.CharacterAnimations.SPOTDODGE:
 				velocity.x = 0
-				change_state(GlobalVariables.CharacterState.SPOTDODGE)
-			GlobalVariables.CharacterAnimations.JUMP:
-				change_state(GlobalVariables.CharacterState.AIR)
+				change_state(Globals.CharacterState.SPOTDODGE)
+			Globals.CharacterAnimations.JUMP:
+				change_state(Globals.CharacterState.AIR)
 				if !Input.is_action_pressed(jump):
 					state.shortHop = true
 				state.process_jump()
-			GlobalVariables.CharacterAnimations.DOUBLEJUMP:
-				change_state(GlobalVariables.CharacterState.AIR)
+			Globals.CharacterAnimations.DOUBLEJUMP:
+				change_state(Globals.CharacterState.AIR)
 				state.double_jump_handler()
-			GlobalVariables.CharacterAnimations.AIRDODGE:
-				change_state(GlobalVariables.CharacterState.AIRDODGE)
-			GlobalVariables.CharacterAnimations.SHIELD:
-				change_state(GlobalVariables.CharacterState.SHIELD)
+			Globals.CharacterAnimations.AIRDODGE:
+				change_state(Globals.CharacterState.AIRDODGE)
+			Globals.CharacterAnimations.SHIELD:
+				change_state(Globals.CharacterState.SHIELD)
 	cancelChargeTransition = null
 					
 func apply_charge_projectile_pushback(pushVelocity):
 	if !onSolidGround: 
 		match currentMoveDirection:
-			GlobalVariables.MoveDirection.LEFT:
+			Globals.MoveDirection.LEFT:
 				velocity.x += pushVelocity
-			GlobalVariables.MoveDirection.RIGHT:
+			Globals.MoveDirection.RIGHT:
 				velocity.x -= pushVelocity
 				
 func start_game():
-	change_state(GlobalVariables.CharacterState.GROUND)
+	change_state(Globals.CharacterState.GROUND)
 
 func reset_all():
+	stocks -= 1
 	damagePercent = 0.0
 	walkMaxSpeed = 300
 	runMaxSpeed = 600

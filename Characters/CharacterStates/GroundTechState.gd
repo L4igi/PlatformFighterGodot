@@ -39,9 +39,9 @@ func _physics_process(_delta):
 
 func check_stop_area_entered(_delta):
 	match character.atPlatformEdge:
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			if character.velocity.x >= 0:
 				character.velocity.x = 0
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			if character.velocity.x <= 0:
 				character.velocity.x = 0

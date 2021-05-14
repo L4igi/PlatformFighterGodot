@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/sprite_0.png-021af085372574a778d60ac6a1618589.stex"
+path="res://.import/square.png-5989416be1a9b662dca45329766c56f5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Stocks/sprite_0.png"
-dest_files=[ "res://.import/sprite_0.png-021af085372574a778d60ac6a1618589.stex" ]
+source_file="res://GameplayUI/CharacterName/square.png"
+dest_files=[ "res://.import/square.png-5989416be1a9b662dca45329766c56f5.stex" ]
 
 [params]
 

@@ -7,7 +7,7 @@ func _ready():
 	
 func setup(change_state, animationPlayer, projectile):
 	.setup(change_state, animationPlayer, projectile)
-	projectile.currentAttack = GlobalVariables.ProjectileAnimations.SHOOT
+	projectile.currentAttack = Globals.ProjectileAnimations.SHOOT
 	projectile.toggle_all_hurtboxes("off")
 
 func _physics_process(_delta):

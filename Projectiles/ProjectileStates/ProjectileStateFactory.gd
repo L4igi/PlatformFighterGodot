@@ -4,13 +4,13 @@ var states
 
 func _init():
 	states = {
-		GlobalVariables.ProjectileState.CONTROL: ProjectileControlState, 
-		GlobalVariables.ProjectileState.SHOOT: ProjectileShootState, 
-		GlobalVariables.ProjectileState.IMPACT: ProjectileImpactState, 
-		GlobalVariables.ProjectileState.DESTROYED: ProjectileDestroyedState, 
-		GlobalVariables.ProjectileState.HOLD: ProjectileHoldState, 
-		GlobalVariables.ProjectileState.CHARGE: ProjectileChargeState, 
-		GlobalVariables.ProjectileState.IDLE: ProjectileIdleState
+		Globals.ProjectileState.CONTROL: ProjectileControlState, 
+		Globals.ProjectileState.SHOOT: ProjectileShootState, 
+		Globals.ProjectileState.IMPACT: ProjectileImpactState, 
+		Globals.ProjectileState.DESTROYED: ProjectileDestroyedState, 
+		Globals.ProjectileState.HOLD: ProjectileHoldState, 
+		Globals.ProjectileState.CHARGE: ProjectileChargeState, 
+		Globals.ProjectileState.IDLE: ProjectileIdleState
 }
 
 func get_state(state_name):

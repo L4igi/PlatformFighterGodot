@@ -1,15 +1,18 @@
 extends CanvasLayer
 
-onready var characterContainer = preload("res://UI/CharacterContainer.tscn")
+onready var characterContainer = preload("res://GameplayUI/CharacterContainer.tscn")
 onready var characterGUI = get_node("CharacterGUI")
 onready var timerGUILabel = get_node("TopScreenGUI/VBoxContainer/HBoxContainer/VBoxContainer/TimerGUI/HBoxContainer/TimerLabel")
 onready var gameGUITimer = get_node("TopScreenGUI/VBoxContainer/HBoxContainer/VBoxContainer/TimerGUI/HBoxContainer/GameGUITimer")
 onready var gameStartOverlay = get_node("GameStartOverlay")
 
+var gameSetTimer = null
+var gameSetFrames = 30
+
 var timerSet = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	update_timer(GlobalVariables.roundTime/60)
+	update_timer(Globals.roundTime/60)
 	
 func _process(delta):
 	if timerSet:
@@ -42,3 +45,16 @@ func update_timer(timeleft = 0):
 	if milliseconds < 10:
 		milliseconds = str("0")+String(milliseconds)
 	timerGUILabel.set_bbcode(str(minutes) + ":" + str(seconds) + "." + str(milliseconds))
+
+func game_set():
+	gameStartOverlay.game_set()
+	gameGUITimer.stop()
+	timerSet = false
+	gameSetTimer = Globals.create_timer("on_gameset_timeout", "Gamesettimer", self)
+	create_gameset_timer(gameSetFrames)
+	
+func create_gameset_timer(waittime):
+	Globals.start_timer(gameSetTimer, waittime)
+	
+func on_gameset_timeout():
+	SceneSwitcher.goto_scene(SceneSwitcher.resultScreen)

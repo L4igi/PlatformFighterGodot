@@ -12,10 +12,10 @@ onready var screen_size = get_viewport_rect().size
 
 func _ready():
 	yield(get_tree().root, "ready")
-	for character in GlobalVariables.charactersInGame: 
+	for character in Globals.charactersInGame: 
 		add_target(character)
 	make_current()
-	add_target(GlobalVariables.centerStage)
+	add_target(Globals.centerStage)
 
 func _process(_delta):
 	if !targets.empty():

@@ -40,12 +40,12 @@ func _ready():
 		create_sidestep_timer(sideStepFrames)
 		
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
-	stopMovementTimer = GlobalVariables.create_timer("on_stop_movement_timeout", "StopMovementTimer", self)
-	turnAroundTimer = GlobalVariables.create_timer("on_turnAroundTimer_timeout", "TurnAroundTimer", self)
-	sideStepTimer = GlobalVariables.create_timer("on_sideStep_timeout", "SideStepTimer", self)
-	dropDownTimer = GlobalVariables.create_timer("on_dropDown_timeout", "DropDownTimer", self)
-	shieldDropTimer = GlobalVariables.create_timer("on_shielddrop_timeout", "ShieldDropTimer", self)
-	landingLagTimer = GlobalVariables.create_timer("on_landingLag_timeout", "LandingLagTimer", self)
+	stopMovementTimer = Globals.create_timer("on_stop_movement_timeout", "StopMovementTimer", self)
+	turnAroundTimer = Globals.create_timer("on_turnAroundTimer_timeout", "TurnAroundTimer", self)
+	sideStepTimer = Globals.create_timer("on_sideStep_timeout", "SideStepTimer", self)
+	dropDownTimer = Globals.create_timer("on_dropDown_timeout", "DropDownTimer", self)
+	shieldDropTimer = Globals.create_timer("on_shielddrop_timeout", "ShieldDropTimer", self)
+	landingLagTimer = Globals.create_timer("on_landingLag_timeout", "LandingLagTimer", self)
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.canGetEdgeInvincibility = true
 	character.disabledEdgeGrab = false
@@ -67,55 +67,55 @@ func handle_input(_delta):
 		return
 	elif Input.is_action_pressed(character.shield):
 		if Input.is_action_just_pressed(character.attack):
-			character.change_state(GlobalVariables.CharacterState.GRAB)
+			character.change_state(Globals.CharacterState.GRAB)
 		else:
-			character.change_state(GlobalVariables.CharacterState.SHIELD)
+			character.change_state(Globals.CharacterState.SHIELD)
 		return
 	elif Input.is_action_just_pressed(character.grab):
-		character.change_state(GlobalVariables.CharacterState.GRAB)
+		character.change_state(Globals.CharacterState.GRAB)
 		return
 	if !character.bufferedSmashAttack:
 		if Input.is_action_just_pressed(character.right):
 			create_smashAttack_timer(smashAttackInputFrames)
-			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHR
+			character.bufferedSmashAttack = Globals.CharacterAnimations.FSMASHR
 		elif Input.is_action_just_pressed(character.left):
 			create_smashAttack_timer(smashAttackInputFrames)
-			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.FSMASHL
+			character.bufferedSmashAttack = Globals.CharacterAnimations.FSMASHL
 		elif Input.is_action_just_pressed(character.up):
 			create_smashAttack_timer(smashAttackInputFrames)
-			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.UPSMASH
+			character.bufferedSmashAttack = Globals.CharacterAnimations.UPSMASH
 		elif Input.is_action_just_pressed(character.down):
 			create_smashAttack_timer(smashAttackInputFrames)
-			character.bufferedSmashAttack = GlobalVariables.CharacterAnimations.DSMASH
+			character.bufferedSmashAttack = Globals.CharacterAnimations.DSMASH
 		if Input.is_action_just_pressed(character.attack):
 			character.smashAttack = character.bufferedSmashAttack
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+			character.change_state(Globals.CharacterState.ATTACKGROUND)
 		if Input.is_action_just_pressed(character.special):
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState)
 	elif character.bufferedSmashAttack && smashAttackTimer.get_time_left():
 		if Input.is_action_just_pressed(character.attack):
 			if Input.is_action_pressed(character.right):
-				if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT:
+				if character.currentMoveDirection == Globals.MoveDirection.LEFT:
 					character.turnAroundSmashAttack = true
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				character.change_state(Globals.CharacterState.ATTACKGROUND)
 			elif Input.is_action_pressed(character.left):
-				if character.currentMoveDirection == GlobalVariables.MoveDirection.RIGHT:
+				if character.currentMoveDirection == Globals.MoveDirection.RIGHT:
 					character.turnAroundSmashAttack = true
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				character.change_state(Globals.CharacterState.ATTACKGROUND)
 			elif Input.is_action_pressed(character.up):
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				character.change_state(Globals.CharacterState.ATTACKGROUND)
 			elif Input.is_action_pressed(character.down):
 				character.smashAttack = character.bufferedSmashAttack
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				character.change_state(Globals.CharacterState.ATTACKGROUND)
 		elif Input.is_action_just_pressed(character.special):
 			var changeToState = character.change_to_special_state()
 			character.change_state(changeToState)
 	elif Input.is_action_just_pressed(character.attack):
-				character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+				character.change_state(Globals.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):
 		var changeToState = character.change_to_special_state()
 		character.change_state(changeToState)
@@ -135,7 +135,7 @@ func handle_input_disabled(_delta):
 				bufferedInput = null
 		elif shortHopTimer.get_time_left():
 			if Input.is_action_pressed(character.attack):
-				bufferedInput = GlobalVariables.CharacterAnimations.SHORTHOPATTACK
+				bufferedInput = Globals.CharacterAnimations.SHORTHOPATTACK
 #normal input 
 				
 func _physics_process(_delta):
@@ -148,7 +148,7 @@ func _physics_process(_delta):
 					perfectShieldFramesLeft -= 1
 			if check_in_air():
 				character.disableInput = false
-				character.change_state(GlobalVariables.CharacterState.AIR)
+				character.change_state(Globals.CharacterState.AIR)
 			if !character.perfectShieldActivated:
 				if character.disableInput:
 					handle_input_disabled(_delta)
@@ -159,7 +159,7 @@ func _physics_process(_delta):
 			character.velocity = character.move_and_slide_with_snap(character.velocity, Vector2.DOWN, Vector2.UP)
 			if check_in_air():
 				character.disableInput = false
-				character.change_state(GlobalVariables.CharacterState.AIR)
+				character.change_state(Globals.CharacterState.AIR)
 			else:
 				handle_input(_delta)
 				check_stop_area_entered(_delta)
@@ -212,10 +212,10 @@ func input_movement_physics(_delta):
 					character.velocity.x = move_toward(character.velocity.x, 0, character.groundStopForce * _delta)
 		elif character.turnAroundTimer.timer_running():
 			match character.currentMoveDirection:
-				GlobalVariables.moveDirection.LEFT:
+				Globals.moveDirection.LEFT:
 					if character.velocity.x > 0:
 						character.velocity.x = move_toward(character.velocity.x, 0, character.groundStopForce * _delta)
-				GlobalVariables.moveDirection.RIGHT:
+				Globals.moveDirection.RIGHT:
 					if character.velocity.x < 0:
 						character.velocity.x = move_toward(character.velocity.x, 0, character.groundStopForce * _delta)
 	lastXInput = xInput
@@ -233,7 +233,7 @@ func count_last_XInput():
 func direction_changer(xInput, fromIdle = false):
 	count_last_XInput()
 	match character.currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			if xInput <= 0 && xInput > lastXInput && !inMovementLag && !fromIdle:  
 				#print("here left Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
 				if character.currentMaxSpeed == character.baseRunMaxSpeed:
@@ -257,7 +257,7 @@ func direction_changer(xInput, fromIdle = false):
 					character.velocity.x = 0
 					character.shortTurnAround = true
 				return true
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			if xInput >= 0 && xInput < lastXInput && !inMovementLag && !fromIdle:  
 				#print("here right Xinput " +str(xInput) + " lastXInput " +str(lastXInput) + " inMovementLag " +str(inMovementLag))
 				if character.currentMaxSpeed == character.baseRunMaxSpeed:
@@ -299,7 +299,7 @@ func change_max_speed(xInput):
 	
 func create_stop_movement_timer(waitTime):
 	inMovementLag = true
-	GlobalVariables.start_timer(stopMovementTimer, waitTime)
+	Globals.start_timer(stopMovementTimer, waitTime)
 	
 func on_stop_movement_timeout():
 	change_max_speed(get_input_direction_x())
@@ -311,14 +311,14 @@ func create_turnAround_timer(waitTime):
 	inMovementLag = true
 	character.stopAreaVelocity.x = 0
 	stopMovementTimer.stop()
-	GlobalVariables.start_timer(turnAroundTimer, waitTime)
+	Globals.start_timer(turnAroundTimer, waitTime)
 	lastXInputZeroCount = 0
 	match character.currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+		Globals.MoveDirection.LEFT:
+			character.currentMoveDirection = Globals.MoveDirection.RIGHT
 			character.mirror_areas()
-		GlobalVariables.MoveDirection.RIGHT:
-			character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+		Globals.MoveDirection.RIGHT:
+			character.currentMoveDirection = Globals.MoveDirection.LEFT
 			character.mirror_areas()
 
 func on_turnAroundTimer_timeout():
@@ -332,7 +332,7 @@ func on_turnAroundTimer_timeout():
 	enable_player_input()
 
 func create_sidestep_timer(waitTime):
-	GlobalVariables.start_timer(sideStepTimer, waitTime)
+	Globals.start_timer(sideStepTimer, waitTime)
 	
 func on_sideStep_timeout():
 	pass
@@ -341,13 +341,13 @@ func create_shieldDrop_timer(waitTime):
 	character.disableInput = true
 	perfectShieldFramesLeft = perfectShieldFrames
 	play_animation("shielddrop")
-	GlobalVariables.start_timer(shieldDropTimer, waitTime)
+	Globals.start_timer(shieldDropTimer, waitTime)
 	
 func on_shielddrop_timeout():
 	lastXInputZeroCount = 0
 	if get_input_direction_y() >= 0.5:
 		if enable_player_input():
-			character.change_state(GlobalVariables.CharacterState.CROUCH)
+			character.change_state(Globals.CharacterState.CROUCH)
 	else:
 		play_animation("idle")
 		character.currentMaxSpeed = character.baseWalkMaxSpeed
@@ -370,7 +370,7 @@ func create_landingLag_timer(waitTime):
 	inLandingLag = true
 	character.disableInput = true
 	character.disableInputDI = false
-	GlobalVariables.start_timer(landingLagTimer, waitTime)
+	Globals.start_timer(landingLagTimer, waitTime)
 	
 func on_landingLag_timeout():
 	inLandingLag = false
@@ -390,13 +390,13 @@ func switch_from_air_to_ground(landingLag):
 	create_landingLag_timer(landingLag)
 	play_animation("landinglagnormal")
 	match character.currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			if get_input_direction_x() > 0:
-				character.currentMoveDirection = GlobalVariables.MoveDirection.RIGHT
+				character.currentMoveDirection = Globals.MoveDirection.RIGHT
 				character.mirror_areas()
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			if get_input_direction_x() < 0:
-				character.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+				character.currentMoveDirection = Globals.MoveDirection.LEFT
 				character.mirror_areas()
 
 func check_character_crouch():
@@ -405,14 +405,14 @@ func check_character_crouch():
 			var collision = character.get_slide_collision(i)
 			if collision.get_collider().is_in_group("Platform"):
 				character.onSolidGround = collision.get_collider()
-				character.change_state(GlobalVariables.CharacterState.CROUCH)
+				character.change_state(Globals.CharacterState.CROUCH)
 				return true
 			elif collision.get_collider().is_in_group("Ground"):
 				character.onSolidGround = collision.get_collider()
-				character.change_state(GlobalVariables.CharacterState.CROUCH)
+				character.change_state(Globals.CharacterState.CROUCH)
 				return true
 	elif get_input_direction_y() >= 0.2:
-		character.change_state(GlobalVariables.CharacterState.CROUCH)
+		character.change_state(Globals.CharacterState.CROUCH)
 		return true
 	return false
 	
@@ -436,11 +436,11 @@ func on_shorthop_timeout():
 		
 func check_stop_area_entered(_delta):
 	match character.atPlatformEdge:
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
 				character.stopAreaVelocity.x = move_toward(character.stopAreaVelocity.x, 0, character.groundStopForce * _delta)
 				character.velocity.x = 0
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			if inMovementLag || get_input_direction_x() == 0 && !character.pushingCharacter:
 				character.stopAreaVelocity.x = move_toward(character.stopAreaVelocity.x, 0, character.groundStopForce * _delta)
 				character.velocity.x = 0

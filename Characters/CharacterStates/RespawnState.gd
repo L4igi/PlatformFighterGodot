@@ -22,35 +22,35 @@ func _ready():
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	.setup(change_state, transitionBufferedInput, animationPlayer, character)
 	character.reset_all()
-	character.global_position = GlobalVariables.centerStage.respawnPositions[GlobalVariables.respawningCharacters.find(character)]
-	respawnTimer = GlobalVariables.create_timer("on_respawn_timeout", "RespawnTimer", self)
-	respawnPlatformTimer = GlobalVariables.create_timer("on_respawnPlatform_timeout", "RespawnPlatformTimer", self)
+	character.global_position = Globals.centerStage.respawnPositions[Globals.respawningCharacters.find(character)]
+	respawnTimer = Globals.create_timer("on_respawn_timeout", "RespawnTimer", self)
+	respawnPlatformTimer = Globals.create_timer("on_respawnPlatform_timeout", "RespawnPlatformTimer", self)
 	character.disableInput = true
-	GlobalVariables.respawningCharacters.append(character)
+	Globals.respawningCharacters.append(character)
 	
 func handle_input(_delta): 
 	if Input.is_action_just_pressed(character.down):
 		tempRevivalPlatform.queue_free()
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.jump):
 		tempRevivalPlatform.queue_free()
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
 		double_jump_handler()
 	elif Input.is_action_just_pressed(character.attack):
 		tempRevivalPlatform.queue_free()
-		character.change_state(GlobalVariables.CharacterState.ATTACKAIR)
+		character.change_state(Globals.CharacterState.ATTACKAIR)
 	elif Input.is_action_just_pressed(character.special):
 		tempRevivalPlatform.queue_free()
 		character.change_state(character.change_to_special_state())
 	elif Input.is_action_just_pressed(character.grab):
 		tempRevivalPlatform.queue_free()
-		character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+		character.change_state(Globals.CharacterState.AIRDODGE)
 	elif Input.is_action_just_pressed(character.left):
 		tempRevivalPlatform.queue_free()
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.right):
 		tempRevivalPlatform.queue_free()
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
 		
 func _physics_process(_delta):
 	if !stateDone: 
@@ -58,7 +58,7 @@ func _physics_process(_delta):
 			handle_input(_delta)
 	
 func create_respawn_timer(waitTimer):
-	GlobalVariables.start_timer(respawnTimer, waitTimer)
+	Globals.start_timer(respawnTimer, waitTimer)
 	
 func on_respawn_timeout():
 	character.tween.interpolate_property(character, "global_position", character.global_position, character.global_position + Vector2(0,1000) , invincibilityTimer.get_time_left()/2, Tween.TRANS_LINEAR, Tween.EASE_IN)
@@ -69,8 +69,8 @@ func on_respawn_timeout():
 	create_respawn_platform_timer(respawnPlatformFrames)
 
 func create_respawn_platform_timer(waitTime):
-	GlobalVariables.start_timer(respawnPlatformTimer, waitTime)
+	Globals.start_timer(respawnPlatformTimer, waitTime)
 	
 func on_respawnPlatform_timeout():
 	tempRevivalPlatform.queue_free()
-	character.change_state(GlobalVariables.CharacterState.AIR)
+	character.change_state(Globals.CharacterState.AIR)

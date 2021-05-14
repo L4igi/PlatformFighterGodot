@@ -44,8 +44,8 @@ func apply_attack_connected(attackingObjectArray, attackedObject):
 	var specialHitBoxEffects = attackingObjectArray[11]
 	var hitlagMultiplier = attackingObjectArray[12]
 	if attackedObject.is_in_group("Character"):
-		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
-		|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDSTUN:
+		if attackedObject.currentState == Globals.CharacterState.SHIELD\
+		|| attackedObject.currentState == Globals.CharacterState.SHIELDSTUN:
 			attackedObject.is_attacked_in_shield_calculations(attackDamage, shieldStunMultiplier, shieldDamage,  attackingObject.global_position)
 		elif attackedObject.perfectShieldActivated:
 			attackedObject.is_attacked_calculations_perfect_shield()
@@ -61,7 +61,7 @@ func calculate_hitlag_frames_connected(attackingObject, attackedObject, attackDa
 	var attackingObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackingObject.state.hitlagTimer.get_time_left()*60))
 	var attackedObjectHitlag = floor((attackDamage*0.65+4)*hitlagMultiplier + (attackedObject.state.hitlagTimer.get_time_left()*60))
 	if attackedObject.is_in_group("Character"):
-		if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
+		if attackedObject.currentState == Globals.CharacterState.SHIELD\
 		|| attackedObject.perfectShieldActivated:
 			attackingObjectHitlag = floor(attackingObjectHitlag * 0.67)
 			attackedObjectHitlag = floor(attackedObjectHitlag * 0.67)
@@ -72,13 +72,13 @@ func calculate_hitlag_frames_connected(attackingObject, attackedObject, attackDa
 	else: 
 		if attackingObject.is_in_group("Projectile")\
 		&& attackedObject.is_in_group("Character"):
-			if attackedObject.currentState == GlobalVariables.CharacterState.SHIELD\
-			|| attackedObject.currentState == GlobalVariables.CharacterState.SHIELDSTUN: 
+			if attackedObject.currentState == Globals.CharacterState.SHIELD\
+			|| attackedObject.currentState == Globals.CharacterState.SHIELDSTUN: 
 				attackingObject.shieldBounceCharacter = attackedObject
-				attackingObject.projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD
+				attackingObject.projectileSpecialInteraction = Globals.ProjectileInteractions.HITOTHERCHARACTERSHIELD
 			else:
-				attackingObject.projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER
-		GlobalVariables.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
+				attackingObject.projectileSpecialInteraction = Globals.ProjectileInteractions.HITOTHERCHARACTER
+		Globals.start_timer(attackingObject.state.hitlagTimer, attackingObjectHitlag)
 #	print("attackingObjectHitlag " +str(attackingObjectHitlag))
 #	print("attackedObjectHitlag " +str(attackedObjectHitlag))
 	if launchVelocity == 0 && weightLaunchVelocity == 0:
@@ -91,7 +91,7 @@ func calculate_hitlag_frames_connected(attackingObject, attackedObject, attackDa
 
 func manage_hurtbox_special_interactions_projectile(attackingObject, attackedObject, specialHitBoxEffects, attackDamage):
 	if attackedObject.is_in_group("Projectile"):
-		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+		var interactionTypeToUse = Globals.HitBoxInteractionType.CONNECTED
 		var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, interactionTypeToUse)
 		if attackedObjectInteracted:
 			return true
@@ -99,5 +99,5 @@ func manage_hurtbox_special_interactions_projectile(attackingObject, attackedObj
 	
 func manage_hurtbox_special_interactions_character(attackingObject, attackedObject, specialHitBoxEffects, attackDamage):
 	if attackingObject.is_in_group("Character") && attackedObject.is_in_group("Character"):
-		var interactionTypeToUse = GlobalVariables.HitBoxInteractionType.CONNECTED
+		var interactionTypeToUse = Globals.HitBoxInteractionType.CONNECTED
 		var attackedObjectInteracted = attackedObject.apply_special_hitbox_effect_attacked(specialHitBoxEffects, attackingObject, attackDamage, interactionTypeToUse)

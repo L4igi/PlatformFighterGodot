@@ -24,8 +24,8 @@ func set_base_stats(parentNode, originalOwner):
 	canHitSelf = true
 	deleteOnImpact = false
 	global_position = parentNode.interactionPoint.global_position
-	change_state(GlobalVariables.ProjectileState.HOLD)
-	ttlTimeoutAction = GlobalVariables.ProjectileState.IMPACT
+	change_state(Globals.ProjectileState.HOLD)
+	ttlTimeoutAction = Globals.ProjectileState.IMPACT
 	solidGroundInteractionThreasholdY = 550.0
 	projectileReflectVelocityY = -500
 	create_projectileTTL_timer(ttlFrames)
@@ -43,29 +43,29 @@ func _physics_process(_delta):
 
 func on_impact():
 	match projectileSpecialInteraction:
-		GlobalVariables.ProjectileInteractions.REFLECTED:
-			change_state(GlobalVariables.ProjectileState.SHOOT)
-		GlobalVariables.ProjectileInteractions.ABSORBED:
+		Globals.ProjectileInteractions.REFLECTED:
+			change_state(Globals.ProjectileState.SHOOT)
+		Globals.ProjectileInteractions.ABSORBED:
 			print("bomb on impact ABSORBED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.COUNTERED:
+		Globals.ProjectileInteractions.COUNTERED:
 			print("bomb on impact COUNTERED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.DESTROYED:
+		Globals.ProjectileInteractions.DESTROYED:
 			print("bomb on impact DESTROYED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.IMPACTED:
+		Globals.ProjectileInteractions.IMPACTED:
 			print("bomb on impact IMPACTED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.CONTINOUS:
+		Globals.ProjectileInteractions.CONTINOUS:
 			pass
-		GlobalVariables.ProjectileInteractions.CATCH:
+		Globals.ProjectileInteractions.CATCH:
 			print("bomb on impact Catch " +str(parentNode.name))
-			change_state(GlobalVariables.ProjectileState.HOLD)
-		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER:
+			change_state(Globals.ProjectileState.HOLD)
+		Globals.ProjectileInteractions.HITOTHERCHARACTER:
 			deleteOnImpact = true
 #			parentNode = null
 #			originalOwner = null
-			change_state(GlobalVariables.ProjectileState.IMPACT)
+			change_state(Globals.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
-		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
-			if currentState != GlobalVariables.ProjectileState.IMPACT:
+		Globals.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
+			if currentState != Globals.ProjectileState.IMPACT:
 				print("bomb hit other character shield " +str(interactionObject))
 				bounce_projectile_relative_to_object(interactionObject)
 				interactionObject = null
@@ -77,7 +77,7 @@ func on_impact():
 			deleteOnImpact = true
 			parentNode = null
 			originalOwner = null
-			change_state(GlobalVariables.ProjectileState.IMPACT)
+			change_state(Globals.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null
 
@@ -95,23 +95,23 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	var projectileInteracted = false
 	for effect in effectArray:
 		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
+			Globals.SpecialHitboxType.REVERSE:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.REFLECT:
+			Globals.SpecialHitboxType.REFLECT:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.ABSORB:
+			Globals.SpecialHitboxType.ABSORB:
 				pass
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.COUNTER:
+			Globals.SpecialHitboxType.COUNTER:
 				pass
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.FIRE:
+			Globals.SpecialHitboxType.FIRE:
 				projectileInteracted = true
 				projectileSpecialInteraction = null
-			GlobalVariables.SpecialHitboxType.BOMB:
-				projectileSpecialInteraction = GlobalVariables.ProjectileInteractions.CONTINOUS
+			Globals.SpecialHitboxType.BOMB:
+				projectileSpecialInteraction = Globals.ProjectileInteractions.CONTINOUS
 				projectileInteracted = true
 	return projectileInteracted
 

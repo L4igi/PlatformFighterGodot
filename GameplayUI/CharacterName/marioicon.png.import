@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/sprite_2.png-e4aff4aa58c16968df5d8f299bdbde08.stex"
+path="res://.import/marioicon.png-bba6805dafd64b28d339ca18aec27bfc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://UI/Stocks/sprite_2.png"
-dest_files=[ "res://.import/sprite_2.png-e4aff4aa58c16968df5d8f299bdbde08.stex" ]
+source_file="res://GameplayUI/CharacterName/marioicon.png"
+dest_files=[ "res://.import/marioicon.png-bba6805dafd64b28d339ca18aec27bfc.stex" ]
 
 [params]
 

@@ -22,7 +22,7 @@ func set_base_stats(parentNode, originalOwner):
 	grabAble = false
 	deleteOnImpact = true
 	global_position = parentNode.interactionPoint.global_position
-	ttlTimeoutAction = GlobalVariables.ProjectileState.IMPACT
+	ttlTimeoutAction = Globals.ProjectileState.IMPACT
 	solidGroundInteractionThreasholdY = 550.0
 	projectileReflectVelocityY = 0
 	ttlFrames = 240
@@ -33,7 +33,7 @@ func set_base_stats(parentNode, originalOwner):
 	addChargeShieldDamage = 2.0
 	addChargeKnockBackGrowth = 20.0
 	set_collision_mask_bit(1,false)
-	change_state(GlobalVariables.ProjectileState.CHARGE)
+	change_state(Globals.ProjectileState.CHARGE)
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)
@@ -48,27 +48,27 @@ func _physics_process(_delta):
 
 func on_impact():
 	match projectileSpecialInteraction:
-		GlobalVariables.ProjectileInteractions.REFLECTED:
-			change_state(GlobalVariables.ProjectileState.SHOOT)
-		GlobalVariables.ProjectileInteractions.ABSORBED:
+		Globals.ProjectileInteractions.REFLECTED:
+			change_state(Globals.ProjectileState.SHOOT)
+		Globals.ProjectileInteractions.ABSORBED:
 			print("bomb on impact ABSORBED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.COUNTERED:
+		Globals.ProjectileInteractions.COUNTERED:
 			print("bomb on impact COUNTERED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.DESTROYED:
+		Globals.ProjectileInteractions.DESTROYED:
 			print("bomb on impact DESTROYED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.IMPACTED:
+		Globals.ProjectileInteractions.IMPACTED:
 			print("bomb on impact IMPACTED " +str(parentNode.name))
-		GlobalVariables.ProjectileInteractions.CONTINOUS:
+		Globals.ProjectileInteractions.CONTINOUS:
 			pass
-		GlobalVariables.ProjectileInteractions.CATCH:
+		Globals.ProjectileInteractions.CATCH:
 			pass
-		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTER:
+		Globals.ProjectileInteractions.HITOTHERCHARACTER:
 			deleteOnImpact = true
 #			parentNode = null
 #			originalOwner = null
-			change_state(GlobalVariables.ProjectileState.IMPACT)
+			change_state(Globals.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
-		GlobalVariables.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
+		Globals.ProjectileInteractions.HITOTHERCHARACTERSHIELD:
 			pass
 		_:
 #			print("bomb on impact " +str(interactionObject.name))
@@ -76,7 +76,7 @@ func on_impact():
 			deleteOnImpact = true
 			parentNode = null
 			originalOwner = null
-			change_state(GlobalVariables.ProjectileState.IMPACT)
+			change_state(Globals.ProjectileState.IMPACT)
 			projectilecollider.set_deferred("disabled", true)
 	projectileSpecialInteraction = null
 
@@ -100,21 +100,21 @@ func apply_special_hitbox_effect_attacked(effectArray, interactionObject, attack
 	var projectileInteracted = false
 	for effect in effectArray:
 		match effect: 
-			GlobalVariables.SpecialHitboxType.REVERSE:
+			Globals.SpecialHitboxType.REVERSE:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.REFLECT:
+			Globals.SpecialHitboxType.REFLECT:
 				if handle_effect_reflect_attacked(interactionType, interactionObject, attackingDamage):
 					projectileInteracted = true
-			GlobalVariables.SpecialHitboxType.ABSORB:
+			Globals.SpecialHitboxType.ABSORB:
 				pass
 #				handle_effect_absorb_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.COUNTER:
+			Globals.SpecialHitboxType.COUNTER:
 				pass
 #				handle_effect_counter_attacking(interactionType, attackedObject, attackingDamage)
-			GlobalVariables.SpecialHitboxType.FIRE:
+			Globals.SpecialHitboxType.FIRE:
 				pass
-			GlobalVariables.SpecialHitboxType.BOMB:
+			Globals.SpecialHitboxType.BOMB:
 				pass
 	return projectileInteracted
 

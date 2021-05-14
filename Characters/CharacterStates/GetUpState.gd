@@ -7,7 +7,7 @@ func _ready():
 
 func _process(delta):
 	var direction = 1
-	if character.currentMoveDirection == GlobalVariables.MoveDirection.LEFT: 
+	if character.currentMoveDirection == Globals.MoveDirection.LEFT: 
 		direction = -1
 	manage_getup_animation(character.getUpType, direction)
 	character.getUpType = null
@@ -31,26 +31,26 @@ func _physics_process(_delta):
 func manage_getup_animation(getUpType, direction):
 	character.getUpType = getUpType
 	match getUpType: 
-		GlobalVariables.CharacterAnimations.ROLLGETUP:
+		Globals.CharacterAnimations.ROLLGETUP:
 			play_animation("roll_getup")
-		GlobalVariables.CharacterAnimations.NORMALGETUP:
+		Globals.CharacterAnimations.NORMALGETUP:
 			play_animation("normal_getup")
-		GlobalVariables.CharacterAnimations.ATTACKGETUP:
+		Globals.CharacterAnimations.ATTACKGETUP:
 			play_attack_animation("attack_getup")
-			character.currentAttack = GlobalVariables.CharacterAnimations.ATTACKGETUP
+			character.currentAttack = Globals.CharacterAnimations.ATTACKGETUP
 
 
 func check_stop_area_entered(_delta):
 	match character.atPlatformEdge:
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			match character.currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					pass
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					character.velocity.x = 0
-		GlobalVariables.MoveDirection.LEFT:
+		Globals.MoveDirection.LEFT:
 			match character.currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					character.velocity.x = 0
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					pass

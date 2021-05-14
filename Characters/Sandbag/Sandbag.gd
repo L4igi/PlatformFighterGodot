@@ -7,15 +7,15 @@ extends "res://Characters/Character.gd"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	up = GlobalVariables.controlsP2.get("up")
-	down = GlobalVariables.controlsP2.get("down")
-	left = GlobalVariables.controlsP2.get("left")
-	right = GlobalVariables.controlsP2.get("right")
-	shield = GlobalVariables.controlsP2.get("shield")
-	jump = GlobalVariables.controlsP2.get("jump")
-	attack = GlobalVariables.controlsP2.get("attack")
-	shield = GlobalVariables.controlsP2.get("shield")
-	grab = GlobalVariables.controlsP2.get("grab")
+	up = Globals.controlsP2.get("up")
+	down = Globals.controlsP2.get("down")
+	left = Globals.controlsP2.get("left")
+	right = Globals.controlsP2.get("right")
+	shield = Globals.controlsP2.get("shield")
+	jump = Globals.controlsP2.get("jump")
+	attack = Globals.controlsP2.get("attack")
+	shield = Globals.controlsP2.get("shield")
+	grab = Globals.controlsP2.get("grab")
 	
 	set_base_stats()
 	
@@ -31,9 +31,9 @@ func set_base_stats():
 
 func apply_attack_movement_stats(step = 0):
 	match currentAttack:
-		GlobalVariables.CharacterAnimations.DAIR: 
+		Globals.CharacterAnimations.DAIR: 
 			manage_dair(step)
-		GlobalVariables.CharacterAnimations.DASHATTACK:
+		Globals.CharacterAnimations.DASHATTACK:
 			manage_dash_attack(step)
 	
 func manage_dair(step):

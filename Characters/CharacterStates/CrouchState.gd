@@ -6,7 +6,7 @@ var dropDownFrames = 2.0
 
 func _ready():
 	play_animation("crouch")
-	dropDownTimer = GlobalVariables.create_timer("on_dropDown_timeout", "DropDownTimer", self)
+	dropDownTimer = Globals.create_timer("on_dropDown_timeout", "DropDownTimer", self)
 	character.disableInput = false
 	if character.onSolidGround && character.onSolidGround.is_in_group("Platform"):
 		create_dropDown_timer(dropDownFrames)
@@ -24,7 +24,7 @@ func handle_input(_delta):
 		if Input.is_action_just_pressed(character.jump):
 			process_shorthop_attack()
 		else:
-			character.change_state(GlobalVariables.CharacterState.ATTACKGROUND)
+			character.change_state(Globals.CharacterState.ATTACKGROUND)
 	elif Input.is_action_just_pressed(character.special):
 		var changeToState = character.change_to_special_state()
 		character.change_state(changeToState)
@@ -32,9 +32,9 @@ func handle_input(_delta):
 		bufferedInput = null
 		create_shortHop_timer()
 	elif dropDownTimer.get_time_left() && Input.is_action_just_pressed(character.shield):
-		character.change_state(GlobalVariables.CharacterState.AIRDODGE)
+		character.change_state(Globals.CharacterState.AIRDODGE)
 	elif !dropDownTimer.get_time_left() && Input.is_action_just_pressed(character.shield):
-		character.change_state(GlobalVariables.CharacterState.SHIELD)
+		character.change_state(Globals.CharacterState.SHIELD)
 
 func handle_input_disabled(_delta):
 	if !shortHopTimer.get_time_left()\
@@ -49,16 +49,16 @@ func _physics_process(_delta):
 		if !character.disableInput:
 			handle_input(_delta)
 			if get_input_direction_y() <= 0.3:
-				character.change_state(GlobalVariables.CharacterState.GROUND)
+				character.change_state(Globals.CharacterState.GROUND)
 		else:
 			handle_input_disabled(_delta)
 	
 func create_dropDown_timer(waitTime):
-	GlobalVariables.start_timer(dropDownTimer, waitTime)
+	Globals.start_timer(dropDownTimer, waitTime)
 
 func on_dropDown_timeout():
 	if get_input_direction_y() >= 0.8:
 		character.create_platformCollisionDisabled_timer(character.platformCollisionDisableFrames)
 		character.jumpCount = 1
 		character.set_collision_mask_bit(1,false)
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)

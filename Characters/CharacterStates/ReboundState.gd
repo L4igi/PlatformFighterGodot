@@ -7,7 +7,7 @@ var reboundFrames = 30.0
 
 func _ready():
 	hitlagTimer.stop()
-	reboundTimer = GlobalVariables.create_timer("on_rebound_timeout", "ReboundTimer", self)
+	reboundTimer = Globals.create_timer("on_rebound_timeout", "ReboundTimer", self)
 	create_rebound_timer(reboundFrames)
 	play_animation("rebound")
 	
@@ -36,11 +36,11 @@ func _physics_process(_delta):
 		process_movement_physics(_delta)
 		if check_in_air():
 			character.disableInput = false
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)
 
 func create_rebound_timer(waitTime):
-	GlobalVariables.start_timer(reboundTimer, waitTime)
+	Globals.start_timer(reboundTimer, waitTime)
 
 func on_rebound_timeout():
 	character.disableInput = false
-	character.change_state(GlobalVariables.CharacterState.GROUND)
+	character.change_state(Globals.CharacterState.GROUND)

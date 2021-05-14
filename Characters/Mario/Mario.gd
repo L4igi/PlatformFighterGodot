@@ -11,13 +11,13 @@ func _ready():
 	characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
 	characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
 	#air to ground transitions
-	moveAirGroundTransition[GlobalVariables.CharacterAnimations.DAIR] = 1
+	moveAirGroundTransition[Globals.CharacterAnimations.DAIR] = 1
 	set_base_stats()
 	#set state factory according to character
 	state_factory = MarioStateFactory.new()
 #	if !onSolidGround:
-#		change_state(GlobalVariables.CharacterState.AIR)
-	change_state(GlobalVariables.CharacterState.GAMESTART)
+#		change_state(Globals.CharacterState.AIR)
+	change_state(Globals.CharacterState.GAMESTART)
 #	animationPlayer = $AnimatedSprite/AnimationPlayer
 	
 func set_base_stats():
@@ -31,20 +31,20 @@ func set_base_stats():
 
 func apply_attack_animation_steps(step = 0):
 	match currentAttack:
-		GlobalVariables.CharacterAnimations.DAIR: 
+		Globals.CharacterAnimations.DAIR: 
 			manage_dair(step)
-		GlobalVariables.CharacterAnimations.DASHATTACK:
+		Globals.CharacterAnimations.DASHATTACK:
 			manage_dash_attack(step)
 			
 func apply_special_animation_steps(step = 0):
 	match currentAttack:
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
+		Globals.CharacterAnimations.UPSPECIAL:
 			manage_up_special(step)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+		Globals.CharacterAnimations.DOWNSPECIAL:
 			manage_down_special(step)
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+		Globals.CharacterAnimations.SIDESPECIAL:
 			manage_side_special(step)
-		GlobalVariables.CharacterAnimations.NSPECIAL:
+		Globals.CharacterAnimations.NSPECIAL:
 			manage_neutral_special_charge_shot(step)
 	
 func manage_dair(step):
@@ -75,9 +75,9 @@ func manage_up_special(step = 0):
 			#frame 6 start upwards momentum 
 			enableSpecialInput = true
 			match currentMoveDirection:
-				GlobalVariables.MoveDirection.LEFT:
+				Globals.MoveDirection.LEFT:
 					velocity = Vector2(-upSpecialSpeed.x, -upSpecialSpeed.y)
-				GlobalVariables.MoveDirection.RIGHT:
+				Globals.MoveDirection.RIGHT:
 					velocity = Vector2(upSpecialSpeed.x, -upSpecialSpeed.y)
 			
 func manage_neutral_special(step = 0):
@@ -88,7 +88,7 @@ func manage_neutral_special(step = 0):
 		1:
 			var newFireBall = fireBall.instance()
 #			newFireBall.set_base_stats(self, self)
-			GlobalVariables.currentStage.call_deferred("add_child" ,newFireBall)
+			Globals.currentStage.call_deferred("add_child" ,newFireBall)
 			newFireBall.call_deferred("set_base_stats", self, self)
 		2:
 			pass
@@ -132,7 +132,7 @@ func manage_neutral_special_charge_shot(step = 0):
 				newChargeShot.call_deferred("set_base_stats", self, self)
 			else:
 				if !chargingProjectile.check_fully_charged(0):
-					chargingProjectile.change_state(GlobalVariables.ProjectileState.CHARGE)
+					chargingProjectile.change_state(Globals.ProjectileState.CHARGE)
 		2:
 			if chargingProjectile && !chargingProjectile.check_fully_charged(1):
 				animationPlayer.stop(false)
@@ -169,85 +169,85 @@ func change_to_special_state():
 		#changes for each character, if item is held and this moves would spawn new item throw current item instead
 	if onSolidGround:
 		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-			changeToState = GlobalVariables.CharacterState.ATTACKGROUND
+			changeToState = Globals.CharacterState.ATTACKGROUND
 		else:
-			changeToState = GlobalVariables.CharacterState.SPECIALGROUND
+			changeToState = Globals.CharacterState.SPECIALGROUND
 	else:
 		if grabbedItem && get_input_direction_x() == 0 && get_input_direction_y() == 0:
-			changeToState = GlobalVariables.CharacterState.ATTACKAIR
+			changeToState = Globals.CharacterState.ATTACKAIR
 		else:
-			changeToState = GlobalVariables.CharacterState.SPECIALAIR
+			changeToState = Globals.CharacterState.SPECIALAIR
 	return changeToState
 
 #func check_special_animation_steps():
 #	match currentAttack:
-#		GlobalVariables.CharacterAnimations.UPSPECIAL:
+#		Globals.CharacterAnimations.UPSPECIAL:
 #			match upSpecialAnimationStep:
 #				0:
-#					moveAirGroundTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
-#					moveGroundAirTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
+#					moveAirGroundTransition[Globals.CharacterAnimations.UPSPECIAL] = 1
+#					moveGroundAirTransition[Globals.CharacterAnimations.UPSPECIAL] = 1
 #				1:
-#					moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.UPSPECIAL)
-#					moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.UPSPECIAL)
-#		GlobalVariables.CharacterAnimations.NSPECIAL:
+#					moveAirGroundTransition.erase(Globals.CharacterAnimations.UPSPECIAL)
+#					moveGroundAirTransition.erase(Globals.CharacterAnimations.UPSPECIAL)
+#		Globals.CharacterAnimations.NSPECIAL:
 #			match neutralSpecialAnimationStep:
 #				0:
-#					moveAirGroundTransition[GlobalVariables.CharacterAnimations.NSPECIAL] = 1
-#					moveGroundAirTransition[GlobalVariables.CharacterAnimations.NSPECIAL] = 1
+#					moveAirGroundTransition[Globals.CharacterAnimations.NSPECIAL] = 1
+#					moveGroundAirTransition[Globals.CharacterAnimations.NSPECIAL] = 1
 #				2:
-#					moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.NSPECIAL)
-#					moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.NSPECIAL)
-#		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
+#					moveAirGroundTransition.erase(Globals.CharacterAnimations.NSPECIAL)
+#					moveGroundAirTransition.erase(Globals.CharacterAnimations.NSPECIAL)
+#		Globals.CharacterAnimations.DOWNSPECIAL:
 #			match downSpecialAnimationStep:
 #				0:
-#					moveAirGroundTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
-#					moveGroundAirTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
+#					moveAirGroundTransition[Globals.CharacterAnimations.DOWNSPECIAL] = 1
+#					moveGroundAirTransition[Globals.CharacterAnimations.DOWNSPECIAL] = 1
 #				2:
-#					moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.DOWNSPECIAL)
-#					moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.DOWNSPECIAL)
-#		GlobalVariables.CharacterAnimations.SIDESPECIAL:
+#					moveAirGroundTransition.erase(Globals.CharacterAnimations.DOWNSPECIAL)
+#					moveGroundAirTransition.erase(Globals.CharacterAnimations.DOWNSPECIAL)
+#		Globals.CharacterAnimations.SIDESPECIAL:
 #			match sideSpecialAnimationStep:
 #				0:
-#					moveAirGroundTransition[GlobalVariables.CharacterAnimations.SIDESPECIAL] = 1
-#					moveGroundAirTransition[GlobalVariables.CharacterAnimations.SIDESPECIAL] = 1
+#					moveAirGroundTransition[Globals.CharacterAnimations.SIDESPECIAL] = 1
+#					moveGroundAirTransition[Globals.CharacterAnimations.SIDESPECIAL] = 1
 #				1:
-#					moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.SIDESPECIAL)
-#					moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.SIDESPECIAL)
+#					moveAirGroundTransition.erase(Globals.CharacterAnimations.SIDESPECIAL)
+#					moveGroundAirTransition.erase(Globals.CharacterAnimations.SIDESPECIAL)
 
 func initialize_special_animation_steps():
 	match currentAttack:
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
-			moveAirGroundTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
-			moveGroundAirTransition[GlobalVariables.CharacterAnimations.UPSPECIAL] = 1
-		GlobalVariables.CharacterAnimations.NSPECIAL:
-			moveAirGroundTransition[GlobalVariables.CharacterAnimations.NSPECIAL] = 1
-			moveGroundAirTransition[GlobalVariables.CharacterAnimations.NSPECIAL] = 1
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			moveAirGroundTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
-			moveGroundAirTransition[GlobalVariables.CharacterAnimations.DOWNSPECIAL] = 1
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
-			moveAirGroundTransition[GlobalVariables.CharacterAnimations.SIDESPECIAL] = 1
-			moveGroundAirTransition[GlobalVariables.CharacterAnimations.SIDESPECIAL] = 1
+		Globals.CharacterAnimations.UPSPECIAL:
+			moveAirGroundTransition[Globals.CharacterAnimations.UPSPECIAL] = 1
+			moveGroundAirTransition[Globals.CharacterAnimations.UPSPECIAL] = 1
+		Globals.CharacterAnimations.NSPECIAL:
+			moveAirGroundTransition[Globals.CharacterAnimations.NSPECIAL] = 1
+			moveGroundAirTransition[Globals.CharacterAnimations.NSPECIAL] = 1
+		Globals.CharacterAnimations.DOWNSPECIAL:
+			moveAirGroundTransition[Globals.CharacterAnimations.DOWNSPECIAL] = 1
+			moveGroundAirTransition[Globals.CharacterAnimations.DOWNSPECIAL] = 1
+		Globals.CharacterAnimations.SIDESPECIAL:
+			moveAirGroundTransition[Globals.CharacterAnimations.SIDESPECIAL] = 1
+			moveGroundAirTransition[Globals.CharacterAnimations.SIDESPECIAL] = 1
 
 func finish_special_animation(step):
 	match currentAttack:
-		GlobalVariables.CharacterAnimations.UPSPECIAL:
-			moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.UPSPECIAL)
-			moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.UPSPECIAL)
-			change_state(GlobalVariables.CharacterState.HELPLESS)
+		Globals.CharacterAnimations.UPSPECIAL:
+			moveAirGroundTransition.erase(Globals.CharacterAnimations.UPSPECIAL)
+			moveGroundAirTransition.erase(Globals.CharacterAnimations.UPSPECIAL)
+			change_state(Globals.CharacterState.HELPLESS)
 			return
-		GlobalVariables.CharacterAnimations.NSPECIAL:
-			moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.NSPECIAL)
-			moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.NSPECIAL)
-		GlobalVariables.CharacterAnimations.DOWNSPECIAL:
-			moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.DOWNSPECIAL)
-			moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.DOWNSPECIAL)
-		GlobalVariables.CharacterAnimations.SIDESPECIAL:
-			moveAirGroundTransition.erase(GlobalVariables.CharacterAnimations.SIDESPECIAL)
-			moveGroundAirTransition.erase(GlobalVariables.CharacterAnimations.SIDESPECIAL)
+		Globals.CharacterAnimations.NSPECIAL:
+			moveAirGroundTransition.erase(Globals.CharacterAnimations.NSPECIAL)
+			moveGroundAirTransition.erase(Globals.CharacterAnimations.NSPECIAL)
+		Globals.CharacterAnimations.DOWNSPECIAL:
+			moveAirGroundTransition.erase(Globals.CharacterAnimations.DOWNSPECIAL)
+			moveGroundAirTransition.erase(Globals.CharacterAnimations.DOWNSPECIAL)
+		Globals.CharacterAnimations.SIDESPECIAL:
+			moveAirGroundTransition.erase(Globals.CharacterAnimations.SIDESPECIAL)
+			moveGroundAirTransition.erase(Globals.CharacterAnimations.SIDESPECIAL)
 	.finish_special_animation(step)
 
 
 func manage_throw_item_special_moves():
-	currentAttack = GlobalVariables.CharacterAnimations.THROWITEMFORWARD
+	currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 	state.play_attack_animation("throw_item_forward")

@@ -9,7 +9,7 @@ var edgeDropTimeHigh = 150.0
 var edgeRegrabFrames = 50.0
 
 func _ready():
-	edgeDropTimer = GlobalVariables.create_timer("on_edgeDrop_timeout", "EdgeDropTimer", self)
+	edgeDropTimer = Globals.create_timer("on_edgeDrop_timeout", "EdgeDropTimer", self)
 	var edgeDamagePercent = 120
 	if character.damagePercent < edgeDamagePercent: 
 		edgeDamagePercent = character.damagePercent
@@ -39,14 +39,14 @@ func handle_input(_delta):
 		character.onEdge = false
 #		character.velocity.x = -character.walkMaxSpeed/2
 		character.disableInput = false
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
 	elif Input.is_action_just_pressed(character.jump) || Input.is_action_just_pressed(character.up):
-		character.getUpType = GlobalVariables.CharacterAnimations.LEDGEJUMPGETUP
+		character.getUpType = Globals.CharacterAnimations.LEDGEJUMPGETUP
 		if character.global_position.x < character.snappedEdge.global_position.x:
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
 		elif character.global_position.x > character.snappedEdge.global_position.x:
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
-		character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+		character.change_state(Globals.CharacterState.EDGEGETUP)
 #		disable_invincibility_edge_action()
 #		character.snappedEdge._on_EdgeSnap_area_exited(character.collisionAreaShape.get_parent())
 #		character.snappedEdge = null
@@ -62,11 +62,11 @@ func handle_input(_delta):
 			character.onEdge = false
 			character.velocity.x = -character.walkMaxSpeed/2
 			character.disableInput = false
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)
 		else:
-			character.getUpType = GlobalVariables.CharacterAnimations.LEDGENORMALGETUP
+			character.getUpType = Globals.CharacterAnimations.LEDGENORMALGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
-			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+			character.change_state(Globals.CharacterState.EDGEGETUP)
 	elif Input.is_action_just_pressed(character.right):
 		disable_invincibility_edge_action()
 		if character.global_position.x > character.snappedEdge.global_position.x:
@@ -75,31 +75,31 @@ func handle_input(_delta):
 			character.onEdge = false
 			character.velocity.x = character.walkMaxSpeed/2
 			character.disableInput = false
-			character.change_state(GlobalVariables.CharacterState.AIR)
+			character.change_state(Globals.CharacterState.AIR)
 		else: 
-			character.getUpType = GlobalVariables.CharacterAnimations.LEDGENORMALGETUP
+			character.getUpType = Globals.CharacterAnimations.LEDGENORMALGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
-			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+			character.change_state(Globals.CharacterState.EDGEGETUP)
 	elif Input.is_action_just_pressed(character.shield):
 		disable_invincibility_edge_action()
 		if character.global_position > character.snappedEdge.global_position:
-			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEROLLGETUP
+			character.getUpType = Globals.CharacterAnimations.LEDGEROLLGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2((character.get_character_size()).x*2,(character.get_character_size()).y)
-			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+			character.change_state(Globals.CharacterState.EDGEGETUP)
 		else: 
-			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEROLLGETUP
+			character.getUpType = Globals.CharacterAnimations.LEDGEROLLGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-(character.get_character_size()).x*2,(character.get_character_size()).y)
-			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+			character.change_state(Globals.CharacterState.EDGEGETUP)
 	elif Input.is_action_just_pressed(character.attack):
 		disable_invincibility_edge_action()
 		if character.global_position > character.snappedEdge.global_position:
-			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEATTACKGETUP
+			character.getUpType = Globals.CharacterAnimations.LEDGEATTACKGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(character.get_character_size().x/4, character.get_character_size().y)
-			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+			character.change_state(Globals.CharacterState.EDGEGETUP)
 		else:
-			character.getUpType = GlobalVariables.CharacterAnimations.LEDGEATTACKGETUP
+			character.getUpType = Globals.CharacterAnimations.LEDGEATTACKGETUP
 			character.characterTargetGetUpPosition = character.snappedEdge.global_position - Vector2(-character.get_character_size().x/4, character.get_character_size().y)
-			character.change_state(GlobalVariables.CharacterState.EDGEGETUP)
+			character.change_state(Globals.CharacterState.EDGEGETUP)
 	if !character.edgeRegrabTimer.get_time_left() && character.snappedEdge == null: 
 		character.create_edgeRegrab_timer(edgeRegrabFrames)
 
@@ -111,7 +111,7 @@ func disable_invincibility_edge_action():
 	character.enable_disable_hurtboxes(true)
 
 func create_edgeDrop_timer(waitTime):
-	GlobalVariables.start_timer(edgeDropTimer, waitTime)
+	Globals.start_timer(edgeDropTimer, waitTime)
 
 func on_edgeDrop_timeout():
 	character.create_edgeRegrab_timer(edgeRegrabFrames)
@@ -121,11 +121,11 @@ func on_edgeDrop_timeout():
 	character.disableInput = false
 	disable_invincibility_edge_action()
 	match character.currentMoveDirection:
-		GlobalVariables.MoveDirection.LEFT: 
+		Globals.MoveDirection.LEFT: 
 			character.velocity.x = character.walkMaxSpeed/2
-		GlobalVariables.MoveDirection.RIGHT:
+		Globals.MoveDirection.RIGHT:
 			character.velocity.x = -character.walkMaxSpeed/2
-	character.change_state(GlobalVariables.CharacterState.AIR)
+	character.change_state(Globals.CharacterState.AIR)
 
 func on_invincibility_timeout():
 	.on_invincibility_timeout()
@@ -141,10 +141,10 @@ func on_push_off_edge():
 		character.disableInput = false
 		disable_invincibility_edge_action()
 		match character.currentMoveDirection:
-			GlobalVariables.MoveDirection.LEFT: 
+			Globals.MoveDirection.LEFT: 
 				character.velocity.x = character.walkMaxSpeed
 				character.velocity.y = character.walkMaxSpeed*2
-			GlobalVariables.MoveDirection.RIGHT:
+			Globals.MoveDirection.RIGHT:
 				character.velocity.x = -character.walkMaxSpeed
 				character.velocity.y = -character.walkMaxSpeed*2
-		character.change_state(GlobalVariables.CharacterState.AIR)
+		character.change_state(Globals.CharacterState.AIR)
