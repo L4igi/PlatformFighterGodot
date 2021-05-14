@@ -401,6 +401,8 @@ func is_attacked_calculations(damage, hitStun,launchAngle, launchVectorInversion
 	lastBounceCollision = null
 	hitsTaken += 1
 	damagePercent += damage
+	#set gui percent 
+	characterGUI.set_damage_percent(damagePercent)
 	if weightLaunchVelocity == 0:
 		if state.hitlagAttackedTimer.get_time_left():
 			attackedCalculatedVelocity += calculate_attack_knockback(damage, launchVelocity, knockBackScaling)
@@ -1110,6 +1112,9 @@ func apply_charge_projectile_pushback(pushVelocity):
 				velocity.x += pushVelocity
 			GlobalVariables.MoveDirection.RIGHT:
 				velocity.x -= pushVelocity
+				
+func start_game():
+	change_state(GlobalVariables.CharacterState.GROUND)
 
 func reset_all():
 	damagePercent = 0.0
@@ -1234,4 +1239,6 @@ func reset_all():
 	multiObjectsConnected = false
 	#charges can be cannceled with multiple actions, save action pressed and execute after cancel animation finished
 	cancelChargeTransition = null
-	
+	#set character gui
+	characterGUI.set_damage_percent(0.0)
+	characterGUI.remove_stock()

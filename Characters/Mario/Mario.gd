@@ -15,8 +15,9 @@ func _ready():
 	set_base_stats()
 	#set state factory according to character
 	state_factory = MarioStateFactory.new()
-	if !onSolidGround:
-		change_state(GlobalVariables.CharacterState.AIR)
+#	if !onSolidGround:
+#		change_state(GlobalVariables.CharacterState.AIR)
+	change_state(GlobalVariables.CharacterState.GAMESTART)
 #	animationPlayer = $AnimatedSprite/AnimationPlayer
 	
 func set_base_stats():

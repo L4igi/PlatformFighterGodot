@@ -18,7 +18,7 @@ var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmas
 
 var specialAnimationList = ["neutralspecial", "downspecial", "sidespecial", "upspecial", "counter", "cancel_charge"]
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND, COUNTER, RESPAWN}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND, COUNTER, RESPAWN, GAMESTART}
 
 enum MoveDirection {LEFT, RIGHT}
 
@@ -38,6 +38,10 @@ enum ProjectileState {SHOOT, IMPACT, CONTROL, DESTROYED, HOLD, CHARGE, IDLE}
 enum ProjectileAnimations {SHOOT, IMPACT}
 
 var respawningCharacters = []
+
+var gameStartFrames = 180
+
+var roundTime = 6000
 
 var controlsP1 = {
 	"up": "Up1",

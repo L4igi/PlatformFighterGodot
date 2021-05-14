@@ -64,4 +64,18 @@ position = Vector2( 608, 288 )
 
 [node name="GameplayGUI" parent="." instance=ExtResource( 3 )]
 
+[node name="SpawnPoints" type="Node" parent="."]
+
+[node name="SpawnPoint1" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 280, 520 )
+
+[node name="SpawnPoint2" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 936, 520 )
+
+[node name="SpawnPoint3" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 280, 376 )
+
+[node name="SpawnPoint4" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 936, 376 )
+
 [connection signal="body_entered" from="BlastZones" to="BlastZones" method="_on_TeleportToStart_body_entered"]

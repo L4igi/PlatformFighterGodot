@@ -6,17 +6,23 @@ onready var gameplayGUI = get_node("GameplayGUI")
 
 var characterList = []
 
+onready var spawnPoints = get_node("SpawnPoints").get_children()
+
+var gameStartTimer = null
+
 #var characters = [$Mario, $Dark_Mario]
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GlobalVariables.currentStage = self
 	spawn_characters()
 	setup_gui()
+	gameStartTimer = GlobalVariables.create_timer("on_gameStart_timeout", "GameStartTimer", self)
+	create_gamestart_timer()
 	
 func spawn_characters():
 	var char1 = characterMario.instance()
 	self.add_child(char1)
-	char1.global_position = Vector2(300, -500)
+	char1.global_position = spawnPoints[0].global_position
 	char1.set_name("Mario")
 	char1.characterName = "Mario"
 	char1.stocks = 3
@@ -25,7 +31,9 @@ func spawn_characters():
 	setup_controls_characters(char1, GlobalVariables.controlsP1)
 	var char2 = characterMario.instance()
 	self.add_child(char2)
-	char2.global_position = Vector2(700, -500)
+	char2.global_position = spawnPoints[1].global_position
+	char2.currentMoveDirection = GlobalVariables.MoveDirection.LEFT
+	char2.mirror_areas()
 	char2.set_name("DarkMario")
 	char2.characterName = "DarkMario"
 	char2.stocks = 3
@@ -50,3 +58,13 @@ func setup_controls_characters(character, globalControls):
 	character.shield = globalControls.get("shield")
 	character.grab = globalControls.get("grab")
 	character.special = globalControls.get("special")
+
+
+func create_gamestart_timer():
+	GlobalVariables.start_timer(gameStartTimer, GlobalVariables.gameStartFrames)
+	gameplayGUI.gameStartOverlay.gameStartTimer = gameStartTimer
+	
+func on_gameStart_timeout():
+	gameplayGUI.set_timer(GlobalVariables.roundTime)
+	for character in characterList:
+		character.start_game()

@@ -75,6 +75,11 @@ _global_script_classes=[ {
 "path": "res://Projectiles/FireBall/FireBall.gd"
 }, {
 "base": "State",
+"class": "GameStartState",
+"language": "GDScript",
+"path": "res://Characters/CharacterStates/GameStartState.gd"
+}, {
+"base": "State",
 "class": "GetUpState",
 "language": "GDScript",
 "path": "res://Characters/CharacterStates/GetUpState.gd"
@@ -248,6 +253,7 @@ _global_script_class_icons={
 "EdgeGetUpState": "",
 "EdgeState": "",
 "FireBall": "",
+"GameStartState": "",
 "GetUpState": "",
 "GrabState": "",
 "GroundState": "",
