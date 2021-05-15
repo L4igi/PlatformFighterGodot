@@ -219,3 +219,9 @@ func check_game_set():
 		Engine.set_time_scale(0.25)
 		currentStage.gameplayGUI.game_set()
 	
+#result data 
+var resultData = []
+
+func create_result_data():
+	var newResultData = ResultData.new()
+	return newResultData

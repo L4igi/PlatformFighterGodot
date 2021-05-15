@@ -4,7 +4,7 @@ class_name DefeatState
 
 
 func _ready():
-	character.get_parent().remove_child(character)
+	character.set_process(false)
 	Globals.check_game_set()
 	
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
