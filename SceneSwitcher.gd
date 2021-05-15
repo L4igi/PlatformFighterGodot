@@ -47,12 +47,12 @@ func _process(time):
 			loader = null
 			set_new_scene(resource)
 			break
-		elif err == OK:
-			update_progress()
-		else: # error during loading
-#			show_error()
-			loader = null
-			break
+#		elif err == OK:
+#			update_progress()
+#		else: # error during loading
+##			show_error()
+#			loader = null
+#			break
 			
 func update_progress():
 	var progress = float(loader.get_stage()) / loader.get_stage_count()

@@ -33,7 +33,8 @@ func _init():
 		Globals.CharacterState.COUNTER: CounterState, 
 		Globals.CharacterState.RESPAWN: RespawnState, 
 		Globals.CharacterState.GAMESTART: GameStartState, 
-		Globals.CharacterState.DEFEAT: DefeatState
+		Globals.CharacterState.DEFEAT: DefeatState, 
+		Globals.CharacterState.GAMEOVER: GameOverState
 }
 
 func get_state(state_name):

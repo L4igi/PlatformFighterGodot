@@ -1,28 +1,64 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Results/CharacterResult.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Results/ResultScreenUI.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Results/ResultScreen.gd" type="Script" id=4]
 
-[node name="ResultScreen" type="HBoxContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
+[sub_resource type="Animation" id=1]
+resource_name = "slide_in_overlay"
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/path = NodePath("Triangle:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 216 ), Vector2( 0, 0 ) ]
 }
 
-[node name="CharacterResult" parent="." instance=ExtResource( 1 )]
-margin_left = 77.0
-margin_top = 100.0
-margin_right = 327.0
-margin_bottom = 700.0
+[node name="ResultScreen" type="Node2D"]
+script = ExtResource( 4 )
 
-[node name="CharacterResult2" parent="." instance=ExtResource( 1 )]
-margin_left = 486.0
-margin_top = 100.0
-margin_right = 736.0
-margin_bottom = 700.0
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/slide_in_overlay = SubResource( 1 )
 
-[node name="CharacterResult3" parent="." instance=ExtResource( 1 )]
-margin_left = 896.0
-margin_top = 100.0
-margin_right = 1146.0
-margin_bottom = 700.0
+[node name="WinnerPosition" type="Position2D" parent="."]
+position = Vector2( 576, 256 )
+
+[node name="ResultUI" type="CanvasLayer" parent="."]
+
+[node name="ResultScreenUI" parent="ResultUI" instance=ExtResource( 1 )]
+visible = false
+
+[node name="Triangle" type="Polygon2D" parent="."]
+position = Vector2( 0, 216 )
+color = Color( 0, 0, 0, 1 )
+polygon = PoolVector2Array( 0, 384, 1024, 600, 0, 600 )
+
+[node name="LoserPosition1" type="Position2D" parent="Triangle"]
+visible = false
+position = Vector2( 256, 462 )
+
+[node name="Polygon2D" type="Polygon2D" parent="Triangle/LoserPosition1"]
+position = Vector2( 0, -12.625 )
+scale = Vector2( 1, 1.0625 )
+polygon = PoolVector2Array( -64, -30, 72, -54, 80, 13.7647, 72, 58, -64, 74, -72, 21.2941 )
+
+[node name="LoserPosition2" type="Position2D" parent="Triangle"]
+visible = false
+position = Vector2( 448, 470 )
+
+[node name="Polygon2D2" type="Polygon2D" parent="Triangle/LoserPosition2"]
+scale = Vector2( 1, 1.0625 )
+polygon = PoolVector2Array( -64, -30, 72, -54, 80, 13.7647, 72, 58, -64, 74, -72, 21.2941 )
+
+[node name="LoserPosition3" type="Position2D" parent="Triangle"]
+visible = false
+position = Vector2( 642, 490 )
+
+[node name="Polygon2D3" type="Polygon2D" parent="Triangle/LoserPosition3"]
+scale = Vector2( 1, 1.0625 )
+polygon = PoolVector2Array( -64, -30, 72, -54, 80, 13.7647, 72, 58, -64, 74, -72, 21.2941 )

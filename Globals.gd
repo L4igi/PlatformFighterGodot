@@ -18,7 +18,7 @@ var attackAnimationList = ["attack_getup", "bair", "dair", "dash_attack", "dsmas
 
 var specialAnimationList = ["neutralspecial", "downspecial", "sidespecial", "upspecial", "counter", "cancel_charge"]
 
-enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND, COUNTER, RESPAWN, GAMESTART, DEFEAT}
+enum CharacterState{GROUND, AIR, EDGE, ATTACKGROUND, ATTACKAIR, HITSTUNGROUND, HITSTUNAIR, SPECIALGROUND, SPECIALAIR, SHIELD, ROLL, GRAB, INGRAB, SPOTDODGE, GETUP, SHIELDBREAK, CROUCH, EDGEGETUP, SHIELDSTUN, TECHGROUND, TECHAIR, AIRDODGE, HELPLESS, REBOUND, COUNTER, RESPAWN, GAMESTART, DEFEAT, GAMEOVER}
 
 enum MoveDirection {LEFT, RIGHT}
 
@@ -210,14 +210,30 @@ func start_timer(timer, waitTime, oneShot = true):
 	timer.set_one_shot(oneShot)
 	timer.start()
 
+#character ranking
+var characterRanking = []
+
 func check_game_set():
 	var countDefeated = 0
 	for character in currentStage.characterList:
 		if character.currentState == Globals.CharacterState.DEFEAT:
 			countDefeated += 1
+			characterRanking.push_front(character)
 	if countDefeated == currentStage.characterList.size()-1:
+		#find out winning character
+		var winner = null
+		for character in currentStage.characterList: 
+			if !characterRanking.has(character):
+				winner = character
+		characterRanking.push_front(winner)
+		remove_characters_from_parent()
 		Engine.set_time_scale(0.25)
 		currentStage.gameplayGUI.game_set()
+	
+func remove_characters_from_parent():
+	for character in characterRanking:
+		print(character.get_parent().remove_child(character))
+	
 	
 #result data 
 var resultData = []

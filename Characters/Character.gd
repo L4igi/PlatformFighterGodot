@@ -54,7 +54,7 @@ var chargingSmashAttack = false
 var bufferedSmashAttack
 var currentHitBox = 1
 #movement
-var currentMoveDirection = Globals.MoveDirection.RIGHT
+var currentMoveDirection = null
 var pushingCharacter = null
 var disableInputDI = false
 var currentPushSpeed = 0
@@ -126,7 +126,7 @@ var tween
 #signal for character state change
 signal character_state_changed(state)
 
-var currentState = Globals.CharacterState.GROUND
+var currentState = null
 
 var collisionAreaShape
 var characterSprite
