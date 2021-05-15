@@ -5,11 +5,26 @@ onready var animationPlayer = get_node("AnimationPlayer")
 
 var winningCharacter = null
 var losingCharacters = []
+var allCharacters = []
+
+var disableInput = true
+
+onready var resultGUINode = get_node("ResultGUINode")
+onready var resultGUIUI = get_node("ResultGUINode/ResultScreenUI")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Engine.set_time_scale(1.0)
 	manage_character_ranking()
+	
+func _process(delta):
+	if !disableInput:
+		for character in allCharacters:
+			if Input.is_action_just_pressed(character.attack):
+				animationPlayer.play("slide_in_gui")
+				disableInput = true
+				yield(animationPlayer, "animation_finished")
+				resultGUIUI.enable_result_gui()
 
 func manage_character_ranking():
 	var countCharacters = 0
@@ -20,6 +35,8 @@ func manage_character_ranking():
 		else:
 			losingCharacters.append(character)
 			manage_losing_characters(0, character,countCharacters)
+		allCharacters.append(character)
+		resultGUIUI.add_character_result_gui(character)
 		character.change_state(Globals.CharacterState.GAMEOVER)
 		countCharacters += 1
 	Globals.characterRanking.clear()
@@ -35,6 +52,7 @@ func manage_winning_character(character):
 	yield(animationPlayer, "animation_finished")
 	for losingCharacter in losingCharacters:
 		manage_losing_characters(1, losingCharacter)
+	disableInput = false
 	
 func manage_losing_characters(step, character, count = 0):
 	match step:
@@ -52,7 +70,7 @@ func manage_losing_characters(step, character, count = 0):
 			loserPosition.set_visible(true)
 			character.animationPlayer.get_parent().set_animation("lose")
 			character.animationPlayer.get_parent().set_frame(0)
-			character.animatedSprite.set_z_index(10)
+			character.animatedSprite.set_z_index(1)
 		1:
 			character.state.play_animation("lose")
 			character.state.play_animation("loseloop", true)

@@ -1,28 +1,11 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Results/CharacterResult.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Results/ResultScreenUI.gd" type="Script" id=2]
 
 [node name="ResultScreenUI" type="HBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="CharacterResult" parent="." instance=ExtResource( 1 )]
-margin_left = 71.0
-margin_top = 100.0
-margin_right = 333.0
-margin_bottom = 700.0
-
-[node name="CharacterResult2" parent="." instance=ExtResource( 1 )]
-margin_left = 480.0
-margin_top = 100.0
-margin_right = 742.0
-margin_bottom = 700.0
-
-[node name="CharacterResult3" parent="." instance=ExtResource( 1 )]
-margin_left = 890.0
-margin_top = 100.0
-margin_right = 1152.0
-margin_bottom = 700.0
