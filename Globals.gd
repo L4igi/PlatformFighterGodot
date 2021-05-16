@@ -233,11 +233,8 @@ func check_game_set():
 func remove_characters_from_parent():
 	for character in characterRanking:
 		print(character.get_parent().remove_child(character))
-	
-	
-#result data 
-var resultData = []
 
-func create_result_data():
+func create_result_data(character):
 	var newResultData = ResultData.new()
+	character.add_child(newResultData)
 	return newResultData

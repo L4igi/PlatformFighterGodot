@@ -25,11 +25,13 @@ func spawn_characters():
 	var char1 = characterMario.instance()
 	self.add_child(char1)
 	char1.global_position = spawnPoints[0].global_position
+	char1.currentMoveDirection = Globals.MoveDirection.RIGHT
 	char1.set_name("Mario")
 	char1.characterName = "Mario"
 	char1.stocks = 1
 	characterList.append(char1)
 	char1.characterControls = Globals.controlsP1
+	char1.resultData.resultdata_setup(char1.get_name(), 1, char1.stocks)
 	setup_controls_characters(char1, Globals.controlsP1)
 	var char2 = characterMario.instance()
 	self.add_child(char2)
@@ -42,8 +44,9 @@ func spawn_characters():
 	characterList.append(char2)
 	char2.characterControls = Globals.controlsP2
 	char2.get_node("AnimatedSprite").set_self_modulate(Color(0,1,0,1))
+	char2.resultData.resultdata_setup(char2.get_name(), 2, char2.stocks)
 	setup_controls_characters(char2, Globals.controlsP2)
-	char2.set_attack_data_file()
+#	char2.set_attack_data_file()
 	
 func setup_gui():
 	for character in characterList: 

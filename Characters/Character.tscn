@@ -4762,28 +4762,28 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath(".:position")
+tracks/2/path = NodePath("..:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.116667, 0.266667, 0.450001, 0.566668, 0.716668, 0.866668, 1.21667 ),
+"times": PoolRealArray( 0, 0.283333, 0.566667, 0.567667, 0.733333, 0.9, 1.03333, 1.25 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( -276, 6 ), Vector2( -178, -48 ), Vector2( -78, -78 ), Vector2( 20, -104 ), Vector2( 146, -50 ), Vector2( 216, 68 ), Vector2( 72, 136 ), Vector2( -2, -4 ) ]
+"values": [ Vector2( -332, -4 ), Vector2( -204, -152 ), Vector2( 0, -276 ), Vector2( 0, -380 ), Vector2( 232, -188 ), Vector2( 280, 108 ), Vector2( 80, 168 ), Vector2( 0, -16 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath(".:scale")
+tracks/3/path = NodePath("..:scale")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 1.21667 ),
+"times": PoolRealArray( 0, 1.25 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 1, 1 ), Vector2( 5, 5 ) ]
+"values": [ Vector2( 2, 2 ), Vector2( 10, 10 ) ]
 }
 
 [sub_resource type="Animation" id=73]
@@ -4833,8 +4833,8 @@ polygon = PoolVector2Array( -2.13333, 10, 2.13333, 10, 2.13333, -6, 0, -18, -2.1
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 2 )
-animation = "lose"
-frame = 9
+animation = "victory"
+frame = 10
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
 autoplay = "idle"

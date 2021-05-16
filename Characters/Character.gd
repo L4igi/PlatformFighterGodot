@@ -245,6 +245,11 @@ onready var characterIcon = preload("res://Characters/Mario/guielements/characte
 onready var characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
 #stocks
 var stocks = 0
+#resultData 
+var resultData = Globals.create_result_data(self)
+var characterRender = null
+var playerName = null
+var playerNumber = 0
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -1024,9 +1029,11 @@ func get_input_direction_y():
 func mirror_areas():
 	match currentMoveDirection:
 		Globals.MoveDirection.LEFT:
-			set_scale(Vector2(-1*abs(get_scale().x), abs(get_scale().y)))
+			apply_scale(Vector2(-1, 1))
+#			set_scale(Vector2(-1*abs(get_scale().x), abs(get_scale().y)))
 		Globals.MoveDirection.RIGHT:
-			set_scale(Vector2(-1*abs(get_scale().x), -1*abs(get_scale().y)))
+			apply_scale(Vector2(-1, 1))
+#			set_scale(Vector2(-1*abs(get_scale().x), -1*abs(get_scale().y)))
 
 func attack_handler_air_throw_attack():
 	if (abs(get_input_direction_x()) == 0) \
@@ -1114,6 +1121,7 @@ func apply_charge_projectile_pushback(pushVelocity):
 				velocity.x -= pushVelocity
 				
 func start_game():
+	disableInput = false
 	change_state(Globals.CharacterState.GROUND)
 
 func reset_all():

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Characters/Mario/guielements/characterRender.png" type="Texture" id=1]
 [ext_resource path="res://Characters/Mario/guielements/characterLogo.png" type="Texture" id=2]
@@ -26,6 +26,11 @@ font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=4]
 extra_spacing_top = 50
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 35
+extra_spacing_top = 5
 font_data = ExtResource( 3 )
 
 [node name="CharacterResult" type="MarginContainer"]
@@ -210,33 +215,33 @@ margin_bottom = 600.0
 
 [node name="HSeparator" type="HSeparator" parent="BaseResults"]
 self_modulate = Color( 1, 1, 1, 0 )
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="BaseResults"]
 margin_top = 302.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="BaseResults/VBoxContainer"]
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 99.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 
 [node name="ColorRect" type="ColorRect" parent="BaseResults/VBoxContainer/MarginContainer"]
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 99.0
 color = Color( 0.490196, 0.0196078, 0.0196078, 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer"]
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 99.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -253,7 +258,7 @@ scroll_active = false
 
 [node name="OutAtValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer/HBoxContainer"]
 margin_left = 144.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 99.0
 rect_min_size = Vector2( 64, 32 )
 size_flags_horizontal = 3
@@ -266,40 +271,42 @@ scroll_active = false
 
 [node name="MarginContainer2" type="MarginContainer" parent="BaseResults/VBoxContainer"]
 margin_top = 99.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ColorRect" type="ColorRect" parent="BaseResults/VBoxContainer/MarginContainer2"]
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 199.0
 color = Color( 0.00784314, 0.00392157, 0.00392157, 0.729412 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2"]
-margin_right = 262.0
+[node name="BaseStatsContainer" type="VBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2"]
+margin_right = 250.0
 margin_bottom = 199.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 0
 
-[node name="Stat" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer"]
-margin_right = 262.0
+[node name="Stat" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer" groups=[
+"StatContainer",
+]]
+margin_right = 250.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="StatLabel" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer/Stat"]
-margin_right = 129.0
+[node name="StatLabel" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer/Stat"]
+margin_right = 123.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = ExtResource( 5 )
 text = "    KOs"
 
-[node name="StatValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer/Stat"]
-margin_left = 133.0
-margin_right = 262.0
+[node name="StatValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer/Stat"]
+margin_left = 127.0
+margin_right = 250.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -308,32 +315,34 @@ bbcode_enabled = true
 bbcode_text = "[center]1[/center]"
 text = "1"
 
-[node name="HSeparator" type="HSeparator" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer"]
 margin_top = 58.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 
-[node name="Stat2" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Stat2" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer" groups=[
+"StatContainer",
+]]
 margin_top = 64.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 122.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="StatLabel" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer/Stat2"]
-margin_right = 129.0
+[node name="StatLabel" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer/Stat2"]
+margin_right = 123.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = ExtResource( 5 )
 text = "    Falls"
 
-[node name="StatValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer/Stat2"]
-margin_left = 133.0
-margin_right = 262.0
+[node name="StatValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer/Stat2"]
+margin_left = 127.0
+margin_right = 250.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -343,29 +352,31 @@ bbcode_text = "[center]1[/center]"
 text = "1"
 scroll_active = false
 
-[node name="HSeparator2" type="HSeparator" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer"]
 margin_top = 122.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 126.0
 
-[node name="Stat3" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="Stat3" type="HBoxContainer" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer" groups=[
+"StatContainer",
+]]
 margin_top = 126.0
-margin_right = 262.0
+margin_right = 250.0
 margin_bottom = 184.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="StatLabel" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer/Stat3"]
-margin_right = 129.0
+[node name="StatLabel" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer/Stat3"]
+margin_right = 123.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/normal_font = ExtResource( 5 )
 text = "    SDs"
 
-[node name="StatValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer/Stat3"]
-margin_left = 133.0
-margin_right = 262.0
+[node name="StatValue" type="RichTextLabel" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer/Stat3"]
+margin_left = 127.0
+margin_right = 250.0
 margin_bottom = 58.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -374,8 +385,7 @@ bbcode_enabled = true
 bbcode_text = "[center]1[/center]"
 text = "1"
 
-[node name="ContinoueBar" parent="BaseResults/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource( 6 )]
-margin_right = 262.0
+[node name="ContinoueBar" parent="BaseResults/VBoxContainer/MarginContainer2/BaseStatsContainer" instance=ExtResource( 6 )]
 
 [node name="ExtendedResults" type="VBoxContainer" parent="."]
 visible = false
@@ -389,6 +399,17 @@ margin_bottom = 288.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="ColorRect" type="ColorRect" parent="ExtendedResults/HSeparator"]
+margin_top = 292.0
+margin_right = 250.0
+margin_bottom = 581.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.00784314, 0.00392157, 0.00392157, 0.729412 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ScrollContainer" type="ScrollContainer" parent="ExtendedResults"]
 self_modulate = Color( 1, 1, 1, 0 )
 margin_top = 292.0
@@ -398,56 +419,82 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ExtendedResults/ScrollContainer"]
+[node name="AdvancedStatsList" type="VBoxContainer" parent="ExtendedResults/ScrollContainer"]
 margin_right = 262.0
-margin_bottom = 568.0
+margin_bottom = 516.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="AdvancedStat" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 
-[node name="AdvancedStat2" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat2" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 52.0
 margin_bottom = 100.0
 
-[node name="AdvancedStat3" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat3" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 104.0
 margin_bottom = 152.0
 
-[node name="AdvancedStat4" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat4" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 156.0
 margin_bottom = 204.0
 
-[node name="AdvancedStat5" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat5" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 208.0
 margin_bottom = 256.0
 
-[node name="AdvancedStat6" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat6" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 260.0
 margin_bottom = 308.0
 
-[node name="AdvancedStat7" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat7" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 312.0
 margin_bottom = 360.0
 
-[node name="AdvancedStat8" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat8" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 364.0
 margin_bottom = 412.0
 
-[node name="AdvancedStat9" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat9" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 416.0
 margin_bottom = 464.0
 
-[node name="AdvancedStat10" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
+[node name="AdvancedStat10" parent="ExtendedResults/ScrollContainer/AdvancedStatsList" instance=ExtResource( 7 )]
 margin_top = 468.0
 margin_bottom = 516.0
-
-[node name="AdvancedStat11" parent="ExtendedResults/ScrollContainer/VBoxContainer" instance=ExtResource( 7 )]
-margin_top = 520.0
-margin_bottom = 568.0
 
 [node name="ContinoueBar" parent="ExtendedResults" instance=ExtResource( 6 )]
 margin_top = 585.0
 margin_right = 262.0
 margin_bottom = 600.0
 size_flags_stretch_ratio = 0.05
+
+[node name="ReadyContainer" type="MarginContainer" parent="."]
+visible = false
+margin_top = 225.0
+margin_right = 250.0
+margin_bottom = 375.0
+rect_min_size = Vector2( 250, 150 )
+size_flags_horizontal = 3
+size_flags_vertical = 6
+
+[node name="ColorRect" type="ColorRect" parent="ReadyContainer"]
+margin_right = 250.0
+margin_bottom = 150.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0.384314, 0, 0, 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="ReadyContainer"]
+margin_right = 250.0
+margin_bottom = 150.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ReadyContainer/CenterContainer"]
+margin_right = 250.0
+margin_bottom = 150.0
+rect_min_size = Vector2( 250, 150 )
+custom_fonts/normal_font = SubResource( 6 )
+bbcode_enabled = true
+bbcode_text = "[center]Ready for the next Battle[/center]"
+text = "Ready for the next Battle"
+scroll_active = false
