@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+var characterSelect = null
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -12,6 +13,7 @@ var select = null
 var cancel = null
 var selectSkinFw = null
 var selectSkinBw = null
+var startGame = null
 
 var velocity = Vector2.ZERO
 var acceleration = 10
@@ -19,11 +21,20 @@ var stopForce = 100
 
 var previewCharacter = null
 var selectedCharacter = null
+
+var characterContainer = null
+var controls = null
+
+onready var characterToken = preload("res://CharacterSelect/CharacterToken.tscn")
+var setToken = null
+
+var enableStartGame = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	characterSelect = get_parent()
 	
 func setup(control):
+	self.controls = control
 	setup_controls(control)
 	
 func setup_controls(controls):
@@ -35,6 +46,7 @@ func setup_controls(controls):
 	cancel = controls.get("special")
 	selectSkinFw = controls.get("shield")
 	selectSkinBw = controls.get("grab")
+	startGame = controls.get("start")
 
 func handle_input():
 	if Input.is_action_just_pressed(left):
@@ -53,6 +65,9 @@ func handle_input():
 		pass
 	elif Input.is_action_just_pressed(selectSkinBw):
 		pass
+	if Input.is_action_just_pressed(startGame)\
+	&& enableStartGame:
+		print("START GAME LEZZZ GO")
 #
 #func _input(event):
 #   # Mouse in viewport coordinates.
@@ -88,11 +103,15 @@ func select_character():
 	if previewCharacter && !selectedCharacter:
 		selectedCharacter = previewCharacter
 		print("character selected")
+		create_character_token()
+		characterSelect.character_selected(self)
 	
 func deselect_character():
 	if selectedCharacter:
 		selectedCharacter = null
 		print("character deselected")
+		delete_character_token()
+		characterSelect.character_deselected(self)
 
 func handle_control_physics(_delta):
 	var xInput = get_input_direction_x()
@@ -112,5 +131,31 @@ func get_input_direction_x():
 func get_input_direction_y():
 	return Input.get_action_strength(down) - Input.get_action_strength(up)
 
-func set_preview_character(character):
-	previewCharacter = character
+func set_preview_character(characterDataGetter):
+	var characterIcon = characterDataGetter.get_character_icon()
+	var characterLogo = characterDataGetter.get_character_logo()
+	var characterName = characterDataGetter.get_character_name()
+	previewCharacter = characterName
+	characterContainer.setup_hover(characterIcon, characterLogo, characterName)
+	
+func remove_preview_character():
+	if !selectedCharacter:
+		previewCharacter = null
+		characterContainer.remove_hover()
+	
+func create_character_token():
+	var newToken = characterToken.instance()
+	characterSelect.add_child(newToken)
+	newToken.set_deferred("global_position", self.global_position)
+	setToken = newToken
+	
+func delete_character_token():
+	setToken.queue_free()
+	setToken = null
+	
+func toggle_game_start(onOff):
+	match onOff:
+		"on":
+			enableStartGame = true
+		"off":
+			enableStartGame = false

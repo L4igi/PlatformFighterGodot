@@ -54,7 +54,8 @@ var controlsP1 = {
 	"attack" : "Attack1",
 	"shield" : "Shield1",
 	"grab" : "Grab1", 
-	"special" : "Special1"
+	"special" : "Special1", 
+	"start" : "Start1"
 }
 
 var controlsP2 = {
@@ -66,7 +67,8 @@ var controlsP2 = {
 	"attack" : "Attack2",
 	"shield" : "Shield2",
 	"grab" : "Grab2", 
-	"special": "Special2"
+	"special": "Special2", 
+	"start" : "Start2"
 }
 #var controlsP2 = {
 #	"up": "Up1",
@@ -239,3 +241,7 @@ func create_result_data(character):
 	var newResultData = ResultData.new()
 	character.add_child(newResultData)
 	return newResultData
+
+#start new game from character select
+func setup_new_game():
+	pass

@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://MiscTextures/Buttons/BackButton.png" type="Texture" id=1]
 [ext_resource path="res://MiscTextures/Buttons/RulesBook.png" type="Texture" id=2]
-[ext_resource path="res://CharacterSelect/CharacterContainer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://CharacterSelect/CharacterSelectGUI.gd" type="Script" id=4]
 
 [node name="CharacterSelectGUI" type="VBoxContainer"]
@@ -78,6 +77,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="TextureRect" type="TextureRect" parent="CharacterSelectContainer"]
+margin_right = 1024.0
+margin_bottom = 348.0
+
 [node name="SelectedCharacterContainer" type="MarginContainer" parent="."]
 margin_top = 425.0
 margin_right = 1024.0
@@ -92,19 +95,3 @@ margin_bottom = 175.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="CharacterContainer" parent="SelectedCharacterContainer/HBoxContainer" instance=ExtResource( 3 )]
-margin_left = 26.0
-margin_right = 226.0
-
-[node name="CharacterContainer2" parent="SelectedCharacterContainer/HBoxContainer" instance=ExtResource( 3 )]
-margin_left = 283.0
-margin_right = 483.0
-
-[node name="CharacterContainer3" parent="SelectedCharacterContainer/HBoxContainer" instance=ExtResource( 3 )]
-margin_left = 540.0
-margin_right = 740.0
-
-[node name="CharacterContainer4" parent="SelectedCharacterContainer/HBoxContainer" instance=ExtResource( 3 )]
-margin_left = 797.0
-margin_right = 997.0

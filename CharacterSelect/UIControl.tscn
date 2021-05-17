@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://CharacterSelect/UIControl.gd" type="Script" id=1]
 [ext_resource path="res://MiscTextures/UIControl/001.png" type="Texture" id=2]
+[ext_resource path="res://MiscTextures/UIControl/Cursor_Ball.png" type="Texture" id=3]
+[ext_resource path="res://MiscTextures/UIControl/Cursor_No_Ball.png" type="Texture" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 1.0
@@ -12,7 +14,47 @@ animations = [ {
 "loop": true,
 "name": "default",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "cursor_ball",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "cursor_no_ball",
+"speed": 5.0
 } ]
+
+[sub_resource type="Animation" id=3]
+resource_name = "cursor_no_ball"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "cursor_no_ball" ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "default"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ "cursor_ball" ]
+}
 
 [node name="UIControl" type="KinematicBody2D" groups=[
 "UIControl",
@@ -24,6 +66,12 @@ z_index = 10
 shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -1.66893e-06, 9.53674e-07 )
+scale = Vector2( 0.064, 0.064 )
 frames = SubResource( 2 )
+animation = "cursor_no_ball"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AnimatedSprite"]
+autoplay = "default"
+anims/cursor_no_ball = SubResource( 3 )
+anims/default = SubResource( 4 )

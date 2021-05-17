@@ -65,3 +65,4 @@ text = "Name"
 scroll_active = false
 
 [connection signal="body_entered" from="CharacterIcon/CharacterPreviewArea" to="." method="_on_CharacterPreviewArea_body_entered"]
+[connection signal="body_exited" from="CharacterIcon/CharacterPreviewArea" to="." method="_on_CharacterPreviewArea_body_exited"]

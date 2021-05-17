@@ -19,6 +19,11 @@ func _on_CharacterPreviewArea_body_entered(body):
 	if body.is_in_group("UIControl"):
 		body.set_preview_character(characterDataGetter)
 
+func _on_CharacterPreviewArea_body_exited(body):
+	if body.is_in_group("UIControl"):
+		body.remove_preview_character()
+
+
 func set_character_icon():
 	var characterIcon = get_node("CharacterIcon")
 	characterIcon.set_texture(characterDataGetter.get_character_icon())
