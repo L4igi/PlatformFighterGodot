@@ -16,6 +16,8 @@ var selectSkinBw = null
 var velocity = Vector2.ZERO
 var acceleration = 10
 var stopForce = 100
+
+var previewCharacter = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	setup_controls(Globals.controlsP1)
@@ -40,33 +42,42 @@ func handle_input():
 	if Input.is_action_just_pressed(down):
 		pass
 	if Input.is_action_just_pressed(select):
-		call_deferred("click_the_left_mouse_button")
+		call_deferred("click_the_left_mouse_button", "on")
 	elif Input.is_action_just_pressed(cancel):
-		pass
+		call_deferred("click_the_left_mouse_button", "off")
 	if Input.is_action_just_pressed(selectSkinFw):
 		pass
 	elif Input.is_action_just_pressed(selectSkinBw):
 		pass
-		
-func _input(event):
-   # Mouse in viewport coordinates.
-   if event is InputEventMouseButton:
-	   print("Mouse Click/Unclick at: ", event.position)
-#   elif event is InputEventMouseMotion:
-#	   print("Mouse Motion at: ", event.position)
+#
+#func _input(event):
+#   # Mouse in viewport coordinates.
+#   if event is InputEventMouseButton:
+#	   print("Mouse Click/Unclick at: ", event.position)
+##   elif event is InputEventMouseMotion:
+##	   print("Mouse Motion at: ", event.position)
 
-func click_the_left_mouse_button():
+func click_the_left_mouse_button(onOff):
 	var evt = InputEventMouseButton.new()
 	evt.button_index = BUTTON_LEFT
-#	evt.set_position(self.position)
+	var screenSizeModifier = Vector2.ZERO
+#	if OS.is_window_fullscreen():
+#		#get screen pixels not covered by game
+#		screenSizeModifier = OS.get_screen_size() - get_viewport().get_size()
+#		#get value by which game is scaled up
+#		screenSizeModifier /= get_viewport().get_size()/get_viewport().get_visible_rect().size
+#	else:
 	#get screen pixels not covered by game
-	var screenSizeModifier = OS.get_screen_size() - get_viewport().get_size()
+	screenSizeModifier = OS.get_window_size() - get_viewport().get_size()
 	#get value by which game is scaled up
 	screenSizeModifier /= get_viewport().get_size()/get_viewport().get_visible_rect().size
+#	screenSizeModifier = Vector2(0,0)
 	evt.set_position((get_viewport_transform() * get_global_transform() * (self.position+screenSizeModifier))/2)
-	evt.pressed = true
-	get_tree().input_event(evt)
-	evt.pressed = false
+	match onOff: 
+		"on":
+			evt.pressed = true
+		"off":
+			evt.pressed = false
 	get_tree().input_event(evt)
 
 func handle_control_physics(_delta):
@@ -86,3 +97,6 @@ func get_input_direction_x():
 	
 func get_input_direction_y():
 	return Input.get_action_strength(down) - Input.get_action_strength(up)
+
+func set_preview_character(character):
+	previewCharacter = character

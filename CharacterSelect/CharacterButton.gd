@@ -1,18 +1,16 @@
-extends TextureButton
+extends MarginContainer
 
+var character = null
+onready var textureButton = get_node("TextureButton")
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
-func _pressed():
-	print("pressed " +str(get_viewport().get_mouse_position()))
-	if is_visible():
-		set_visible(false)
-	else:
-		set_visible(true)
+func setup(character):
+	self.character = character
+
+
+func _on_CharacterPreviewArea_body_entered(body):
+	if body.is_in_group("UIControl"):
+		body.set_preview_character(character)
+		print("aaaaaaaaaaaaa")
