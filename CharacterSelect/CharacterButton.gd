@@ -3,21 +3,23 @@ extends MarginContainer
 var character = "Mario"
 
 var characterDataGetter = null
+var characterDataPath = ""
 
 func _ready():
 	pass # Replace with function body.
 
 func setup(character):
 	self.character = character
-	var characterDataPath = str("res://Characters/"+str(character)+"/characterDataGetter.gd")
+	characterDataPath = str("res://Characters/"+str(character)+"/characterDataGetter.gd")
 	characterDataGetter = load(characterDataPath).new()
+	add_child(characterDataGetter)
 	set_character_name()
 	set_character_icon()
 
 
 func _on_CharacterPreviewArea_body_entered(body):
 	if body.is_in_group("UIControl"):
-		body.set_preview_character(characterDataGetter)
+		body.set_preview_character(characterDataGetter, characterDataPath)
 
 func _on_CharacterPreviewArea_body_exited(body):
 	if body.is_in_group("UIControl"):

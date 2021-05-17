@@ -29,11 +29,18 @@ onready var characterToken = preload("res://CharacterSelect/CharacterToken.tscn"
 var setToken = null
 
 var enableStartGame = false
+
+var playerName = "Player"
+var playerNumber = ""
+var characterDataPath = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	characterSelect = get_parent()
+	global_position =  get_viewport().get_size()/2
 	
-func setup(control):
+func setup(control, currentPlayerNumber):
+	playerName += str(currentPlayerNumber)
+	playerNumber = currentPlayerNumber
 	self.controls = control
 	setup_controls(control)
 	
@@ -67,6 +74,7 @@ func handle_input():
 		pass
 	if Input.is_action_just_pressed(startGame)\
 	&& enableStartGame:
+		characterSelect.start_game()
 		print("START GAME LEZZZ GO")
 #
 #func _input(event):
@@ -111,7 +119,8 @@ func deselect_character():
 		selectedCharacter = null
 		print("character deselected")
 		delete_character_token()
-		characterSelect.character_deselected(self)
+		if !previewCharacter:
+			characterSelect.character_deselected(self)
 
 func handle_control_physics(_delta):
 	var xInput = get_input_direction_x()
@@ -131,7 +140,8 @@ func get_input_direction_x():
 func get_input_direction_y():
 	return Input.get_action_strength(down) - Input.get_action_strength(up)
 
-func set_preview_character(characterDataGetter):
+func set_preview_character(characterDataGetter, characterDataPath):
+	self.characterDataPath = characterDataPath
 	var characterIcon = characterDataGetter.get_character_icon()
 	var characterLogo = characterDataGetter.get_character_logo()
 	var characterName = characterDataGetter.get_character_name()

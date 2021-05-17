@@ -321,7 +321,7 @@ _global_script_class_icons={
 [application]
 
 config/name="SmashBro"
-run/main_scene="res://Stages/Stage1.tscn"
+run/main_scene="res://CharacterSelect/CharacterSelect.tscn"
 config/icon="res://icon.png"
 
 [autoload]

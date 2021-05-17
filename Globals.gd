@@ -242,6 +242,42 @@ func create_result_data(character):
 	character.add_child(newResultData)
 	return newResultData
 
+
+var smashCharacters = []
 #start new game from character select
-func setup_new_game():
-	pass
+func setup_new_game(characterList, selectedStage = null, ruleSet = null):
+	SceneSwitcher.smashScene = "res://Stages/Stage1.tscn"
+	smashCharacters = setup_characters(characterList)
+	SceneSwitcher.goto_scene(SceneSwitcher.smashScene)
+
+func setup_characters(characterList):
+	var instancedCharacters = []
+	for character in characterList: 
+		var characterDataGetter = load(character.characterDataPath).new()
+		var spawnCharInstancePath = characterDataGetter.get_instance_path()
+		var spawnChar = spawnCharInstancePath.instance()
+#		spawnChar.set_name(character.characterDataGetter.get_character_name)
+		spawnChar.characterName = characterDataGetter.get_character_name()
+		spawnChar.stocks = 1
+		spawnChar.characterControls = character.controls
+		spawnChar.resultData.resultdata_setup(spawnChar.get_name(), 1, spawnChar.stocks)
+		setup_controls_characters(spawnChar, spawnChar.characterControls)
+		instancedCharacters.append(spawnChar)
+		characterDataGetter.queue_free()
+	return instancedCharacters
+
+func setup_controls_characters(character, globalControls):
+	character.up = globalControls.get("up")
+	character.down = globalControls.get("down")
+	character.left = globalControls.get("left")
+	character.right = globalControls.get("right")
+	character.shield = globalControls.get("shield")
+	character.jump = globalControls.get("jump")
+	character.attack = globalControls.get("attack")
+	character.shield = globalControls.get("shield")
+	character.grab = globalControls.get("grab")
+	character.special = globalControls.get("special")
+
+#after results screen switch to stage select (in the mean time character select)
+func switch_to_character_select():
+	SceneSwitcher.goto_scene(SceneSwitcher.characterSelect)

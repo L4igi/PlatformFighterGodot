@@ -32,7 +32,7 @@ func check_action_event(event):
 
 func spawn_uiControl(control):
 	var newUiControl = uiControl.instance()
-	newUiControl.setup(control)
+	newUiControl.setup(control, currentPlayerNumber)
 	add_child(newUiControl)
 	newUiControl.characterContainer = spawn_character_container()
 	
@@ -61,3 +61,6 @@ func toggle_start_game(onOff):
 			gameStartContainer.set_visible(false)
 	for uiControl in characterSelectedUIControl:
 		uiControl.toggle_game_start(onOff)
+		
+func start_game():
+	Globals.setup_new_game(characterSelectedUIControl)

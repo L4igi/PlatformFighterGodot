@@ -8,3 +8,7 @@ func get_character_icon():
 
 func get_character_logo():
 	return preload("res://Characters/Mario/guielements/characterLogo.png")
+
+func get_instance_path():
+	var characterNode = load("res://Characters/Mario/Mario.tscn")
+	return characterNode

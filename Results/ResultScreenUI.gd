@@ -17,7 +17,7 @@ func enable_result_gui():
 func ready_next_battle(character):
 	charactersReady.append(character)
 	if characters.size() == charactersReady.size():
-		print("RESULTS DONE")
+		Globals.switch_to_character_select()
 		
 func not_ready_next_battle(character):
 	charactersReady.erase(character)

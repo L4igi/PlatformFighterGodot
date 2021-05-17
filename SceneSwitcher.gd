@@ -6,7 +6,9 @@ var wait_frames
 var time_max = 100 # msec
 var current_scene = null
 
+var characterSelect = "res://CharacterSelect/CharacterSelect.tscn"
 var resultScreen = "res://Results/ResultScreen.tscn"
+var smashScene = ""
 
 func _ready():
 	var root = get_tree().get_root()

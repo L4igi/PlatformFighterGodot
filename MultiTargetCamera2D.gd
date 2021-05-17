@@ -10,9 +10,15 @@ var targets = []  # Array of targets to be tracked.
 
 onready var screen_size = get_viewport_rect().size
 
-func _ready():
-	yield(get_tree().root, "ready")
-	for character in Globals.charactersInGame: 
+#func _ready():
+#	yield(get_tree().root, "ready")
+#	for character in Globals.charactersInGame: 
+#		add_target(character)
+#	make_current()
+#	add_target(Globals.centerStage)
+	
+func setup_multitarget_camera(characterList):
+	for character in characterList: 
 		add_target(character)
 	make_current()
 	add_target(Globals.centerStage)
