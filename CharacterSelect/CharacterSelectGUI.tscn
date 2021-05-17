@@ -1,0 +1,489 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://MiscTextures/Buttons/BackButton.png" type="Texture" id=1]
+[ext_resource path="res://MiscTextures/Buttons/RulesBook.png" type="Texture" id=2]
+[ext_resource path="res://CharacterSelect/CharacterButton.tscn" type="PackedScene" id=3]
+
+[node name="CharacterSelectGUI" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopMenuContainer" type="MarginContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 69.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopMenuContainer"]
+margin_right = 1024.0
+margin_bottom = 69.0
+
+[node name="BackButton" type="TextureButton" parent="TopMenuContainer/HBoxContainer"]
+margin_right = 32.0
+margin_bottom = 69.0
+texture_normal = ExtResource( 1 )
+
+[node name="RulesButton" type="TextureButton" parent="TopMenuContainer/HBoxContainer"]
+margin_left = 36.0
+margin_right = 68.0
+margin_bottom = 69.0
+texture_normal = ExtResource( 2 )
+
+[node name="CharacterSelectContainer" type="MarginContainer" parent="."]
+margin_left = 54.0
+margin_top = 73.0
+margin_right = 969.0
+margin_bottom = 421.0
+size_flags_horizontal = 6
+size_flags_vertical = 7
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterSelectContainer"]
+margin_right = 915.0
+margin_bottom = 348.0
+
+[node name="VSeparator" type="VSeparator" parent="CharacterSelectContainer/HBoxContainer"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_right = 4.0
+margin_bottom = 348.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CharacterSelectContainer/HBoxContainer"]
+margin_left = 8.0
+margin_right = 907.0
+margin_bottom = 348.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer"]
+margin_right = 899.0
+margin_bottom = 84.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 13
+
+[node name="CharacterButton" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_bottom = 84.0
+
+[node name="CharacterButton23" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 48.0
+margin_right = 83.0
+margin_bottom = 84.0
+
+[node name="CharacterButton2" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 96.0
+margin_right = 131.0
+margin_bottom = 84.0
+
+[node name="CharacterButton3" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 144.0
+margin_right = 179.0
+margin_bottom = 84.0
+
+[node name="CharacterButton4" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 192.0
+margin_right = 227.0
+margin_bottom = 84.0
+
+[node name="CharacterButton5" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 240.0
+margin_right = 275.0
+margin_bottom = 84.0
+
+[node name="CharacterButton6" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 288.0
+margin_right = 323.0
+margin_bottom = 84.0
+
+[node name="CharacterButton7" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 336.0
+margin_right = 371.0
+margin_bottom = 84.0
+
+[node name="CharacterButton8" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 384.0
+margin_right = 419.0
+margin_bottom = 84.0
+
+[node name="CharacterButton9" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 432.0
+margin_right = 467.0
+margin_bottom = 84.0
+
+[node name="CharacterButton10" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 480.0
+margin_right = 515.0
+margin_bottom = 84.0
+
+[node name="CharacterButton11" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 528.0
+margin_right = 563.0
+margin_bottom = 84.0
+
+[node name="CharacterButton12" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 576.0
+margin_right = 611.0
+margin_bottom = 84.0
+
+[node name="CharacterButton13" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 624.0
+margin_right = 659.0
+margin_bottom = 84.0
+
+[node name="CharacterButton14" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 672.0
+margin_right = 707.0
+margin_bottom = 84.0
+
+[node name="CharacterButton15" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 720.0
+margin_right = 755.0
+margin_bottom = 84.0
+
+[node name="CharacterButton16" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 768.0
+margin_right = 803.0
+margin_bottom = 84.0
+
+[node name="CharacterButton17" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 816.0
+margin_right = 851.0
+margin_bottom = 84.0
+
+[node name="CharacterButton18" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 864.0
+margin_right = 899.0
+margin_bottom = 84.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer"]
+margin_top = 88.0
+margin_right = 899.0
+margin_bottom = 172.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 13
+
+[node name="CharacterButton" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_bottom = 84.0
+
+[node name="CharacterButton23" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 48.0
+margin_right = 83.0
+margin_bottom = 84.0
+
+[node name="CharacterButton2" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 96.0
+margin_right = 131.0
+margin_bottom = 84.0
+
+[node name="CharacterButton3" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 144.0
+margin_right = 179.0
+margin_bottom = 84.0
+
+[node name="CharacterButton4" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 192.0
+margin_right = 227.0
+margin_bottom = 84.0
+
+[node name="CharacterButton5" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 240.0
+margin_right = 275.0
+margin_bottom = 84.0
+
+[node name="CharacterButton6" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 288.0
+margin_right = 323.0
+margin_bottom = 84.0
+
+[node name="CharacterButton7" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 336.0
+margin_right = 371.0
+margin_bottom = 84.0
+
+[node name="CharacterButton8" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 384.0
+margin_right = 419.0
+margin_bottom = 84.0
+
+[node name="CharacterButton9" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 432.0
+margin_right = 467.0
+margin_bottom = 84.0
+
+[node name="CharacterButton10" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 480.0
+margin_right = 515.0
+margin_bottom = 84.0
+
+[node name="CharacterButton11" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 528.0
+margin_right = 563.0
+margin_bottom = 84.0
+
+[node name="CharacterButton12" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 576.0
+margin_right = 611.0
+margin_bottom = 84.0
+
+[node name="CharacterButton13" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 624.0
+margin_right = 659.0
+margin_bottom = 84.0
+
+[node name="CharacterButton14" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 672.0
+margin_right = 707.0
+margin_bottom = 84.0
+
+[node name="CharacterButton15" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 720.0
+margin_right = 755.0
+margin_bottom = 84.0
+
+[node name="CharacterButton16" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 768.0
+margin_right = 803.0
+margin_bottom = 84.0
+
+[node name="CharacterButton17" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 816.0
+margin_right = 851.0
+margin_bottom = 84.0
+
+[node name="CharacterButton18" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 864.0
+margin_right = 899.0
+margin_bottom = 84.0
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer"]
+margin_top = 176.0
+margin_right = 899.0
+margin_bottom = 260.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 13
+
+[node name="CharacterButton" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_bottom = 84.0
+
+[node name="CharacterButton23" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 48.0
+margin_right = 83.0
+margin_bottom = 84.0
+
+[node name="CharacterButton2" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 96.0
+margin_right = 131.0
+margin_bottom = 84.0
+
+[node name="CharacterButton3" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 144.0
+margin_right = 179.0
+margin_bottom = 84.0
+
+[node name="CharacterButton4" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 192.0
+margin_right = 227.0
+margin_bottom = 84.0
+
+[node name="CharacterButton5" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 240.0
+margin_right = 275.0
+margin_bottom = 84.0
+
+[node name="CharacterButton6" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 288.0
+margin_right = 323.0
+margin_bottom = 84.0
+
+[node name="CharacterButton7" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 336.0
+margin_right = 371.0
+margin_bottom = 84.0
+
+[node name="CharacterButton8" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 384.0
+margin_right = 419.0
+margin_bottom = 84.0
+
+[node name="CharacterButton9" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 432.0
+margin_right = 467.0
+margin_bottom = 84.0
+
+[node name="CharacterButton10" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 480.0
+margin_right = 515.0
+margin_bottom = 84.0
+
+[node name="CharacterButton11" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 528.0
+margin_right = 563.0
+margin_bottom = 84.0
+
+[node name="CharacterButton12" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 576.0
+margin_right = 611.0
+margin_bottom = 84.0
+
+[node name="CharacterButton13" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 624.0
+margin_right = 659.0
+margin_bottom = 84.0
+
+[node name="CharacterButton14" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 672.0
+margin_right = 707.0
+margin_bottom = 84.0
+
+[node name="CharacterButton15" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 720.0
+margin_right = 755.0
+margin_bottom = 84.0
+
+[node name="CharacterButton16" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 768.0
+margin_right = 803.0
+margin_bottom = 84.0
+
+[node name="CharacterButton17" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 816.0
+margin_right = 851.0
+margin_bottom = 84.0
+
+[node name="CharacterButton18" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer3" instance=ExtResource( 3 )]
+margin_left = 864.0
+margin_right = 899.0
+margin_bottom = 84.0
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer"]
+margin_top = 264.0
+margin_right = 899.0
+margin_bottom = 348.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 13
+
+[node name="CharacterButton" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_bottom = 84.0
+
+[node name="CharacterButton23" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 48.0
+margin_right = 83.0
+margin_bottom = 84.0
+
+[node name="CharacterButton2" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 96.0
+margin_right = 131.0
+margin_bottom = 84.0
+
+[node name="CharacterButton3" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 144.0
+margin_right = 179.0
+margin_bottom = 84.0
+
+[node name="CharacterButton4" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 192.0
+margin_right = 227.0
+margin_bottom = 84.0
+
+[node name="CharacterButton5" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 240.0
+margin_right = 275.0
+margin_bottom = 84.0
+
+[node name="CharacterButton6" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 288.0
+margin_right = 323.0
+margin_bottom = 84.0
+
+[node name="CharacterButton7" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 336.0
+margin_right = 371.0
+margin_bottom = 84.0
+
+[node name="CharacterButton8" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 384.0
+margin_right = 419.0
+margin_bottom = 84.0
+
+[node name="CharacterButton9" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 432.0
+margin_right = 467.0
+margin_bottom = 84.0
+
+[node name="CharacterButton10" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 480.0
+margin_right = 515.0
+margin_bottom = 84.0
+
+[node name="CharacterButton11" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 528.0
+margin_right = 563.0
+margin_bottom = 84.0
+
+[node name="CharacterButton12" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 576.0
+margin_right = 611.0
+margin_bottom = 84.0
+
+[node name="CharacterButton13" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 624.0
+margin_right = 659.0
+margin_bottom = 84.0
+
+[node name="CharacterButton14" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 672.0
+margin_right = 707.0
+margin_bottom = 84.0
+
+[node name="CharacterButton15" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 720.0
+margin_right = 755.0
+margin_bottom = 84.0
+
+[node name="CharacterButton16" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 768.0
+margin_right = 803.0
+margin_bottom = 84.0
+
+[node name="CharacterButton17" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 816.0
+margin_right = 851.0
+margin_bottom = 84.0
+
+[node name="CharacterButton18" parent="CharacterSelectContainer/HBoxContainer/VBoxContainer/HBoxContainer4" instance=ExtResource( 3 )]
+margin_left = 864.0
+margin_right = 899.0
+margin_bottom = 84.0
+
+[node name="VSeparator2" type="VSeparator" parent="CharacterSelectContainer/HBoxContainer"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_left = 911.0
+margin_right = 915.0
+margin_bottom = 348.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SelectedCharacterContainer" type="MarginContainer" parent="."]
+margin_top = 425.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5

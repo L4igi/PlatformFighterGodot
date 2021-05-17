@@ -57,4 +57,5 @@ func create_gameset_timer(waittime):
 	Globals.start_timer(gameSetTimer, waittime)
 	
 func on_gameset_timeout():
+	Globals.remove_characters_from_parent()
 	SceneSwitcher.goto_scene(SceneSwitcher.resultScreen)

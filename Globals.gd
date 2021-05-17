@@ -226,7 +226,6 @@ func check_game_set():
 			if !characterRanking.has(character):
 				winner = character
 		characterRanking.push_front(winner)
-		remove_characters_from_parent()
 		Engine.set_time_scale(0.25)
 		currentStage.gameplayGUI.game_set()
 	
