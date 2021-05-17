@@ -18,9 +18,13 @@ var acceleration = 10
 var stopForce = 100
 
 var previewCharacter = null
+var selectedCharacter = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	setup_controls(Globals.controlsP1)
+	pass
+	
+func setup(control):
+	setup_controls(control)
 	
 func setup_controls(controls):
 	up = controls.get("up")
@@ -42,9 +46,9 @@ func handle_input():
 	if Input.is_action_just_pressed(down):
 		pass
 	if Input.is_action_just_pressed(select):
-		call_deferred("click_the_left_mouse_button", "on")
+		select_character()
 	elif Input.is_action_just_pressed(cancel):
-		call_deferred("click_the_left_mouse_button", "off")
+		deselect_character()
 	if Input.is_action_just_pressed(selectSkinFw):
 		pass
 	elif Input.is_action_just_pressed(selectSkinBw):
@@ -57,28 +61,38 @@ func handle_input():
 ##   elif event is InputEventMouseMotion:
 ##	   print("Mouse Motion at: ", event.position)
 
-func click_the_left_mouse_button(onOff):
-	var evt = InputEventMouseButton.new()
-	evt.button_index = BUTTON_LEFT
-	var screenSizeModifier = Vector2.ZERO
-#	if OS.is_window_fullscreen():
-#		#get screen pixels not covered by game
-#		screenSizeModifier = OS.get_screen_size() - get_viewport().get_size()
-#		#get value by which game is scaled up
-#		screenSizeModifier /= get_viewport().get_size()/get_viewport().get_visible_rect().size
-#	else:
-	#get screen pixels not covered by game
-	screenSizeModifier = OS.get_window_size() - get_viewport().get_size()
-	#get value by which game is scaled up
-	screenSizeModifier /= get_viewport().get_size()/get_viewport().get_visible_rect().size
-#	screenSizeModifier = Vector2(0,0)
-	evt.set_position((get_viewport_transform() * get_global_transform() * (self.position+screenSizeModifier))/2)
-	match onOff: 
-		"on":
-			evt.pressed = true
-		"off":
-			evt.pressed = false
-	get_tree().input_event(evt)
+#func click_the_left_mouse_button(onOff):
+#	var evt = InputEventMouseButton.new()
+#	evt.button_index = BUTTON_LEFT
+#	var screenSizeModifier = Vector2.ZERO
+##	if OS.is_window_fullscreen():
+##		#get screen pixels not covered by game
+##		screenSizeModifier = OS.get_screen_size() - get_viewport().get_size()
+##		#get value by which game is scaled up
+##		screenSizeModifier /= get_viewport().get_size()/get_viewport().get_visible_rect().size
+##	else:
+#	#get screen pixels not covered by game
+#	screenSizeModifier = OS.get_window_size() - get_viewport().get_size()
+#	#get value by which game is scaled up
+#	screenSizeModifier /= get_viewport().get_size()/get_viewport().get_visible_rect().size
+##	screenSizeModifier = Vector2(0,0)
+#	evt.set_position((get_viewport_transform() * get_global_transform() * (self.position+screenSizeModifier))/2)
+#	match onOff: 
+#		"on":
+#			evt.pressed = true
+#		"off":
+#			evt.pressed = false
+#	get_tree().input_event(evt)
+
+func select_character():
+	if previewCharacter && !selectedCharacter:
+		selectedCharacter = previewCharacter
+		print("character selected")
+	
+func deselect_character():
+	if selectedCharacter:
+		selectedCharacter = null
+		print("character deselected")
 
 func handle_control_physics(_delta):
 	var xInput = get_input_direction_x()

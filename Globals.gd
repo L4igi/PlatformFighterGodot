@@ -43,6 +43,8 @@ var gameStartFrames = 180
 
 var roundTime = 6000
 
+enum availableCharacters {Mario}
+
 var controlsP1 = {
 	"up": "Up1",
 	"down" : "Down1",

@@ -3,12 +3,13 @@
 [ext_resource path="res://MiscTextures/Buttons/BackButton.png" type="Texture" id=1]
 [ext_resource path="res://MiscTextures/Buttons/RulesBook.png" type="Texture" id=2]
 [ext_resource path="res://CharacterSelect/CharacterContainer.tscn" type="PackedScene" id=3]
-[ext_resource path="res://CharacterSelect/CharacterButton.tscn" type="PackedScene" id=4]
+[ext_resource path="res://CharacterSelect/CharacterSelectGUI.gd" type="Script" id=4]
 
 [node name="CharacterSelectGUI" type="VBoxContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_clip_content = true
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -52,50 +53,23 @@ rect_clip_content = true
 
 [node name="VSeparator" type="VSeparator" parent="CharacterSelectContainer/HBoxContainer"]
 self_modulate = Color( 1, 1, 1, 0 )
-margin_right = 272.0
+margin_right = 508.0
 margin_bottom = 348.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="CharacterSelectContainer/HBoxContainer"]
-margin_left = 276.0
-margin_right = 748.0
+margin_left = 512.0
+margin_right = 512.0
 margin_bottom = 348.0
 columns = 10
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CharacterSelector" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_right = 64.0
-
-[node name="CharacterSelector2" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 68.0
-margin_right = 132.0
-
-[node name="CharacterSelector3" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 136.0
-margin_right = 200.0
-
-[node name="CharacterSelector4" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 204.0
-margin_right = 268.0
-
-[node name="CharacterSelector5" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 272.0
-margin_right = 336.0
-
-[node name="CharacterSelector6" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 340.0
-margin_right = 404.0
-
-[node name="CharacterSelector7" parent="CharacterSelectContainer/HBoxContainer/GridContainer" instance=ExtResource( 4 )]
-margin_left = 408.0
-margin_right = 472.0
-
 [node name="VSeparator2" type="VSeparator" parent="CharacterSelectContainer/HBoxContainer"]
 self_modulate = Color( 1, 1, 1, 0 )
-margin_left = 752.0
+margin_left = 516.0
 margin_right = 1024.0
 margin_bottom = 348.0
 size_flags_horizontal = 3
