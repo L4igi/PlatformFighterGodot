@@ -13,8 +13,8 @@ var character = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	set_label_name(character.get_name())
-	set_character_icon(character.characterIcon)
+	set_label_name(character.characterName)
+	set_character_icon(character.characterIcon, character.characterColor)
 	set_character_logo(character.characterLogo)
 	set_damage_percent(0.0)
 	set_stocks(character.stocks)
@@ -25,8 +25,9 @@ func setup(character):
 func set_label_name(charName):
 	characterNameLabel.set_bbcode("[center]"+charName+"[/center]")
 	
-func set_character_icon(iconTexture):
+func set_character_icon(iconTexture, color):
 	characterIcon.set_texture(iconTexture)
+	characterIcon.set_modulate(color)
 	
 func set_character_logo(logoTexture):
 	characterLogo.set_texture(logoTexture)

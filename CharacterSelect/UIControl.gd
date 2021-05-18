@@ -32,7 +32,12 @@ var enableStartGame = false
 
 var playerName = "Player"
 var playerNumber = ""
+var characterIcon = null
+var characterLogo = null
+var characterName = null
+var currentColor = null
 var characterDataPath = null
+var characterDataGetter = null
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	characterSelect = get_parent()
@@ -69,9 +74,13 @@ func handle_input():
 	elif Input.is_action_just_pressed(cancel):
 		deselect_character()
 	if Input.is_action_just_pressed(selectSkinFw):
-		pass
+		if characterDataGetter:
+			currentColor = characterDataGetter.get_next_color(currentColor)
+			characterContainer.update_color(currentColor)
 	elif Input.is_action_just_pressed(selectSkinBw):
-		pass
+		if characterDataGetter:
+			currentColor = characterDataGetter.get_previous_color(currentColor)
+			characterContainer.update_color(currentColor)
 	if Input.is_action_just_pressed(startGame)\
 	&& enableStartGame:
 		characterSelect.start_game()
@@ -119,8 +128,7 @@ func deselect_character():
 		selectedCharacter = null
 		print("character deselected")
 		delete_character_token()
-		if !previewCharacter:
-			characterSelect.character_deselected(self)
+		characterSelect.character_deselected(self, previewCharacter)
 
 func handle_control_physics(_delta):
 	var xInput = get_input_direction_x()
@@ -142,11 +150,13 @@ func get_input_direction_y():
 
 func set_preview_character(characterDataGetter, characterDataPath):
 	self.characterDataPath = characterDataPath
-	var characterIcon = characterDataGetter.get_character_icon()
-	var characterLogo = characterDataGetter.get_character_logo()
-	var characterName = characterDataGetter.get_character_name()
+	self.characterDataGetter = characterDataGetter
+	characterIcon = characterDataGetter.get_character_icon()
+	characterLogo = characterDataGetter.get_character_logo()
+	characterName = characterDataGetter.get_character_name()
+	currentColor = characterDataGetter.get_first_availavle_color()
 	previewCharacter = characterName
-	characterContainer.setup_hover(characterIcon, characterLogo, characterName)
+	characterContainer.setup_hover(characterIcon, characterLogo, characterName, currentColor)
 	
 func remove_preview_character():
 	if !selectedCharacter:

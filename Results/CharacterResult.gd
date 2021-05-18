@@ -4,9 +4,15 @@ var character = null
 var currentStep = 0
 var enableInput = false
 var resultScreenUI = null
+onready var characterRenderRect = get_node("BGContainer/BG2/CharacterRender")
+onready var characterLogoRect = get_node("CharacterInfo/CharPlayerInfo/HBoxContainer/CharacterLogo")
+onready var characterNameLabel = get_node("CharacterInfo/CharPlayerInfo/VBoxContainer/CharacterName")
+onready var playerNameLabel = get_node("CharacterInfo/CharPlayerInfo/VBoxContainer/HBoxContainer/MarginContainer/PlayerName")
+onready var playerNumberLabel = get_node("CharacterInfo/CharPlayerInfo/PlayerNumber")
 
 func setup(character):
 	self.character = character
+	set_base_info()
 	set_base_stats()
 	set_advanced_stats()
 	
@@ -71,6 +77,14 @@ func scroll_down():
 	var scrollContainer = get_node("ExtendedResults/ScrollContainer")
 	scrollContainer.set_v_scroll(scrollContainer.get_v_scroll()+8)
 #	get_node("ExtendedResults/ScrollContainer").update()
+
+func set_base_info():
+	characterRenderRect.set_texture(character.characterRender)
+	characterRenderRect.set_modulate(character.characterColor)
+	characterLogoRect.set_texture(character.characterLogo)
+	characterNameLabel.set_bbcode("  "+str(character.characterName))
+	playerNameLabel.set_bbcode("[center]"+str(character.playerName)+"[/center]")
+	playerNumberLabel.set_bbcode("[center]P"+str(character.playerNumber)+"[/center]")
 
 func set_base_stats():
 	var outAtValue = get_node("BaseResults/VBoxContainer/MarginContainer/HBoxContainer/OutAtValue")

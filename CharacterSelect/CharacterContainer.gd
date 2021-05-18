@@ -17,8 +17,8 @@ func setup(playerName, playerNumber):
 	set_player_name(playerName)
 	set_player_number(playerNumber)
 	
-func setup_hover(characterIcon, characterLogo, characterName):
-	set_icon(characterIcon)
+func setup_hover(characterIcon, characterLogo, characterName, currentColor):
+	set_icon(characterIcon, currentColor)
 	set_logo(characterLogo)
 	set_character_name(characterName)
 	
@@ -27,8 +27,15 @@ func remove_hover():
 	set_logo(null)
 	set_character_name("")
 	
-func set_icon(characterIcon):
+func set_icon(characterIcon, currentColor= null):
 	self.characterIcon.set_texture(characterIcon)
+	if currentColor:
+		self.characterIcon.set_modulate(currentColor)
+	else:
+		self.characterIcon.set_modulate(Color(1,1,1,1))
+		
+func update_color(newColor):
+	self.characterIcon.set_modulate(newColor)
 	
 func set_logo(characterLogo):
 	self.characterLogo.set_texture(characterLogo)

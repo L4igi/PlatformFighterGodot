@@ -7,8 +7,8 @@ var charactersReady = []
 func add_character_result_gui(character):
 	characters.append(character)
 	var newCharacterGUI = characterResultGUI.instance()
-	newCharacterGUI.setup(character)
 	add_child(newCharacterGUI)
+	newCharacterGUI.call_deferred("setup",character)
 
 func enable_result_gui():
 	for gui in get_children():

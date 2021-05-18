@@ -243,13 +243,14 @@ var cancelChargeTransition = null
 var characterGUI = null
 onready var characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
 onready var characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
+onready var characterRender = preload("res://Characters/Mario/guielements/characterRender.png")
 #stocks
 var stocks = 0
 #resultData 
 var resultData = Globals.create_result_data(self)
-var characterRender = null
 var playerName = null
 var playerNumber = 0
+var characterColor = Color(1,1,1,1)
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -274,6 +275,7 @@ func _ready():
 	animationPlayer.set_animation_process_mode(0)
 	attackDataEnum = Globals.CharacterAnimations
 	Globals.charactersInGame.append(self)
+	self.set_modulate(characterColor)
 		
 func set_attack_data_file():
 	var file = File.new()

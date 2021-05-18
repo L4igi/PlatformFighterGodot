@@ -560,6 +560,8 @@ Start2={
 2d_physics/layer_6="Edge"
 2d_physics/layer_7="EdgeSnap"
 2d_physics/layer_8="Projectile"
+2d_physics/layer_9="Cursor"
+2d_physics/layer_10="UIComponent"
 
 [rendering]
 

@@ -46,14 +46,15 @@ func character_selected(UIControl):
 	characterSelectedUIControl.append(UIControl)
 	if characterSelectedUIControl.size() >= 2\
 	&& characterSelectedUIControl.size() == currentPlayerNumber-1:
-		toggle_start_game("on")
+		toggle_game_start("on")
 	
-func character_deselected(UIControl):
-	toggle_start_game("off")
-	UIControl.remove_preview_character()
+func character_deselected(UIControl, previewCharacter = null):
+	toggle_game_start("off")
+	if !previewCharacter:
+		UIControl.remove_preview_character()
 	characterSelectedUIControl.erase(UIControl)
 	
-func toggle_start_game(onOff):
+func toggle_game_start(onOff):
 	match onOff:
 		"on":
 			gameStartContainer.set_visible(true)

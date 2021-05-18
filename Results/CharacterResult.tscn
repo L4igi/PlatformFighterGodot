@@ -9,7 +9,7 @@
 [ext_resource path="res://Results/AdvancedStatContainer.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Results/CharacterResult.gd" type="Script" id=8]
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=1]
 size = 35
 font_data = ExtResource( 3 )
 
@@ -28,7 +28,7 @@ font_data = ExtResource( 3 )
 extra_spacing_top = 50
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 35
 extra_spacing_top = 5
 font_data = ExtResource( 3 )
@@ -141,7 +141,8 @@ margin_right = 250.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/normal_font = SubResource( 5 )
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
 bbcode_text = "  MARIO"
 text = "  MARIO"
 scroll_active = false
@@ -493,7 +494,7 @@ margin_bottom = 150.0
 margin_right = 250.0
 margin_bottom = 150.0
 rect_min_size = Vector2( 250, 150 )
-custom_fonts/normal_font = SubResource( 6 )
+custom_fonts/normal_font = SubResource( 5 )
 bbcode_enabled = true
 bbcode_text = "[center]Ready for the next Battle[/center]"
 text = "Ready for the next Battle"

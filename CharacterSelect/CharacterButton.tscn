@@ -47,6 +47,8 @@ __meta__ = {
 [node name="CharacterPreviewArea" type="Area2D" parent="CharacterIcon" groups=[
 "CharacterPreview",
 ]]
+collision_layer = 512
+collision_mask = 256
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterIcon/CharacterPreviewArea"]
 position = Vector2( 16, 16 )

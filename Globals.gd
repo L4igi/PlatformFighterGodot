@@ -258,9 +258,12 @@ func setup_characters(characterList):
 		var spawnChar = spawnCharInstancePath.instance()
 #		spawnChar.set_name(character.characterDataGetter.get_character_name)
 		spawnChar.characterName = characterDataGetter.get_character_name()
+		spawnChar.playerName = character.playerName
+		spawnChar.playerNumber = character.playerNumber
 		spawnChar.stocks = 1
 		spawnChar.characterControls = character.controls
 		spawnChar.resultData.resultdata_setup(spawnChar.get_name(), 1, spawnChar.stocks)
+		spawnChar.characterColor = character.currentColor
 		setup_controls_characters(spawnChar, spawnChar.characterControls)
 		instancedCharacters.append(spawnChar)
 		characterDataGetter.queue_free()
