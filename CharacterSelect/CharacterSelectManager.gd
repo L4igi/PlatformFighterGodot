@@ -32,15 +32,15 @@ func check_action_event(event):
 
 func spawn_uiControl(control):
 	var newUiControl = uiControl.instance()
-	newUiControl.setup(control, currentPlayerNumber)
 	add_child(newUiControl)
-	newUiControl.characterContainer = spawn_character_container()
+	newUiControl.setup(control, currentPlayerNumber)
+	newUiControl.characterContainer = spawn_character_container(newUiControl)
 	
-func spawn_character_container():
+func spawn_character_container(newUiControl):
 	var playerName = "Player"+str(currentPlayerNumber)
 	var playerNumber = currentPlayerNumber
 	currentPlayerNumber += 1
-	return characterSelectGUI.instance_character_container(playerName, playerNumber)
+	return characterSelectGUI.instance_character_container(playerName, playerNumber, newUiControl)
 	
 func character_selected(UIControl):
 	characterSelectedUIControl.append(UIControl)

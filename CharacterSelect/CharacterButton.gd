@@ -19,13 +19,15 @@ func setup(character):
 
 func _on_CharacterPreviewArea_body_entered(body):
 	if body.is_in_group("UIControl"):
-		body.set_preview_character(characterDataGetter, characterDataPath)
-		characterDataGetter.increase_players_on_buttons()
+		body.areaEntered = self
+		if body.set_preview_character(characterDataGetter, characterDataPath):
+			characterDataGetter.increase_players_on_buttons()
 
 func _on_CharacterPreviewArea_body_exited(body):
 	if body.is_in_group("UIControl"):
-		body.remove_preview_character()
-		characterDataGetter.decrease_players_on_buttons(body.currentColor)
+		body.areaEntered = null
+		if body.remove_preview_character():
+			characterDataGetter.decrease_players_on_buttons(body.currentColor)
 
 
 func set_character_icon():

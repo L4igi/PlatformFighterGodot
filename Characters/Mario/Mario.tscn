@@ -193,7 +193,7 @@ tracks/11/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=18]
+[sub_resource type="Animation" id=3]
 resource_name = "cancel_charge"
 length = 0.1
 step = 0.0166667
@@ -236,7 +236,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.833335
 step = 0.0166667
 tracks/0/type = "value"
@@ -401,7 +401,7 @@ tracks/12/keys = {
 "values": [ Vector2( 0, 0 ), Vector2( 0, 4 ), Vector2( -2.38419e-07, 12 ), Vector2( 0, 8 ), Vector2( 0, 6 ), Vector2( 0, 4 ), Vector2( -2.38419e-07, 2 ) ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=5]
 length = 0.633335
 step = 0.0166667
 tracks/0/type = "value"
@@ -497,7 +497,7 @@ tracks/6/keys = {
 "values": [ Vector2( -2.38419e-07, 4 ), Vector2( -4.76837e-07, 6 ), Vector2( 2, 6 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 length = 0.666667
 step = 0.0166667
 tracks/0/type = "value"
@@ -525,7 +525,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 length = 0.466668
 step = 0.0166667
 tracks/0/type = "value"
@@ -673,7 +673,7 @@ tracks/11/keys = {
 "values": [ Vector2( -6, -2 ), Vector2( -6, 0 ), Vector2( 14, 0 ), Vector2( 16, -0.406 ), Vector2( -6, -0.812 ), Vector2( -16, -0.812 ), Vector2( 2, 0 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
 length = 1.01667
 step = 0.0166667
 tracks/0/type = "value"
@@ -763,7 +763,7 @@ tracks/6/keys = {
 "values": [ Vector2( -8, -16 ), Vector2( -14, -10.406 ), Vector2( 4, -10.812 ), Vector2( 18, 2 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=9]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -791,7 +791,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 1, 0 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=10]
 loop = true
 step = 0.0166667
 tracks/0/type = "value"
@@ -819,7 +819,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=11]
 length = 0.300001
 step = 0.0166667
 tracks/0/type = "value"
@@ -972,7 +972,7 @@ tracks/11/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=12]
 length = 0.35
 step = 0.0166667
 tracks/0/type = "value"
@@ -1072,7 +1072,7 @@ tracks/7/keys = {
 "values": [ Vector2( 2.05128, 2.38419e-07 ) ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=13]
 length = 0.7
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
@@ -1099,7 +1099,7 @@ tracks/1/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6 ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=14]
 length = 0.633335
 step = 0.0166667
 tracks/0/type = "value"
@@ -1261,8 +1261,7 @@ tracks/12/keys = {
 "values": [ Vector2( 1e-05, 1e-05 ) ]
 }
 
-[sub_resource type="Animation" id=14]
-resource_name = "tumble"
+[sub_resource type="Animation" id=15]
 length = 0.5
 loop = true
 step = 0.0166667
@@ -1303,7 +1302,7 @@ tracks/2/keys = {
 "values": [ -112.3, -480.0 ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=16]
 length = 0.500001
 step = 0.0166667
 tracks/0/type = "value"
@@ -1379,7 +1378,7 @@ tracks/5/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=16]
+[sub_resource type="Animation" id=17]
 length = 0.500001
 step = 0.0166667
 tracks/0/type = "value"
@@ -1515,7 +1514,7 @@ tracks/10/keys = {
 "values": [ false, true ]
 }
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=18]
 length = 1.1
 loop = true
 tracks/0/type = "value"
@@ -1544,36 +1543,33 @@ tracks/1/keys = {
 }
 
 [node name="Mario" instance=ExtResource( 1 )]
+position = Vector2( -332, -4 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" parent="." index="2"]
-animation = "nspecial"
-frame = 2
+frame = 0
 speed_scale = 2.0
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
 playback_speed = 2.0
 anims/backflip = SubResource( 1 )
 anims/bair = SubResource( 2 )
-anims/cancel_charge = SubResource( 18 )
-anims/dair = SubResource( 3 )
-anims/dash_attack = SubResource( 4 )
-anims/doublejump = SubResource( 5 )
-anims/dtilt = SubResource( 6 )
-anims/fair = SubResource( 7 )
-anims/freefall = SubResource( 8 )
-anims/idle = SubResource( 9 )
-anims/jab1 = SubResource( 10 )
-anims/jab2 = SubResource( 11 )
-anims/jump = SubResource( 12 )
-anims/nair = SubResource( 13 )
-anims/tumble = SubResource( 14 )
-anims/upair = SubResource( 15 )
-anims/uptilt = SubResource( 16 )
-anims/walk = SubResource( 17 )
-
-[node name="HitBoxes" parent="AnimatedSprite" index="1"]
-visible = false
+anims/cancel_charge = SubResource( 3 )
+anims/dair = SubResource( 4 )
+anims/dash_attack = SubResource( 5 )
+anims/doublejump = SubResource( 6 )
+anims/dtilt = SubResource( 7 )
+anims/fair = SubResource( 8 )
+anims/freefall = SubResource( 9 )
+anims/idle = SubResource( 10 )
+anims/jab1 = SubResource( 11 )
+anims/jab2 = SubResource( 12 )
+anims/jump = SubResource( 13 )
+anims/nair = SubResource( 14 )
+anims/tumble = SubResource( 15 )
+anims/upair = SubResource( 16 )
+anims/uptilt = SubResource( 17 )
+anims/walk = SubResource( 18 )
 
 [node name="Sweet" parent="AnimatedSprite/HitBoxes/HitBoxSweetArea" index="0"]
 disabled = false

@@ -14,7 +14,9 @@ outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_top = 22
 font_data = ExtResource( 1 )
 
-[node name="CharacterSelector" type="MarginContainer"]
+[node name="CharacterSelector" type="MarginContainer" groups=[
+"CharacterSelector",
+]]
 margin_right = 32.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )

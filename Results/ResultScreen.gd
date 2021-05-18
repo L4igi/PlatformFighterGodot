@@ -43,6 +43,9 @@ func manage_character_ranking():
 	
 
 func manage_winning_character(character):
+	if character.currentMoveDirection == Globals.MoveDirection.LEFT:
+		character.set_rotation(2*PI)
+	print(character.get_rotation())
 	get_node("WinnerPosition").add_child(character)
 	character.global_position = get_node("WinnerPosition").global_position
 	character.state.play_animation("victory")
@@ -69,9 +72,9 @@ func manage_losing_characters(step, character, count = 0):
 			character.global_position = loserPosition.global_position
 			loserPosition.set_visible(true)
 			character.animationPlayer.get_parent().set_animation("lose")
+			character.state.reset_animatedSprite()
 			character.animationPlayer.get_parent().set_frame(0)
 			character.animatedSprite.set_z_index(1)
 		1:
 			character.state.play_animation("lose")
 			character.state.play_animation("loseloop", true)
-	

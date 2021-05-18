@@ -12,8 +12,10 @@ func _ready():
 		characterGridContainer.add_child(newCharacterButton)
 
 
-func instance_character_container(playerName, playerNumber):
+func instance_character_container(playerName, playerNumber, uiNode):
 	var newCharacterContainer = characterContainer.instance()
-	newCharacterContainer.call_deferred("setup",playerName, playerNumber)
+	newCharacterContainer.call_deferred("setup",playerName, playerNumber, uiNode)
 	get_node("SelectedCharacterContainer/HBoxContainer").add_child(newCharacterContainer)
+	for child in get_node("SelectedCharacterContainer/HBoxContainer").get_children():
+		child.call_deferred("update_positions")
 	return newCharacterContainer
