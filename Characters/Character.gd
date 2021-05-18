@@ -257,11 +257,6 @@ func _ready():
 	self.set_collision_mask_bit(2,true)
 	animatedSprite.set_position(Vector2(0,0))
 	#self.set_collision_mask_bit(1,false)
-	var file = File.new()
-	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
-	var attacks = JSON.parse(file.get_as_text())
-	file.close()
-	attackData = attacks.get_result()
 	#assign nodes easy vars
 	edgeGrabShape = $CharacterEdgeGrabArea/CharacterEdgeGrabShape
 	collisionAreaShape = $InteractionAreas/CollisionArea/CollisionArea
@@ -276,13 +271,6 @@ func _ready():
 	attackDataEnum = Globals.CharacterAnimations
 	Globals.charactersInGame.append(self)
 	self.set_modulate(characterColor)
-		
-func set_attack_data_file():
-	var file = File.new()
-	file.open("res://Characters/debugAttacks.json", file.READ)
-	var attacks = JSON.parse(file.get_as_text())
-	file.close()
-	attackData = attacks.get_result()
 		
 func _physics_process(delta):
 	stateChangedThisFrame = false

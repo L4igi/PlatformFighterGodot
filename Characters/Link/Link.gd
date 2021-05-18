@@ -9,17 +9,17 @@ onready var chargeShot = preload("res://Projectiles/ChargeShot/ChargeShot.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var file = File.new()
-	file.open("res://Characters/Mario/marioAttacks.json", file.READ)
+	file.open("res://Characters/Link/linkAttacks.json", file.READ)
 	var attacks = JSON.parse(file.get_as_text())
 	file.close()
 	attackData = attacks.get_result()
-	characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
-	characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
+	characterIcon = preload("res://Characters/Link/guielements/characterIcon.png")
+	characterLogo = preload("res://Characters/Link/guielements/characterLogo.png")
 	#air to ground transitions
 	moveAirGroundTransition[Globals.CharacterAnimations.DAIR] = 1
 	set_base_stats()
 	#set state factory according to character
-	state_factory = MarioStateFactory.new()
+	state_factory = LinkStateFactory.new()
 #	if !onSolidGround:
 #		change_state(Globals.CharacterState.AIR)
 	change_state(Globals.CharacterState.GAMESTART)

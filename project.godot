@@ -140,6 +140,11 @@ _global_script_classes=[ {
 "path": "res://Characters/CharacterStates/InGrabState.gd"
 }, {
 "base": "Reference",
+"class": "LinkStateFactory",
+"language": "GDScript",
+"path": "res://Characters/Link/LinkStateFactory.gd"
+}, {
+"base": "Reference",
 "class": "MarioStateFactory",
 "language": "GDScript",
 "path": "res://Characters/Mario/MarioStateFactory.gd"
@@ -235,6 +240,11 @@ _global_script_classes=[ {
 "path": "res://Characters/CharacterStates/SpecialAirState.gd"
 }, {
 "base": "SpecialAir",
+"class": "SpecialAirLink",
+"language": "GDScript",
+"path": "res://Characters/Link/SpecialAirLink.gd"
+}, {
+"base": "SpecialAir",
 "class": "SpecialAirMario",
 "language": "GDScript",
 "path": "res://Characters/Mario/SpecialAirMario.gd"
@@ -243,6 +253,11 @@ _global_script_classes=[ {
 "class": "SpecialGround",
 "language": "GDScript",
 "path": "res://Characters/CharacterStates/SpecialGroundState.gd"
+}, {
+"base": "SpecialGround",
+"class": "SpecialGroundLink",
+"language": "GDScript",
+"path": "res://Characters/Link/SpecialGroundLink.gd"
 }, {
 "base": "SpecialGround",
 "class": "SpecialGroundMario",
@@ -291,6 +306,7 @@ _global_script_class_icons={
 "HitStunAirState": "",
 "HitStunGroundState": "",
 "InGrabState": "",
+"LinkStateFactory": "",
 "MarioStateFactory": "",
 "Projectile": "",
 "ProjectileChargeState": "",
@@ -310,8 +326,10 @@ _global_script_class_icons={
 "ShieldState": "",
 "ShieldStunState": "",
 "SpecialAir": "",
+"SpecialAirLink": "",
 "SpecialAirMario": "",
 "SpecialGround": "",
+"SpecialGroundLink": "",
 "SpecialGroundMario": "",
 "SpotDodgeState": "",
 "State": "",
