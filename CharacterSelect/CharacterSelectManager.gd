@@ -17,18 +17,16 @@ func _ready():
 func _input(event):
 	check_action_event(event)
 
-func process():
-	pass
+func add_controls(controls):
+	setupControls.append(controls)
 
 func check_action_event(event):
-	var currentControl = 0
 	for control in setupControls:
 		for input in control.values():
-			if event.is_action(input):
+			if event.is_action_pressed(input):
 				setupControls.erase(control)
 				spawn_uiControl(control)
 				return
-		currentControl += 1
 
 func spawn_uiControl(control):
 	var newUiControl = uiControl.instance()
@@ -65,3 +63,14 @@ func toggle_game_start(onOff):
 		
 func start_game():
 	Globals.setup_new_game(characterSelectedUIControl)
+
+func update_player_numbers(playerNumber):
+	var uiController = []
+	for child in get_children():
+		if child.is_in_group("UIControl"):
+			uiController.append(child)
+	for uiControl in uiController:
+		if uiControl.playerNumber > playerNumber:
+			uiControl.playerNumber -= 1
+			uiControl.characterContainer.set_player_number(uiControl.playerNumber)
+	currentPlayerNumber -= 1

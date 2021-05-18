@@ -56,11 +56,13 @@ func get_previous_color(currentColor):
 			usedColors.append(color)
 			usedColors.erase(currentColor)
 			return color
+			
+func on_charactercontainer_delete(color):
+	usedColors.erase(color)
 
 func increase_players_on_buttons():
 	playersOnButton += 1
 	
 func decrease_players_on_buttons(color):
 	usedColors.erase(color)
-	availableColors.append(color)
 	playersOnButton -= 1

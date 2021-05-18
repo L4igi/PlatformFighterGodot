@@ -12,10 +12,13 @@ onready var playerNamesPopUp = get_node("HBoxContainer/MarginContainer2/VBoxCont
 onready var playerNameSelectAres = get_node("HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer2/PlayerName/PlayerNameSelectArea")
 onready var playerNameList = get_node("HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer2/PlayerName/PlayerNamesPopUp/ItemList")
 
+#player name select variables
 var enablePlayerNameSelect = false
 var playerNameSelectPopedUp = false
 var playerNameSelectedItem = 0 
 
+#player select 
+var enablePlayerSelectCount = []
 var uiController = null
 
 func _ready():
@@ -25,6 +28,8 @@ func _ready():
 func _process(delta):
 	if enablePlayerNameSelect:
 		handle_player_name_select()
+	elif !enablePlayerSelectCount.empty():
+		handle_player_select_input()
 		
 func handle_player_name_select():
 	if playerNameSelectPopedUp:
@@ -54,6 +59,11 @@ func handle_player_name_select():
 		playerNameList.ensure_current_is_visible()
 		playerNameSelectPopedUp = false
 		playerNamesPopUp.hide()
+		
+func handle_player_select_input():
+	for control in enablePlayerSelectCount:
+		if Input.is_action_just_pressed(control.select):
+			uiController.toggle_player_select()
 		
 func disable_uiNode_movement():
 	if playerNameSelectPopedUp:
@@ -115,3 +125,11 @@ func update_positions():
 		playerNamesPopUp.rect_position = playerNameSelectAres.global_position
 		uiController.global_position = playerNameSelectAres.global_position
 	
+
+
+func _on_PlayerNumberArea_body_entered(body):
+	enablePlayerSelectCount.append(body)
+
+
+func _on_PlayerNumberArea_body_exited(body):
+	enablePlayerSelectCount.erase(body)

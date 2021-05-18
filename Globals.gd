@@ -70,6 +70,9 @@ var controlsP2 = {
 	"special": "Special2", 
 	"start" : "Start2"
 }
+
+var availableControls = [controlsP1, controlsP2]
+
 #var controlsP2 = {
 #	"up": "Up1",
 #	"down" : "Down1",

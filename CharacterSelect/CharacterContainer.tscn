@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Fonts/strenuous.black.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://CharacterSelect/CharacterContainer.gd" type="Script" id=4]
@@ -16,6 +16,9 @@ extents = Vector2( 100, 16 )
 [sub_resource type="DynamicFont" id=3]
 extra_spacing_top = 7
 font_data = ExtResource( 2 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 100, 16 )
 
 [node name="CharacterContainer" type="MarginContainer"]
 margin_left = 412.0
@@ -187,5 +190,15 @@ bbcode_enabled = true
 bbcode_text = "[center]P1[/center]"
 text = "P1"
 
+[node name="PlayerNumberArea" type="Area2D" parent="HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer3/PlayerNumber"]
+collision_layer = 512
+collision_mask = 256
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer3/PlayerNumber/PlayerNumberArea"]
+position = Vector2( 0, 15 )
+shape = SubResource( 6 )
+
 [connection signal="body_entered" from="HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer2/PlayerName/PlayerNameSelectArea" to="." method="_on_PlayerNameSelectArea_body_entered"]
 [connection signal="body_exited" from="HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer2/PlayerName/PlayerNameSelectArea" to="." method="_on_PlayerNameSelectArea_body_exited"]
+[connection signal="body_entered" from="HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer3/PlayerNumber/PlayerNumberArea" to="." method="_on_PlayerNumberArea_body_entered"]
+[connection signal="body_exited" from="HBoxContainer/MarginContainer2/VBoxContainer/MarginContainer3/PlayerNumber/PlayerNumberArea" to="." method="_on_PlayerNumberArea_body_exited"]

@@ -41,7 +41,7 @@ var characterDataGetter = null
 
 #area entered 
 var areaEntered = null
-# Called when the node enters the scene tree for the first time.
+var bodyDeleted = false
 func _ready():
 	characterSelect = get_parent()
 	global_position =  get_viewport().get_size()/2
@@ -182,3 +182,17 @@ func toggle_game_start(onOff):
 			enableStartGame = true
 		"off":
 			enableStartGame = false
+
+#if cpu was an option toggle between player, cpu and none
+func toggle_player_select():
+	bodyDeleted = true
+	characterSelect.call_deferred("add_controls", controls)
+	characterSelect.character_deselected(self)
+	characterSelect.characterSelectedUIControl.erase(self)
+	characterSelect.update_player_numbers(playerNumber)
+	if characterDataGetter:
+		characterDataGetter.on_charactercontainer_delete(currentColor)
+	characterContainer.queue_free()
+	if setToken:
+		setToken.queue_free()
+	self.queue_free()

@@ -24,7 +24,7 @@ func _on_CharacterPreviewArea_body_entered(body):
 			characterDataGetter.increase_players_on_buttons()
 
 func _on_CharacterPreviewArea_body_exited(body):
-	if body.is_in_group("UIControl"):
+	if body.is_in_group("UIControl") && !body.bodyDeleted:
 		body.areaEntered = null
 		if body.remove_preview_character():
 			characterDataGetter.decrease_players_on_buttons(body.currentColor)
