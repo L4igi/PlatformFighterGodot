@@ -344,6 +344,8 @@ func reset_animatedSprite():
 	character.animatedSprite.set_rotation_degrees(0.0)
 	character.animatedSprite.set_position(Vector2(0,0))
 	character.animatedSprite.set_modulate(Color(1,1,1,1))
+	character.animatedSprite.set_flip_v(false)
+	character.animatedSprite.set_flip_h(false)
 	
 func reset_interactionareas():
 	pass

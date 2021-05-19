@@ -1,0 +1,746 @@
+[gd_resource type="SpriteFrames" load_steps=460 format=2]
+
+[ext_resource path="res://Characters/Mario/Run/8.png" type="Texture" id=1]
+[ext_resource path="res://Characters/Mario/Run/9.png" type="Texture" id=2]
+[ext_resource path="res://Characters/Mario/Run/7.png" type="Texture" id=3]
+[ext_resource path="res://Characters/Mario/Run/0.png" type="Texture" id=4]
+[ext_resource path="res://Characters/Mario/Run/3.png" type="Texture" id=5]
+[ext_resource path="res://Characters/Mario/Run/5.png" type="Texture" id=6]
+[ext_resource path="res://Characters/Mario/Run/6.png" type="Texture" id=7]
+[ext_resource path="res://Characters/Mario/Run/2.png" type="Texture" id=8]
+[ext_resource path="res://Characters/Mario/Jab1/0.png" type="Texture" id=9]
+[ext_resource path="res://Characters/Mario/Run/4.png" type="Texture" id=10]
+[ext_resource path="res://Characters/Mario/dthrow/3.png" type="Texture" id=11]
+[ext_resource path="res://Characters/Mario/roll/8.png" type="Texture" id=12]
+[ext_resource path="res://Characters/Mario/dthrow/6.png" type="Texture" id=13]
+[ext_resource path="res://Characters/Mario/grabJab/1.png" type="Texture" id=14]
+[ext_resource path="res://Characters/Mario/roll/3.png" type="Texture" id=15]
+[ext_resource path="res://Characters/Mario/spotdodge/4.png" type="Texture" id=16]
+[ext_resource path="res://Characters/Mario/dthrow/7.png" type="Texture" id=17]
+[ext_resource path="res://Characters/Mario/spotdodge/6.png" type="Texture" id=18]
+[ext_resource path="res://Characters/Mario/spotdodge/5.png" type="Texture" id=19]
+[ext_resource path="res://Characters/Mario/grab/3.png" type="Texture" id=20]
+[ext_resource path="res://Characters/Mario/grabJab/2.png" type="Texture" id=21]
+[ext_resource path="res://Characters/Mario/uthrow/1.png" type="Texture" id=22]
+[ext_resource path="res://Characters/Mario/dthrow/2.png" type="Texture" id=23]
+[ext_resource path="res://Characters/Mario/dthrow/5.png" type="Texture" id=24]
+[ext_resource path="res://Characters/Mario/dthrow/12.png" type="Texture" id=25]
+[ext_resource path="res://Characters/Mario/spotdodge/1.png" type="Texture" id=26]
+[ext_resource path="res://Characters/Mario/roll/6.png" type="Texture" id=27]
+[ext_resource path="res://Characters/Mario/roll/5.png" type="Texture" id=28]
+[ext_resource path="res://Characters/Mario/bthrow/11.png" type="Texture" id=29]
+[ext_resource path="res://Characters/Mario/fthrow/3.png" type="Texture" id=30]
+[ext_resource path="res://Characters/Mario/fthrow/0.png" type="Texture" id=31]
+[ext_resource path="res://Characters/Mario/fthrow/4.png" type="Texture" id=32]
+[ext_resource path="res://Characters/Mario/grab/1.png" type="Texture" id=33]
+[ext_resource path="res://Characters/Mario/uthrow/0.png" type="Texture" id=34]
+[ext_resource path="res://Characters/Mario/dthrow/0.png" type="Texture" id=35]
+[ext_resource path="res://Characters/Mario/roll/0.png" type="Texture" id=36]
+[ext_resource path="res://Characters/Mario/fthrow/1.png" type="Texture" id=37]
+[ext_resource path="res://Characters/Mario/fthrow/2.png" type="Texture" id=38]
+[ext_resource path="res://Characters/Mario/grabJab/3.png" type="Texture" id=39]
+[ext_resource path="res://Characters/Mario/bthrow/0.png" type="Texture" id=40]
+[ext_resource path="res://Characters/Mario/grab/0.png" type="Texture" id=41]
+[ext_resource path="res://Characters/Mario/grab/2.png" type="Texture" id=42]
+[ext_resource path="res://Characters/Mario/dthrow/9.png" type="Texture" id=43]
+[ext_resource path="res://Characters/Mario/dthrow/10.png" type="Texture" id=44]
+[ext_resource path="res://Characters/Mario/bthrow/1.png" type="Texture" id=45]
+[ext_resource path="res://Characters/Mario/bthrow/2.png" type="Texture" id=46]
+[ext_resource path="res://Characters/Mario/bthrow/3.png" type="Texture" id=47]
+[ext_resource path="res://Characters/Mario/bthrow/13.png" type="Texture" id=48]
+[ext_resource path="res://Characters/Mario/roll/7.png" type="Texture" id=49]
+[ext_resource path="res://Characters/Mario/ingrab/1.png" type="Texture" id=50]
+[ext_resource path="res://Characters/Mario/ingrab/0.png" type="Texture" id=51]
+[ext_resource path="res://Characters/Mario/uthrow/2.png" type="Texture" id=52]
+[ext_resource path="res://Characters/Mario/uthrow/5.png" type="Texture" id=53]
+[ext_resource path="res://Characters/Mario/uthrow/3.png" type="Texture" id=54]
+[ext_resource path="res://Characters/Mario/roll/2.png" type="Texture" id=55]
+[ext_resource path="res://Characters/Mario/spotdodge/2.png" type="Texture" id=56]
+[ext_resource path="res://Characters/Mario/roll/1.png" type="Texture" id=57]
+[ext_resource path="res://Characters/Mario/grabJab/0.png" type="Texture" id=58]
+[ext_resource path="res://Characters/Mario/uthrow/4.png" type="Texture" id=59]
+[ext_resource path="res://Characters/Mario/bthrow/12.png" type="Texture" id=60]
+[ext_resource path="res://Characters/Mario/dthrow/1.png" type="Texture" id=61]
+[ext_resource path="res://Characters/Mario/dthrow/4.png" type="Texture" id=62]
+[ext_resource path="res://Characters/Mario/spotdodge/0.png" type="Texture" id=63]
+[ext_resource path="res://Characters/Mario/dthrow/8.png" type="Texture" id=64]
+[ext_resource path="res://Characters/Mario/bthrow/14.png" type="Texture" id=65]
+[ext_resource path="res://Characters/Mario/spotdodge/3.png" type="Texture" id=66]
+[ext_resource path="res://Characters/Mario/dthrow/11.png" type="Texture" id=67]
+[ext_resource path="res://Characters/Mario/Run/10.png" type="Texture" id=68]
+[ext_resource path="res://Characters/Mario/idle/1.png" type="Texture" id=69]
+[ext_resource path="res://Characters/Mario/Jab1/1.png" type="Texture" id=70]
+[ext_resource path="res://Characters/Mario/freefall/3.png" type="Texture" id=71]
+[ext_resource path="res://Characters/Mario/nair/5.png" type="Texture" id=72]
+[ext_resource path="res://Characters/Mario/Run/11.png" type="Texture" id=73]
+[ext_resource path="res://Characters/Mario/nair/6.png" type="Texture" id=74]
+[ext_resource path="res://Characters/Mario/dash_attack/16.png" type="Texture" id=75]
+[ext_resource path="res://Characters/Mario/jump/0.png" type="Texture" id=76]
+[ext_resource path="res://Characters/Mario/dash_attack/1.png" type="Texture" id=77]
+[ext_resource path="res://Characters/Mario/jump/3.png" type="Texture" id=78]
+[ext_resource path="res://Characters/Mario/jump/1.png" type="Texture" id=79]
+[ext_resource path="res://Characters/Mario/jump/6.png" type="Texture" id=80]
+[ext_resource path="res://Characters/Mario/Jab1/2.png" type="Texture" id=81]
+[ext_resource path="res://Characters/Mario/nair/1.png" type="Texture" id=82]
+[ext_resource path="res://Characters/Mario/nair/2.png" type="Texture" id=83]
+[ext_resource path="res://Characters/Mario/dash_attack/14.png" type="Texture" id=84]
+[ext_resource path="res://Characters/Mario/freefall/6.png" type="Texture" id=85]
+[ext_resource path="res://Characters/Mario/jump/4.png" type="Texture" id=86]
+[ext_resource path="res://Characters/Mario/nair/4.png" type="Texture" id=87]
+[ext_resource path="res://Characters/Mario/dash_attack/0.png" type="Texture" id=88]
+[ext_resource path="res://Characters/Mario/dash_attack/7.png" type="Texture" id=89]
+[ext_resource path="res://Characters/Mario/idle/5.png" type="Texture" id=90]
+[ext_resource path="res://Characters/Mario/dash_attack/10.png" type="Texture" id=91]
+[ext_resource path="res://Characters/Mario/dash_attack/12.png" type="Texture" id=92]
+[ext_resource path="res://Characters/Mario/freefall/5.png" type="Texture" id=93]
+[ext_resource path="res://Characters/Mario/DoubleJump/3.png" type="Texture" id=94]
+[ext_resource path="res://Characters/Mario/nair/0.png" type="Texture" id=95]
+[ext_resource path="res://Characters/Mario/dash_attack/2.png" type="Texture" id=96]
+[ext_resource path="res://Characters/Mario/idle/4.png" type="Texture" id=97]
+[ext_resource path="res://Characters/Mario/idle/3.png" type="Texture" id=98]
+[ext_resource path="res://Characters/Mario/DoubleJump/4.png" type="Texture" id=99]
+[ext_resource path="res://Characters/Mario/dash_attack/8.png" type="Texture" id=100]
+[ext_resource path="res://Characters/Mario/idle/0.png" type="Texture" id=101]
+[ext_resource path="res://Characters/Mario/Run/1.png" type="Texture" id=102]
+[ext_resource path="res://Characters/Mario/Jab1/3.png" type="Texture" id=103]
+[ext_resource path="res://Characters/Mario/DoubleJump/2.png" type="Texture" id=104]
+[ext_resource path="res://Characters/Mario/idle/6.png" type="Texture" id=105]
+[ext_resource path="res://Characters/Mario/DoubleJump/0.png" type="Texture" id=106]
+[ext_resource path="res://Characters/Mario/DoubleJump/1.png" type="Texture" id=107]
+[ext_resource path="res://Characters/Mario/freefall/4.png" type="Texture" id=108]
+[ext_resource path="res://Characters/Mario/jump/5.png" type="Texture" id=109]
+[ext_resource path="res://Characters/Mario/nair/3.png" type="Texture" id=110]
+[ext_resource path="res://Characters/Mario/jump/2.png" type="Texture" id=111]
+[ext_resource path="res://Characters/Mario/dash_attack/6.png" type="Texture" id=112]
+[ext_resource path="res://Characters/Mario/dash_attack/3.png" type="Texture" id=113]
+[ext_resource path="res://Characters/Mario/idle/2.png" type="Texture" id=114]
+[ext_resource path="res://Characters/Mario/dash_attack/9.png" type="Texture" id=115]
+[ext_resource path="res://Characters/Mario/dash_attack/11.png" type="Texture" id=116]
+[ext_resource path="res://Characters/Mario/dash_attack/13.png" type="Texture" id=117]
+[ext_resource path="res://Characters/Mario/dash_attack/15.png" type="Texture" id=118]
+[ext_resource path="res://Characters/Mario/dash_attack/5.png" type="Texture" id=119]
+[ext_resource path="res://Characters/Mario/dash_attack/4.png" type="Texture" id=120]
+[ext_resource path="res://Characters/Mario/upair/0.png" type="Texture" id=121]
+[ext_resource path="res://Characters/Mario/uptilt/5.png" type="Texture" id=122]
+[ext_resource path="res://Characters/Mario/fair/3.png" type="Texture" id=123]
+[ext_resource path="res://Characters/Mario/dtilt/6.png" type="Texture" id=124]
+[ext_resource path="res://Characters/Mario/dtilt/1.png" type="Texture" id=125]
+[ext_resource path="res://Characters/Mario/dair/9.png" type="Texture" id=126]
+[ext_resource path="res://Characters/Mario/fair/4.png" type="Texture" id=127]
+[ext_resource path="res://Characters/Mario/dair/1.png" type="Texture" id=128]
+[ext_resource path="res://Characters/Mario/dair/3.png" type="Texture" id=129]
+[ext_resource path="res://Characters/Mario/dair/6.png" type="Texture" id=130]
+[ext_resource path="res://Characters/Mario/walk/7.png" type="Texture" id=131]
+[ext_resource path="res://Characters/Mario/uptilt/1.png" type="Texture" id=132]
+[ext_resource path="res://Characters/Mario/uptilt/3.png" type="Texture" id=133]
+[ext_resource path="res://Characters/Mario/fair/7.png" type="Texture" id=134]
+[ext_resource path="res://Characters/Mario/bair/1.png" type="Texture" id=135]
+[ext_resource path="res://Characters/Mario/bair/5.png" type="Texture" id=136]
+[ext_resource path="res://Characters/Mario/Jab2/0.png" type="Texture" id=137]
+[ext_resource path="res://Characters/Mario/Jab2/2.png" type="Texture" id=138]
+[ext_resource path="res://Characters/Mario/bair/3.png" type="Texture" id=139]
+[ext_resource path="res://Characters/Mario/dtilt/3.png" type="Texture" id=140]
+[ext_resource path="res://Characters/Mario/dair/0.png" type="Texture" id=141]
+[ext_resource path="res://Characters/Mario/uptilt/2.png" type="Texture" id=142]
+[ext_resource path="res://Characters/Mario/dair/4.png" type="Texture" id=143]
+[ext_resource path="res://Characters/Mario/dair/8.png" type="Texture" id=144]
+[ext_resource path="res://Characters/Mario/fair/10.png" type="Texture" id=145]
+[ext_resource path="res://Characters/Mario/fair/8.png" type="Texture" id=146]
+[ext_resource path="res://Characters/Mario/upair/6.png" type="Texture" id=147]
+[ext_resource path="res://Characters/Mario/dtilt/5.png" type="Texture" id=148]
+[ext_resource path="res://Characters/Mario/dtilt/2.png" type="Texture" id=149]
+[ext_resource path="res://Characters/Mario/dair/2.png" type="Texture" id=150]
+[ext_resource path="res://Characters/Mario/fair/9.png" type="Texture" id=151]
+[ext_resource path="res://Characters/Mario/dtilt/4.png" type="Texture" id=152]
+[ext_resource path="res://Characters/Mario/dair/10.png" type="Texture" id=153]
+[ext_resource path="res://Characters/Mario/dair/13.png" type="Texture" id=154]
+[ext_resource path="res://Characters/Mario/walk/0.png" type="Texture" id=155]
+[ext_resource path="res://Characters/Mario/walk/4.png" type="Texture" id=156]
+[ext_resource path="res://Characters/Mario/walk/6.png" type="Texture" id=157]
+[ext_resource path="res://Characters/Mario/upair/3.png" type="Texture" id=158]
+[ext_resource path="res://Characters/Mario/fair/5.png" type="Texture" id=159]
+[ext_resource path="res://Characters/Mario/upair/1.png" type="Texture" id=160]
+[ext_resource path="res://Characters/Mario/bair/2.png" type="Texture" id=161]
+[ext_resource path="res://Characters/Mario/bair/6.png" type="Texture" id=162]
+[ext_resource path="res://Characters/Mario/Jab2/1.png" type="Texture" id=163]
+[ext_resource path="res://Characters/Mario/upair/4.png" type="Texture" id=164]
+[ext_resource path="res://Characters/Mario/upair/2.png" type="Texture" id=165]
+[ext_resource path="res://Characters/Mario/uptilt/0.png" type="Texture" id=166]
+[ext_resource path="res://Characters/Mario/fair/0.png" type="Texture" id=167]
+[ext_resource path="res://Characters/Mario/dtilt/0.png" type="Texture" id=168]
+[ext_resource path="res://Characters/Mario/Jab2/3.png" type="Texture" id=169]
+[ext_resource path="res://Characters/Mario/upair/5.png" type="Texture" id=170]
+[ext_resource path="res://Characters/Mario/bair/0.png" type="Texture" id=171]
+[ext_resource path="res://Characters/Mario/bair/4.png" type="Texture" id=172]
+[ext_resource path="res://Characters/Mario/fair/2.png" type="Texture" id=173]
+[ext_resource path="res://Characters/Mario/dair/12.png" type="Texture" id=174]
+[ext_resource path="res://Characters/Mario/walk/1.png" type="Texture" id=175]
+[ext_resource path="res://Characters/Mario/fair/1.png" type="Texture" id=176]
+[ext_resource path="res://Characters/Mario/dair/5.png" type="Texture" id=177]
+[ext_resource path="res://Characters/Mario/uptilt/4.png" type="Texture" id=178]
+[ext_resource path="res://Characters/Mario/fair/6.png" type="Texture" id=179]
+[ext_resource path="res://Characters/Mario/dair/7.png" type="Texture" id=180]
+[ext_resource path="res://Characters/Mario/dair/11.png" type="Texture" id=181]
+[ext_resource path="res://Characters/Mario/walk/2.png" type="Texture" id=182]
+[ext_resource path="res://Characters/Mario/walk/3.png" type="Texture" id=183]
+[ext_resource path="res://Characters/Mario/hurt/7.png" type="Texture" id=184]
+[ext_resource path="res://Characters/Mario/ftilt/2.png" type="Texture" id=185]
+[ext_resource path="res://Characters/Mario/ftilt/4.png" type="Texture" id=186]
+[ext_resource path="res://Characters/Mario/hurt/6.png" type="Texture" id=187]
+[ext_resource path="res://Characters/Mario/hurt/2.png" type="Texture" id=188]
+[ext_resource path="res://Characters/Mario/normal_getup/1.png" type="Texture" id=189]
+[ext_resource path="res://Characters/Mario/roll_getup/1.png" type="Texture" id=190]
+[ext_resource path="res://Characters/Mario/walk/5.png" type="Texture" id=191]
+[ext_resource path="res://Characters/Mario/normal_getup/4.png" type="Texture" id=192]
+[ext_resource path="res://Characters/Mario/roll_getup/0.png" type="Texture" id=193]
+[ext_resource path="res://Characters/Mario/fsmash/5.png" type="Texture" id=194]
+[ext_resource path="res://Characters/Mario/roll_getup/2.png" type="Texture" id=195]
+[ext_resource path="res://Characters/Mario/attack_getup/1.png" type="Texture" id=196]
+[ext_resource path="res://Characters/Mario/walk/11.png" type="Texture" id=197]
+[ext_resource path="res://Characters/Mario/ftilt/1.png" type="Texture" id=198]
+[ext_resource path="res://Characters/Mario/upsmash/8.png" type="Texture" id=199]
+[ext_resource path="res://Characters/Mario/upsmash/10.png" type="Texture" id=200]
+[ext_resource path="res://Characters/Mario/fsmash/3.png" type="Texture" id=201]
+[ext_resource path="res://Characters/Mario/fsmash/2.png" type="Texture" id=202]
+[ext_resource path="res://Characters/Mario/dsmash/9.png" type="Texture" id=203]
+[ext_resource path="res://Characters/Mario/upsmash/2.png" type="Texture" id=204]
+[ext_resource path="res://Characters/Mario/dsmash/6.png" type="Texture" id=205]
+[ext_resource path="res://Characters/Mario/dsmash/1.png" type="Texture" id=206]
+[ext_resource path="res://Characters/Mario/hurt/10.png" type="Texture" id=207]
+[ext_resource path="res://Characters/Mario/fsmash/10.png" type="Texture" id=208]
+[ext_resource path="res://Characters/Mario/hurt/12.png" type="Texture" id=209]
+[ext_resource path="res://Characters/Mario/walk/9.png" type="Texture" id=210]
+[ext_resource path="res://Characters/Mario/dsmash/10.png" type="Texture" id=211]
+[ext_resource path="res://Characters/Mario/dsmash/0.png" type="Texture" id=212]
+[ext_resource path="res://Characters/Mario/dsmash/11.png" type="Texture" id=213]
+[ext_resource path="res://Characters/Mario/hurt/1.png" type="Texture" id=214]
+[ext_resource path="res://Characters/Mario/upsmash/5.png" type="Texture" id=215]
+[ext_resource path="res://Characters/Mario/upsmash/6.png" type="Texture" id=216]
+[ext_resource path="res://Characters/Mario/upsmash/11.png" type="Texture" id=217]
+[ext_resource path="res://Characters/Mario/hurt/0.png" type="Texture" id=218]
+[ext_resource path="res://Characters/Mario/fsmash/7.png" type="Texture" id=219]
+[ext_resource path="res://Characters/Mario/fsmash/9.png" type="Texture" id=220]
+[ext_resource path="res://Characters/Mario/dsmash/2.png" type="Texture" id=221]
+[ext_resource path="res://Characters/Mario/fsmash/4.png" type="Texture" id=222]
+[ext_resource path="res://Characters/Mario/upsmash/1.png" type="Texture" id=223]
+[ext_resource path="res://Characters/Mario/fsmash/1.png" type="Texture" id=224]
+[ext_resource path="res://Characters/Mario/fsmash/8.png" type="Texture" id=225]
+[ext_resource path="res://Characters/Mario/upsmash/7.png" type="Texture" id=226]
+[ext_resource path="res://Characters/Mario/fsmash/6.png" type="Texture" id=227]
+[ext_resource path="res://Characters/Mario/walk/10.png" type="Texture" id=228]
+[ext_resource path="res://Characters/Mario/dsmash/3.png" type="Texture" id=229]
+[ext_resource path="res://Characters/Mario/upsmash/9.png" type="Texture" id=230]
+[ext_resource path="res://Characters/Mario/ftilt/3.png" type="Texture" id=231]
+[ext_resource path="res://Characters/Mario/ftilt/0.png" type="Texture" id=232]
+[ext_resource path="res://Characters/Mario/dsmash/4.png" type="Texture" id=233]
+[ext_resource path="res://Characters/Mario/walk/8.png" type="Texture" id=234]
+[ext_resource path="res://Characters/Mario/dsmash/7.png" type="Texture" id=235]
+[ext_resource path="res://Characters/Mario/upsmash/3.png" type="Texture" id=236]
+[ext_resource path="res://Characters/Mario/dsmash/5.png" type="Texture" id=237]
+[ext_resource path="res://Characters/Mario/upsmash/4.png" type="Texture" id=238]
+[ext_resource path="res://Characters/Mario/dsmash/8.png" type="Texture" id=239]
+[ext_resource path="res://Characters/Mario/hurt/9.png" type="Texture" id=240]
+[ext_resource path="res://Characters/Mario/hurt/4.png" type="Texture" id=241]
+[ext_resource path="res://Characters/Mario/fsmash/0.png" type="Texture" id=242]
+[ext_resource path="res://Characters/Mario/hurt/11.png" type="Texture" id=243]
+[ext_resource path="res://Characters/Mario/upsmash/0.png" type="Texture" id=244]
+[ext_resource path="res://Characters/Mario/hurt/3.png" type="Texture" id=245]
+[ext_resource path="res://Characters/Mario/hurt/5.png" type="Texture" id=246]
+[ext_resource path="res://Characters/Mario/hurt/8.png" type="Texture" id=247]
+[ext_resource path="res://Characters/Mario/attack_getup/2.png" type="Texture" id=248]
+[ext_resource path="res://Characters/Mario/roll_getup/5.png" type="Texture" id=249]
+[ext_resource path="res://Characters/Mario/shield/0.png" type="Texture" id=250]
+[ext_resource path="res://Characters/Mario/normal_getup/2.png" type="Texture" id=251]
+[ext_resource path="res://Characters/Mario/roll_getup/6.png" type="Texture" id=252]
+[ext_resource path="res://Characters/Mario/attack_getup/4.png" type="Texture" id=253]
+[ext_resource path="res://Characters/Mario/attack_getup/0.png" type="Texture" id=254]
+[ext_resource path="res://Characters/Mario/attack_getup/5.png" type="Texture" id=255]
+[ext_resource path="res://Characters/Mario/attack_getup/6.png" type="Texture" id=256]
+[ext_resource path="res://Characters/Mario/roll_getup/7.png" type="Texture" id=257]
+[ext_resource path="res://Characters/Mario/roll_getup/10.png" type="Texture" id=258]
+[ext_resource path="res://Characters/Mario/normal_getup/0.png" type="Texture" id=259]
+[ext_resource path="res://Characters/Mario/roll_getup/4.png" type="Texture" id=260]
+[ext_resource path="res://Characters/Mario/roll_getup/12.png" type="Texture" id=261]
+[ext_resource path="res://Characters/Mario/roll_getup/8.png" type="Texture" id=262]
+[ext_resource path="res://Characters/Mario/normal_getup/3.png" type="Texture" id=263]
+[ext_resource path="res://Characters/Mario/roll_getup/11.png" type="Texture" id=264]
+[ext_resource path="res://Characters/Mario/roll_getup/3.png" type="Texture" id=265]
+[ext_resource path="res://Characters/Mario/roll_getup/9.png" type="Texture" id=266]
+[ext_resource path="res://Characters/Mario/attack_getup/3.png" type="Texture" id=267]
+[ext_resource path="res://Characters/Mario/shieldbreak/7.png" type="Texture" id=268]
+[ext_resource path="res://Characters/Mario/shieldbreak/9.png" type="Texture" id=269]
+[ext_resource path="res://Characters/Mario/backflip/0.png" type="Texture" id=270]
+[ext_resource path="res://Characters/Mario/jump_getup/16.png" type="Texture" id=271]
+[ext_resource path="res://Characters/Mario/jump_getup/4.png" type="Texture" id=272]
+[ext_resource path="res://Characters/Mario/slide_turnaround/0.png" type="Texture" id=273]
+[ext_resource path="res://Characters/Mario/shieldDrop/2.png" type="Texture" id=274]
+[ext_resource path="res://Characters/Mario/edgeHang/1.png" type="Texture" id=275]
+[ext_resource path="res://Characters/Mario/attack_getup/7.png" type="Texture" id=276]
+[ext_resource path="res://Characters/Mario/jump_getup/14.png" type="Texture" id=277]
+[ext_resource path="res://Characters/Mario/shieldDrop/1.png" type="Texture" id=278]
+[ext_resource path="res://Characters/Mario/slide_turnaround/7.png" type="Texture" id=279]
+[ext_resource path="res://Characters/Mario/shieldbreak/6.png" type="Texture" id=280]
+[ext_resource path="res://Characters/Mario/shieldbreak/11.png" type="Texture" id=281]
+[ext_resource path="res://Characters/Mario/jump_getup/10.png" type="Texture" id=282]
+[ext_resource path="res://Characters/Mario/jump_getup/11.png" type="Texture" id=283]
+[ext_resource path="res://Characters/Mario/jump_getup/15.png" type="Texture" id=284]
+[ext_resource path="res://Characters/Mario/jump_getup/12.png" type="Texture" id=285]
+[ext_resource path="res://Characters/Mario/slide_turnaround/2.png" type="Texture" id=286]
+[ext_resource path="res://Characters/Mario/attack_getup/8.png" type="Texture" id=287]
+[ext_resource path="res://Characters/Mario/jump_getup/6.png" type="Texture" id=288]
+[ext_resource path="res://Characters/Mario/landinglag/0.png" type="Texture" id=289]
+[ext_resource path="res://Characters/Mario/jump_getup/3.png" type="Texture" id=290]
+[ext_resource path="res://Characters/Mario/jump_getup/1.png" type="Texture" id=291]
+[ext_resource path="res://Characters/Mario/edgeHang/2.png" type="Texture" id=292]
+[ext_resource path="res://Characters/Mario/jump_getup/7.png" type="Texture" id=293]
+[ext_resource path="res://Characters/Mario/jump_getup/13.png" type="Texture" id=294]
+[ext_resource path="res://Characters/Mario/edgeHang/0.png" type="Texture" id=295]
+[ext_resource path="res://Characters/Mario/bthrow/4.png" type="Texture" id=296]
+[ext_resource path="res://Characters/Mario/bthrow/5.png" type="Texture" id=297]
+[ext_resource path="res://Characters/Mario/bthrow/8.png" type="Texture" id=298]
+[ext_resource path="res://Characters/Mario/crouch/2.png" type="Texture" id=299]
+[ext_resource path="res://Characters/Mario/shieldbreak/13.png" type="Texture" id=300]
+[ext_resource path="res://Characters/Mario/jump_getup/9.png" type="Texture" id=301]
+[ext_resource path="res://Characters/Mario/jump_getup/5.png" type="Texture" id=302]
+[ext_resource path="res://Characters/Mario/slide_turnaround/3.png" type="Texture" id=303]
+[ext_resource path="res://Characters/Mario/shieldbreak/1.png" type="Texture" id=304]
+[ext_resource path="res://Characters/Mario/jump_getup/0.png" type="Texture" id=305]
+[ext_resource path="res://Characters/Mario/slide_turnaround/5.png" type="Texture" id=306]
+[ext_resource path="res://Characters/Mario/slide_turnaround/1.png" type="Texture" id=307]
+[ext_resource path="res://Characters/Mario/crouch/0.png" type="Texture" id=308]
+[ext_resource path="res://Characters/Mario/shieldbreak/0.png" type="Texture" id=309]
+[ext_resource path="res://Characters/Mario/jump_getup/2.png" type="Texture" id=310]
+[ext_resource path="res://Characters/Mario/bthrow/9.png" type="Texture" id=311]
+[ext_resource path="res://Characters/Mario/shieldDrop/0.png" type="Texture" id=312]
+[ext_resource path="res://Characters/Mario/slide_turnaround/4.png" type="Texture" id=313]
+[ext_resource path="res://Characters/Mario/crouch/1.png" type="Texture" id=314]
+[ext_resource path="res://Characters/Mario/slide_turnaround/8.png" type="Texture" id=315]
+[ext_resource path="res://Characters/Mario/slide_turnaround/6.png" type="Texture" id=316]
+[ext_resource path="res://Characters/Mario/attack_getup/9.png" type="Texture" id=317]
+[ext_resource path="res://Characters/Mario/backflip/1.png" type="Texture" id=318]
+[ext_resource path="res://Characters/Mario/shieldbreak/4.png" type="Texture" id=319]
+[ext_resource path="res://Characters/Mario/shieldDrop/3.png" type="Texture" id=320]
+[ext_resource path="res://Characters/Mario/landinglag/2.png" type="Texture" id=321]
+[ext_resource path="res://Characters/Mario/shieldbreak/8.png" type="Texture" id=322]
+[ext_resource path="res://Characters/Mario/landinglag/1.png" type="Texture" id=323]
+[ext_resource path="res://Characters/Mario/bthrow/10.png" type="Texture" id=324]
+[ext_resource path="res://Characters/Mario/shieldbreak/12.png" type="Texture" id=325]
+[ext_resource path="res://Characters/Mario/shieldbreak/2.png" type="Texture" id=326]
+[ext_resource path="res://Characters/Mario/bthrow/7.png" type="Texture" id=327]
+[ext_resource path="res://Characters/Mario/shieldbreak/5.png" type="Texture" id=328]
+[ext_resource path="res://Characters/Mario/shieldbreak/3.png" type="Texture" id=329]
+[ext_resource path="res://Characters/Mario/shieldbreak/10.png" type="Texture" id=330]
+[ext_resource path="res://Characters/Mario/bthrow/6.png" type="Texture" id=331]
+[ext_resource path="res://Characters/Mario/rebound/3.png" type="Texture" id=332]
+[ext_resource path="res://Characters/Mario/rebound/6.png" type="Texture" id=333]
+[ext_resource path="res://Characters/Mario/techroll/6.png" type="Texture" id=334]
+[ext_resource path="res://Characters/Mario/rebound/1.png" type="Texture" id=335]
+[ext_resource path="res://Characters/Mario/downspecial/8.png" type="Texture" id=336]
+[ext_resource path="res://Characters/Mario/downspecial/13.png" type="Texture" id=337]
+[ext_resource path="res://Characters/Mario/rebound/5.png" type="Texture" id=338]
+[ext_resource path="res://Characters/Mario/rebound/2.png" type="Texture" id=339]
+[ext_resource path="res://Characters/Mario/downspecial/14.png" type="Texture" id=340]
+[ext_resource path="res://Characters/Mario/nspecial/4.png" type="Texture" id=341]
+[ext_resource path="res://Characters/Mario/AirDodge/0.png" type="Texture" id=342]
+[ext_resource path="res://Characters/Mario/downspecial/15.png" type="Texture" id=343]
+[ext_resource path="res://Characters/Mario/AirDodge/3.png" type="Texture" id=344]
+[ext_resource path="res://Characters/Mario/techGround/6.png" type="Texture" id=345]
+[ext_resource path="res://Characters/Mario/techGround/0.png" type="Texture" id=346]
+[ext_resource path="res://Characters/Mario/downspecial/4.png" type="Texture" id=347]
+[ext_resource path="res://Characters/Mario/downspecial/10.png" type="Texture" id=348]
+[ext_resource path="res://Characters/Mario/nspecial/6.png" type="Texture" id=349]
+[ext_resource path="res://Characters/Mario/rebound/0.png" type="Texture" id=350]
+[ext_resource path="res://Characters/Mario/techGround/7.png" type="Texture" id=351]
+[ext_resource path="res://Characters/Mario/rebound/4.png" type="Texture" id=352]
+[ext_resource path="res://Characters/Mario/downspecial/12.png" type="Texture" id=353]
+[ext_resource path="res://Characters/Mario/downspecial/6.png" type="Texture" id=354]
+[ext_resource path="res://Characters/Mario/nspecial/8.png" type="Texture" id=355]
+[ext_resource path="res://Characters/Mario/downspecial/5.png" type="Texture" id=356]
+[ext_resource path="res://Characters/Mario/downspecial/9.png" type="Texture" id=357]
+[ext_resource path="res://Characters/Mario/techroll/0.png" type="Texture" id=358]
+[ext_resource path="res://Characters/Mario/techair/1.png" type="Texture" id=359]
+[ext_resource path="res://Characters/Mario/techroll/1.png" type="Texture" id=360]
+[ext_resource path="res://Characters/Mario/techroll/3.png" type="Texture" id=361]
+[ext_resource path="res://Characters/Mario/techroll/2.png" type="Texture" id=362]
+[ext_resource path="res://Characters/Mario/techroll/8.png" type="Texture" id=363]
+[ext_resource path="res://Characters/Mario/jump_getup/8.png" type="Texture" id=364]
+[ext_resource path="res://Characters/Mario/downspecial/7.png" type="Texture" id=365]
+[ext_resource path="res://Characters/Mario/downspecial/16.png" type="Texture" id=366]
+[ext_resource path="res://Characters/Mario/downspecial/3.png" type="Texture" id=367]
+[ext_resource path="res://Characters/Mario/techGround/8.png" type="Texture" id=368]
+[ext_resource path="res://Characters/Mario/nspecial/9.png" type="Texture" id=369]
+[ext_resource path="res://Characters/Mario/nspecial/7.png" type="Texture" id=370]
+[ext_resource path="res://Characters/Mario/techair/2.png" type="Texture" id=371]
+[ext_resource path="res://Characters/Mario/techair/3.png" type="Texture" id=372]
+[ext_resource path="res://Characters/Mario/AirDodge/1.png" type="Texture" id=373]
+[ext_resource path="res://Characters/Mario/downspecial/0.png" type="Texture" id=374]
+[ext_resource path="res://Characters/Mario/nspecial/3.png" type="Texture" id=375]
+[ext_resource path="res://Characters/Mario/techroll/7.png" type="Texture" id=376]
+[ext_resource path="res://Characters/Mario/techair/5.png" type="Texture" id=377]
+[ext_resource path="res://Characters/Mario/nspecial/0.png" type="Texture" id=378]
+[ext_resource path="res://Characters/Mario/downspecial/1.png" type="Texture" id=379]
+[ext_resource path="res://Characters/Mario/techair/4.png" type="Texture" id=380]
+[ext_resource path="res://Characters/Mario/downspecial/2.png" type="Texture" id=381]
+[ext_resource path="res://Characters/Mario/techGround/4.png" type="Texture" id=382]
+[ext_resource path="res://Characters/Mario/nspecial/2.png" type="Texture" id=383]
+[ext_resource path="res://Characters/Mario/nspecial/5.png" type="Texture" id=384]
+[ext_resource path="res://Characters/Mario/nspecial/1.png" type="Texture" id=385]
+[ext_resource path="res://Characters/Mario/sidespecial/7.png" type="Texture" id=386]
+[ext_resource path="res://Characters/Mario/downspecial/11.png" type="Texture" id=387]
+[ext_resource path="res://Characters/Mario/sidespecial/1.png" type="Texture" id=388]
+[ext_resource path="res://Characters/Mario/sidespecial/12.png" type="Texture" id=389]
+[ext_resource path="res://Characters/Mario/techGround/3.png" type="Texture" id=390]
+[ext_resource path="res://Characters/Mario/techGround/2.png" type="Texture" id=391]
+[ext_resource path="res://Characters/Mario/techroll/5.png" type="Texture" id=392]
+[ext_resource path="res://Characters/Mario/techGround/1.png" type="Texture" id=393]
+[ext_resource path="res://Characters/Mario/techroll/4.png" type="Texture" id=394]
+[ext_resource path="res://Characters/Mario/AirDodge/2.png" type="Texture" id=395]
+[ext_resource path="res://Characters/Mario/sidespecial/13.png" type="Texture" id=396]
+[ext_resource path="res://Characters/Mario/sidespecial/14.png" type="Texture" id=397]
+[ext_resource path="res://Characters/Mario/upspecial/10.png" type="Texture" id=398]
+[ext_resource path="res://Characters/Mario/upspecial/8.png" type="Texture" id=399]
+[ext_resource path="res://Characters/Mario/upspecial/3.png" type="Texture" id=400]
+[ext_resource path="res://Characters/Mario/gamestart/0.png" type="Texture" id=401]
+[ext_resource path="res://Characters/Mario/sidespecial/0.png" type="Texture" id=402]
+[ext_resource path="res://Characters/Mario/upspecial/6.png" type="Texture" id=403]
+[ext_resource path="res://Characters/Mario/gamestart/3.png" type="Texture" id=404]
+[ext_resource path="res://Characters/Mario/sidespecial/5.png" type="Texture" id=405]
+[ext_resource path="res://Characters/Mario/upspecial/13.png" type="Texture" id=406]
+[ext_resource path="res://Characters/Mario/gamestart/7.png" type="Texture" id=407]
+[ext_resource path="res://Characters/Mario/gamestart/5.png" type="Texture" id=408]
+[ext_resource path="res://Characters/Mario/victory/8.png" type="Texture" id=409]
+[ext_resource path="res://Characters/Mario/victory/10.png" type="Texture" id=410]
+[ext_resource path="res://Characters/Mario/gamestart/11.png" type="Texture" id=411]
+[ext_resource path="res://Characters/Mario/upspecial/12.png" type="Texture" id=412]
+[ext_resource path="res://Characters/Mario/lose/2.png" type="Texture" id=413]
+[ext_resource path="res://Characters/Mario/gamestart/2.png" type="Texture" id=414]
+[ext_resource path="res://Characters/Mario/lose/8.png" type="Texture" id=415]
+[ext_resource path="res://Characters/Mario/upspecial/5.png" type="Texture" id=416]
+[ext_resource path="res://Characters/Mario/helpless/1.png" type="Texture" id=417]
+[ext_resource path="res://Characters/Mario/upspecial/11.png" type="Texture" id=418]
+[ext_resource path="res://Characters/Mario/sidespecial/6.png" type="Texture" id=419]
+[ext_resource path="res://Characters/Mario/victory/11.png" type="Texture" id=420]
+[ext_resource path="res://Characters/Mario/victory/0.png" type="Texture" id=421]
+[ext_resource path="res://Characters/Mario/victory/4.png" type="Texture" id=422]
+[ext_resource path="res://Characters/Mario/lose/4.png" type="Texture" id=423]
+[ext_resource path="res://Characters/Mario/sidespecial/10.png" type="Texture" id=424]
+[ext_resource path="res://Characters/Mario/gamestart/9.png" type="Texture" id=425]
+[ext_resource path="res://Characters/Mario/lose/1.png" type="Texture" id=426]
+[ext_resource path="res://Characters/Mario/lose/7.png" type="Texture" id=427]
+[ext_resource path="res://Characters/Mario/lose/6.png" type="Texture" id=428]
+[ext_resource path="res://Characters/Mario/lose/5.png" type="Texture" id=429]
+[ext_resource path="res://Characters/Mario/victory/1.png" type="Texture" id=430]
+[ext_resource path="res://Characters/Mario/victory/3.png" type="Texture" id=431]
+[ext_resource path="res://Characters/Mario/gamestart/10.png" type="Texture" id=432]
+[ext_resource path="res://Characters/Mario/upspecial/7.png" type="Texture" id=433]
+[ext_resource path="res://Characters/Mario/sidespecial/8.png" type="Texture" id=434]
+[ext_resource path="res://Characters/Mario/victory/5.png" type="Texture" id=435]
+[ext_resource path="res://Characters/Mario/gamestart/4.png" type="Texture" id=436]
+[ext_resource path="res://Characters/Mario/upspecial/9.png" type="Texture" id=437]
+[ext_resource path="res://Characters/Mario/victory/7.png" type="Texture" id=438]
+[ext_resource path="res://Characters/Mario/victory/9.png" type="Texture" id=439]
+[ext_resource path="res://Characters/Mario/victory/6.png" type="Texture" id=440]
+[ext_resource path="res://Characters/Mario/lose/3.png" type="Texture" id=441]
+[ext_resource path="res://Characters/Mario/upspecial/2.png" type="Texture" id=442]
+[ext_resource path="res://Characters/Mario/victory/2.png" type="Texture" id=443]
+[ext_resource path="res://Characters/Mario/sidespecial/3.png" type="Texture" id=444]
+[ext_resource path="res://Characters/Mario/upspecial/0.png" type="Texture" id=445]
+[ext_resource path="res://Characters/Mario/sidespecial/2.png" type="Texture" id=446]
+[ext_resource path="res://Characters/Mario/sidespecial/11.png" type="Texture" id=447]
+[ext_resource path="res://Characters/Mario/upspecial/4.png" type="Texture" id=448]
+[ext_resource path="res://Characters/Mario/helpless/0.png" type="Texture" id=449]
+[ext_resource path="res://Characters/Mario/sidespecial/4.png" type="Texture" id=450]
+[ext_resource path="res://Characters/Mario/lose/0.png" type="Texture" id=451]
+[ext_resource path="res://Characters/Mario/sidespecial/9.png" type="Texture" id=452]
+[ext_resource path="res://Characters/Mario/gamestart/6.png" type="Texture" id=453]
+[ext_resource path="res://Characters/Mario/gamestart/1.png" type="Texture" id=454]
+[ext_resource path="res://Characters/Mario/lose/10.png" type="Texture" id=455]
+[ext_resource path="res://Characters/Mario/gamestart/8.png" type="Texture" id=456]
+[ext_resource path="res://Characters/Mario/lose/9.png" type="Texture" id=457]
+[ext_resource path="res://Characters/Mario/upspecial/1.png" type="Texture" id=458]
+
+[sub_resource type="StreamTexture" id=73]
+load_path = "res://.import/5.png-43fbad497e5c0940070c19a1cd231129.stex"
+
+[resource]
+animations = [ {
+"frames": [ ExtResource( 101 ), ExtResource( 69 ), ExtResource( 114 ), ExtResource( 98 ), ExtResource( 97 ), ExtResource( 90 ), ExtResource( 105 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 193 ), ExtResource( 190 ), ExtResource( 195 ), ExtResource( 265 ), ExtResource( 260 ), ExtResource( 249 ), ExtResource( 252 ), ExtResource( 257 ), ExtResource( 262 ), ExtResource( 266 ), ExtResource( 258 ), ExtResource( 264 ), ExtResource( 261 ) ],
+"loop": true,
+"name": "roll_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 35 ), ExtResource( 61 ), ExtResource( 23 ), ExtResource( 11 ), ExtResource( 62 ), ExtResource( 24 ), ExtResource( 13 ), ExtResource( 17 ), ExtResource( 64 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 67 ), ExtResource( 25 ) ],
+"loop": true,
+"name": "dthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 155 ), ExtResource( 175 ), ExtResource( 182 ), ExtResource( 183 ), ExtResource( 156 ), ExtResource( 191 ), ExtResource( 157 ), ExtResource( 131 ), ExtResource( 234 ), ExtResource( 210 ), ExtResource( 228 ), ExtResource( 197 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 121 ), ExtResource( 160 ), ExtResource( 165 ), ExtResource( 158 ), ExtResource( 164 ), ExtResource( 170 ), ExtResource( 147 ) ],
+"loop": true,
+"name": "upair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 71 ), ExtResource( 108 ), ExtResource( 93 ), ExtResource( 85 ) ],
+"loop": true,
+"name": "freefall",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 166 ), ExtResource( 132 ), ExtResource( 142 ), ExtResource( 133 ), ExtResource( 178 ), ExtResource( 122 ) ],
+"loop": true,
+"name": "uptilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 289 ), ExtResource( 323 ), ExtResource( 321 ) ],
+"loop": true,
+"name": "landing_lag",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 346 ), ExtResource( 393 ), ExtResource( 391 ), ExtResource( 390 ), ExtResource( 382 ), SubResource( 73 ), ExtResource( 345 ), ExtResource( 351 ), ExtResource( 368 ) ],
+"loop": true,
+"name": "techground",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 259 ), ExtResource( 189 ), ExtResource( 251 ), ExtResource( 263 ), ExtResource( 192 ) ],
+"loop": true,
+"name": "normal_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 106 ), ExtResource( 107 ), ExtResource( 104 ), ExtResource( 94 ), ExtResource( 99 ) ],
+"loop": true,
+"name": "doublejump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 401 ), ExtResource( 454 ), ExtResource( 414 ), ExtResource( 404 ), ExtResource( 436 ), ExtResource( 408 ), ExtResource( 453 ), ExtResource( 407 ), ExtResource( 456 ), ExtResource( 425 ), ExtResource( 432 ), ExtResource( 411 ) ],
+"loop": true,
+"name": "gamestart",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 36 ), ExtResource( 57 ), ExtResource( 55 ), ExtResource( 15 ), ExtResource( 28 ), ExtResource( 27 ), ExtResource( 49 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "roll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 40 ), ExtResource( 45 ), ExtResource( 46 ), ExtResource( 47 ), ExtResource( 296 ), ExtResource( 297 ), ExtResource( 331 ), ExtResource( 327 ), ExtResource( 298 ), ExtResource( 311 ), ExtResource( 324 ), ExtResource( 29 ), ExtResource( 60 ), ExtResource( 48 ), ExtResource( 65 ) ],
+"loop": true,
+"name": "bthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 295 ), ExtResource( 275 ), ExtResource( 292 ) ],
+"loop": true,
+"name": "edgeSnap",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 273 ), ExtResource( 307 ), ExtResource( 286 ), ExtResource( 303 ), ExtResource( 313 ), ExtResource( 306 ), ExtResource( 316 ), ExtResource( 279 ), ExtResource( 315 ) ],
+"loop": true,
+"name": "turnaround_fast",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 168 ), ExtResource( 125 ), ExtResource( 149 ), ExtResource( 140 ), ExtResource( 152 ), ExtResource( 148 ), ExtResource( 124 ) ],
+"loop": true,
+"name": "dtilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 141 ), ExtResource( 128 ), ExtResource( 150 ), ExtResource( 129 ), ExtResource( 143 ), ExtResource( 177 ), ExtResource( 130 ), ExtResource( 180 ), ExtResource( 144 ), ExtResource( 126 ), ExtResource( 153 ), ExtResource( 181 ), ExtResource( 174 ), ExtResource( 154 ) ],
+"loop": true,
+"name": "dair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 378 ), ExtResource( 385 ), ExtResource( 383 ), ExtResource( 375 ), ExtResource( 341 ), ExtResource( 384 ), ExtResource( 349 ), ExtResource( 370 ), ExtResource( 355 ), ExtResource( 369 ) ],
+"loop": true,
+"name": "nspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 273 ), ExtResource( 307 ), ExtResource( 286 ), ExtResource( 303 ), ExtResource( 313 ), ExtResource( 306 ), ExtResource( 316 ), ExtResource( 279 ), ExtResource( 315 ) ],
+"loop": true,
+"name": "turnaround_slow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 63 ), ExtResource( 26 ), ExtResource( 56 ), ExtResource( 66 ), ExtResource( 16 ), ExtResource( 19 ), ExtResource( 18 ) ],
+"loop": true,
+"name": "spotdodge",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 232 ), ExtResource( 198 ), ExtResource( 185 ), ExtResource( 231 ), ExtResource( 186 ) ],
+"loop": true,
+"name": "ftilt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 270 ), ExtResource( 318 ) ],
+"loop": true,
+"name": "backflip",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 218 ), ExtResource( 214 ), ExtResource( 188 ), ExtResource( 245 ), ExtResource( 241 ), ExtResource( 246 ), ExtResource( 187 ), ExtResource( 184 ), ExtResource( 247 ), ExtResource( 240 ), ExtResource( 207 ), ExtResource( 243 ), ExtResource( 209 ) ],
+"loop": true,
+"name": "hurt",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 102 ), ExtResource( 8 ), ExtResource( 5 ), ExtResource( 10 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 3 ), ExtResource( 1 ), ExtResource( 2 ), ExtResource( 68 ), ExtResource( 73 ) ],
+"loop": true,
+"name": "run",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 171 ), ExtResource( 135 ), ExtResource( 161 ), ExtResource( 139 ), ExtResource( 172 ), ExtResource( 136 ), ExtResource( 162 ) ],
+"loop": true,
+"name": "bair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 254 ), ExtResource( 196 ), ExtResource( 248 ), ExtResource( 267 ), ExtResource( 253 ), ExtResource( 255 ), ExtResource( 256 ), ExtResource( 276 ), ExtResource( 287 ), ExtResource( 317 ) ],
+"loop": true,
+"name": "attack_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 342 ), ExtResource( 373 ), ExtResource( 395 ), ExtResource( 344 ) ],
+"loop": true,
+"name": "airdodge",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 51 ), ExtResource( 50 ) ],
+"loop": true,
+"name": "ingrab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 9 ), ExtResource( 70 ), ExtResource( 81 ), ExtResource( 103 ) ],
+"loop": true,
+"name": "jab1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 309 ), ExtResource( 304 ), ExtResource( 326 ), ExtResource( 329 ), ExtResource( 319 ), ExtResource( 328 ), ExtResource( 280 ), ExtResource( 268 ), ExtResource( 322 ), ExtResource( 269 ), ExtResource( 330 ), ExtResource( 281 ), ExtResource( 325 ), ExtResource( 300 ) ],
+"loop": true,
+"name": "shieldbreak",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 88 ), ExtResource( 77 ), ExtResource( 96 ), ExtResource( 113 ), ExtResource( 120 ), ExtResource( 119 ), ExtResource( 112 ), ExtResource( 89 ), ExtResource( 100 ), ExtResource( 115 ), ExtResource( 91 ), ExtResource( 116 ), ExtResource( 92 ), ExtResource( 117 ), ExtResource( 84 ), ExtResource( 118 ), ExtResource( 75 ) ],
+"loop": true,
+"name": "dash_attack",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 374 ), ExtResource( 379 ), ExtResource( 381 ), ExtResource( 367 ), ExtResource( 347 ), ExtResource( 356 ), ExtResource( 354 ), ExtResource( 365 ), ExtResource( 336 ), ExtResource( 357 ), ExtResource( 348 ), ExtResource( 387 ), ExtResource( 353 ), ExtResource( 337 ), ExtResource( 340 ), ExtResource( 343 ), ExtResource( 366 ) ],
+"loop": true,
+"name": "downspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 402 ), ExtResource( 388 ), ExtResource( 446 ), ExtResource( 444 ), ExtResource( 450 ), ExtResource( 405 ), ExtResource( 419 ), ExtResource( 386 ), ExtResource( 434 ), ExtResource( 452 ), ExtResource( 424 ), ExtResource( 447 ), ExtResource( 389 ), ExtResource( 396 ), ExtResource( 397 ) ],
+"loop": true,
+"name": "sidespecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 421 ), ExtResource( 430 ), ExtResource( 443 ), ExtResource( 431 ), ExtResource( 422 ), ExtResource( 435 ), ExtResource( 440 ), ExtResource( 438 ), ExtResource( 409 ), ExtResource( 439 ), ExtResource( 410 ), ExtResource( 420 ) ],
+"loop": true,
+"name": "victory",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 451 ), ExtResource( 426 ), ExtResource( 413 ), ExtResource( 441 ), ExtResource( 423 ), ExtResource( 429 ), ExtResource( 428 ), ExtResource( 427 ), ExtResource( 415 ), ExtResource( 457 ), ExtResource( 455 ) ],
+"loop": true,
+"name": "lose",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 34 ), ExtResource( 22 ), ExtResource( 52 ), ExtResource( 54 ), ExtResource( 59 ), ExtResource( 53 ) ],
+"loop": true,
+"name": "uthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 358 ), ExtResource( 360 ), ExtResource( 362 ), ExtResource( 361 ), ExtResource( 394 ), ExtResource( 392 ), ExtResource( 334 ), ExtResource( 376 ), ExtResource( 363 ) ],
+"loop": true,
+"name": "techroll",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 359 ), ExtResource( 371 ), ExtResource( 372 ), ExtResource( 380 ), ExtResource( 377 ) ],
+"loop": true,
+"name": "techair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 312 ), ExtResource( 278 ), ExtResource( 274 ), ExtResource( 320 ) ],
+"loop": true,
+"name": "shielddrop",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 31 ), ExtResource( 37 ), ExtResource( 38 ), ExtResource( 30 ), ExtResource( 32 ) ],
+"loop": true,
+"name": "fthrow",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 58 ), ExtResource( 14 ), ExtResource( 21 ), ExtResource( 39 ) ],
+"loop": true,
+"name": "grabjab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 242 ), ExtResource( 224 ), ExtResource( 202 ), ExtResource( 201 ), ExtResource( 222 ), ExtResource( 194 ), ExtResource( 227 ), ExtResource( 219 ), ExtResource( 225 ), ExtResource( 220 ), ExtResource( 208 ) ],
+"loop": true,
+"name": "fsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 305 ), ExtResource( 291 ), ExtResource( 310 ), ExtResource( 302 ), ExtResource( 288 ), ExtResource( 293 ), ExtResource( 364 ), ExtResource( 301 ), ExtResource( 290 ), ExtResource( 272 ), ExtResource( 282 ), ExtResource( 283 ), ExtResource( 285 ), ExtResource( 294 ), ExtResource( 277 ), ExtResource( 284 ), ExtResource( 271 ) ],
+"loop": true,
+"name": "jump_getup",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 212 ), ExtResource( 206 ), ExtResource( 221 ), ExtResource( 229 ), ExtResource( 233 ), ExtResource( 237 ), ExtResource( 205 ), ExtResource( 235 ), ExtResource( 239 ), ExtResource( 203 ), ExtResource( 211 ), ExtResource( 213 ) ],
+"loop": true,
+"name": "dsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 244 ), ExtResource( 223 ), ExtResource( 204 ), ExtResource( 236 ), ExtResource( 238 ), ExtResource( 215 ), ExtResource( 216 ), ExtResource( 226 ), ExtResource( 199 ), ExtResource( 230 ), ExtResource( 200 ), ExtResource( 217 ) ],
+"loop": true,
+"name": "upsmash",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 95 ), ExtResource( 82 ), ExtResource( 83 ), ExtResource( 110 ), ExtResource( 87 ), ExtResource( 72 ), ExtResource( 74 ) ],
+"loop": true,
+"name": "nair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 137 ), ExtResource( 163 ), ExtResource( 138 ), ExtResource( 169 ) ],
+"loop": true,
+"name": "jab2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 449 ), ExtResource( 417 ) ],
+"loop": true,
+"name": "helpless",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 350 ), ExtResource( 335 ), ExtResource( 339 ), ExtResource( 332 ), ExtResource( 352 ), ExtResource( 338 ), ExtResource( 333 ) ],
+"loop": true,
+"name": "rebound",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 167 ), ExtResource( 176 ), ExtResource( 173 ), ExtResource( 123 ), ExtResource( 127 ), ExtResource( 159 ), ExtResource( 179 ), ExtResource( 134 ), ExtResource( 146 ), ExtResource( 151 ), ExtResource( 145 ) ],
+"loop": true,
+"name": "fair",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 445 ), ExtResource( 458 ), ExtResource( 442 ), ExtResource( 400 ), ExtResource( 448 ), ExtResource( 416 ), ExtResource( 403 ), ExtResource( 433 ), ExtResource( 399 ), ExtResource( 437 ), ExtResource( 398 ), ExtResource( 418 ), ExtResource( 412 ), ExtResource( 406 ) ],
+"loop": true,
+"name": "upspecial",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 308 ), ExtResource( 314 ), ExtResource( 299 ) ],
+"loop": true,
+"name": "crouch",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 76 ), ExtResource( 79 ), ExtResource( 111 ), ExtResource( 78 ), ExtResource( 86 ), ExtResource( 109 ), ExtResource( 80 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 41 ), ExtResource( 33 ), ExtResource( 42 ), ExtResource( 20 ) ],
+"loop": true,
+"name": "grab",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 250 ) ],
+"loop": true,
+"name": "shield",
+"speed": 5.0
+} ]
