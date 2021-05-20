@@ -1123,6 +1123,9 @@ func get_attack_damage_multipliers():
 	print(attackMultiplicator)
 	return smashAttackMultiplier * attackMultiplicator
 				
+func check_move_connected_interaction():
+	pass
+				
 func start_game():
 	disableInput = false
 	change_state(Globals.CharacterState.GROUND)

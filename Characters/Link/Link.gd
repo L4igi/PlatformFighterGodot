@@ -6,6 +6,9 @@ onready var arrow = preload("res://Projectiles/Arrow/Arrow.tscn")
 onready var bomb = preload("res://Projectiles/Bomb/Bomb.tscn")
 onready var chargeShot = preload("res://Projectiles/ChargeShot/ChargeShot.tscn")
 
+var linkDairBounce = 0
+var maxLinkDairBounces = 2
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var file = File.new()
@@ -57,13 +60,24 @@ func apply_special_animation_steps(step = 0):
 func manage_dair(step):
 	match step:
 		0:
+			linkDairBounce = 0
 			velocity = Vector2.ZERO
 			state.gravity_on_off("off")
 			disableInputDI = false
 		1:
 			state.gravity_on_off("on")
-			animationPlayer.stop(false)
-			state.bufferedAnimation = true
+			disableInputDI = true
+#			animationPlayer.stop(false)
+#			state.bufferedAnimation = true
+		2:
+			if linkDairBounce == maxLinkDairBounces: 
+				return
+			else:
+				link_dair_bounce()
+				linkDairBounce += 1
+				
+func link_dair_bounce():
+	velocity.y = -600
 
 func manage_dash_attack(step):
 	match step: 
@@ -217,4 +231,9 @@ func manage_throw_item_special_moves():
 	currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 	state.play_attack_animation("throw_item_forward")
 
+
+func check_move_connected_interaction():
+	match currentAttack:
+		Globals.CharacterAnimations.DAIR:
+			manage_dair(2)
 

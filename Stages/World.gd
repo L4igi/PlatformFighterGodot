@@ -69,7 +69,7 @@ func spawn_characters():
 	characterList.append(char1)
 	char1.characterControls = Globals.controlsP1
 	char1.resultData.resultdata_setup(char1.get_name(), 1, char1.stocks)
-	setup_controls_characters(char1, Globals.controlsP1)
+	setup_controls_characters(char1, Globals.controlsP2)
 	var char2 = characterLink.instance()
 	self.add_child(char2)
 	char2.global_position = spawnPoints[1].global_position
@@ -81,7 +81,7 @@ func spawn_characters():
 	characterList.append(char2)
 	char2.characterControls = Globals.controlsP2
 	char2.resultData.resultdata_setup(char2.get_name(), 2, char2.stocks)
-	setup_controls_characters(char2, Globals.controlsP2)
+	setup_controls_characters(char2, Globals.controlsP1)
 	
 func setup_gui():
 	for character in characterList: 

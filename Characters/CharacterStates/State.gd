@@ -524,6 +524,7 @@ func on_hitlag_timeout():
 		character.superArmourOn = false
 	elif !bufferedAnimation:
 		animationPlayer.play()
+	character.check_move_connected_interaction()
 	character.disableInputDI = character.backUpDisableInputDI
 	character.disableInput = character.backUpDisableInput
 
