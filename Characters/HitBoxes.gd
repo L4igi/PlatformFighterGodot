@@ -110,7 +110,7 @@ func set_hitbox_data(attackedObject, hbType, interactionType):
 	if attackingObject.is_in_group("Character"):
 		if attackingObject.currentAttack == Globals.CharacterAnimations.COUNTER:
 			attackDamage = clamp(attackingObject.bufferedCounterDamage, attackDamage, 100)
-		attackDamage *= attackingObject.smashAttackMultiplier
+		attackDamage *= attackingObject.get_attack_damage_multipliers()
 	#add charge projectile multipliers
 	if attackingObject.is_in_group("Projectile"):
 		if attackingObject.maxCharge > 1:

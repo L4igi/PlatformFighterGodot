@@ -275,7 +275,9 @@ func reset_attributes():
 	character.backUpDisableInputDI = false
 	character.backUpDisableInput = false
 	character.backupDisabledHitboxes.clear()
+	character.attackMultiplicator = 1.0
 	character.set_character_z_index(0)
+	character.currentPartSmashAttack = 0
 	
 func switch_to_current_state_again(transitionBufferedInput):
 	self.transitionBufferedInput = transitionBufferedInput
@@ -299,6 +301,7 @@ func switch_to_current_state_again(transitionBufferedInput):
 	character.backUpDisableInputDI = false
 	character.backUpDisableInput = false
 	character.backupDisabledHitboxes.clear()
+	character.currentPartSmashAttack = 0
 
 func input_movement_physics(_delta):
 #	character.move_and_slide(character.velocity, Vector2.UP)

@@ -15,6 +15,7 @@ func _ready():
 	attackData = attacks.get_result()
 	characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
 	characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
+	characterRender = preload("res://Characters/Mario/guielements/characterRender.png")
 	#air to ground transitions
 	moveAirGroundTransition[Globals.CharacterAnimations.DAIR] = 1
 	set_base_stats()
@@ -50,7 +51,7 @@ func apply_special_animation_steps(step = 0):
 		Globals.CharacterAnimations.SIDESPECIAL:
 			manage_side_special(step)
 		Globals.CharacterAnimations.NSPECIAL:
-			manage_neutral_special_charge_shot(step)
+			manage_neutral_special(step)
 	
 func manage_dair(step):
 	match step:

@@ -187,6 +187,7 @@ var stateChangedThisFrame = false
 var turnAroundSmashAttack = false
 #smashAttackMultiplier
 var smashAttackMultiplier = 1.0
+var attackMultiplicator = 1.0 
 #buffered animation 
 var bufferedAnimation = null
 #rebound 
@@ -231,6 +232,7 @@ var counteredHitlagFrames = 50.0
 var normalLandingLag = 3.0
 #items 
 var grabbedItem = null
+var thrownFromGrabbedItemSpawnMove = false
 #charging projectile 
 var chargingProjectile = null
 #backuped disabled hitboxes
@@ -241,9 +243,9 @@ var multiObjectsConnected = false
 var cancelChargeTransition = null
 #gui
 var characterGUI = null
-onready var characterIcon = preload("res://Characters/Mario/guielements/characterIcon.png")
-onready var characterLogo = preload("res://Characters/Mario/guielements/characterLogo.png")
-onready var characterRender = preload("res://Characters/Mario/guielements/characterRender.png")
+var characterIcon = null
+var characterLogo = null 
+var characterRender = null
 #stocks
 var stocks = 0
 #resultData 
@@ -251,6 +253,10 @@ var resultData = Globals.create_result_data(self)
 var playerName = null
 var playerNumber = 0
 var characterColor = Color(1,1,1,1)
+
+var multiPartSmashAttack = {}
+var currentPartSmashAttack = 0
+var comboNextSmash = false
 
 func _ready():
 	self.set_collision_mask_bit(0,false)
@@ -515,6 +521,7 @@ func apply_throw(actionType):
 func apply_smash_attack_steps(step = 0):
 	match step:
 		0:
+			comboNextSmash = false
 			disableInputDI = false
 			chargingSmashAttack = true
 		1:
@@ -522,6 +529,8 @@ func apply_smash_attack_steps(step = 0):
 				animationPlayer.stop(false)
 		2:
 			animationPlayer.play()
+		3:
+			comboNextSmash = true
 
 func apply_hurt_animation_step(step =0):
 	match step: 
@@ -1109,6 +1118,10 @@ func apply_charge_projectile_pushback(pushVelocity):
 				velocity.x += pushVelocity
 			Globals.MoveDirection.RIGHT:
 				velocity.x -= pushVelocity
+				
+func get_attack_damage_multipliers():
+	print(attackMultiplicator)
+	return smashAttackMultiplier * attackMultiplicator
 				
 func start_game():
 	disableInput = false

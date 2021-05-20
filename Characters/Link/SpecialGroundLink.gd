@@ -8,9 +8,9 @@ var downSpecialRehitFrames = 5.0
 func handle_input_disabled(_delta):
 	match character.currentAttack:
 		Globals.CharacterAnimations.UPSPECIAL:
-			pass
+			process_up_special_inputs(_delta)
 		Globals.CharacterAnimations.NSPECIAL:
-			process_neutral_special_inputs_charge_shot(_delta)
+			process_neutral_special_inputs(_delta)
 		Globals.CharacterAnimations.DOWNSPECIAL:
 			process_down_special_inputs(_delta)
 		Globals.CharacterAnimations.SIDESPECIAL:
@@ -28,6 +28,15 @@ func process_down_special_inputs(_delta):
 			character.velocity.x = clamp(character.velocity.x, -downSpecialMaxSpeed, downSpecialMaxSpeed)
 	if character.enableSpecialInput:
 		pass
+		
+func process_up_special_inputs(_delts):
+	if animationPlayer.is_playing():
+		if Input.is_action_pressed(character.special):
+			animationPlayer.stop(false)
+	else:
+		character.attackMultiplicator += 0.01
+		if !Input.is_action_pressed(character.special):
+			animationPlayer.play()
 		
 func process_neutral_special_inputs_charge_shot(_delta):
 	if character.enableSpecialInput:
@@ -70,6 +79,18 @@ func process_neutral_special_inputs_charge_shot(_delta):
 				if character.chargingProjectile:
 					character.chargingProjectile.call_deferred("store_charged_projectile")
 					
+func process_neutral_special_inputs(_delta):
+	if character.enableSpecialInput:
+		if animationPlayer.is_playing():
+			if Input.is_action_pressed(character.special):
+				animationPlayer.stop(false)
+		else:
+			character.attackMultiplicator += 0.01
+			if !Input.is_action_pressed(character.special):
+				animationPlayer.play()
+				character.enableSpecialInput = false
+			
+		
 func on_hitlag_timeout():
 	if character.currentAttack == Globals.CharacterAnimations.DOWNSPECIAL:
 		create_rehit_timer(downSpecialRehitFrames)

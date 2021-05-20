@@ -29,7 +29,7 @@
 		"launchAngle_1": 270,
 		"knockBackGrowth_1": 100,
 		"effects_1": {
-			"effect1": "BOMB"
+			"effect1": "FIRE"
 		},
 		"shieldStun_multiplier_1": 1,
 		"hitlag_multiplier_1": 1,

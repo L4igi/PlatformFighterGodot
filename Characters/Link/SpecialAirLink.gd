@@ -10,37 +10,27 @@ func handle_input_disabled(_delta):
 		Globals.CharacterAnimations.UPSPECIAL:
 			process_up_special_inputs(_delta)
 		Globals.CharacterAnimations.NSPECIAL:
-			process_neutral_special_inputs_charge_shot(_delta)
+			process_neutral_special_inputs(_delta)
 		Globals.CharacterAnimations.DOWNSPECIAL:
-			process_down_special_inputs(_delta)
+			pass
 		Globals.CharacterAnimations.SIDESPECIAL:
 			pass
 	.handle_input_disabled(_delta)
 #	print("special input air disbaled input mario")
 
 func process_up_special_inputs(_delta):
-	if !hitlagTimer.get_time_left():
+	if character.enableSpecialInput:
+		if animationPlayer.is_playing():
+			if Input.is_action_pressed(character.special):
+				animationPlayer.stop(false)
+		else:
+			character.attackMultiplicator += 0.01
+			if !Input.is_action_pressed(character.special):
+				animationPlayer.play()
+	if !hitlagTimer.get_time_left() && !character.enableSpecialInput:
 		var xInput = get_input_direction_x()
 		var walk = character.airMaxSpeed * xInput
 		character.velocity.x += (walk * _delta) *4
-
-func process_down_special_inputs(_delta):
-	if character.disableInputDI:
-		if !hitlagTimer.get_time_left():
-			var xInput = get_input_direction_x()
-			var walk = character.airMaxSpeed * xInput
-			character.velocity.x += (walk * _delta) *10
-			character.velocity.x = clamp(character.velocity.x, -downSpecialMaxSpeed, downSpecialMaxSpeed)
-	if character.enableSpecialInput:
-		if Input.is_action_just_pressed(character.special):
-			if character.velocity.y > 0: 
-				character.velocity.y -= 700
-			else:
-				character.velocity.y -= 350
-		if character.velocity.y > 0 && get_input_direction_y() >= 0.5: 
-			character.set_collision_mask_bit(1,false)
-		elif character.velocity.y > 0 && get_input_direction_y() < 0.5 && character.platformCollision == null && !character.platformCollisionDisabledTimer.get_time_left():
-			character.set_collision_mask_bit(1,true) 
 
 func process_neutral_special_inputs_charge_shot(_delta):
 	if character.enableSpecialInput:
@@ -64,6 +54,19 @@ func process_neutral_special_inputs_charge_shot(_delta):
 					character.cancelChargeTransition = Globals.CharacterAnimations.DOUBLEJUMP
 					if character.chargingProjectile:
 						character.chargingProjectile.store_charged_projectile()
+			
+func process_neutral_special_inputs(_delta):
+	if character.enableSpecialInput:
+		if animationPlayer.is_playing():
+			if Input.is_action_pressed(character.special):
+				animationPlayer.stop(false)
+			else:
+				character.enableSpecialInput = false
+		else:
+			character.attackMultiplicator += 0.01
+			if !Input.is_action_pressed(character.special):
+				animationPlayer.play()
+				character.enableSpecialInput = false
 			
 func on_hitlag_timeout():
 	if character.currentAttack == Globals.CharacterAnimations.DOWNSPECIAL:

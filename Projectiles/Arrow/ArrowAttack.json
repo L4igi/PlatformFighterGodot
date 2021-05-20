@@ -1,0 +1,46 @@
+{
+	"SHOOT_neutral": {
+		"damage_1": 2.5,
+		"hitStun_1": 10,
+		"launchVelocity_1": 15,
+		"launchVelocityWeight_1": 15,
+		"launchAngle_1": 350,
+		"knockBackGrowth_1": 100,
+		"effects_1": {
+			"effect1": "ARROW"
+		},
+		"shieldStun_multiplier_1": 1,
+		"hitlag_multiplier_1": 1,
+		"shield_damage_1": 3.1,
+		"rebounding_1": 0,
+		"transcendent_1": 0,
+		"priority": 2,
+		"facing_direction": 0,
+		"damagePercentArmour": 0.0,
+		"knockbackArmour": 0.0,
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
+	},
+	"IMPACT_neutral": {
+		"damage_1": 10.5,
+		"hitStun_1": 45,
+		"launchVelocity_1": 15,
+		"launchVelocityWeight_1": 0,
+		"launchAngle_1": 270,
+		"knockBackGrowth_1": 100,
+		"effects_1": {
+			"effect1": "ARROW"
+		},
+		"shieldStun_multiplier_1": 1,
+		"hitlag_multiplier_1": 1,
+		"shield_damage_1": 3.1,
+		"rebounding_1": 0,
+		"transcendent_1": 0,
+		"priority": 2,
+		"facing_direction": 0,
+		"damagePercentArmour": 0.0,
+		"knockbackArmour": 0.0,
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
+	}
+}

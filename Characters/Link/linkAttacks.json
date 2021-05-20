@@ -837,6 +837,64 @@
 		"priority": 0,
 		"facing_direction": 2
 	},
+	"FSMASH1_neutral": {
+		"damage_1": 17,
+		"hitStun_1": 23,
+		"launchVelocity_1": 25,
+		"launchVelocityWeight_1": 0,
+		"launchAngle_1": 361,
+		"knockBackGrowth_1": 60,
+		"effects_1":{
+			"effect1": "NEUTRAL"
+		},
+		"shieldStun_multiplier_1": 1,
+		"hitlag_multiplier_1": 1,
+		"shield_damage_1": 1,
+		"rebounding_1": 0,
+		"transcendent_1": 0,
+		"priority": 2,
+		"facing_direction": 0,
+		"damagePercentArmour": 0.0,
+		"knockbackArmour": 0.0,
+		"multiHitArmour": 0.0,
+		"disableInputDI": 0
+	},
+	"FSMASH1_sweet": {
+		"damage_1": 17,
+		"hitStun_1": 23,
+		"launchVelocity_1": 25,
+		"launchVelocityWeight_1": 0,
+		"launchAngle_1": 361,
+		"knockBackGrowth_1": 60,
+		"effects_1":{
+			"effect1": "NEUTRAL"
+		},
+		"shieldStun_multiplier_1": 1,
+		"hitlag_multiplier_1": 1,
+		"shield_damage_1": 1,
+		"rebounding_1": 0,
+		"transcendent_1": 0,
+		"priority": 1,
+		"facing_direction": 0
+	},
+	"FSMASH1_sour": {
+		"damage_1": 14,
+		"hitStun_1": 23,
+		"launchVelocity_1": 25,
+		"launchVelocityWeight_1": 0,
+		"launchAngle_1": 361,
+		"knockBackGrowth_1": 60,
+		"effects_1":{
+			"effect1": "NEUTRAL"
+		},
+		"shieldStun_multiplier_1": 1,
+		"hitlag_multiplier_1": 1,
+		"shield_damage_1": 1,
+		"rebounding_1": 0,
+		"transcendent_1": 0,
+		"priority": 0,
+		"facing_direction": 2
+	},
 	"UPSMASH_neutral": {
 		"damage_1": 14,
 		"hitStun_1": 24,

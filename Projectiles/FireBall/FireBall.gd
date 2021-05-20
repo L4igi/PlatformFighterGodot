@@ -12,7 +12,6 @@ func _ready():
 	
 func set_base_stats(parentNode, originalOwner):
 	ttlFrames = 180.0
-	.set_base_stats(parentNode, originalOwner)
 	gravity = 2000.0
 	baseGravity = 2000.0
 #	var airStopForce = 100
@@ -26,6 +25,7 @@ func set_base_stats(parentNode, originalOwner):
 	deleteOnImpact = true
 	ttlTimeoutAction = Globals.ProjectileState.DESTROYED
 	create_projectileTTL_timer(ttlFrames)
+	.set_base_stats(parentNode, originalOwner)
 	
 func process_projectile_physics(_delta):
 #	projectile.velocity.x = move_toward(projectile.velocity.x, 0, projectile.airStopForce * _delta)

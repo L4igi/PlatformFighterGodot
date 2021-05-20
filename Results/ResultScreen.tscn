@@ -3,7 +3,7 @@
 [ext_resource path="res://Results/ResultScreenUI.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Results/ResultScreen.gd" type="Script" id=4]
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=1]
 resource_name = "slide_in_gui"
 step = 0.0166667
 tracks/0/type = "value"
@@ -19,8 +19,7 @@ tracks/0/keys = {
 "values": [ Vector2( -8, -603 ), Vector2( -8, 0 ) ]
 }
 
-[sub_resource type="Animation" id=1]
-resource_name = "slide_in_overlay"
+[sub_resource type="Animation" id=2]
 step = 0.0166667
 tracks/0/type = "value"
 tracks/0/path = NodePath("Triangle:position")
@@ -39,8 +38,8 @@ tracks/0/keys = {
 script = ExtResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/slide_in_gui = SubResource( 2 )
-anims/slide_in_overlay = SubResource( 1 )
+anims/slide_in_gui = SubResource( 1 )
+anims/slide_in_overlay = SubResource( 2 )
 
 [node name="WinnerPosition" type="Position2D" parent="."]
 position = Vector2( 576, 256 )

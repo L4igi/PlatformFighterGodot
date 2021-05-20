@@ -1,10 +1,30 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Projectiles/Projectile.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Projectiles/Bomb/Bomb.gd" type="Script" id=2]
+[ext_resource path="res://Projectiles/Bomb/impact/4.png" type="Texture" id=3]
+[ext_resource path="res://Projectiles/Bomb/impact/5.png" type="Texture" id=4]
+[ext_resource path="res://Projectiles/Bomb/impact/6.png" type="Texture" id=5]
+[ext_resource path="res://Projectiles/Bomb/impact/7.png" type="Texture" id=6]
+[ext_resource path="res://Projectiles/Bomb/impact/8.png" type="Texture" id=7]
+[ext_resource path="res://Projectiles/Bomb/impact/2.png" type="Texture" id=8]
+[ext_resource path="res://Projectiles/Bomb/impact/1.png" type="Texture" id=9]
+[ext_resource path="res://Projectiles/Bomb/impact/3.png" type="Texture" id=10]
 
-[sub_resource type="Animation" id=1]
-resource_name = "hold"
+[sub_resource type="SpriteFrames" id=6]
+animations = [ {
+"frames": [ ExtResource( 9 ), ExtResource( 8 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "shoot",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "impact",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=2]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:animation")
 tracks/0/interp = 1
@@ -29,20 +49,8 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 0 ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath(".:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ Color( 0, 0, 0, 1 ) ]
-}
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id=3]
 length = 0.333333
 step = 0.0166667
 tracks/0/type = "value"
@@ -94,7 +102,7 @@ tracks/3/keys = {
 "values": [ Vector2( 4, 4 ) ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -132,7 +140,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ "impact" ]
+"values": [ "shoot" ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath(".:frame")
@@ -141,14 +149,25 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
+"times": PoolRealArray( 0, 0.183334 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 1, 2 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("..:scale")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ 2 ]
+"update": 0,
+"values": [ Vector2( 2, 2 ) ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "shoot_no_hitbox"
+[sub_resource type="Animation" id=5]
 length = 0.383333
 loop = true
 step = 0.0166667
@@ -162,7 +181,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ "impact" ]
+"values": [ "shoot" ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath(".:frame")
@@ -171,10 +190,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 0.166667 ),
+"transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 2 ]
+"values": [ 2, 1 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("../HurtBoxArea/HurtBoxShape:disabled")
@@ -190,27 +209,26 @@ tracks/2/keys = {
 }
 
 [node name="Bomb" instance=ExtResource( 1 )]
+scale = Vector2( 2, 2 )
 script = ExtResource( 2 )
 
 [node name="ProjectileCollider" parent="." index="0"]
 visible = false
 
 [node name="AnimatedSprite" parent="." index="1"]
-modulate = Color( 0, 0, 0, 1 )
-animation = "impact"
+frames = SubResource( 6 )
 frame = 1
 
 [node name="AnimationPlayer" parent="AnimatedSprite" index="0"]
-anims/hold = SubResource( 1 )
-anims/impact = SubResource( 2 )
-anims/shoot = SubResource( 3 )
-anims/shoot_no_hitbox = SubResource( 4 )
+anims/hold = SubResource( 2 )
+anims/impact = SubResource( 3 )
+anims/shoot = SubResource( 4 )
+anims/shoot_no_hitbox = SubResource( 5 )
 
 [node name="HitBoxes" parent="AnimatedSprite" index="1"]
 visible = false
 
 [node name="Neutral" parent="AnimatedSprite/HitBoxes/HitBoxNeutralArea" index="0"]
 scale = Vector2( 2, 2 )
-disabled = true
 
 [editable path="AnimatedSprite/HitBoxes"]

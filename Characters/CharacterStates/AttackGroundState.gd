@@ -178,6 +178,12 @@ func _physics_process(_delta):
 							animationPlayer.stop()
 							jab_handler()
 							character.comboNextJab = false
+				elif character.multiPartSmashAttack.has(character.currentAttack):
+					if character.comboNextSmash == true:
+						if character.currentPartSmashAttack < character.multiPartSmashAttack.get(character.currentAttack):
+							if Input.is_action_just_pressed(character.attack):
+								character.currentPartSmashAttack += 1
+								multipart_smashAttack_handler()
 		else:
 			if character.grabbedItem: 
 				attack_handler_ground_throw_attack()
@@ -263,6 +269,43 @@ func jab_handler():
 	if character.jabCount > character.jabCombo: 
 		character.jabCount = 0
 		
+func multipart_smashAttack_handler():
+	character.comboNextSmash = false
+	match character.currentPartSmashAttack:
+		1:
+			match character.currentAttack:
+				Globals.CharacterAnimations.UPSMASH:
+					character.currentAttack = Globals.CharacterAnimations.UPSMASH1
+					play_attack_animation("upsmash1")
+				Globals.CharacterAnimations.DSMASH:
+					character.currentAttack = Globals.CharacterAnimations.DSMASH1
+					play_attack_animation("dsmash1")
+				Globals.CharacterAnimations.FSMASH:
+					character.currentAttack = Globals.CharacterAnimations.FSMASH1
+					play_attack_animation("fsmash1")
+		2:
+			match character.currentAttack:
+				Globals.CharacterAnimations.UPSMASH:
+					character.currentAttack = Globals.CharacterAnimations.UPSMASH2
+					play_attack_animation("upsmash2")
+				Globals.CharacterAnimations.DSMASH:
+					character.currentAttack = Globals.CharacterAnimations.DSMASH2
+					play_attack_animation("dsmash2")
+				Globals.CharacterAnimations.FSMASH:
+					character.currentAttack = Globals.CharacterAnimations.FSMASH2
+					play_attack_animation("fsmash2")
+		3:
+			match character.currentAttack:
+				Globals.CharacterAnimations.UPSMASH:
+					character.currentAttack = Globals.CharacterAnimations.UPSMASH3
+					play_attack_animation("upsmash3")
+				Globals.CharacterAnimations.DSMASH:
+					character.currentAttack = Globals.CharacterAnimations.DSMASH3
+					play_attack_animation("dsmash3")
+				Globals.CharacterAnimations.FSMASH:
+					character.currentAttack = Globals.CharacterAnimations.FSMASH3
+					play_attack_animation("fsmash3")
+		
 func handle_input(_delta):
 	pass
 	
@@ -347,7 +390,11 @@ func shift_attack_angle():
 		rotateSmashAttackDegrees = angle
 
 func attack_handler_ground_throw_attack():
-	if (abs(get_input_direction_x()) == 0) \
+	if character.thrownFromGrabbedItemSpawnMove:
+		character.thrownFromGrabbedItemSpawnMove = false
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")
+	elif (abs(get_input_direction_x()) == 0) \
 	&& get_input_direction_y() == 0:
 		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		play_attack_animation("throw_item_forward")

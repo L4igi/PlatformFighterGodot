@@ -172,7 +172,11 @@ func manage_ground_air_move_transition():
 	character.disableInput = true
 
 func attack_handler_air_throw_attack():
-	if (abs(get_input_direction_x()) == 0) \
+	if character.thrownFromGrabbedItemSpawnMove:
+		character.thrownFromGrabbedItemSpawnMove = false
+		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
+		play_attack_animation("throw_item_forward")
+	elif (abs(get_input_direction_x()) == 0) \
 	&& get_input_direction_y() == 0:
 		character.currentAttack = Globals.CharacterAnimations.THROWITEMFORWARD
 		play_attack_animation("throw_item_forward")
