@@ -19,14 +19,14 @@ func handle_input_disabled(_delta):
 #	print("special input air disbaled input mario")
 
 func process_up_special_inputs(_delta):
-	if character.enableSpecialInput:
-		if animationPlayer.is_playing():
-			if Input.is_action_pressed(character.special):
-				animationPlayer.stop(false)
-		else:
-			character.attackMultiplicator += 0.01
-			if !Input.is_action_pressed(character.special):
-				animationPlayer.play()
+#	if character.enableSpecialInput:
+#		if animationPlayer.is_playing():
+#			if Input.is_action_pressed(character.special):
+#				animationPlayer.stop(false)
+#		else:
+#			character.attackMultiplicator += 0.01
+#			if !Input.is_action_pressed(character.special):
+#				animationPlayer.play()
 	if !hitlagTimer.get_time_left() && !character.enableSpecialInput:
 		var xInput = get_input_direction_x()
 		var walk = character.airMaxSpeed * xInput

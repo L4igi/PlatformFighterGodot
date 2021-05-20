@@ -38,7 +38,7 @@ func _ready():
 	if character.applySideStepFrames: 
 		character.applySideStepFrames = false
 		create_sidestep_timer(sideStepFrames)
-	character.onSolidGround = true
+	character.onSolidGround = Globals.centerStage
 		
 func setup(change_state, transitionBufferedInput, animationPlayer, character):
 	stopMovementTimer = Globals.create_timer("on_stop_movement_timeout", "StopMovementTimer", self)
