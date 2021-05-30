@@ -58,3 +58,5 @@ works as inteded. (it did :) ).
 
 This is a passion project to better understand the mechanics behind one of my favourit game franchises. I really had fun working on all of it and hope to keep on improving
 the existing codebase. 
+
+The game in its current State can be tried here: https://l4igi.itch.io/platform-fighter
